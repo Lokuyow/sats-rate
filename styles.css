@@ -41,9 +41,15 @@ p {
     padding-right: 0.5rem;
 }
 
-.data-provider {
-    font-size: 0.8rem;
+.notes {
     position: fixed;
-    bottom: 0;
+    bottom: 0.5rem;
     right: 1rem;
+    text-align: right;
+}
+
+.source, 
+.data-provider{
+    font-size: 0.8rem;
+    margin: 0.1rem;
 }
