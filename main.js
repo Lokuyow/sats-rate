@@ -8,7 +8,18 @@ window.onload = async function() {
     btcToJpy = data.bitcoin.jpy;
     btcToUsd = data.bitcoin.usd;
 
-    console.log(data); //あとでけす
+    document.getElementById('btc').addEventListener('focus', function() {
+        this.select();
+    });
+    document.getElementById('sats').addEventListener('focus', function() {
+        this.select();
+    });
+    document.getElementById('jpy').addEventListener('focus', function() {
+        this.select();
+    });
+    document.getElementById('usd').addEventListener('focus', function() {
+        this.select();
+    });
 }
 
 function calculateValues(inputField) {
