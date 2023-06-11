@@ -14,6 +14,9 @@ window.onload = async function() {
         return;
     }
 
+    document.getElementById('btc').value = 1;
+    calculateValues('btc');
+
     document.getElementById('btc').addEventListener('focus', function() {
         this.select();
     });
