@@ -10,7 +10,7 @@ window.onload = async function() {
         btcToUsd = data.bitcoin.usd;
     } catch (err) {
         console.error("Failed to fetch price data from CoinGecko:", err);
-        alert("価格データの取得に失敗しました。ページをリロードしてみてください。");
+        alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
         return;
     }
 
