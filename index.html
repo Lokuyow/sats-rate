@@ -13,7 +13,10 @@
 </head>
 <body>
     <h1>おいくらサッツ🍠</h1>
-    <p class="sub">数字を入れると自動で計算するよ</p>
+    <p class="sub">
+        数字を入れると<br>
+        今の価格レートで自動計算するよ
+    </p>
     
     <div class="input-group">
         <div class="icon-wrapper">
@@ -23,7 +26,7 @@
             <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         </div>
         <div class="label-wrapper">
-            <label for="btc">bitcoin</label>
+            <label for="btc">BTC</label>
         </div>
     </div>
     
@@ -59,11 +62,16 @@
             <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         </div>
         <div class="label-wrapper">
-            <label for="usd">dollars</label>
+            <label for="usd">ドル</label>
         </div>
     </div>
 
-    <p class="description">ビットコイン（bitcoin、BTC）、サッツ（Sats、Sat、Satoshi）、日本円（JPY）、および米ドル（USD）間の換算機です。</p>
+    <p class="description">
+        ビットコイン（bitcoin、BTC）、サッツ（Sats、Sat、Satoshi）、日本円（JPY）、および米ドル（USD）間の換算機です。<br>
+        <br>
+        <span class="tab1">1 satoshi</span> = <span class="tab2">0.00000001 bitcoin</span><br>
+        <span class="tab1">1億 satoshi</span> = <span class="tab2">1 bitcoin</span>
+    </p>
 
     <div class="notes">
         <p class="source">ソースコード：<a href="https://github.com/Lokuyow/btc-sat-jpy-usd-converter" target="_blank">GitHub</a></p>

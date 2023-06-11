@@ -1,1 +1,1 @@
-# btc-sat-jpy-usd-converter
+# おいくらサッツ🍠
