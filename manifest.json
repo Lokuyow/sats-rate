@@ -1,6 +1,6 @@
 {
-    "name": "Satoshi Converter",
-    "short_name": "SAT Conv",
+    "name": "おいくらサッツ",
+    "short_name": "おいくらサッツ",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#fff78c",
