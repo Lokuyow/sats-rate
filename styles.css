@@ -22,7 +22,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.5rem;
 }
 
 .icon-wrapper, .label-wrapper, .input-wrapper {
@@ -38,7 +38,7 @@ h1 {
 .input-group input {
     font-size: 1.3rem;
     text-align: right;
-    height: 3.7rem;
+    height: 3.6rem;
     width: 16rem;
     padding-right: 0.5rem;
 }
@@ -52,14 +52,13 @@ h1 {
 .description {
     font-size: 1rem;
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     margin-left: 1rem;
 }
 
 .description.conversion {
-    margin-top: -0.8rem;
+    margin-top: -0.3rem;
 }
-
 
 .tab1 {
     display: inline-block;
