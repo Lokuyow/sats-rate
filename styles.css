@@ -36,10 +36,10 @@ h1 {
 }
 
 .input-group input {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     text-align: right;
-    flex-grow: 1;
     height: 3.8rem;
+    width: 15rem;
     padding-right: 0.5rem;
 }
 
@@ -51,7 +51,7 @@ h1 {
 
 .description {
     font-size: 0.9rem;
-    text-align: start;
+    text-align: center;
     margin-top: 2rem;
     margin-left: 1rem;
 }
