@@ -16,25 +16,25 @@
     
     <div class="input-group">
         <label for="btc">BTC:</label>
-        <input type="text" id="btc" oninput="calculateValues('btc')" pattern="[0-9]*" inputmode="numeric">
+        <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         <label>btc</label>
     </div>
     
     <div class="input-group">
         <label for="sats">BTC:</label>
-        <input type="text" id="sats" oninput="calculateValues('sats')" pattern="[0-9]*" inputmode="numeric">
+        <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         <label>sats</label>
     </div>
     
     <div class="input-group">
         <label for="jpy">JPY:</label>
-        <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="[0-9]*" inputmode="numeric">
+        <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         <label>yen</label>
     </div>
     
     <div class="input-group">
         <label for="usd">USD:</label>
-        <input type="text" id="usd" oninput="calculateValues('usd')" pattern="[0-9]*" inputmode="numeric">
+        <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
         <label>dollars</label>
     </div>
     
