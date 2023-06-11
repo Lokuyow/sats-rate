@@ -13,29 +13,32 @@
     <h1>Satoshi Converter</h1>
     <p>ビットコイン（BTC）、サトシ（Satoshi, Sats）、日本円（JPY）、および米ドル（USD）間の換算機です。</p>
 
+    
     <div class="input-group">
         <label for="btc">BTC:</label>
-        <input type="text" id="btc" oninput="calculateValues('btc')">
+        <input type="text" id="btc" oninput="calculateValues('btc')" pattern="[0-9]*" inputmode="numeric">
         <label>btc</label>
     </div>
     
     <div class="input-group">
         <label for="sats">BTC:</label>
-        <input type="text" id="sats" oninput="calculateValues('sats')">
+        <input type="text" id="sats" oninput="calculateValues('sats')" pattern="[0-9]*" inputmode="numeric">
         <label>sats</label>
     </div>
-
+    
     <div class="input-group">
         <label for="jpy">JPY:</label>
-        <input type="text" id="jpy" oninput="calculateValues('jpy')">
+        <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="[0-9]*" inputmode="numeric">
         <label>yen</label>
     </div>
-
+    
     <div class="input-group">
         <label for="usd">USD:</label>
-        <input type="text" id="usd" oninput="calculateValues('usd')">
+        <input type="text" id="usd" oninput="calculateValues('usd')" pattern="[0-9]*" inputmode="numeric">
         <label>dollars</label>
     </div>
+    
+
 
     <div class="notes">
         <p class="source">ソースコード：<a href="https://github.com/Lokuyow/btc-sat-jpy-usd-converter" target="_blank">GitHub</a></p>
