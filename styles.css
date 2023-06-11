@@ -1,0 +1,46 @@
+:root {
+    --main-font: -apple-system,BlinkMacSystemFont,Helvetica Neue,Segoe UI,Hiragino Kaku Gothic ProN,Hiragino Sans,ヒラギノ角ゴ ProN W3,Arial,メイリオ,Meiryo,sans-serif;
+}  
+
+body {
+    font-family: var(--main-font);
+}
+
+h1 {
+    font-size: 1.2rem;
+}
+
+p {
+    font-size: 0.9rem;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 1.3rem;
+    margin-bottom: 0.625rem;
+}
+
+.input-group label:first-child {
+    margin-right: 0.4rem;
+    width: 2rem;
+}
+
+.input-group label:last-child {
+    font-size: 1.1rem;
+    margin-left: 0.2rem;
+    width: 2rem;
+}
+
+.input-group input {
+    flex-grow: 1;
+    height: 2rem;
+}
+
+.data-provider {
+    font-size: 0.8rem;
+    position: fixed;
+    bottom: 0;
+    right: 1rem;
+}

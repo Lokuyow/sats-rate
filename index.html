@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Converter</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>ビットコイン換算機</h1>
+    <p>ビットコイン（BTC）、サトシ（Satoshi, Sats）、日本円（JPY）、および米ドル（USD）間の換算機です。</p>
+
+    <div class="input-group">
+        <label for="btc">BTC:</label>
+        <input type="text" id="btc" oninput="calculateValues('btc')">
+        <label>btc</label>
+    </div>
+    
+    <div class="input-group">
+        <label for="sats">BTC:</label>
+        <input type="text" id="sats" oninput="calculateValues('sats')">
+        <label>sats</label>
+    </div>
+
+    <div class="input-group">
+        <label for="jpy">JPY:</label>
+        <input type="text" id="jpy" oninput="calculateValues('jpy')">
+        <label>yen</label>
+    </div>
+
+    <div class="input-group">
+        <label for="usd">USD:</label>
+        <input type="text" id="usd" oninput="calculateValues('usd')">
+        <label>dollars</label>
+    </div>
+
+    <p class="data-provider">データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a></p>
+
+    <script src="main.js"></script>
+</body>
+</html>
