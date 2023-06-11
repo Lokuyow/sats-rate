@@ -34,8 +34,11 @@ p {
 }
 
 .input-group input {
+    font-size: 1.1rem;
+    text-align: right;
     flex-grow: 1;
-    height: 2rem;
+    height: 2.5rem;
+    padding-right: 0.5rem;
 }
 
 .data-provider {
