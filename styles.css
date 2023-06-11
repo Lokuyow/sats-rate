@@ -12,10 +12,10 @@ h1 {
 }
 
 .sub{
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: center;
-    margin-top: -0.5rem;
-    margin-bottom: 2rem;
+    margin-top: -1.2rem;
+    margin-bottom: 0.8rem;
 }
 
 .input-group {
@@ -38,7 +38,7 @@ h1 {
 .input-group input {
     font-size: 1.3rem;
     text-align: right;
-    height: 3.8rem;
+    height: 3.7rem;
     width: 16rem;
     padding-right: 0.5rem;
 }
@@ -52,9 +52,14 @@ h1 {
 .description {
     font-size: 1rem;
     text-align: center;
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
     margin-left: 1rem;
 }
+
+.description.conversion {
+    margin-top: -0.8rem;
+}
+
 
 .tab1 {
     display: inline-block;
