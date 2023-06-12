@@ -30,6 +30,19 @@ window.onload = async function() {
         this.select();
     });
 
+    document.getElementById('btc').addEventListener('keyup', function() {
+        addCommasToInput(this);
+    });
+    document.getElementById('sats').addEventListener('keyup', function() {
+        addCommasToInput(this);
+    });
+    document.getElementById('jpy').addEventListener('keyup', function() {
+        addCommasToInput(this);
+    });
+    document.getElementById('usd').addEventListener('keyup', function() {
+        addCommasToInput(this);
+    });
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
         .then(function(registration) {
@@ -43,10 +56,9 @@ window.onload = async function() {
 
 function calculateValues(inputField) {
     let btc, sats, jpy, usd;
-
     switch(inputField) {
         case 'btc':
-            btc = document.getElementById('btc').value;
+            btc = document.getElementById('btc').value.replace(/,/g, '');
             sats = (btc * satsInBtc).toLocaleString();
             jpy = (btc * btcToJpy).toLocaleString();
             usd = (btc * btcToUsd).toLocaleString();
@@ -71,8 +83,23 @@ function calculateValues(inputField) {
             break;
     }
 
-    document.getElementById('btc').value = btc;
+    document.getElementById('btc').value = addCommas(btc);
     document.getElementById('sats').value = sats;
     document.getElementById('jpy').value = jpy;
     document.getElementById('usd').value = usd;
+}
+
+function addCommas(num) {
+    let s = num.toString().replace(/[^0-9.]/g, '');
+    let b = s.toString().split('.');
+    b[0] = b[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+    return b.join('.');
+}
+
+function addCommasToInput(inputElement) {
+    let caretPos = inputElement.selectionStart - inputElement.value.length;
+    inputElement.value = addCommas(inputElement.value.replace(/,/g, ''));
+    caretPos = caretPos + (inputElement.value.length - caretPos);
+    inputElement.selectionStart = caretPos;
+    inputElement.selectionEnd = caretPos;
 }
