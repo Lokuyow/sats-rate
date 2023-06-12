@@ -33,6 +33,7 @@ h1 {
     display: grid;
     grid-template-columns: 2.5rem 1fr 2.5rem;
     grid-template-rows: 1fr 1fr 1fr 1fr;
+    row-gap: 0.2rem;
     align-items: center;
     justify-items: auto;
     max-width: 40rem;
@@ -48,7 +49,8 @@ h1 {
     font-size: 2.3rem;
     height: 4rem;
     text-align: right;
-    min-width: 16.5rem;
+    min-width: 16rem;
+    padding-right: 0.3rem;
 }
 
 .grid-container label {

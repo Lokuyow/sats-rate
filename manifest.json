@@ -3,12 +3,12 @@
     "short_name": "おいくらサッツ",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#fff78c",
+    "background_color": "#ffffff",
     "theme_color": "#000000",
     "icons": [
       {
         "src": "./images/icon.png",
-        "sizes": "192x192",
+        "sizes": "128x128",
         "type": "image/png"
       }
     ]
