@@ -17,15 +17,19 @@ body {
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: 2.4rem;
     text-align: center;
 }
 
-.sub{
+.flex-summary {
+    display: flex;
+    justify-content: center;
+}
+.summary {
     font-size: 1rem;
-    text-align: center;
-    margin-top: -1.2rem;
-    margin-bottom: 1.5rem;
+    text-align: left;
+    margin-top: -0.5rem;
+    margin-bottom: 1.8rem;
 }
 
 
@@ -36,7 +40,7 @@ h1 {
     row-gap: 0.2rem;
     align-items: center;
     justify-items: auto;
-    max-width: 40rem;
+    max-width: 32rem;
     margin: 0 auto;
 }
 
@@ -58,28 +62,28 @@ h1 {
     margin-left: 0.2rem;
 }
 
-
-.flex-container {
+.flex-description {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: auto;
+    justify-content: center;
 }
-
 .description {
     font-size: 0.9rem;
-    text-align: center;
+    text-align: left;
     margin-top: 2rem;
     margin-left: 1rem;
 }
 
 .link {
     text-align: center;
+    margin-top: 1.2rem;
+    margin-bottom: 0.8rem;
 }
 
 .table {
     text-align: center;
+    margin-top: 0;
     margin-left: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .tab1 {
