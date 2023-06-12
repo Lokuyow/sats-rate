@@ -12,76 +12,53 @@
     <script src="https://kit.fontawesome.com/23c28c9488.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>おいくらサッツ🍠</h1>
-    <p class="sub">
-        数字を入れると<br>
-        今の価格レートで自動計算するよ
-    </p>
-    
-    <div class="input-group">
-        <div class="icon-wrapper">
-            <i class="fa-brands fa-bitcoin fa-2xl currency-icon"></i>
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-        </div>
-        <div class="label-wrapper">
-            <label for="btc">BTC</label>
-        </div>
-    </div>
-    
-    <div class="input-group">
-        <div class="icon-wrapper">
-            <i class="fa-brands fa-bitcoin fa-2xl currency-icon"></i>
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-        </div>
-        <div class="label-wrapper">
-            <label for="sats">sats</label>
-        </div>
-    </div>
-    
-    <div class="input-group">
-        <div class="icon-wrapper">
-            <i class="fa-solid fa-yen-sign fa-2xl currency-icon"></i>
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-        </div>
-        <div class="label-wrapper">
-            <label for="jpy">円</label>
-        </div>
-    </div>
-    
-    <div class="input-group">
-        <div class="icon-wrapper">
-            <i class="fa-solid fa-dollar-sign fa-2xl currency-icon"></i>
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-        </div>
-        <div class="label-wrapper">
-            <label for="usd">ドル</label>
-        </div>
-    </div>
+    <div class="page">
+        <div class="main">
+            <h1>おいくらサッツ🍠</h1>
 
-    <p class="description">
-        ビットコイン（bitcoin, BTC）、<br>
-        サッツ（Sats, Sat, Satoshi）、日本円（JPY）、<br>
-        およびアメリカドル（USD）間の換算機です。<br>
-    </p>
-    <p class="description conversion">
-        <span class="tab1">1 satoshi</span> = <span class="tab2">0.00000001 bitcoin</span><br>
-        <span class="tab1">1億 satoshi</span> = <span class="tab2">1 bitcoin</span>
-    </p>
-    <p class="description conversion">
-        <a href="https://bitcoin.dmm.com/glossary/satoshi" target="_blank">Satoshi</a>
-    </p>
+            <p class="sub">
+                数字を入れると<br>
+                今の価格レートで自動計算するよ
+            </p>
+            
+            <div class="grid-container">
+                <i class="fa-brands fa-bitcoin fa-2xl currency-icon"></i>
+                <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <label for="btc">BTC</label>
 
-    <div class="notes">
-        <p class="source">ソースコード：<a href="https://github.com/Lokuyow/btc-sat-jpy-usd-converter" target="_blank">GitHub</a></p>
-        <p class="data-provider">データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a></p>
+                <i class="fa-brands fa-bitcoin fa-2xl currency-icon"></i>
+                <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <label for="sats">sats</label>
+
+                <i class="fa-solid fa-yen-sign fa-2xl currency-icon"></i>
+                <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <label for="jpy">円</label>
+
+                <i class="fa-solid fa-dollar-sign fa-2xl currency-icon"></i>
+                <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <label for="usd">ドル</label>
+            </div> 
+
+            <p class="description">
+                ビットコイン（bitcoin, BTC）、<br>
+                サッツ（Sats, Sat, Satoshi）、日本円（JPY）、<br>
+                およびアメリカドル（USD）間の換算機です。<br>
+            </p>
+
+            <p class="link">
+                <a href="https://bitcoin.dmm.com/glossary/satoshi" target="_blank">Satoshi</a>
+            </p>
+
+            <p class="table">
+                <span class="tab1">1億 satoshi</span> = <span class="tab2">1 bitcoin</span><br>
+                <span class="tab1">1 satoshi</span> = <span class="tab2">0.00000001 bitcoin</span>
+            </p>
+        </div>
+
+        <footer class="footer">
+            ソースコード：<a href="https://github.com/Lokuyow/btc-sat-jpy-usd-converter" target="_blank">GitHub</a><br>
+            データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a>
+        </footer>
     </div>
 
     <script src="main.js"></script>

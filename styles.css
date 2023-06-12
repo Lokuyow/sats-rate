@@ -6,6 +6,16 @@ body {
     font-family: var(--main-font);
 }
 
+.page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 25px);
+}
+
+.main {
+    flex: 1 0 auto;
+}
+
 h1 {
     font-size: 2rem;
     text-align: center;
@@ -15,49 +25,59 @@ h1 {
     font-size: 1rem;
     text-align: center;
     margin-top: -1.2rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
 }
 
-.input-group {
-    display: flex;
-    justify-content: center;
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 2.5rem;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     align-items: center;
-    margin-bottom: 0.5rem;
+    justify-items: auto;
+    max-width: 40rem;
+    margin: 0 auto;
 }
 
-.icon-wrapper, .label-wrapper, .input-wrapper {
-    display: flex;
-    justify-content: center;
+.grid-container i {
+    text-align: center;
+    margin-right: 0.5rem;
 }
 
-.icon-wrapper {
-    width: 2.8rem;
-    margin-left: -0.5rem;
-}
-
-.input-group input {
-    font-size: 1.3rem;
+.grid-container input {
+    font-size: 2.3rem;
+    height: 4rem;
     text-align: right;
-    height: 3.6rem;
-    width: 16rem;
-    padding-right: 0.5rem;
+    min-width: 16.5rem;
 }
 
-.input-group label {
-    font-size: 1.1rem;
+.grid-container label {
+    text-align: left;
     margin-left: 0.2rem;
-    width: 2.2rem;
+}
+
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto;
 }
 
 .description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
     margin-left: 1rem;
 }
 
-.description.conversion {
-    margin-top: -0.3rem;
+.link {
+    text-align: center;
+}
+
+.table {
+    text-align: center;
+    margin-left: 3rem;
 }
 
 .tab1 {
@@ -73,15 +93,9 @@ h1 {
     text-align: left;
 }
 
-.notes {
-    position: fixed;
-    bottom: 0.5rem;
-    right: 1rem;
+.footer {
+    flex-shrink: 0;
     text-align: right;
-}
-
-.source, 
-.data-provider{
     font-size: 0.85rem;
-    margin: 0.1rem;
+    margin: 0 0.5rem 0 0;
 }
