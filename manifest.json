@@ -1,7 +1,7 @@
 {
     "name": "おいくらサッツ",
     "short_name": "おいくらサッツ",
-    "description": "ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）間の相互換算ツールです。",
+    "description": "ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）間の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
