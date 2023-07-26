@@ -44,9 +44,10 @@ h1 {
     margin: 0 auto;
 }
 
-.grid-container i {
-    text-align: center;
+.grid-container svg {
+    justify-self: center;
     margin-right: 0.5rem;
+    height: 2em;
 }
 
 .grid-container input {
