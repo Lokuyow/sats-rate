@@ -4,6 +4,7 @@
 
 body {
     font-family: var(--main-font);
+    color: rgb(38, 31, 56);
 }
 
 .page {
