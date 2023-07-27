@@ -4,10 +4,12 @@ const satsInBtc = 1e8;
 
 window.onload = async function() {
     try {
-        const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd");
+        const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd&include_last_updated_at=true");
         const data = await response.json();
         btcToJpy = data.bitcoin.jpy;
         btcToUsd = data.bitcoin.usd;
+        const updatedAt = new Date(data.bitcoin.last_updated_at * 1000);
+        document.getElementById('last-updated').textContent = `データ取得：${updatedAt.toLocaleString()}`;
     } catch (err) {
         console.error("Failed to fetch price data from CoinGecko:", err);
         alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
