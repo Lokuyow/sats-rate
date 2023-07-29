@@ -27,15 +27,19 @@ body {
     justify-content: center;
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
-    margin: 0.8rem 0rem;
+    margin: 1rem 0 0.6rem 0;
     padding: 1.2rem 0rem;
     width: 100%;
-    max-width: 35rem;
+    max-width: 40rem;
+}
+.title-color svg {
+    margin-left: 0.4rem;
 }
 .icon {
     width: 60px;
     height: 60px;
     margin-left: 0.6rem;
+    margin-bottom: 0.3rem;
 }
 
 
@@ -43,7 +47,7 @@ body {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
     width: 100%;
-    max-width: 35rem;
+    max-width: 40rem;
     margin: 0.3rem 0rem;
     padding: 1.4rem 0rem 2rem 0rem;
 }
@@ -91,17 +95,14 @@ body {
 .flex-descriptions {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
-    max-width: 35rem;
+    max-width: 40rem;
 }
 
 .description-color,
 .satoshi-color {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
-    width: 100%;
-    max-width: 35rem;
     margin: 0.3rem 0rem;
     padding: 1.2rem 0rem;
 }
@@ -111,10 +112,7 @@ body {
 .table {
     font-size: 0.9rem;
     text-align: left;
-    width: 0;
-    min-width: 19rem;
-    margin: 0;
-    padding-left: 2rem;
+    margin: 0 0 0 12%;
 }
 
 
