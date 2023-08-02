@@ -89,6 +89,8 @@ function calculateValues(inputField) {
     document.getElementById('sats').value = sats;
     document.getElementById('jpy').value = jpy;
     document.getElementById('usd').value = usd;
+
+    updateShareButton(btc, sats, jpy, usd);
 }
 
 function addCommas(num) {
@@ -104,4 +106,11 @@ function addCommasToInput(inputElement) {
     caretPos = caretPos + (inputElement.value.length - caretPos);
     inputElement.selectionStart = caretPos;
     inputElement.selectionEnd = caretPos;
+}
+
+function updateShareButton(btc, sats, jpy, usd) {
+    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n\¥：${addCommas(jpy)} JPY\n$：${addCommas(usd)} USD\n`;
+    const shareUrl = "https://lokuyow.github.io/sats-rate/";
+    document.getElementById('share-twitter').href =
+        "https://twitter.com/share?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText);
 }
