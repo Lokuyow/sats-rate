@@ -109,8 +109,7 @@ function addCommasToInput(inputElement) {
 }
 
 function updateShareButton(btc, sats, jpy, usd) {
-    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n\¥：${addCommas(jpy)} JPY\n$：${addCommas(usd)} USD\n`;
+    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n¥：${addCommas(jpy)} 円\n$：${addCommas(usd)} ドル\n`;
     const shareUrl = "https://lokuyow.github.io/sats-rate/";
-    document.getElementById('share-twitter').href =
-        "https://twitter.com/share?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText);
+    document.getElementById('share-twitter').href = "https://twitter.com/share?url=" + shareUrl + "&text=" + encodeURIComponent(shareText);
 }
