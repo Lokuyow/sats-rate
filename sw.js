@@ -1,5 +1,5 @@
 // Cache name
-const CACHE_NAME = 'sats-rate-caches-v2';
+const CACHE_NAME = 'sats-rate-caches-v1.11';
 // Cache targets
 const urlsToCache = [
   './',
@@ -34,7 +34,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  var cacheWhitelist = ['sats-rate-caches-v2']; // このバージョン以外は削除
+  var cacheWhitelist = [CACHE_NAME]; // このバージョン以外は削除
 
   event.waitUntil(
     caches.keys().then((cacheNames) => {

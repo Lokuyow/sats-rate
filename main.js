@@ -67,7 +67,7 @@ window.onload = async function() {
         document.getElementById('updateBtn').addEventListener('click', () => {
             reg.waiting.postMessage('skipWaiting');
         });
-        
+
     }
 }
 
@@ -128,4 +128,31 @@ function updateShareButton(btc, sats, jpy, usd) {
     const shareUrl = "https://lokuyow.github.io/sats-rate/";
     document.getElementById('share-twitter').href = "https://twitter.com/share?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText);
     document.getElementById('share-nostter').href = "https://nostter.vercel.app/post?content=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl);
+    document.getElementById('share-mass-driver').href = "https://mdrv.shino3.net/?intent=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl);
 }
+
+document.getElementById('copy-to-clipboard').addEventListener('click', function(event) {
+    const btc = addCommas(document.getElementById('btc').value);
+    const sats = addCommas(document.getElementById('sats').value);
+    const jpy = addCommas(document.getElementById('jpy').value);
+    const usd = addCommas(document.getElementById('usd').value);
+
+    const textToCopy = `₿：${btc} BTC\n₿：${sats} sats\n¥：${jpy} 円\n$：${usd} ドル\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/`;
+
+    const textarea = document.createElement('textarea');
+    textarea.value = textToCopy;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    const notification = document.getElementById('notification');
+    notification.textContent = 'クリップボードにコピーしました';
+    notification.style.left = event.clientX + 'px';
+    notification.style.top = (event.clientY + 20) + 'px';
+    notification.style.visibility = 'visible';
+
+    setTimeout(() => {
+        notification.style.visibility = 'hidden';
+    }, 1000);
+});
