@@ -63,14 +63,16 @@ window.onload = async function() {
         });
     }
     function notifyUserOfUpdate(reg) {
-    const updateNotice = document.createElement('div');
-    updateNotice.innerHTML = '新しいバージョンが利用可能です。<button id="updateBtn">更新</button>';
-    document.body.appendChild(updateNotice);
-    
+        const updateNotice = document.createElement('div');
+        updateNotice.innerHTML = '新しいバージョンが利用可能です。<button id="updateBtn">更新</button>';
+        document.body.appendChild(updateNotice);
         document.getElementById('updateBtn').addEventListener('click', () => {
-            reg.waiting.postMessage('skipWaiting');
+            if (reg.waiting) {
+                reg.waiting.postMessage('skipWaiting');
+            } else {
+                console.warn('Service Worker is not waiting.');
+            }
         });
-
     }
 }
 
