@@ -1,5 +1,6 @@
 let btcToJpy;
 let btcToUsd;
+let dataLoaded = false;
 const satsInBtc = 1e8;
 
 window.onload = async function() {
@@ -10,9 +11,11 @@ window.onload = async function() {
         btcToUsd = data.bitcoin.usd;
         const updatedAt = new Date(data.bitcoin.last_updated_at * 1000);
         document.getElementById('last-updated').textContent = `データ取得：${updatedAt.toLocaleString()}`;
+        dataLoaded = true;
     } catch (err) {
         console.error("Failed to fetch price data from CoinGecko:", err);
         alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
+        dataLoaded = false;
         return;
     }
 
@@ -72,6 +75,11 @@ window.onload = async function() {
 }
 
 function calculateValues(inputField) {
+    if (!dataLoaded) {
+        alert('価格データがまだロードされていないため、計算を実行できません。少し待ってからページをリロードしてみてください。');
+        return;
+    }
+
     let btc, sats, jpy, usd;
     switch(inputField) {
         case 'btc':
@@ -139,20 +147,17 @@ document.getElementById('copy-to-clipboard').addEventListener('click', function(
 
     const textToCopy = `₿：${btc} BTC\n₿：${sats} sats\n¥：${jpy} 円\n$：${usd} ドル\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/`;
 
-    const textarea = document.createElement('textarea');
-    textarea.value = textToCopy;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const notification = document.getElementById('notification');
+        notification.textContent = 'クリップボードにコピーしました';
+        notification.style.left = event.clientX + 'px';
+        notification.style.top = (event.clientY + 20) + 'px';
+        notification.style.visibility = 'visible';
 
-    const notification = document.getElementById('notification');
-    notification.textContent = 'クリップボードにコピーしました';
-    notification.style.left = event.clientX + 'px';
-    notification.style.top = (event.clientY + 20) + 'px';
-    notification.style.visibility = 'visible';
-
-    setTimeout(() => {
-        notification.style.visibility = 'hidden';
-    }, 1000);
+        setTimeout(() => {
+            notification.style.visibility = 'hidden';
+        }, 1000);
+    }).catch(err => {
+        console.error('クリップボードへのコピーに失敗しました', err);
+    });
 });
