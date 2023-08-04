@@ -46,13 +46,28 @@ window.onload = async function() {
     });
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-        .then(function(registration) {
-            console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function(error) {
-            console.log('Service Worker registration failed:', error);
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        notifyUserOfUpdate(reg);
+                    }
+                });
+
+            });
         });
+    }
+    function notifyUserOfUpdate(reg) {
+    const updateNotice = document.createElement('div');
+    updateNotice.innerHTML = '新しいバージョンが利用可能です。<button id="updateBtn">更新</button>';
+    document.body.appendChild(updateNotice);
+    
+        document.getElementById('updateBtn').addEventListener('click', () => {
+            reg.waiting.postMessage('skipWaiting');
+        });
+        
     }
 }
 

@@ -1,5 +1,5 @@
 // Cache name
-const CACHE_NAME = 'sats-rate-caches-v1';
+const CACHE_NAME = 'sats-rate-caches-v2';
 // Cache targets
 const urlsToCache = [
   './',
@@ -31,4 +31,26 @@ self.addEventListener('fetch', (event) => {
         return response ? response : fetch(event.request);
       })
   );
+});
+
+self.addEventListener('activate', (event) => {
+  var cacheWhitelist = ['sats-rate-caches-v2']; // このバージョン以外は削除
+
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
