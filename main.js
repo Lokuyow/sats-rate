@@ -79,8 +79,8 @@ window.onload = async function() {
                 console.warn('Service Worker is not waiting.');
             }
         });
-    }
-    
+    }    
+}
 
 function calculateValues(inputField) {
     if (!dataLoaded) {
