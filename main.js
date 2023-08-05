@@ -50,6 +50,7 @@ window.onload = async function() {
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
+            console.log(reg);
             reg.addEventListener('updatefound', () => {
                 const newWorker = reg.installing;
 
