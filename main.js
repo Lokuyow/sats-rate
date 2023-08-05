@@ -164,3 +164,16 @@ document.getElementById('copy-to-clipboard').addEventListener('click', function(
         console.error('クリップボードへのコピーに失敗しました', err);
     });
 });
+
+document.getElementById('updateBtn').addEventListener('click', () => {
+    if (reg.waiting) {
+        reg.waiting.postMessage('skipWaiting');
+        reg.waiting.addEventListener('statechange', () => {
+            if (reg.waiting == null) {
+                window.location.reload();
+            }
+        });
+    } else {
+        console.warn('Service Worker is not waiting.');
+    }
+});
