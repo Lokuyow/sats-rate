@@ -64,7 +64,8 @@ window.onload = async function() {
     }
     function notifyUserOfUpdate(reg) {
         const updateNotice = document.createElement('div');
-        updateNotice.innerHTML = '新しいバージョンが利用可能です。<button id="updateBtn">更新</button>';
+        updateNotice.className = 'update-notice';
+        updateNotice.innerHTML = '新しいバージョンが利用可能です<button id="updateBtn">更新</button>';
         document.body.appendChild(updateNotice);
         document.getElementById('updateBtn').addEventListener('click', () => {
             if (reg.waiting) {
@@ -78,7 +79,7 @@ window.onload = async function() {
                 console.warn('Service Worker is not waiting.');
             }
         });
-    }    
+    }
 }
 
 function calculateValues(inputField) {

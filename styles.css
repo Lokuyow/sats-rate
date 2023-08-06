@@ -5,7 +5,7 @@
 body {
     background-color: rgb(242, 244, 243);
     font-family: var(--main-font);
-    color: rgb(38, 31, 56);
+    color: rgb(48, 41, 64);
 }
 
 .page {
@@ -134,3 +134,28 @@ body {
     color: #333;
   }
   
+
+.update-notice {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgb(48, 41, 64);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 0.6rem 0;
+}
+
+.update-notice #updateBtn {
+    background-color: rgb(247, 147, 26);
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.update-notice #updateBtn:hover {
+    background-color: rgb(217, 144, 54);
+}
