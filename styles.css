@@ -34,8 +34,6 @@ body {
 }
 
 .title {
-    width: 224px;
-    height: 28.484px;
     margin-left: 0.5rem;
 }
 
@@ -74,19 +72,9 @@ body {
 }
 
 .grid-container img {
-    width: 20px;
-    height: 32px;
     justify-self: center;
     margin-right: 0.8rem;
     margin-left: 1.2rem;
-}
-
-.grid-container svg {
-    fill: rgb(48, 41, 64);
-    justify-self: center;
-    margin-right: 0.8rem;
-    margin-left: 1.2rem;
-    height: 2em;
 }
 
 .grid-container input {
