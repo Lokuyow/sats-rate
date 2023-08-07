@@ -27,7 +27,7 @@ body {
     justify-content: center;
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
-    margin: 1rem 0 0.6rem 0;
+    margin: 0 0 0.6rem 0;
     padding: 1.2rem 0rem;
     width: 100%;
     max-width: 40rem;
@@ -115,6 +115,7 @@ body {
 }
 
 .sns-subject {
+    font-weight: 600;
     text-align: center;
     margin: -0.2rem 0 0.4rem 0;
 }
