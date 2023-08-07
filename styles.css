@@ -126,13 +126,6 @@ body {
     align-items: center;
 }
 
-.sns img {
-    height: 2.4rem;
-    width: 2.4rem;
-}
-
-
-
 .flex-descriptions {
     display: flex;
     flex-direction: column;
