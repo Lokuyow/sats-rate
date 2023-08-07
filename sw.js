@@ -1,5 +1,5 @@
 // Cache name
-const CACHE_NAME = 'sats-rate-caches-v1.14';
+const CACHE_NAME = 'sats-rate-caches-v1.15';
 // Cache targets
 const urlsToCache = [
   './index.html',
@@ -9,6 +9,9 @@ const urlsToCache = [
   './images/icon_x512.png',
   './images/maskable_icon_x192.png',
   './images/maskable_icon_x512.png',
+  './images/bitcoin-sign-solid.svg',
+  './images/yen-sign-solid.svg',
+  './images/dollar-sign-solid.svg',
   './favicons/favicon.ico'
 ];
 

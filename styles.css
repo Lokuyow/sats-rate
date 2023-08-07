@@ -1,6 +1,6 @@
 :root {
-    --main-font: -apple-system,BlinkMacSystemFont,Helvetica Neue,Segoe UI,Hiragino Kaku Gothic ProN,Hiragino Sans,ヒラギノ角ゴ ProN W3,Arial,メイリオ,Meiryo,sans-serif;
-}  
+    --main-font: -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, メイリオ, Meiryo, sans-serif;
+}
 
 body {
     background-color: rgb(242, 244, 243);
@@ -21,7 +21,7 @@ body {
     align-items: center;
 }
 
-.title-color {
+.title-bgcolor {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,18 +32,21 @@ body {
     width: 100%;
     max-width: 40rem;
 }
-.title-color svg {
-    margin-left: 0.4rem;
+
+.title {
+    width: 14rem;
+    margin-left: 0.5rem;
 }
+
 .icon {
     width: 60px;
     height: 60px;
-    margin-left: 0.6rem;
+    margin-left: 0.8rem;
     margin-bottom: 0.3rem;
 }
 
 
-.main-color {
+.main-bgcolor {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
     width: 100%;
@@ -54,7 +57,7 @@ body {
 
 .date {
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: 0.5rem;
 }
 
@@ -69,7 +72,15 @@ body {
     margin: 0 auto;
 }
 
+.grid-container img {
+    width: 20px;
+    justify-self: center;
+    margin-right: 0.8rem;
+    margin-left: 1.2rem;
+}
+
 .grid-container svg {
+    fill: rgb(48, 41, 64);
     justify-self: center;
     margin-right: 0.8rem;
     margin-left: 1.2rem;
@@ -92,6 +103,33 @@ body {
 }
 
 
+.share-bgcolor {
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0.3rem 0;
+    padding: 1rem 0;
+}
+
+.sns-subject {
+    text-align: center;
+    margin: -0.2rem 0 0.4rem 0;
+}
+
+.sns {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.sns img {
+    height: 2.4rem;
+    width: 2.4rem;
+}
+
+
+
 .flex-descriptions {
     display: flex;
     flex-direction: column;
@@ -99,11 +137,11 @@ body {
     max-width: 40rem;
 }
 
-.description-color,
-.satoshi-color {
+.description-bgcolor,
+.satoshi-bgcolor {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
-    margin: 0.3rem 0rem;
+    margin: 0.3rem 0;
     padding: 1.2rem 0rem;
 }
 
@@ -123,6 +161,14 @@ body {
     margin: 1rem 0.5rem 0 0;
 }
 
+#copy-to-clipboard {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+}
+
 #notification {
     position: absolute;
     visibility: hidden;
@@ -132,8 +178,10 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     font-size: 14px;
     color: #333;
-  }
-  
+    transform: translateX(-100%);
+    white-space: nowrap;
+}
+
 
 .update-notice {
     position: fixed;
