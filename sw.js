@@ -1,5 +1,5 @@
 // Cache name
-const CACHE_NAME = 'sats-rate-caches-v1.16';
+const CACHE_NAME = 'sats-rate-caches-v1.17';
 // Cache targets
 const urlsToCache = [
   './index.html',
