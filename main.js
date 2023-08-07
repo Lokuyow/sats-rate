@@ -166,6 +166,6 @@ document.getElementById('copy-to-clipboard').addEventListener('click', function(
             notification.style.visibility = 'hidden';
         }, 1000);
     }).catch(err => {
-        console.error('コピーに失敗しました', err);
+        console.error('クリップボードへのコピーに失敗しました', err);
     });
 });
