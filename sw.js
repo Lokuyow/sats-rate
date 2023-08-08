@@ -15,7 +15,7 @@ const urlsToCache = [
   './images/dollar-sign-solid.svg',
   './images/square-x-twitter.svg',
   './images/cloud-solid.svg',
-  './images/ostrich.svg',
+  './images/nostr-icon-purple-on-white.svg',
   './images/copy-solid.svg',
   './favicons/favicon.ico'
 ];
