@@ -1,5 +1,6 @@
 let btcToJpy;
 let btcToUsd;
+let lastUpdatedField;
 const satsInBtc = 1e8;
 
 window.onload = async function () {
@@ -98,6 +99,7 @@ window.onload = async function () {
     }
 }
 
+// 計算
 function calculateValues(inputField) {
     let btc, sats, jpy, usd;
     switch (inputField) {
@@ -132,7 +134,8 @@ function calculateValues(inputField) {
     document.getElementById('jpy').value = addCommas(jpy);
     document.getElementById('usd').value = addCommas(usd);
 
-    updateShareButton(btc, sats, jpy, usd);
+    lastUpdatedField = inputField;
+    updateShareButton(btc, sats, jpy, usd, inputField);
 }
 
 // カンマ追加
@@ -151,21 +154,62 @@ function addCommasToInput(inputElement) {
     inputElement.selectionEnd = caretPos;
 }
 
-function updateShareButton(btc, sats, jpy, usd) {
+// 共有ボタン
+function updateShareButton(btc, sats, jpy, usd, lastInputField) {
     const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n¥：${addCommas(jpy)} 円\n$：${addCommas(usd)} ドル\nPowered by CoinGecko,`;
-    const shareUrl = "https://lokuyow.github.io/sats-rate/";
+
+    let queryParams;
+    switch (lastInputField) {
+        case 'btc':
+            queryParams = `?btc=${btc}`;
+            break;
+        case 'sats':
+            queryParams = `?sats=${sats}`;
+            break;
+        case 'jpy':
+            queryParams = `?jpy=${jpy}`;
+            break;
+        case 'usd':
+            queryParams = `?usd=${usd}`;
+            break;
+        default:
+            queryParams = '';
+    }
+    const shareUrl = "https://lokuyow.github.io/sats-rate/" + queryParams;
+
     document.getElementById('share-twitter').href = "https://twitter.com/share?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText);
     document.getElementById('share-nostter').href = "https://nostter.vercel.app/post?content=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl);
     document.getElementById('share-mass-driver').href = "https://mdrv.shino3.net/?intent=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl);
 }
 
+// クリップボードにコピー
 document.getElementById('copy-to-clipboard').addEventListener('click', function (event) {
     const btc = addCommas(document.getElementById('btc').value);
     const sats = addCommas(document.getElementById('sats').value);
     const jpy = addCommas(document.getElementById('jpy').value);
     const usd = addCommas(document.getElementById('usd').value);
 
-    const textToCopy = `₿：${btc} BTC\n₿：${sats} sats\n¥：${jpy} 円\n$：${usd} ドル\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/`;
+    let queryParams;
+    switch (lastUpdatedField) {
+        case 'btc':
+            queryParams = `?btc=${btc.replace(/,/g, '')}`;
+            break;
+        case 'sats':
+            queryParams = `?sats=${sats.replace(/,/g, '')}`;
+            break;
+        case 'jpy':
+            queryParams = `?jpy=${jpy.replace(/,/g, '')}`;
+            break;
+        case 'usd':
+            queryParams = `?usd=${usd.replace(/,/g, '')}`;
+            break;
+        default:
+            queryParams = '';
+    }
+
+    const shareUrl = "https://lokuyow.github.io/sats-rate/" + queryParams;
+
+    const textToCopy = `₿：${btc} BTC\n₿：${sats} sats\n¥：${jpy} 円\n$：${usd} ドル\nPowered by CoinGecko, ${shareUrl}`;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
         const notification = document.getElementById('notification');
