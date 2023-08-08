@@ -1,6 +1,5 @@
 let btcToJpy;
 let btcToUsd;
-//let dataLoaded = false;
 const satsInBtc = 1e8;
 
 window.onload = async function () {
@@ -11,11 +10,9 @@ window.onload = async function () {
         btcToUsd = data.bitcoin.usd;
         const updatedAt = new Date(data.bitcoin.last_updated_at * 1000);
         document.getElementById('last-updated').textContent = `データ取得：${updatedAt.toLocaleString()}`;
-        //dataLoaded = true;
     } catch (err) {
         console.error("Failed to fetch price data from CoinGecko:", err);
         alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
-        //dataLoaded = false;
         return;
     }
 
@@ -83,10 +80,6 @@ window.onload = async function () {
 }
 
 function calculateValues(inputField) {
-    // if (!dataLoaded) {
-    //     alert('価格データがまだロードされていないため、計算を実行できません。少し待ってからページをリロードしてみてください。');
-    //     return;
-    // }
     let btc, sats, jpy, usd;
     switch (inputField) {
         case 'btc':
