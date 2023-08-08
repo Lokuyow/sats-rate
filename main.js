@@ -3,7 +3,7 @@ let btcToUsd;
 //let dataLoaded = false;
 const satsInBtc = 1e8;
 
-window.onload = async function() {
+window.onload = async function () {
     try {
         const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd&include_last_updated_at=true");
         const data = await response.json();
@@ -22,29 +22,29 @@ window.onload = async function() {
     document.getElementById('sats').value = 100;
     calculateValues('sats');
 
-    document.getElementById('btc').addEventListener('focus', function() {
+    document.getElementById('btc').addEventListener('focus', function () {
         this.select();
     });
-    document.getElementById('sats').addEventListener('focus', function() {
+    document.getElementById('sats').addEventListener('focus', function () {
         this.select();
     });
-    document.getElementById('jpy').addEventListener('focus', function() {
+    document.getElementById('jpy').addEventListener('focus', function () {
         this.select();
     });
-    document.getElementById('usd').addEventListener('focus', function() {
+    document.getElementById('usd').addEventListener('focus', function () {
         this.select();
     });
 
-    document.getElementById('btc').addEventListener('keyup', function() {
+    document.getElementById('btc').addEventListener('keyup', function () {
         addCommasToInput(this);
     });
-    document.getElementById('sats').addEventListener('keyup', function() {
+    document.getElementById('sats').addEventListener('keyup', function () {
         addCommasToInput(this);
     });
-    document.getElementById('jpy').addEventListener('keyup', function() {
+    document.getElementById('jpy').addEventListener('keyup', function () {
         addCommasToInput(this);
     });
-    document.getElementById('usd').addEventListener('keyup', function() {
+    document.getElementById('usd').addEventListener('keyup', function () {
         addCommasToInput(this);
     });
 
@@ -88,7 +88,7 @@ function calculateValues(inputField) {
     //     return;
     // }
     let btc, sats, jpy, usd;
-    switch(inputField) {
+    switch (inputField) {
         case 'btc':
             btc = document.getElementById('btc').value.replace(/,/g, '');
             sats = (btc * satsInBtc).toLocaleString();
@@ -146,7 +146,7 @@ function updateShareButton(btc, sats, jpy, usd) {
     document.getElementById('share-mass-driver').href = "https://mdrv.shino3.net/?intent=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl);
 }
 
-document.getElementById('copy-to-clipboard').addEventListener('click', function(event) {
+document.getElementById('copy-to-clipboard').addEventListener('click', function (event) {
     const btc = addCommas(document.getElementById('btc').value);
     const sats = addCommas(document.getElementById('sats').value);
     const jpy = addCommas(document.getElementById('jpy').value);

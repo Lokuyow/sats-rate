@@ -1,36 +1,35 @@
 {
-    "name": "おいくらサッツ",
-    "short_name": "おいくらサッツ",
-    "description": "ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）間の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#B3475F",
-    "icons": [
-      {
-        "src": "./images/icon_x192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any"
-      },
-      {
-        "src": "./images/icon_x512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any"
-      },
-      {
-        "src": "./images/maskable_icon_x192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "maskable"
-      },
-      {
-        "src": "./images/maskable_icon_x512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "maskable"
-      }
-    ]
-  }
-  
+  "name": "おいくらサッツ",
+  "short_name": "おいくらサッツ",
+  "description": "ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）間の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#B3475F",
+  "icons": [
+    {
+      "src": "./images/icon_x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/maskable_icon_x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./images/maskable_icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
