@@ -77,6 +77,25 @@ window.onload = async function () {
             }
         });
     }
+
+    // URLクエリパラメータ
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('btc')) {
+        document.getElementById('btc').value = addCommas(urlParams.get('btc'));
+        calculateValues('btc');
+    }
+    if (urlParams.has('sats')) {
+        document.getElementById('sats').value = addCommas(urlParams.get('sats'));
+        calculateValues('sats');
+    }
+    if (urlParams.has('jpy')) {
+        document.getElementById('jpy').value = addCommas(urlParams.get('jpy'));
+        calculateValues('jpy');
+    }
+    if (urlParams.has('usd')) {
+        document.getElementById('usd').value = addCommas(urlParams.get('usd'));
+        calculateValues('usd');
+    }
 }
 
 function calculateValues(inputField) {
@@ -109,20 +128,21 @@ function calculateValues(inputField) {
     }
 
     document.getElementById('btc').value = addCommas(btc);
-    document.getElementById('sats').value = sats;
-    document.getElementById('jpy').value = jpy;
-    document.getElementById('usd').value = usd;
+    document.getElementById('sats').value = addCommas(sats);
+    document.getElementById('jpy').value = addCommas(jpy);
+    document.getElementById('usd').value = addCommas(usd);
 
     updateShareButton(btc, sats, jpy, usd);
 }
 
+// カンマ追加
 function addCommas(num) {
     let s = num.toString().replace(/[^0-9.]/g, '');
     let b = s.toString().split('.');
     b[0] = b[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
     return b.join('.');
 }
-
+// カンマ追加時のカーソル位置調整
 function addCommasToInput(inputElement) {
     let caretPos = inputElement.selectionStart - inputElement.value.length;
     inputElement.value = addCommas(inputElement.value.replace(/,/g, ''));
