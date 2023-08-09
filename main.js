@@ -269,9 +269,6 @@ function shareViaWebAPI(shareText, queryParams) {
             title: 'おいくらサッツ',
             text: shareText,
             url: `https://lokuyow.github.io/sats-rate/${queryParams}`
-        })
-        .catch((error) => {
-            alert('共有に失敗しました。再度お試し下さい。');
         });
     } else {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
