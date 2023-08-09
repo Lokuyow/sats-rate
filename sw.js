@@ -1,10 +1,11 @@
 // Cache name
-const CACHE_NAME = 'sats-rate-caches-v1.20';
+const CACHE_NAME = 'sats-rate-caches-v1.21';
 // Cache targets
 const urlsToCache = [
   './index.html',
   './styles.css',
   './main.js',
+  './favicons/favicon.ico',
   './images/icon_x192.png',
   './images/icon_x512.png',
   './images/maskable_icon_x192.png',
@@ -14,10 +15,10 @@ const urlsToCache = [
   './images/yen-sign-solid.svg',
   './images/dollar-sign-solid.svg',
   './images/square-x-twitter.svg',
-  './images/cloud-solid.svg',
   './images/nostr-icon-purple-on-white.svg',
-  './images/copy-solid.svg',
-  './favicons/favicon.ico'
+  './images/cloud-solid.svg',
+  './images/share-nodes-solid.svg',
+  './images/clipboard-solid.svg'
 ];
 
 self.addEventListener('install', (event) => {
