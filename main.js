@@ -66,7 +66,8 @@ function setupEventListeners() {
     document.getElementById('share-via-webapi').addEventListener('click', function () {
         const values = getValuesFromElements();
         const shareText = generateCopyText(values);
-        shareViaWebAPI(shareText);
+        const queryParams = getQueryStringFromValues(values);
+        shareViaWebAPI(shareText, queryParams);
     });
 }
 
@@ -261,16 +262,18 @@ function getInputValue(id) {
 }
 
 // Web Share API
-function shareViaWebAPI(shareText) {
+function shareViaWebAPI(shareText, queryParams) {
+    shareText = shareText.replace(/https:\/\/lokuyow\.github\.io\/sats-rate\/.*$/, '');
     if (navigator.share) {
         navigator.share({
             title: 'おいくらサッツ',
             text: shareText,
-            url: 'https://lokuyow.github.io/sats-rate/'
+            url: `https://lokuyow.github.io/sats-rate/${queryParams}`
         })
-        .then(() => console.log('成功した共有'))
-        .catch((error) => console.log('共有エラー', error));
+        .catch((error) => {
+            alert('共有に失敗しました。再度お試し下さい。');
+        });
     } else {
-        console.log('Web Share APIはサポートされていません。');
+        alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
     }
 }
