@@ -118,6 +118,27 @@ body {
     margin-bottom: -0.5rem;
 }
 
+.sns button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+}
+
+#notification {
+    position: absolute;
+    visibility: hidden;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    color: #333;
+    transform: translateX(-100%);
+    white-space: nowrap;
+}
+
 .flex-descriptions {
     display: flex;
     flex-direction: column;
@@ -147,27 +168,6 @@ body {
     text-align: right;
     font-size: 0.85rem;
     margin: 1rem 0.5rem 0 0;
-}
-
-#copy-to-clipboard {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    outline: none;
-}
-
-#notification {
-    position: absolute;
-    visibility: hidden;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    font-size: 14px;
-    color: #333;
-    transform: translateX(-100%);
-    white-space: nowrap;
 }
 
 
