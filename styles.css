@@ -87,6 +87,7 @@ body {
 
 .grid-container label {
     font-size: 1.2rem;
+    font-weight: 600;
     text-align: left;
     margin-right: 0.5rem;
     margin-left: 0.3rem;
