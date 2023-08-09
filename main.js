@@ -62,6 +62,12 @@ function setupEventListeners() {
         const textToCopy = generateCopyText(values);
         copyToClipboard(textToCopy, event);
     });
+
+    document.getElementById('share-via-webapi').addEventListener('click', function () {
+        const values = getValuesFromElements();
+        const shareText = generateCopyText(values);
+        shareViaWebAPI(shareText);
+    });
 }
 
 function selectInputText(event) {
@@ -252,4 +258,19 @@ function getElementById(id) {
 
 function getInputValue(id) {
     return getElementById(id).value.replace(/,/g, '');
+}
+
+// Web Share API
+function shareViaWebAPI(shareText) {
+    if (navigator.share) {
+        navigator.share({
+            title: 'おいくらサッツ',
+            text: shareText,
+            url: 'https://lokuyow.github.io/sats-rate/'
+        })
+        .then(() => console.log('成功した共有'))
+        .catch((error) => console.log('共有エラー', error));
+    } else {
+        console.log('Web Share APIはサポートされていません。');
+    }
 }
