@@ -81,7 +81,12 @@
             </div>
 
             <div class="main-bgcolor">
-                <div class="date" id="last-updated"></div>
+                <div class="price-update-container">
+                    <div class="date" id="last-updated"></div>
+                    <button id="update-prices">
+                        <img src="./images/rotate-solid.svg" alt="価格更新">
+                    </button>
+                </div>
                 <div class="grid-container">
                     <img src="images/bitcoin-sign-solid.svg" alt="ビットコイン">
                     <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"

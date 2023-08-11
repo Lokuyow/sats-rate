@@ -20,6 +20,7 @@ async function fetchDataFromCoinGecko() {
     updateCurrencyRates(data);
     updateLastUpdated(data.bitcoin.last_updated_at);
     setDefaultValues();
+    recalculateValues();
 }
 
 async function getCoinGeckoData() {
@@ -69,6 +70,8 @@ function setupEventListeners() {
         const queryParams = getQueryStringFromValues(values);
         shareViaWebAPI(shareText, queryParams);
     });
+
+    document.getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
 
 function selectInputText(event) {
@@ -292,3 +295,19 @@ function shareViaWebAPI(shareText, queryParams) {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
     }
 }
+
+function recalculateValues() {
+    if (lastUpdatedField) {
+        calculateValues(lastUpdatedField);
+    }
+}
+
+// 更新ボタンの回転
+document.getElementById('update-prices').addEventListener('click', function() {
+    let img = this.querySelector('img');
+    img.classList.add('rotated');
+
+    img.addEventListener('animationend', function() {
+        img.classList.remove('rotated');
+    }, { once: true });
+});

@@ -54,10 +54,43 @@ body {
     padding: 1.4rem 0rem 2rem 0rem;
 }
 
+.price-update-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.8rem;
+}
+
 .date {
-    text-align: center;
     font-size: 1rem;
-    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+    padding-bottom: 0.1rem;
+}
+
+#update-prices {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    align-items: center;
+}
+
+#update-prices:active {
+    transform: scale(0.9);
+}
+
+@keyframes rotateAnimation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotated {
+    animation: rotateAnimation 0.8s forwards;
 }
 
 .grid-container {
