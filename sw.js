@@ -42,7 +42,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  var cacheWhitelist = [CACHE_NAME]; // このバージョン以外は削除
+  var cacheWhitelist = [CACHE_NAME];
 
   event.waitUntil(
     caches.keys().then((cacheNames) => {
