@@ -43,8 +43,56 @@ function updateCurrencyRates(data) {
 
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
-    document.getElementById('last-updated').textContent = `${updatedAt.toLocaleString()}`;
+    const formatter = new Intl.DateTimeFormat('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    document.getElementById('last-updated').textContent = formatter.format(updatedAt);
+    updateButtonAppearance();
 }
+
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+        updateButtonAppearance();
+    }
+});
+
+// 更新ボタンの見た目
+function updateButtonAppearance() {
+    const timestampElem = document.getElementById('last-updated');
+    const updatedAtTimestamp = new Date(timestampElem.textContent).getTime();
+    const now = Date.now();
+    const diffMinutes = (now - updatedAtTimestamp) / (1000 * 60);
+
+    const updateButton = document.getElementById('update-prices');
+
+    if (diffMinutes >= 10) {
+        updateButton.classList.add('outdated');
+        updateButton.classList.remove('recent');
+    } else {
+        updateButton.classList.remove('outdated');
+        updateButton.classList.add('recent');
+    }
+
+    updateButton.style.visibility = 'visible';
+}
+
+// 更新ボタンの回転
+document.getElementById('update-prices').addEventListener('click', function() {
+    if (this.classList.contains('recent')) {
+        return;
+    }
+
+    let svg = this.querySelector('svg');
+    svg.classList.add('rotated');
+
+    svg.addEventListener('animationend', function() {
+        svg.classList.remove('rotated');
+    }, { once: true });
+});
 
 function handleError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
@@ -301,13 +349,3 @@ function recalculateValues() {
         calculateValues(lastUpdatedField);
     }
 }
-
-// 更新ボタンの回転
-document.getElementById('update-prices').addEventListener('click', function() {
-    let img = this.querySelector('img');
-    img.classList.add('rotated');
-
-    img.addEventListener('animationend', function() {
-        img.classList.remove('rotated');
-    }, { once: true });
-});

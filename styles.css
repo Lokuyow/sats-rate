@@ -56,7 +56,7 @@ body {
 
 .price-update-container {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     margin-bottom: 0.6rem;
 }
@@ -69,6 +69,12 @@ body {
 }
 
 #update-prices {
+    visibility: hidden;
+}
+
+.outdated,
+.recent {
+    cursor: pointer;
     font-size: 0;
     background: none;
     border: none;
@@ -77,6 +83,15 @@ body {
     outline: none;
     margin-left: 0.6rem;
     height: 24px;
+}
+
+.outdated {
+    background: none;
+    fill: rgb(48, 41, 64);
+}
+
+.recent {
+    fill: rgba(48, 41, 64, 0.2);
 }
 
 #update-prices:active {
