@@ -97,8 +97,26 @@ function handleServiceWorker() {
 function notifyUserOfUpdate(reg) {
     const updateNotice = document.createElement('div');
     updateNotice.className = 'update-notice';
-    updateNotice.innerHTML = '新しいバージョンが利用可能です<button id="updateBtn">更新</button>';
+
+    const updateBox = document.createElement('div');
+    updateBox.className = 'update-notice-box';
+    updateNotice.appendChild(updateBox);
+
+    const title = document.createElement('h3');
+    title.innerHTML = 'アップデート通知';
+    updateBox.appendChild(title);
+
+    const text = document.createElement('p');
+    text.innerHTML = '新しいバージョンが利用可能です。';
+    updateBox.appendChild(text);
+
+    const updateButton = document.createElement('button');
+    updateButton.id = 'updateBtn';
+    updateButton.innerHTML = '更新';
+    updateBox.appendChild(updateButton);
+
     document.body.appendChild(updateNotice);
+
     document.getElementById('updateBtn').addEventListener('click', () => {
         if (reg.waiting) {
             reg.waiting.postMessage('skipWaiting');
