@@ -56,15 +56,16 @@ body {
 
 .price-update-container {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
 }
 
 .date {
     font-size: 1rem;
     margin-right: 0.5rem;
-    padding-bottom: 0.1rem;
+    height: 22px;
+    line-height: 22px;
 }
 
 #update-prices {
