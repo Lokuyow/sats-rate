@@ -56,25 +56,27 @@ body {
 
 .price-update-container {
     display: flex;
-    align-items: stretch;
+    align-items: flex-end;
     justify-content: center;
     margin-bottom: 0.6rem;
 }
 
 .date {
-    font-size: 1rem;
-    margin-right: 0.5rem;
-    height: 22px;
-    line-height: 22px;
+    font-size: 1.2rem;
+    margin-left: 2rem;
+    height:26px;
+    line-height:26px;
 }
 
 #update-prices {
+    font-size: 0;
     background: none;
     border: none;
     padding: 0;
     margin: 0;
     outline: none;
-    align-items: center;
+    margin-left: 0.6rem;
+    height: 24px;
 }
 
 #update-prices:active {

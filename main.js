@@ -43,7 +43,7 @@ function updateCurrencyRates(data) {
 
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
-    document.getElementById('last-updated').textContent = `データ取得：${updatedAt.toLocaleString()}`;
+    document.getElementById('last-updated').textContent = `${updatedAt.toLocaleString()}`;
 }
 
 function handleError(err) {
