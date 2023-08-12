@@ -63,7 +63,7 @@ body {
 
 .date {
     font-size: 1.2rem;
-    margin-left: 2rem;
+    margin-left: 2.5rem;
     height:26px;
     line-height:26px;
 }
@@ -168,6 +168,7 @@ body {
 
 .sns img {
     margin-bottom: -0.5rem;
+    cursor: pointer;
 }
 
 .sns button {
