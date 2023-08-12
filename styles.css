@@ -63,22 +63,20 @@ body {
 .date {
     font-size: 1.2rem;
     margin-left: 2.5rem;
+    height: 26px;
+    line-height: 26px;
 }
 
 #update-prices {
     visibility: hidden;
-}
-
-.outdated,
-.recent {
     cursor: pointer;
-    font-size: 0;
     background: none;
     border: none;
     padding: 0;
     margin: 0;
     outline: none;
     margin-left: 0.6rem;
+    font-size: 0;
 }
 
 .outdated {
@@ -88,6 +86,11 @@ body {
 
 .recent {
     fill: rgba(48, 41, 64, 0.2);
+}
+
+#update-prices svg {
+    height: 26px;
+    line-height: 26px;
 }
 
 #update-prices:active {
