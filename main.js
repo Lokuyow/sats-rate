@@ -1,5 +1,12 @@
 const satsInBtc = 1e8;
 const inputFields = ['btc', 'sats', 'jpy', 'usd'];
+const formatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+};
 let btcToJpy, btcToUsd, lastUpdatedField;
 
 document.addEventListener('DOMContentLoaded', initializeApp);
@@ -10,6 +17,8 @@ async function initializeApp() {
         setupEventListeners();
         handleServiceWorker();
         loadValuesFromQueryParams();
+        initializeUpdateButtonRotation();
+        document.addEventListener('visibilitychange', updateButtonAppearanceOnVisibilityChange);
     } catch (err) {
         handleError(err);
     }
@@ -28,6 +37,23 @@ async function getCoinGeckoData() {
     return response.json();
 }
 
+function setupEventListeners() {
+    inputFields.forEach(id => {
+        const element = document.getElementById(id);
+        element.addEventListener('focus', selectInputText);
+        element.addEventListener('keyup', formatInputWithCommas);
+    });
+
+    getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
+    getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
+    getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
+}
+
+function handleError(err) {
+    console.error("Failed to fetch price data from CoinGecko:", err);
+    alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
+}
+
 function setDefaultValues() {
     const satsField = document.getElementById('sats');
     if (!satsField.value) {
@@ -43,22 +69,16 @@ function updateCurrencyRates(data) {
 
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
-    const formatter = new Intl.DateTimeFormat('ja-JP', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    document.getElementById('last-updated').textContent = formatter.format(updatedAt);
+    const formatter = new Intl.DateTimeFormat('ja-JP', formatOptions);
+    getElementById('last-updated').textContent = formatter.format(updatedAt);
     updateButtonAppearance();
 }
 
-document.addEventListener('visibilitychange', function() {
+function updateButtonAppearanceOnVisibilityChange() {
     if (document.visibilityState === 'visible') {
         updateButtonAppearance();
     }
-});
+}
 
 // 更新ボタンの見た目
 function updateButtonAppearance() {
@@ -81,45 +101,16 @@ function updateButtonAppearance() {
 }
 
 // 更新ボタンの回転
-document.getElementById('update-prices').addEventListener('click', function() {
-    if (this.classList.contains('recent')) {
-        return;
-    }
-
-    let svg = this.querySelector('svg');
-    svg.classList.add('rotated');
-
-    svg.addEventListener('animationend', function() {
-        svg.classList.remove('rotated');
-    }, { once: true });
-});
-
-function handleError(err) {
-    console.error("Failed to fetch price data from CoinGecko:", err);
-    alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
-}
-
-function setupEventListeners() {
-    inputFields.forEach(id => {
-        const element = document.getElementById(id);
-        element.addEventListener('focus', selectInputText);
-        element.addEventListener('keyup', formatInputWithCommas);
+function initializeUpdateButtonRotation() {
+    const updateButton = getElementById('update-prices');
+    updateButton.addEventListener('click', function() {
+        if (this.classList.contains('recent')) return;
+        let svg = this.querySelector('svg');
+        svg.classList.add('rotated');
+        svg.addEventListener('animationend', function() {
+            svg.classList.remove('rotated');
+        }, { once: true });
     });
-
-    document.getElementById('copy-to-clipboard').addEventListener('click', function (event) {
-        const values = getValuesFromElements();
-        const textToCopy = generateCopyText(values);
-        copyToClipboard(textToCopy, event);
-    });
-
-    document.getElementById('share-via-webapi').addEventListener('click', function () {
-        const values = getValuesFromElements();
-        const shareText = generateCopyText(values);
-        const queryParams = getQueryStringFromValues(values);
-        shareViaWebAPI(shareText, queryParams);
-    });
-
-    document.getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
 
 function selectInputText(event) {
@@ -292,18 +283,30 @@ function updateShareButton(btc, sats, jpy, usd) {
 }
 
 // クリップボードにコピー
+function copyToClipboardEvent(event) {
+    const values = getValuesFromElements();
+    const textToCopy = generateCopyText(values);
+    copyToClipboard(textToCopy, event);
+}
+
 function getValuesFromElements() {
-    return {
-        btc: addCommas(document.getElementById('btc').value),
-        sats: addCommas(document.getElementById('sats').value),
-        jpy: addCommas(document.getElementById('jpy').value),
-        usd: addCommas(document.getElementById('usd').value)
-    };
+    const values = {};
+    inputFields.forEach(field => {
+        values[field] = addCommas(document.getElementById(field).value);
+    });
+    return values;
 }
 
 function generateCopyText(values) {
-    const queryParams = getQueryStringFromValues(values);
-    return `₿：${values.btc} BTC\n₿：${values.sats} sats\n¥：${values.jpy} 円\n$：${values.usd} ドル\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/${queryParams}`;
+    const baseTexts = {
+        btc: "₿：{value} BTC",
+        sats: "₿：{value} sats",
+        jpy: "¥：{value} 円",
+        usd: "$：{value} ドル",
+    };
+
+    const generatedTexts = inputFields.map(field => baseTexts[field].replace('{value}', values[field])).join('\n');
+    return `${generatedTexts}\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/${getQueryStringFromValues(values)}`;
 }
 
 function copyToClipboard(text, event) {
@@ -331,6 +334,12 @@ function getInputValue(id) {
 }
 
 // Web Share API
+function shareViaWebAPIEvent() {
+    const values = getValuesFromElements();
+    const shareText = generateCopyText(values);
+    const queryParams = getQueryStringFromValues(values);
+    shareViaWebAPI(shareText, queryParams);
+}
 function shareViaWebAPI(shareText, queryParams) {
     shareText = shareText.replace(/https:\/\/lokuyow\.github\.io\/sats-rate\/.*$/, '');
     if (navigator.share) {
