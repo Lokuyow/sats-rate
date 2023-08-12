@@ -194,26 +194,33 @@ function calculateValues(inputField) {
         usd: getInputValue('usd')
     };
 
+    const formatOptions = {
+        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
+        sats: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
+        jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
+    };
+
     switch (inputField) {
         case 'btc':
-            values.sats = (values.btc * satsInBtc).toLocaleString();
-            values.jpy = (values.btc * btcToJpy).toLocaleString();
-            values.usd = (values.btc * btcToUsd).toLocaleString();
+            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
+            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
+            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
             break;
         case 'sats':
             values.btc = (values.sats / satsInBtc).toFixed(8);
-            values.jpy = (values.btc * btcToJpy).toLocaleString();
-            values.usd = (values.btc * btcToUsd).toLocaleString();
+            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
+            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
             break;
         case 'jpy':
             values.btc = (values.jpy / btcToJpy).toFixed(8);
-            values.sats = (values.btc * satsInBtc).toLocaleString();
-            values.usd = (values.btc * btcToUsd).toLocaleString();
+            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
+            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
             break;
         case 'usd':
             values.btc = (values.usd / btcToUsd).toFixed(8);
-            values.sats = (values.btc * satsInBtc).toLocaleString();
-            values.jpy = (values.btc * btcToJpy).toLocaleString();
+            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
+            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
             break;
         default:
             console.error("Unknown inputField:", inputField);
@@ -221,7 +228,7 @@ function calculateValues(inputField) {
     }
 
     inputFields.forEach(id => {
-        getElementById(id).value = addCommas(values[id]);
+        getElementById(id).value = values[id];
     });
 
     lastUpdatedField = inputField;
