@@ -228,7 +228,7 @@ function calculateValues(inputField) {
     }
 
     inputFields.forEach(id => {
-        getElementById(id).value = values[id];
+        getElementById(id).value = addCommas(values[id]);
     });
 
     lastUpdatedField = inputField;
