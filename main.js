@@ -39,7 +39,7 @@ async function getCoinGeckoData() {
 
 function setupEventListeners() {
     inputFields.forEach(id => {
-        const element = document.getElementById(id);
+        const element = getElementById(id);
         element.addEventListener('focus', selectInputText);
         element.addEventListener('keyup', formatInputWithCommas);
     });
@@ -55,7 +55,7 @@ function handleError(err) {
 }
 
 function setDefaultValues() {
-    const satsField = document.getElementById('sats');
+    const satsField = getElementById('sats');
     if (!satsField.value) {
         satsField.value = addCommas("100");
         calculateValues('sats');
@@ -65,6 +65,22 @@ function setDefaultValues() {
 function updateCurrencyRates(data) {
     btcToJpy = data.bitcoin.jpy;
     btcToUsd = data.bitcoin.usd;
+}
+
+function selectInputText(event) {
+    event.target.select();
+}
+
+function formatInputWithCommas(event) {
+    addCommasToInput(event.target);
+}
+
+function getElementById(id) {
+    return document.getElementById(id);
+}
+
+function getInputValue(id) {
+    return getElementById(id).value.replace(/,/g, '');
 }
 
 function updateLastUpdated(timestamp) {
@@ -78,111 +94,6 @@ function updateButtonAppearanceOnVisibilityChange() {
     if (document.visibilityState === 'visible') {
         updateButtonAppearance();
     }
-}
-
-// 更新ボタンの見た目
-function updateButtonAppearance() {
-    const timestampElem = document.getElementById('last-updated');
-    const updatedAtTimestamp = new Date(timestampElem.textContent).getTime();
-    const now = Date.now();
-    const diffMinutes = (now - updatedAtTimestamp) / (1000 * 60);
-
-    const updateButton = document.getElementById('update-prices');
-
-    if (diffMinutes >= 10) {
-        updateButton.classList.add('outdated');
-        updateButton.classList.remove('recent');
-    } else {
-        updateButton.classList.remove('outdated');
-        updateButton.classList.add('recent');
-    }
-
-    updateButton.style.visibility = 'visible';
-}
-
-// 更新ボタンの回転
-function initializeUpdateButtonRotation() {
-    const updateButton = getElementById('update-prices');
-    updateButton.addEventListener('click', function() {
-        if (this.classList.contains('recent')) return;
-        let svg = this.querySelector('svg');
-        svg.classList.add('rotated');
-        svg.addEventListener('animationend', function() {
-            svg.classList.remove('rotated');
-        }, { once: true });
-    });
-}
-
-function selectInputText(event) {
-    event.target.select();
-}
-
-function formatInputWithCommas(event) {
-    addCommasToInput(event.target);
-}
-
-function handleServiceWorker() {
-    if (!('serviceWorker' in navigator)) return;
-
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-        reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    notifyUserOfUpdate(reg);
-                }
-            });
-        });
-    });
-}
-
-function notifyUserOfUpdate(reg) {
-    const updateNotice = document.createElement('div');
-    updateNotice.className = 'update-notice';
-
-    const updateBox = document.createElement('div');
-    updateBox.className = 'update-notice-box';
-    updateNotice.appendChild(updateBox);
-
-    const title = document.createElement('h3');
-    title.innerHTML = 'アップデート通知';
-    updateBox.appendChild(title);
-
-    const text = document.createElement('p');
-    text.innerHTML = '新しいバージョンが利用可能です。';
-    updateBox.appendChild(text);
-
-    const updateButton = document.createElement('button');
-    updateButton.id = 'updateBtn';
-    updateButton.innerHTML = '更新';
-    updateBox.appendChild(updateButton);
-
-    document.body.appendChild(updateNotice);
-
-    document.getElementById('updateBtn').addEventListener('click', () => {
-        if (reg.waiting) {
-            reg.waiting.postMessage('skipWaiting');
-            reg.waiting.addEventListener('statechange', () => {
-                if (reg.waiting == null) {
-                    window.location.reload();
-                }
-            });
-        } else {
-            console.warn('Service Worker is not waiting.');
-        }
-    });
-}
-
-// URLクエリパラメータ
-function loadValuesFromQueryParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    ['btc', 'sats', 'jpy', 'usd'].forEach(field => {
-        if (urlParams.has(field)) {
-            const element = document.getElementById(field);
-            element.value = addCommas(urlParams.get(field));
-            calculateValues(field);
-        }
-    });
 }
 
 // 計算
@@ -235,6 +146,98 @@ function calculateValues(inputField) {
     updateShareButton(values.btc, values.sats, values.jpy, values.usd);
 }
 
+// 更新時再計算
+function recalculateValues() {
+    if (lastUpdatedField) {
+        calculateValues(lastUpdatedField);
+    }
+}
+
+// 更新ボタンの見た目
+function updateButtonAppearance() {
+    const timestampElem = getElementById('last-updated');
+    const updatedAtTimestamp = new Date(timestampElem.textContent).getTime();
+    const now = Date.now();
+    const diffMinutes = (now - updatedAtTimestamp) / (1000 * 60);
+
+    const updateButton = getElementById('update-prices');
+
+    if (diffMinutes >= 10) {
+        updateButton.classList.add('outdated');
+        updateButton.classList.remove('recent');
+    } else {
+        updateButton.classList.remove('outdated');
+        updateButton.classList.add('recent');
+    }
+
+    updateButton.style.visibility = 'visible';
+}
+
+// 更新ボタンの回転
+function initializeUpdateButtonRotation() {
+    const updateButton = getElementById('update-prices');
+    updateButton.addEventListener('click', function() {
+        if (this.classList.contains('recent')) return;
+        let svg = this.querySelector('svg');
+        svg.classList.add('rotated');
+        svg.addEventListener('animationend', function() {
+            svg.classList.remove('rotated');
+        }, { once: true });
+    });
+}
+
+// サービスワーカー
+function handleServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    notifyUserOfUpdate(reg);
+                }
+            });
+        });
+    });
+}
+function notifyUserOfUpdate(reg) {
+    const updateNotice = document.createElement('div');
+    updateNotice.className = 'update-notice';
+
+    const updateBox = document.createElement('div');
+    updateBox.className = 'update-notice-box';
+    updateNotice.appendChild(updateBox);
+
+    const title = document.createElement('h3');
+    title.innerHTML = 'アップデート通知';
+    updateBox.appendChild(title);
+
+    const text = document.createElement('p');
+    text.innerHTML = '新しいバージョンが利用可能です。';
+    updateBox.appendChild(text);
+
+    const updateButton = document.createElement('button');
+    updateButton.id = 'updateBtn';
+    updateButton.innerHTML = '更新';
+    updateBox.appendChild(updateButton);
+
+    document.body.appendChild(updateNotice);
+
+    getElementById('updateBtn').addEventListener('click', () => {
+        if (reg.waiting) {
+            reg.waiting.postMessage('skipWaiting');
+            reg.waiting.addEventListener('statechange', () => {
+                if (reg.waiting == null) {
+                    window.location.reload();
+                }
+            });
+        } else {
+            console.warn('Service Worker is not waiting.');
+        }
+    });
+}
+
 // カンマ追加
 function addCommas(num) {
     let s = num.toString().replace(/[^0-9.]/g, '');
@@ -251,6 +254,17 @@ function addCommasToInput(inputElement) {
     inputElement.selectionEnd = caretPos;
 }
 
+// URLクエリパラメータ
+function loadValuesFromQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    ['btc', 'sats', 'jpy', 'usd'].forEach(field => {
+        if (urlParams.has(field)) {
+            const element = getElementById(field);
+            element.value = addCommas(urlParams.get(field));
+            calculateValues(field);
+        }
+    });
+}
 function getQueryStringFromValues(values) {
     let queryParams = '';
     switch (lastUpdatedField) {
@@ -284,9 +298,9 @@ function updateShareButton(btc, sats, jpy, usd) {
     const queryParams = getQueryStringFromValues({ btc, sats, jpy, usd });
     const links = generateShareLinks(queryParams, shareText);
 
-    document.getElementById('share-twitter').href = links.twitter;
-    document.getElementById('share-nostter').href = links.nostter;
-    document.getElementById('share-mass-driver').href = links.massDriver;
+    getElementById('share-twitter').href = links.twitter;
+    getElementById('share-nostter').href = links.nostter;
+    getElementById('share-mass-driver').href = links.massDriver;
 }
 
 // クリップボードにコピー
@@ -299,7 +313,7 @@ function copyToClipboardEvent(event) {
 function getValuesFromElements() {
     const values = {};
     inputFields.forEach(field => {
-        values[field] = addCommas(document.getElementById(field).value);
+        values[field] = addCommas(getElementById(field).value);
     });
     return values;
 }
@@ -318,7 +332,7 @@ function generateCopyText(values) {
 
 function copyToClipboard(text, event) {
     navigator.clipboard.writeText(text).then(() => {
-        const notification = document.getElementById('notification');
+        const notification = getElementById('notification');
         notification.textContent = 'クリップボードにコピーしました';
         notification.style.left = event.clientX + 'px';
         notification.style.top = (event.clientY + 20) + 'px';
@@ -330,14 +344,6 @@ function copyToClipboard(text, event) {
     }).catch(err => {
         console.error('クリップボードへのコピーに失敗しました', err);
     });
-}
-
-function getElementById(id) {
-    return document.getElementById(id);
-}
-
-function getInputValue(id) {
-    return getElementById(id).value.replace(/,/g, '');
 }
 
 // Web Share API
@@ -357,11 +363,5 @@ function shareViaWebAPI(shareText, queryParams) {
         });
     } else {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
-    }
-}
-
-function recalculateValues() {
-    if (lastUpdatedField) {
-        calculateValues(lastUpdatedField);
     }
 }
