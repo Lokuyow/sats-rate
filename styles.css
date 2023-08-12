@@ -63,7 +63,7 @@ body {
 
 .date {
     font-size: 1.2rem;
-    margin-left: 2.8rem;
+    margin-left: 2.6rem;
     height: 32px;
     line-height: 32px;
 }
@@ -76,7 +76,7 @@ body {
     padding: 0;
     margin: 0;
     outline: none;
-    margin-left: 1rem;
+    margin-left: 0.6rem;
     font-size: 0;
 }
 
