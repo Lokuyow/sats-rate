@@ -57,14 +57,15 @@ body {
 .price-update-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 0.6rem;
+    align-items: stretch;
+    margin-bottom: 1.4rem;
 }
 
 .date {
     font-size: 1.2rem;
-    margin-left: 2.5rem;
-    height: 26px;
-    line-height: 26px;
+    margin-left: 2.8rem;
+    height: 32px;
+    line-height: 32px;
 }
 
 #update-prices {
@@ -75,7 +76,7 @@ body {
     padding: 0;
     margin: 0;
     outline: none;
-    margin-left: 0.6rem;
+    margin-left: 1rem;
     font-size: 0;
 }
 
@@ -89,12 +90,13 @@ body {
 }
 
 #update-prices svg {
-    height: 26px;
-    line-height: 26px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
 }
 
 #update-prices:active {
-    transform: scale(0.9);
+    transform: scale(0.8);
 }
 
 @keyframes rotateAnimation {
