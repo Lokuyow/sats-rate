@@ -11,14 +11,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#B3475F" />
     <meta name="description"
-        content="ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）間の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。">
+        content="ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）、ユーロ（EUR）の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。">
 
     <meta property="og:site_name" content="おいくらサッツ">
     <meta property="og:title" content="おいくらサッツ">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lokuyow.github.io/sats-rate/">
     <meta property="og:image" content="https://lokuyow.github.io/sats-rate/images/ogp.png">
-    <meta property="og:description" content="ビットコイン（BTC）、サッツ（Sats）、日本円（JPY）、米ドル（USD）間の換算ツール">
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドル、ユーロの換算ツール">
     <meta property="og:locale" content="ja_JP">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -96,18 +96,22 @@
                     <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="btc">BTC</label>
-                    <img src="images/bitcoin-sign-solid.svg" alt="ビットコイン">
+                    <img src="images/bitcoin-sign-solid.svg" alt="ビットコイン（サッツ）">
                     <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="sats">sats</label>
                     <img src="images/yen-sign-solid.svg" alt="日本円">
                     <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
-                    <label for="jpy">円</label>
+                    <label for="jpy">JPY</label>
                     <img src="images/dollar-sign-solid.svg" alt="アメリカドル">
                     <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
-                    <label for="usd">ドル</label>
+                    <label for="usd">USD</label>
+                    <img src="images/euro-sign-solid.svg" alt="ユーロ">
+                    <input type="text" id="eur" oninput="calculateValues('eur')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                        inputmode="decimal">
+                    <label for="eur">EUR</label>
                 </div>
             </div>
 
@@ -140,7 +144,8 @@
                     <p class="description">
                         ビットコイン（bitcoin, BTC）<br>
                         サッツ（Sats, Sat, Satoshi）、日本円（JPY）<br>
-                        米ドル（USD）間の相互換算ツールです。<br>
+                        米ドル（USD）、ユーロ（EUR）の<br>
+                        相互換算ツールです。<br>
                     </p>
                 </div>
                 <div class="satoshi-bgcolor">
@@ -156,7 +161,7 @@
         </div>
 
         <footer class="footer">
-            ソースコード：<a href="https://github.com/Lokuyow/btc-sat-jpy-usd-converter" target="_blank">GitHub</a><br>
+            ソースコード：<a href="https://github.com/Lokuyow/sats-rate" target="_blank">GitHub</a><br>
             データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a><br>
             おいくらサッツ：Version 1.24
         </footer>

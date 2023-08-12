@@ -1,5 +1,5 @@
 const satsInBtc = 1e8;
-const inputFields = ['btc', 'sats', 'jpy', 'usd'];
+const inputFields = ['btc', 'sats', 'jpy', 'usd', 'eur'];
 const formatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -7,7 +7,7 @@ const formatOptions = {
     hour: '2-digit',
     minute: '2-digit'
 };
-let btcToJpy, btcToUsd, lastUpdatedField;
+let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 
 document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -33,7 +33,7 @@ async function fetchDataFromCoinGecko() {
 }
 
 async function getCoinGeckoData() {
-    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd&include_last_updated_at=true");
+    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true");
     return response.json();
 }
 
@@ -65,6 +65,7 @@ function setDefaultValues() {
 function updateCurrencyRates(data) {
     btcToJpy = data.bitcoin.jpy;
     btcToUsd = data.bitcoin.usd;
+    btcToEur = data.bitcoin.eur;
 }
 
 function selectInputText(event) {
@@ -102,14 +103,16 @@ function calculateValues(inputField) {
         btc: getInputValue('btc'),
         sats: getInputValue('sats'),
         jpy: getInputValue('jpy'),
-        usd: getInputValue('usd')
+        usd: getInputValue('usd'),
+        eur: getInputValue('eur')
     };
 
     const formatOptions = {
         btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         sats: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
-        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
+        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
+        eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
     };
 
     switch (inputField) {
@@ -117,21 +120,31 @@ function calculateValues(inputField) {
             values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
             values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
             values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
+            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
             break;
         case 'sats':
             values.btc = (values.sats / satsInBtc).toFixed(8);
             values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
             values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
+            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
             break;
         case 'jpy':
             values.btc = (values.jpy / btcToJpy).toFixed(8);
             values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
             values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
+            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
             break;
         case 'usd':
             values.btc = (values.usd / btcToUsd).toFixed(8);
             values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
             values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
+            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
+            break;
+        case 'eur':
+            values.btc = (values.eur / btcToEur).toFixed(8);
+            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
+            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
+            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
             break;
         default:
             console.error("Unknown inputField:", inputField);
@@ -143,7 +156,7 @@ function calculateValues(inputField) {
     });
 
     lastUpdatedField = inputField;
-    updateShareButton(values.btc, values.sats, values.jpy, values.usd);
+    updateShareButton(values.btc, values.sats, values.jpy, values.usd, values.eur);
 }
 
 // 更新時再計算
@@ -257,7 +270,7 @@ function addCommasToInput(inputElement) {
 // URLクエリパラメータ
 function loadValuesFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
-    ['btc', 'sats', 'jpy', 'usd'].forEach(field => {
+    ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
         if (urlParams.has(field)) {
             const element = getElementById(field);
             element.value = addCommas(urlParams.get(field));
@@ -280,6 +293,9 @@ function getQueryStringFromValues(values) {
         case 'usd':
             queryParams = `?usd=${values.usd.replace(/,/g, '')}`;
             break;
+        case 'eur':
+            queryParams = `?eur=${values.eur.replace(/,/g, '')}`;
+            break;
     }
     return queryParams;
 }
@@ -293,9 +309,9 @@ function generateShareLinks(queryParams, shareText) {
         massDriver: "https://mdrv.shino3.net/?intent=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl)
     };
 }
-function updateShareButton(btc, sats, jpy, usd) {
-    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n¥：${addCommas(jpy)} 円\n$：${addCommas(usd)} ドル\nPowered by CoinGecko,`;
-    const queryParams = getQueryStringFromValues({ btc, sats, jpy, usd });
+function updateShareButton(btc, sats, jpy, usd, eur) {
+    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n¥：${addCommas(jpy)} JPY\n$：${addCommas(usd)} USD\n€：${addCommas(eur)} EUR\nPowered by CoinGecko,`;
+    const queryParams = getQueryStringFromValues({ btc, sats, jpy, usd, eur });
     const links = generateShareLinks(queryParams, shareText);
 
     getElementById('share-twitter').href = links.twitter;
@@ -322,8 +338,9 @@ function generateCopyText(values) {
     const baseTexts = {
         btc: "₿：{value} BTC",
         sats: "₿：{value} sats",
-        jpy: "¥：{value} 円",
-        usd: "$：{value} ドル",
+        jpy: "¥：{value} JPY",
+        usd: "$：{value} USD",
+        eur: "€：{value} EUR",
     };
 
     const generatedTexts = inputFields.map(field => baseTexts[field].replace('{value}', values[field])).join('\n');
