@@ -51,36 +51,30 @@ function setupEventListeners() {
             this.select();
         });
         
-        // タッチの開始時間を記録
+        // タッチの開始時に長押しのタイマーを設定
         element.addEventListener('touchstart', function() {
-            touchStartTime = Date.now();
+            touchMoved = false; // 初期化
             longPressed = false; // 初期化
-            touchMoved = false;  // 初期化
+            longPressTimer = setTimeout(() => {
+                longPressed = true;
+            }, 500); // 500ms後に長押しと判定
         });
 
         // タッチ移動の検出
         element.addEventListener('touchmove', function() {
             touchMoved = true;
+            clearTimeout(longPressTimer);
         });
 
-        // タッチの終了時間を計測し、長押しを判定
+        // タッチの終了時にタイマーをクリア
         element.addEventListener('touchend', function() {
-            if (!touchMoved) {
-                setTimeout(() => {
-                    const touchEndTime = Date.now();
-                    if (touchEndTime - touchStartTime >= 500) {
-                        longPressed = true; // 長押しと判定
-                    }
-                }, 100);  // 100msの遅延
-            }
+            clearTimeout(longPressTimer);
         });
         
         // タップして全選択したときのメニューを制御する
         element.addEventListener('contextmenu', function(e) {
-            if (isMobileDevice()) {
-                if (!longPressed) {
-                    e.preventDefault(); // 長押しでない場合はコンテキストメニューを表示しない
-                }
+            if (isMobileDevice() && !longPressed) {
+                e.preventDefault(); // 長押しでない場合はコンテキストメニューを表示しない
             }
         });
     });
