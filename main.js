@@ -42,6 +42,7 @@ function setupEventListeners() {
         const element = getElementById(id);
         element.addEventListener('focus', selectInputText);
         element.addEventListener('keyup', formatInputWithCommas);
+        element.addEventListener('touchend', handleTouchEnd);
     });
 
     getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
@@ -72,6 +73,17 @@ function selectInputText(event) {
     const inputElement = event.target;
     inputElement.select();
     inputElement.addEventListener('contextmenu', handleContextMenu);
+}
+
+function handleTouchEnd(event) {
+    const inputElement = event.target;
+    // 一旦選択を解除
+    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
+
+    setTimeout(() => {
+        // 少し遅らせてから全選択
+        inputElement.select();
+    }, 10);
 }
 
 function handleContextMenu(e) {
