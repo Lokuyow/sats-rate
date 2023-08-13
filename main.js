@@ -47,22 +47,6 @@ function setupEventListeners() {
     getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
     getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
-
-    document.body.addEventListener('contextmenu', handleContextMenu);
-}
-
-function handleContextMenu(e) {
-    if (e.target.tagName === "INPUT" && e.target.type === "text") {
-        const inputElement = e.target;
-        
-        // テキストボックスの内容がすべて選択されているかどうかをチェック
-        if (inputElement.selectionStart === 0 && inputElement.selectionEnd === inputElement.value.length) {
-            // 何もしない（コンテキストメニューを表示）
-        } else {
-            // コンテキストメニューの表示をオフにする
-            e.preventDefault();
-        }
-    }
 }
 
 function handleError(err) {
@@ -85,7 +69,19 @@ function updateCurrencyRates(data) {
 }
 
 function selectInputText(event) {
-    event.target.select();
+    const inputElement = event.target;
+    inputElement.select();
+    inputElement.addEventListener('contextmenu', handleContextMenu);
+}
+
+function handleContextMenu(e) {
+    const inputElement = e.target;
+
+    // テキストボックスの内容がすべて選択されているかどうかをチェック
+    if (inputElement.selectionStart !== 0 || inputElement.selectionEnd !== inputElement.value.length) {
+        // コンテキストメニューの表示をキャンセル
+        e.preventDefault();
+    }
 }
 
 function formatInputWithCommas(event) {
