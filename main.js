@@ -39,6 +39,7 @@ async function getCoinGeckoData() {
 
 let touchStartTime = 0;
 let longPressed = false; // 長押し判定用のフラグ
+let touchMoved = false;  // タッチ移動を検出するフラグ
 
 function setupEventListeners() {
     inputFields.forEach(id => {
@@ -54,13 +55,23 @@ function setupEventListeners() {
         element.addEventListener('touchstart', function() {
             touchStartTime = Date.now();
             longPressed = false; // 初期化
+            touchMoved = false;  // 初期化
+        });
+
+        // タッチ移動の検出
+        element.addEventListener('touchmove', function() {
+            touchMoved = true;
         });
 
         // タッチの終了時間を計測し、長押しを判定
         element.addEventListener('touchend', function() {
-            const touchEndTime = Date.now();
-            if (touchEndTime - touchStartTime >= 500) {
-                longPressed = true; // 長押しと判定
+            if (!touchMoved) {
+                setTimeout(() => {
+                    const touchEndTime = Date.now();
+                    if (touchEndTime - touchStartTime >= 500) {
+                        longPressed = true; // 長押しと判定
+                    }
+                }, 100);  // 100msの遅延
             }
         });
         
