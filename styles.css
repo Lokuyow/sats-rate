@@ -5,7 +5,7 @@
 body {
     background-color: rgb(242, 244, 243);
     font-family: var(--main-font);
-    color: rgb(48, 41, 64);
+    color: #393640;
 }
 
 .page {
@@ -58,31 +58,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: stretch;
-    margin-bottom: 1.4rem;
+    margin: -0.4rem 0 0.6rem 0;
 }
 
 .date {
     font-size: 1.2rem;
     margin-left: 2.6rem;
-    height: 32px;
-    line-height: 32px;
+    height: 44px;
+    line-height: 44px;
 }
 
 #update-prices {
     visibility: hidden;
     cursor: pointer;
     background: none;
-    border: none;
+    border: 2px solid #E9EBEB;
+    border-radius: 8px;
     padding: 0;
     margin: 0;
     outline: none;
-    margin-left: 0.6rem;
+    margin-left: 1rem;
     font-size: 0;
+    width: 44px;
+    height: 44px;
 }
 
 .outdated {
     background: none;
-    fill: rgb(48, 41, 64);
+    fill: #393640;
 }
 
 .recent {
@@ -90,9 +93,9 @@ body {
 }
 
 #update-prices svg {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
 }
 
 #update-prices:active {
@@ -114,9 +117,9 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: 3.5rem 1fr 3.5rem;
+    grid-template-columns: 56px 1fr 56px;
     grid-template-rows: 1fr 1fr 1fr 1fr;
-    row-gap: 0.2rem;
+    row-gap: 10px;
     align-items: center;
     justify-items: auto;
     max-width: 32rem;
@@ -125,24 +128,27 @@ body {
 
 .grid-container img {
     justify-self: center;
-    margin-right: 0.8rem;
-    margin-left: 1.2rem;
+    margin-right: 0.7rem;
+    margin-left: 1rem;
 }
 
 .grid-container input {
+    background-color: rgb(245, 247, 246);
     font-size: 2.3rem;
-    height: 4rem;
+    height: 70px;
+    border-radius: 0.6rem;
+    border: 1px solid #E9EBEB;
     text-align: right;
     min-width: 13rem;
-    padding-right: 0.3rem;
+    padding-right: 15px;
 }
 
 .grid-container label {
     font-size: 1.2rem;
     font-weight: 700;
     text-align: left;
-    margin-right: 0.5rem;
-    margin-left: 0.3rem;
+    margin-right: 10px;
+    margin-left: 8px;
 }
 
 
@@ -239,7 +245,7 @@ body {
 
 .update-notice-box {
     background-color: rgb(255, 255, 255);
-    color: rgb(48, 41, 64);
+    color: #393640;
     text-align: center;
     padding: 1rem 1rem;
     border-radius: 0.8rem;
