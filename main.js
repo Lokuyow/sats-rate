@@ -41,13 +41,17 @@ function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getElementById(id);
         element.addEventListener('keyup', formatInputWithCommas);
+        
+        // テキストボックス内のテキストを全選択
         element.addEventListener('focus', function() {
             this.select();
         });
         
-        // タップして全選択したときのメニューを表示しない
+        // タップして全選択したときのメニューを制御する
         element.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
+            if (isMobileDevice() && !isLongPress(e)) {
+                e.preventDefault();
+            }
         });
     });
 
@@ -55,8 +59,19 @@ function setupEventListeners() {
     getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
+
 function getElementById(id) {
     return document.getElementById(id);
+}
+
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// この関数はイベントオブジェクトを用いて長押しを判別する方法としては簡易的であり、
+// 実際の長押しの判別には別の方法を検討する必要があります。
+function isLongPress(e) {
+    return e.type === 'contextmenu';
 }
 
 function handleError(err) {
