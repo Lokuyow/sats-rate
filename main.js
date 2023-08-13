@@ -49,6 +49,9 @@ function setupEventListeners() {
     getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
+function getElementById(id) {
+    return document.getElementById(id);
+}
 
 function handleError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
@@ -69,59 +72,38 @@ function updateCurrencyRates(data) {
     btcToEur = data.bitcoin.eur;
 }
 
-let wasSelectedOnTouchStart = false;
-
-function handleTouchStart(event) {
-    const inputElement = event.target;
-    wasSelectedOnTouchStart = (inputElement.selectionStart === 0 && inputElement.selectionEnd === inputElement.value.length);
-}
-
 function handleTouchEnd(event) {
+    event.preventDefault();
     const inputElement = event.target;
+    // 一旦選択を解除
+    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 
-    if (!wasSelectedOnTouchStart) {
-        // 一旦選択を解除
-        inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
-
-        setTimeout(() => {
-            // 少し遅らせてから全選択
-            inputElement.select();
-        }, 1);
-    } 
-
-    // コンテキストメニューへのイベントリスナーを一度だけ追加する
-    if (!inputElement.hasContextMenuListener) {
+    setTimeout(() => {
+        // 少し遅らせてから全選択
+        inputElement.select();
         inputElement.addEventListener('contextmenu', handleContextMenu);
-        inputElement.hasContextMenuListener = true; 
-    }
+    }, 10);
 }
 
 function handleFocus(event) {
-    if (!('ontouchstart' in window)) {
+    if (!('ontouchstart' in window)) { // タッチデバイスでなければ
         const inputElement = event.target;
         inputElement.select();
-
-        // コンテキストメニューへのイベントリスナーを一度だけ追加する
-        if (!inputElement.hasContextMenuListener) {
-            inputElement.addEventListener('contextmenu', handleContextMenu);
-            inputElement.hasContextMenuListener = true; 
-        }
+        inputElement.addEventListener('contextmenu', handleContextMenu);
     }
 }
 
 function handleContextMenu(e) {
     const inputElement = e.target;
+    // テキストボックスの内容がすべて選択されているかどうかをチェック
     if (inputElement.selectionStart !== 0 || inputElement.selectionEnd !== inputElement.value.length) {
+        // コンテキストメニューの表示をキャンセル
         e.preventDefault();
     }
 }
 
 function formatInputWithCommas(event) {
     addCommasToInput(event.target);
-}
-
-function getElementById(id) {
-    return document.getElementById(id);
 }
 
 function getInputValue(id) {
