@@ -40,7 +40,6 @@ async function getCoinGeckoData() {
 function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getElementById(id);
-        element.addEventListener('focus', selectInputText);
         element.addEventListener('keyup', formatInputWithCommas);
         element.addEventListener('touchend', handleTouchEnd);
     });
@@ -83,6 +82,7 @@ function handleTouchEnd(event) {
     setTimeout(() => {
         // 少し遅らせてから全選択
         inputElement.select();
+        inputElement.addEventListener('contextmenu', handleContextMenu);
     }, 10);
 }
 
