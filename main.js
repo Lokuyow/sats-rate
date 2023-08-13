@@ -69,21 +69,34 @@ function updateCurrencyRates(data) {
     btcToEur = data.bitcoin.eur;
 }
 
+let wasSelectedOnTouchStart = false;
+
+function handleTouchStart(event) {
+    const inputElement = event.target;
+    wasSelectedOnTouchStart = (inputElement.selectionStart === 0 && inputElement.selectionEnd === inputElement.value.length);
+}
+
 function handleTouchEnd(event) {
     const inputElement = event.target;
 
-    // 一旦選択を解除
-    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
-
-    setTimeout(() => {
-        // 少し遅らせてから全選択
-        inputElement.select();
-    }, 10);
+    if (!wasSelectedOnTouchStart) {
+        setTimeout(() => {
+            inputElement.select();  // 全選択
+        }, 10);
+    } else {
+        // タッチ位置にカーソルを移動するためのロジック
+        const touch = event.changedTouches[0];
+        const targetRect = inputElement.getBoundingClientRect();
+        const ratio = (touch.clientX - targetRect.left) / targetRect.width;
+        const position = Math.floor(ratio * inputElement.value.length);
+        inputElement.selectionStart = position;
+        inputElement.selectionEnd = position;
+    }
 
     // コンテキストメニューへのイベントリスナーを一度だけ追加する
     if (!inputElement.hasContextMenuListener) {
         inputElement.addEventListener('contextmenu', handleContextMenu);
-        inputElement.hasContextMenuListener = true; // フラグを追加して、リスナーが追加されたことを示す
+        inputElement.hasContextMenuListener = true; 
     }
 }
 
