@@ -72,18 +72,13 @@ function updateCurrencyRates(data) {
 function handleTouchEnd(event) {
     const inputElement = event.target;
 
-    // 既にテキストが全選択されているかを判断
-    const isAlreadySelected = (inputElement.selectionStart === 0 && inputElement.selectionEnd === inputElement.value.length);
+    // 一旦選択を解除
+    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 
-    if (!isAlreadySelected) {
-        // 一旦選択を解除
-        inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
-
-        setTimeout(() => {
-            // 少し遅らせてから全選択
-            inputElement.select();
-        }, 10);
-    }
+    setTimeout(() => {
+        // 少し遅らせてから全選択
+        inputElement.select();
+    }, 10);
 
     // コンテキストメニューへのイベントリスナーを一度だけ追加する
     if (!inputElement.hasContextMenuListener) {
@@ -93,7 +88,7 @@ function handleTouchEnd(event) {
 }
 
 function handleFocus(event) {
-    if (!('ontouchstart' in window)) { 
+    if (!('ontouchstart' in window)) {
         const inputElement = event.target;
         inputElement.select();
 
