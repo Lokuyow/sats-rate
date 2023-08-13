@@ -80,18 +80,14 @@ function handleTouchEnd(event) {
     const inputElement = event.target;
 
     if (!wasSelectedOnTouchStart) {
+        // 一旦選択を解除
+        inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
+
         setTimeout(() => {
-            inputElement.select();  // 全選択
-        }, 10);
-    } else {
-        // タッチ位置にカーソルを移動するためのロジック
-        const touch = event.changedTouches[0];
-        const targetRect = inputElement.getBoundingClientRect();
-        const ratio = (touch.clientX - targetRect.left) / targetRect.width;
-        const position = Math.floor(ratio * inputElement.value.length);
-        inputElement.selectionStart = position;
-        inputElement.selectionEnd = position;
-    }
+            // 少し遅らせてから全選択
+            inputElement.select();
+        }, 1);
+    } 
 
     // コンテキストメニューへのイベントリスナーを一度だけ追加する
     if (!inputElement.hasContextMenuListener) {
