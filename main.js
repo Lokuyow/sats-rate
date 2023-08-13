@@ -70,31 +70,44 @@ function updateCurrencyRates(data) {
 }
 
 function handleTouchEnd(event) {
-    event.preventDefault();
     const inputElement = event.target;
-    // 一旦選択を解除
-    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
 
-    setTimeout(() => {
-        // 少し遅らせてから全選択
-        inputElement.select();
+    // 既にテキストが全選択されているかを判断
+    const isAlreadySelected = (inputElement.selectionStart === 0 && inputElement.selectionEnd === inputElement.value.length);
+
+    if (!isAlreadySelected) {
+        // 一旦選択を解除
+        inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
+
+        setTimeout(() => {
+            // 少し遅らせてから全選択
+            inputElement.select();
+        }, 10);
+    }
+
+    // コンテキストメニューへのイベントリスナーを一度だけ追加する
+    if (!inputElement.hasContextMenuListener) {
         inputElement.addEventListener('contextmenu', handleContextMenu);
-    }, 10);
+        inputElement.hasContextMenuListener = true; // フラグを追加して、リスナーが追加されたことを示す
+    }
 }
 
 function handleFocus(event) {
-    if (!('ontouchstart' in window)) { // タッチデバイスでなければ
+    if (!('ontouchstart' in window)) { 
         const inputElement = event.target;
         inputElement.select();
-        inputElement.addEventListener('contextmenu', handleContextMenu);
+
+        // コンテキストメニューへのイベントリスナーを一度だけ追加する
+        if (!inputElement.hasContextMenuListener) {
+            inputElement.addEventListener('contextmenu', handleContextMenu);
+            inputElement.hasContextMenuListener = true; 
+        }
     }
 }
 
 function handleContextMenu(e) {
     const inputElement = e.target;
-    // テキストボックスの内容がすべて選択されているかどうかをチェック
     if (inputElement.selectionStart !== 0 || inputElement.selectionEnd !== inputElement.value.length) {
-        // コンテキストメニューの表示をキャンセル
         e.preventDefault();
     }
 }
