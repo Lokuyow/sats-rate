@@ -42,6 +42,11 @@ function setupEventListeners() {
         const element = getElementById(id);
         element.addEventListener('focus', selectInputText);
         element.addEventListener('keyup', formatInputWithCommas);
+        element.addEventListener('touchend', function(event) {
+            setTimeout(() => {
+                event.target.select();
+            }, 300);
+        });
     });
 
     getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
