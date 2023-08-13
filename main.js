@@ -37,6 +37,9 @@ async function getCoinGeckoData() {
     return response.json();
 }
 
+let touchStartTime = 0;
+let longPressed = false; // 長押し判定用のフラグ
+
 function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getElementById(id);
@@ -47,10 +50,26 @@ function setupEventListeners() {
             this.select();
         });
         
+        // タッチの開始時間を記録
+        element.addEventListener('touchstart', function() {
+            touchStartTime = Date.now();
+            longPressed = false; // 初期化
+        });
+
+        // タッチの終了時間を計測し、長押しを判定
+        element.addEventListener('touchend', function() {
+            const touchEndTime = Date.now();
+            if (touchEndTime - touchStartTime >= 500) {
+                longPressed = true; // 長押しと判定
+            }
+        });
+        
         // タップして全選択したときのメニューを制御する
         element.addEventListener('contextmenu', function(e) {
-            if (isMobileDevice() && !isLongPress(e)) {
-                e.preventDefault();
+            if (isMobileDevice()) {
+                if (!longPressed) {
+                    e.preventDefault(); // 長押しでない場合はコンテキストメニューを表示しない
+                }
             }
         });
     });
