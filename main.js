@@ -42,6 +42,7 @@ function setupEventListeners() {
         const element = getElementById(id);
         element.addEventListener('keyup', formatInputWithCommas);
         element.addEventListener('touchend', handleTouchEnd);
+        element.addEventListener('focus', handleFocus);
     });
 
     getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
@@ -68,13 +69,8 @@ function updateCurrencyRates(data) {
     btcToEur = data.bitcoin.eur;
 }
 
-function selectInputText(event) {
-    const inputElement = event.target;
-    inputElement.select();
-    inputElement.addEventListener('contextmenu', handleContextMenu);
-}
-
 function handleTouchEnd(event) {
+    event.preventDefault();
     const inputElement = event.target;
     // 一旦選択を解除
     inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
@@ -86,9 +82,16 @@ function handleTouchEnd(event) {
     }, 10);
 }
 
+function handleFocus(event) {
+    if (!('ontouchstart' in window)) { // タッチデバイスでなければ
+        const inputElement = event.target;
+        inputElement.select();
+        inputElement.addEventListener('contextmenu', handleContextMenu);
+    }
+}
+
 function handleContextMenu(e) {
     const inputElement = e.target;
-
     // テキストボックスの内容がすべて選択されているかどうかをチェック
     if (inputElement.selectionStart !== 0 || inputElement.selectionEnd !== inputElement.value.length) {
         // コンテキストメニューの表示をキャンセル
