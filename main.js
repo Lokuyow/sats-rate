@@ -41,8 +41,14 @@ function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getElementById(id);
         element.addEventListener('keyup', formatInputWithCommas);
-        element.addEventListener('touchend', handleTouchEnd);
-        element.addEventListener('focus', handleFocus);
+        element.addEventListener('focus', function() {
+            this.select();
+        });
+        
+        // タップして全選択したときのメニューを表示しない
+        element.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
     });
 
     getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
@@ -70,36 +76,6 @@ function updateCurrencyRates(data) {
     btcToJpy = data.bitcoin.jpy;
     btcToUsd = data.bitcoin.usd;
     btcToEur = data.bitcoin.eur;
-}
-
-function handleTouchEnd(event) {
-    event.preventDefault();
-    const inputElement = event.target;
-    // 一旦選択を解除
-    inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
-
-    setTimeout(() => {
-        // 少し遅らせてから全選択
-        inputElement.select();
-        inputElement.addEventListener('contextmenu', handleContextMenu);
-    }, 10);
-}
-
-function handleFocus(event) {
-    if (!('ontouchstart' in window)) { // タッチデバイスでなければ
-        const inputElement = event.target;
-        inputElement.select();
-        inputElement.addEventListener('contextmenu', handleContextMenu);
-    }
-}
-
-function handleContextMenu(e) {
-    const inputElement = e.target;
-    // テキストボックスの内容がすべて選択されているかどうかをチェック
-    if (inputElement.selectionStart !== 0 || inputElement.selectionEnd !== inputElement.value.length) {
-        // コンテキストメニューの表示をキャンセル
-        e.preventDefault();
-    }
 }
 
 function formatInputWithCommas(event) {
