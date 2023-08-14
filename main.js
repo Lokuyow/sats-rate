@@ -1,12 +1,13 @@
 const satsInBtc = 1e8;
 const inputFields = ['btc', 'sats', 'jpy', 'usd', 'eur'];
-const formatOptions = {
+const dateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'
 };
+const BASE_URL = "https://lokuyow.github.io/sats-rate/";
 const BASE_TEXTS = {
     btc: "₿：{value} BTC",
     sats: "₿：{value} sats",
@@ -34,17 +35,17 @@ async function initializeApp() {
     }
 }
 
+async function getCoinGeckoData() {
+    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=2");
+    return response.json();
+}
+
 async function fetchDataFromCoinGecko() {
     const data = await getCoinGeckoData();
     updateCurrencyRates(data);
     updateLastUpdated(data.bitcoin.last_updated_at);
     setDefaultValues();
     recalculateValues();
-}
-
-async function getCoinGeckoData() {
-    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true");
-    return response.json();
 }
 
 function setupEventListeners() {
@@ -75,38 +76,6 @@ function getDomElementById(id) {
     return document.getElementById(id);
 }
 
-// 選択
-function handleFocus(event) {
-    event.target.select();
-}
-
-function handleTouchStart(event) {
-    touchMoved = false;
-    longPressed = false;
-    longPressTimer = setTimeout(() => {
-        longPressed = true;
-    }, 500);
-}
-
-function handleTouchMove(event) {
-    touchMoved = true;
-    clearTimeout(longPressTimer);
-}
-
-function handleTouchEnd(event) {
-    clearTimeout(longPressTimer);
-}
-
-function handleContextMenu(event) {
-    if (isMobileDevice() && !longPressed) {
-        event.preventDefault();
-    }
-}
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
 function handleError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
     alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
@@ -126,23 +95,6 @@ function updateCurrencyRates(data) {
     btcToEur = data.bitcoin.eur;
 }
 
-function formatInputWithCommas(event) {
-    addCommasToInput(event.target);
-}
-
-function updateLastUpdated(timestamp) {
-    const updatedAt = new Date(timestamp * 1000);
-    const formatter = new Intl.DateTimeFormat('ja-JP', formatOptions);
-    getDomElementById('last-updated').textContent = formatter.format(updatedAt);
-    updateButtonAppearance();
-}
-
-function updateButtonAppearanceOnVisibilityChange() {
-    if (document.visibilityState === 'visible') {
-        updateButtonAppearance();
-    }
-}
-
 function getInputValue(id) {
     return getDomElementById(id).value.replace(/,/g, '');
 }
@@ -157,44 +109,36 @@ function calculateValues(inputField) {
         eur: getInputValue('eur')
     };
 
-    const formatOptions = {
-        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        sats: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
-        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
-        eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
-    };
-
     switch (inputField) {
         case 'btc':
-            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
-            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
-            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
-            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
+            values.sats = values.btc * satsInBtc;
+            values.jpy = values.btc * btcToJpy;
+            values.usd = values.btc * btcToUsd;
+            values.eur = values.btc * btcToEur;
             break;
         case 'sats':
-            values.btc = (values.sats / satsInBtc).toFixed(8);
-            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
-            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
-            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
+            values.btc = values.sats / satsInBtc;
+            values.jpy = values.btc * btcToJpy;
+            values.usd = values.btc * btcToUsd;
+            values.eur = values.btc * btcToEur;
             break;
         case 'jpy':
-            values.btc = (values.jpy / btcToJpy).toFixed(8);
-            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
-            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
-            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
+            values.btc = values.jpy / btcToJpy;
+            values.sats = values.btc * satsInBtc;
+            values.usd = values.btc * btcToUsd;
+            values.eur = values.btc * btcToEur;
             break;
         case 'usd':
-            values.btc = (values.usd / btcToUsd).toFixed(8);
-            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
-            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
-            values.eur = (values.btc * btcToEur).toLocaleString(undefined, formatOptions.eur);
+            values.btc = values.usd / btcToUsd;
+            values.sats = values.btc * satsInBtc;
+            values.jpy = values.btc * btcToJpy;
+            values.eur = values.btc * btcToEur;
             break;
         case 'eur':
-            values.btc = (values.eur / btcToEur).toFixed(8);
-            values.sats = (values.btc * satsInBtc).toLocaleString(undefined, formatOptions.sats);
-            values.jpy = (values.btc * btcToJpy).toLocaleString(undefined, formatOptions.jpy);
-            values.usd = (values.btc * btcToUsd).toLocaleString(undefined, formatOptions.usd);
+            values.btc = values.eur / btcToEur;
+            values.sats = values.btc * satsInBtc;
+            values.jpy = values.btc * btcToJpy;
+            values.usd = values.btc * btcToUsd;
             break;
         default:
             console.error("Unknown inputField:", inputField);
@@ -202,17 +146,57 @@ function calculateValues(inputField) {
     }
 
     inputFields.forEach(id => {
-        getDomElementById(id).value = addCommas(values[id]);
-    });
+        getDomElementById(id).value = addCommas(values[id], id);
+    });    
 
     lastUpdatedField = inputField;
     updateShareButton(values.btc, values.sats, values.jpy, values.usd, values.eur);
+}
+
+// カンマ追加
+function addCommas(num, id) {
+    const currencyFormatOptions = {
+        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
+        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
+        eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
+    };
+
+    return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
+}
+
+// カンマ追加時のカーソル位置調整
+function addCommasToInput(inputElement) {
+    let caretPos = inputElement.selectionStart - inputElement.value.length;
+    inputElement.value = addCommas(inputElement.value.replace(/,/g, ''));
+    caretPos = caretPos + (inputElement.value.length - caretPos);
+    inputElement.selectionStart = caretPos;
+    inputElement.selectionEnd = caretPos;
+}
+
+function formatInputWithCommas(event) {
+    addCommasToInput(event.target);
 }
 
 // 更新時再計算
 function recalculateValues() {
     if (lastUpdatedField) {
         calculateValues(lastUpdatedField);
+    }
+}
+
+// 価格更新日時
+function updateLastUpdated(timestamp) {
+    const updatedAt = new Date(timestamp * 1000);
+    const formatter = new Intl.DateTimeFormat('ja-JP', dateTimeFormatOptions);
+    getDomElementById('last-updated').textContent = formatter.format(updatedAt);
+    updateButtonAppearance();
+}
+
+function updateButtonAppearanceOnVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+        updateButtonAppearance();
     }
 }
 
@@ -247,6 +231,151 @@ function initializeUpdateButtonRotation() {
             svg.classList.remove('rotated');
         }, { once: true });
     });
+}
+
+// 選択
+function handleFocus(event) {
+    event.target.select();
+}
+
+function handleTouchStart(event) {
+    touchMoved = false;
+    longPressed = false;
+    longPressTimer = setTimeout(() => {
+        longPressed = true;
+    }, 500);
+}
+
+function handleTouchMove(event) {
+    touchMoved = true;
+    clearTimeout(longPressTimer);
+}
+
+function handleTouchEnd(event) {
+    clearTimeout(longPressTimer);
+}
+
+function handleContextMenu(event) {
+    if (isMobileDevice() && !longPressed) {
+        event.preventDefault();
+    }
+}
+
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// URLクエリパラメータ
+function loadValuesFromQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
+        if (urlParams.has(field)) {
+            const element = getDomElementById(field);
+            element.value = addCommas(urlParams.get(field));
+            calculateValues(field);
+        }
+    });
+}
+function getQueryString(field, value) {
+    return `?${field}=${value.replace(/,/g, '')}`;
+}
+function generateQueryStringFromValues() {
+    if (!lastUpdatedField) return '';
+    const values = getValuesFromElements();
+    return getQueryString(lastUpdatedField, values[lastUpdatedField]);
+}
+
+// インプットフィールドからカンマを取り除いた数値を取得
+function getValuesFromElements() {
+    const values = {};
+    inputFields.forEach(field => {
+        values[field] = getDomElementById(field).value.replace(/,/g, '');
+    });
+    return values;
+}
+
+// 共有テキスト生成
+function generateCopyText(values) {
+    const formattedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', addCommas(values[field], field))).join('\n');
+    return `${formattedTexts}\nPowered by CoinGecko,`;
+}
+
+// 共有ボタン
+function updateShareButton(btc, sats, jpy, usd, eur) {
+    const values = { btc, sats, jpy, usd, eur };
+    
+    const shareText = generateCopyText(values);
+    const queryParams = generateQueryStringFromValues();
+
+    const links = generateShareLinks(queryParams, shareText);
+
+    getDomElementById('share-twitter').href = links.twitter;
+    getDomElementById('share-nostter').href = links.nostter;
+    getDomElementById('share-mass-driver').href = links.massDriver;
+}
+
+function generateShareLinks(queryParams, shareText) {
+    const shareUrl = `${BASE_URL}${queryParams}`;
+    return {
+        twitter: `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
+        nostter: `https://nostter.vercel.app/post?content=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
+        massDriver: `https://mdrv.shino3.net/?intent=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`
+    };
+}
+
+// クリップボードにコピー　各通貨
+function copySingleCurrencyToClipboardEvent(event) {
+    const currency = event.target.dataset.currency;
+    const values = getValuesFromElements();
+    copyToClipboard(values[currency], event);
+}
+
+// クリップボードにコピー　全体
+function copyToClipboardEvent(event) {
+    const values = getValuesFromElements();
+    const baseText = generateCopyText(values);
+    const queryParams = generateQueryStringFromValues();
+    const textToCopy = `${baseText} ${BASE_URL}${queryParams}`;
+    copyToClipboard(textToCopy, event);
+}
+
+// コピーポップアップ表示
+function copyToClipboard(text, event) {
+    navigator.clipboard.writeText(text).then(() => {
+        const notification = getDomElementById('notification');
+        notification.textContent = 'クリップボードにコピーしました';
+        notification.style.left = event.clientX + 'px';
+        notification.style.top = (event.clientY + 20) + 'px';
+        notification.style.visibility = 'visible';
+
+        setTimeout(() => {
+            notification.style.visibility = 'hidden';
+        }, 1000);
+    }).catch(err => {
+        console.error('クリップボードへのコピーに失敗しました', err);
+    });
+}
+
+// Web Share API
+function shareViaWebAPIEvent() {
+    const values = getValuesFromElements();
+    const shareText = generateCopyText(values);
+    const queryParams = generateQueryStringFromValues();
+    shareViaWebAPI(shareText, queryParams);
+}
+
+function shareViaWebAPI(originalShareText, queryParams) {
+    const modifiedShareText = originalShareText.replace(/https:\/\/lokuyow\.github\.io\/sats-rate\/.*$/, '');
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'おいくらサッツ',
+            text: modifiedShareText,
+            url: `https://lokuyow.github.io/sats-rate/${queryParams}`
+        });
+    } else {
+        alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
+    }
 }
 
 // サービスワーカー
@@ -299,142 +428,4 @@ function notifyUserOfUpdate(reg) {
             console.warn('Service Worker is not waiting.');
         }
     });
-}
-
-// カンマ追加
-function addCommas(num) {
-    let s = num.toString().replace(/[^0-9.]/g, '');
-    let b = s.toString().split('.');
-    b[0] = b[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
-    return b.join('.');
-}
-// カンマ追加時のカーソル位置調整
-function addCommasToInput(inputElement) {
-    let caretPos = inputElement.selectionStart - inputElement.value.length;
-    inputElement.value = addCommas(inputElement.value.replace(/,/g, ''));
-    caretPos = caretPos + (inputElement.value.length - caretPos);
-    inputElement.selectionStart = caretPos;
-    inputElement.selectionEnd = caretPos;
-}
-
-// URLクエリパラメータ
-function loadValuesFromQueryParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
-        if (urlParams.has(field)) {
-            const element = getDomElementById(field);
-            element.value = addCommas(urlParams.get(field));
-            calculateValues(field);
-        }
-    });
-}
-function getQueryStringFromValues(values) {
-    let queryParams = '';
-    switch (lastUpdatedField) {
-        case 'btc':
-            queryParams = `?btc=${values.btc.replace(/,/g, '')}`;
-            break;
-        case 'sats':
-            queryParams = `?sats=${values.sats.replace(/,/g, '')}`;
-            break;
-        case 'jpy':
-            queryParams = `?jpy=${values.jpy.replace(/,/g, '')}`;
-            break;
-        case 'usd':
-            queryParams = `?usd=${values.usd.replace(/,/g, '')}`;
-            break;
-        case 'eur':
-            queryParams = `?eur=${values.eur.replace(/,/g, '')}`;
-            break;
-    }
-    return queryParams;
-}
-
-// 共有ボタン
-function generateShareLinks(queryParams, shareText) {
-    const shareUrl = "https://lokuyow.github.io/sats-rate/" + queryParams;
-    return {
-        twitter: "https://twitter.com/share?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText),
-        nostter: "https://nostter.vercel.app/post?content=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl),
-        massDriver: "https://mdrv.shino3.net/?intent=" + encodeURIComponent(shareText) + "%20" + encodeURIComponent(shareUrl)
-    };
-}
-function updateShareButton(btc, sats, jpy, usd, eur) {
-    const shareText = `₿：${addCommas(btc)} BTC\n₿：${addCommas(sats)} sats\n¥：${addCommas(jpy)} JPY\n$：${addCommas(usd)} USD\n€：${addCommas(eur)} EUR\nPowered by CoinGecko,`;
-    const queryParams = getQueryStringFromValues({ btc, sats, jpy, usd, eur });
-    const links = generateShareLinks(queryParams, shareText);
-
-    getDomElementById('share-twitter').href = links.twitter;
-    getDomElementById('share-nostter').href = links.nostter;
-    getDomElementById('share-mass-driver').href = links.massDriver;
-}
-
-// クリップボードにコピー　各通貨
-function copySingleCurrencyToClipboardEvent(event) {
-    const currency = event.target.dataset.currency;
-    const value = getDomElementById(currency).value;
-    const valueWithoutCommas = value.replace(/,/g, '');
-    copyToClipboard(valueWithoutCommas, event);
-}
-
-// クリップボードにコピー　全体
-function copyToClipboardEvent(event) {
-    const specificCurrency = event.target.getAttribute('data-currency');
-    const values = getValuesFromElements();
-    let textToCopy;
-    if (specificCurrency) {
-        textToCopy = BASE_TEXTS[specificCurrency].replace('{value}', values[specificCurrency]);
-    } else {
-        textToCopy = generateCopyText(values);
-    }
-    copyToClipboard(textToCopy, event);
-}
-
-function getValuesFromElements() {
-    const values = {};
-    inputFields.forEach(field => {
-        values[field] = addCommas(getDomElementById(field).value);
-    });
-    return values;
-}
-
-function generateCopyText(values) {
-    const generatedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', values[field])).join('\n');
-    return `${generatedTexts}\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/${getQueryStringFromValues(values)}`;
-}
-
-function copyToClipboard(text, event) {
-    navigator.clipboard.writeText(text).then(() => {
-        const notification = getDomElementById('notification');
-        notification.textContent = 'クリップボードにコピーしました';
-        notification.style.left = event.clientX + 'px';
-        notification.style.top = (event.clientY + 20) + 'px';
-        notification.style.visibility = 'visible';
-
-        setTimeout(() => {
-            notification.style.visibility = 'hidden';
-        }, 1000);
-    }).catch(err => {
-        console.error('クリップボードへのコピーに失敗しました', err);
-    });
-}
-
-// Web Share API
-function shareViaWebAPIEvent() {
-    const values = getValuesFromElements();
-    const shareText = generateCopyText(values);
-    const queryParams = getQueryStringFromValues(values);
-    shareViaWebAPI(shareText, queryParams);
-}
-function shareViaWebAPI(shareText, queryParams) {
-    shareText = shareText.replace(/https:\/\/lokuyow\.github\.io\/sats-rate\/.*$/, '');
-    if (navigator.share) {
-        navigator.share({
-            title: 'おいくらサッツ',
-            text: shareText,
-            url: `https://lokuyow.github.io/sats-rate/${queryParams}`
-        });
-    } else {
-        alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
-    }
 }
