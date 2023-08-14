@@ -43,59 +43,57 @@ let touchMoved = false;  // タッチ移動を検出するフラグ
 
 function setupEventListeners() {
     inputFields.forEach(id => {
-        const element = getElementById(id);
-        element.addEventListener('keyup', formatInputWithCommas);
-        
-        // テキストボックス内のテキストを全選択
-        element.addEventListener('focus', function() {
-            this.select();
-        });
-        
-        // タッチの開始時に長押しのタイマーを設定
-        element.addEventListener('touchstart', function() {
-            touchMoved = false; // 初期化
-            longPressed = false; // 初期化
-            longPressTimer = setTimeout(() => {
-                longPressed = true;
-            }, 500); // 500ms後に長押しと判定
-        });
-
-        // タッチ移動の検出
-        element.addEventListener('touchmove', function() {
-            touchMoved = true;
-            clearTimeout(longPressTimer);
-        });
-
-        // タッチの終了時にタイマーをクリア
-        element.addEventListener('touchend', function() {
-            clearTimeout(longPressTimer);
-        });
-        
-        // タップして全選択したときのメニューを制御する
-        element.addEventListener('contextmenu', function(e) {
-            if (isMobileDevice() && !longPressed) {
-                e.preventDefault(); // 長押しでない場合はコンテキストメニューを表示しない
-            }
-        });
+        const element = getDomElementById(id);
+        setupInputFieldEventListeners(element);
     });
 
-    getElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
-    getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
-    getElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
+    getDomElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
+    getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
+    getDomElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
 
-function getElementById(id) {
+function setupInputFieldEventListeners(element) {
+    element.addEventListener('keyup', formatInputWithCommas);
+    element.addEventListener('focus', handleFocus);
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });    
+    element.addEventListener('touchend', handleTouchEnd);
+    element.addEventListener('contextmenu', handleContextMenu);
+}
+
+function getDomElementById(id) {
     return document.getElementById(id);
+}
+
+function handleFocus(event) {
+    event.target.select();
+}
+
+function handleTouchStart(event) {
+    touchMoved = false;
+    longPressed = false;
+    longPressTimer = setTimeout(() => {
+        longPressed = true;
+    }, 500);
+}
+
+function handleTouchMove(event) {
+    touchMoved = true;
+    clearTimeout(longPressTimer);
+}
+
+function handleTouchEnd(event) {
+    clearTimeout(longPressTimer);
+}
+
+function handleContextMenu(event) {
+    if (isMobileDevice() && !longPressed) {
+        event.preventDefault();
+    }
 }
 
 function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-// この関数はイベントオブジェクトを用いて長押しを判別する方法としては簡易的であり、
-// 実際の長押しの判別には別の方法を検討する必要があります。
-function isLongPress(e) {
-    return e.type === 'contextmenu';
 }
 
 function handleError(err) {
@@ -104,7 +102,7 @@ function handleError(err) {
 }
 
 function setDefaultValues() {
-    const satsField = getElementById('sats');
+    const satsField = getDomElementById('sats');
     if (!satsField.value) {
         satsField.value = addCommas("100");
         calculateValues('sats');
@@ -122,13 +120,13 @@ function formatInputWithCommas(event) {
 }
 
 function getInputValue(id) {
-    return getElementById(id).value.replace(/,/g, '');
+    return getDomElementById(id).value.replace(/,/g, '');
 }
 
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const formatter = new Intl.DateTimeFormat('ja-JP', formatOptions);
-    getElementById('last-updated').textContent = formatter.format(updatedAt);
+    getDomElementById('last-updated').textContent = formatter.format(updatedAt);
     updateButtonAppearance();
 }
 
@@ -193,7 +191,7 @@ function calculateValues(inputField) {
     }
 
     inputFields.forEach(id => {
-        getElementById(id).value = addCommas(values[id]);
+        getDomElementById(id).value = addCommas(values[id]);
     });
 
     lastUpdatedField = inputField;
@@ -209,12 +207,12 @@ function recalculateValues() {
 
 // 更新ボタンの見た目
 function updateButtonAppearance() {
-    const timestampElem = getElementById('last-updated');
+    const timestampElem = getDomElementById('last-updated');
     const updatedAtTimestamp = new Date(timestampElem.textContent).getTime();
     const now = Date.now();
     const diffMinutes = (now - updatedAtTimestamp) / (1000 * 60);
 
-    const updateButton = getElementById('update-prices');
+    const updateButton = getDomElementById('update-prices');
 
     if (diffMinutes >= 10) {
         updateButton.classList.add('outdated');
@@ -229,7 +227,7 @@ function updateButtonAppearance() {
 
 // 更新ボタンの回転
 function initializeUpdateButtonRotation() {
-    const updateButton = getElementById('update-prices');
+    const updateButton = getDomElementById('update-prices');
     updateButton.addEventListener('click', function() {
         if (this.classList.contains('recent')) return;
         let svg = this.querySelector('svg');
@@ -278,7 +276,7 @@ function notifyUserOfUpdate(reg) {
 
     document.body.appendChild(updateNotice);
 
-    getElementById('updateBtn').addEventListener('click', () => {
+    getDomElementById('updateBtn').addEventListener('click', () => {
         if (reg.waiting) {
             reg.waiting.postMessage('skipWaiting');
             reg.waiting.addEventListener('statechange', () => {
@@ -313,7 +311,7 @@ function loadValuesFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
     ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
         if (urlParams.has(field)) {
-            const element = getElementById(field);
+            const element = getDomElementById(field);
             element.value = addCommas(urlParams.get(field));
             calculateValues(field);
         }
@@ -355,9 +353,9 @@ function updateShareButton(btc, sats, jpy, usd, eur) {
     const queryParams = getQueryStringFromValues({ btc, sats, jpy, usd, eur });
     const links = generateShareLinks(queryParams, shareText);
 
-    getElementById('share-twitter').href = links.twitter;
-    getElementById('share-nostter').href = links.nostter;
-    getElementById('share-mass-driver').href = links.massDriver;
+    getDomElementById('share-twitter').href = links.twitter;
+    getDomElementById('share-nostter').href = links.nostter;
+    getDomElementById('share-mass-driver').href = links.massDriver;
 }
 
 // クリップボードにコピー
@@ -370,7 +368,7 @@ function copyToClipboardEvent(event) {
 function getValuesFromElements() {
     const values = {};
     inputFields.forEach(field => {
-        values[field] = addCommas(getElementById(field).value);
+        values[field] = addCommas(getDomElementById(field).value);
     });
     return values;
 }
@@ -390,7 +388,7 @@ function generateCopyText(values) {
 
 function copyToClipboard(text, event) {
     navigator.clipboard.writeText(text).then(() => {
-        const notification = getElementById('notification');
+        const notification = getDomElementById('notification');
         notification.textContent = 'クリップボードにコピーしました';
         notification.style.left = event.clientX + 'px';
         notification.style.top = (event.clientY + 20) + 'px';
