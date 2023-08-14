@@ -56,9 +56,9 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: 70px 1fr 52px;
+    grid-template-columns: 74px auto auto;
     grid-template-rows: 0.5fr 1fr 1fr 1fr 1fr 1fr;
-    row-gap: 8px;
+    row-gap: 6px;
     align-items: center;
     max-width: 32rem;
     margin: 0 auto;
@@ -122,17 +122,15 @@ body {
 .grid-container button {
     justify-self: center;
     cursor: pointer;
-    background: none;
-    background-color: rgb(245, 247, 246);
-    border: 0px solid #393640;
-    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #393640;
+    border-radius: 10px 0 0 10px;
     padding: 0;
-    margin: 0;
-    margin-left: 4px;
+    margin: 0 0 0 6px;
     outline: none;
     font-size: 0;
-    width: 52px;
-    height: 67px;
+    width: 60px;
+    height: 70px;
 }
 
 .grid-container img {
@@ -156,12 +154,12 @@ button > img {
         sans-serif;
     background-color: rgb(245, 247, 246);
     font-size: 2rem;
-    height: 65px;
-    border-radius: 10px;
-    border: 0px solid #E9EBEB;
+    height: 68px;
+    border-radius: 0 10px 10px 0;
+    border: 1px solid #E9EBEB;
     text-align: right;
     min-width: 13rem;
-    padding-right: 15px;
+    padding: 0 10px 0 0;
 }
 
 .grid-container label {
@@ -169,7 +167,7 @@ button > img {
     font-weight: 600;
     text-align: left;
     align-self: end;
-    margin: 0 8px 12px 5px;
+    margin: 0 8px 17px 8px;
 }
 
 
