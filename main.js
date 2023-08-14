@@ -64,7 +64,7 @@ function setupEventListeners() {
 }
 
 function setupInputFieldEventListeners(element) {
-    element.addEventListener('keyup', formatInputWithCommas);
+    element.addEventListener('keyup', handleInputFormatting);
     element.addEventListener('focus', handleFocus);
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
     element.addEventListener('touchmove', handleTouchMove, { passive: true });    
@@ -84,7 +84,7 @@ function handleError(err) {
 function setDefaultValues() {
     const satsField = getDomElementById('sats');
     if (!satsField.value) {
-        satsField.value = addCommas("100");
+        satsField.value = formatCurrency("100");
         calculateValues('sats');
     }
 }
@@ -146,15 +146,43 @@ function calculateValues(inputField) {
     }
 
     inputFields.forEach(id => {
-        getDomElementById(id).value = addCommas(values[id], id);
-    });    
+        if (id === inputField) {
+            const element = getDomElementById(id);
+            const caretPos = element.selectionStart;
+            element.setSelectionRange(caretPos, caretPos);
+        } else {
+            getDomElementById(id).value = formatCurrency(values[id], id);
+        }
+    });
 
     lastUpdatedField = inputField;
     updateShareButton(values.btc, values.sats, values.jpy, values.usd, values.eur);
 }
 
-// カンマ追加
-function addCommas(num, id) {
+// キー入力
+function handleInputFormatting(event) {
+    addCommasToInput(event.target);
+}
+
+// 数値入力時のカンマ追加とカーソル位置調整
+function addCommasToInput(inputElement) {
+    const originalCaretPos = inputElement.selectionStart;
+    const originalLength = inputElement.value.length;
+
+    inputElement.value = formatCurrency(inputElement.value.replace(/,/g, ''));
+
+    const newLength = inputElement.value.length;
+    const lengthDifference = newLength - originalLength;
+
+    let newCaretPos = originalCaretPos + lengthDifference;
+    if (newCaretPos < 0) newCaretPos = 0;
+
+    inputElement.selectionStart = newCaretPos;
+    inputElement.selectionEnd = newCaretPos;
+}
+
+// カンマ追加と小数点
+function formatCurrency(num, id) {
     const currencyFormatOptions = {
         btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
@@ -162,21 +190,7 @@ function addCommas(num, id) {
         usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
         eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
     };
-
     return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
-}
-
-// カンマ追加時のカーソル位置調整
-function addCommasToInput(inputElement) {
-    let caretPos = inputElement.selectionStart - inputElement.value.length;
-    inputElement.value = addCommas(inputElement.value.replace(/,/g, ''));
-    caretPos = caretPos + (inputElement.value.length - caretPos);
-    inputElement.selectionStart = caretPos;
-    inputElement.selectionEnd = caretPos;
-}
-
-function formatInputWithCommas(event) {
-    addCommasToInput(event.target);
 }
 
 // 更新時再計算
@@ -271,7 +285,7 @@ function loadValuesFromQueryParams() {
     ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
         if (urlParams.has(field)) {
             const element = getDomElementById(field);
-            element.value = addCommas(urlParams.get(field));
+            element.value = formatCurrency(urlParams.get(field));
             calculateValues(field);
         }
     });
@@ -296,7 +310,7 @@ function getValuesFromElements() {
 
 // 共有テキスト生成
 function generateCopyText(values) {
-    const formattedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', addCommas(values[field], field))).join('\n');
+    const formattedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', formatCurrency(values[field], field))).join('\n');
     return `${formattedTexts}\nPowered by CoinGecko,`;
 }
 
