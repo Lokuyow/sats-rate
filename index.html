@@ -92,23 +92,37 @@
                     </button>
                 </div>
                 <div class="grid-container">
-                    <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン">
+                    <button id="copy-btc" data-currency="btc">
+                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン">
+                    </button>
                     <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="btc">BTC</label>
-                    <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）">
+
+                    <button id="copy-sats" data-currency="sats">
+                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）">
+                    </button>
                     <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="sats">sats</label>
-                    <img src="images/白抜きの円アイコン.svg" alt="日本円">
+
+                    <button id="copy-jpy" data-currency="jpy">
+                        <img src="images/白抜きの円アイコン.svg" alt="日本円">
+                    </button>
                     <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="jpy">JPY</label>
-                    <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル">
+
+                    <button id="copy-usd" data-currency="usd">
+                        <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル">
+                    </button>
                     <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="usd">USD</label>
-                    <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ">
+
+                    <button id="copy-eur" data-currency="eur">
+                        <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ">
+                    </button>
                     <input type="text" id="eur" oninput="calculateValues('eur')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <label for="eur">EUR</label>

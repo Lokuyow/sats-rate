@@ -7,6 +7,13 @@ const formatOptions = {
     hour: '2-digit',
     minute: '2-digit'
 };
+const BASE_TEXTS = {
+    btc: "₿：{value} BTC",
+    sats: "₿：{value} sats",
+    jpy: "¥：{value} JPY",
+    usd: "$：{value} USD",
+    eur: "€：{value} EUR"
+};
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let touchStartTime = 0;
 let longPressed = false;
@@ -44,6 +51,10 @@ function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getDomElementById(id);
         setupInputFieldEventListeners(element);
+    });
+
+    inputFields.forEach(currency => {
+        getDomElementById('copy-' + currency).addEventListener('click', copySingleCurrencyToClipboardEvent);
     });
 
     getDomElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
@@ -358,10 +369,24 @@ function updateShareButton(btc, sats, jpy, usd, eur) {
     getDomElementById('share-mass-driver').href = links.massDriver;
 }
 
-// クリップボードにコピー
+// クリップボードにコピー　各通貨
+function copySingleCurrencyToClipboardEvent(event) {
+    const currency = event.target.dataset.currency;
+    const value = getDomElementById(currency).value;
+    const valueWithoutCommas = value.replace(/,/g, '');
+    copyToClipboard(valueWithoutCommas, event);
+}
+
+// クリップボードにコピー　全体
 function copyToClipboardEvent(event) {
+    const specificCurrency = event.target.getAttribute('data-currency');
     const values = getValuesFromElements();
-    const textToCopy = generateCopyText(values);
+    let textToCopy;
+    if (specificCurrency) {
+        textToCopy = BASE_TEXTS[specificCurrency].replace('{value}', values[specificCurrency]);
+    } else {
+        textToCopy = generateCopyText(values);
+    }
     copyToClipboard(textToCopy, event);
 }
 
@@ -374,15 +399,7 @@ function getValuesFromElements() {
 }
 
 function generateCopyText(values) {
-    const baseTexts = {
-        btc: "₿：{value} BTC",
-        sats: "₿：{value} sats",
-        jpy: "¥：{value} JPY",
-        usd: "$：{value} USD",
-        eur: "€：{value} EUR",
-    };
-
-    const generatedTexts = inputFields.map(field => baseTexts[field].replace('{value}', values[field])).join('\n');
+    const generatedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', values[field])).join('\n');
     return `${generatedTexts}\nPowered by CoinGecko, https://lokuyow.github.io/sats-rate/${getQueryStringFromValues(values)}`;
 }
 

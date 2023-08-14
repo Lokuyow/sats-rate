@@ -117,7 +117,7 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: 56px 1fr 56px;
+    grid-template-columns: 65px 1fr 52px;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     row-gap: 8px;
     align-items: center;
@@ -125,10 +125,27 @@ body {
     margin: 0 auto;
 }
 
+.grid-container button {
+    justify-self: center;
+    cursor: pointer;
+    background: none;
+    background-color: rgb(245, 247, 246);
+    border: 2px solid #E9EBEB;
+    border-radius: 8px;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    font-size: 0;
+    width: 52px;
+    height: 65px;
+}
+
 .grid-container img {
     justify-self: center;
-    margin-right: 0.7rem;
-    margin-left: 1rem;
+}
+
+button > img {
+    pointer-events: none;
 }
 
 .grid-container input {
@@ -143,7 +160,7 @@ body {
         Arial, 
         sans-serif;
     background-color: rgb(245, 247, 246);
-    font-size: 2.3rem;
+    font-size: 2rem;
     height: 65px;
     border-radius: 0.6rem;
     border: 1px solid #E9EBEB;
@@ -157,7 +174,7 @@ body {
     font-weight: 600;
     text-align: left;
     align-self: end;
-    margin: 0 10px 12px 6px;
+    margin: 0 8px 12px 5px;
 }
 
 
