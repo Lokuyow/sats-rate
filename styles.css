@@ -51,21 +51,17 @@ body {
     width: 100%;
     max-width: 40rem;
     margin: 0.3rem 0rem;
-    padding: 1.4rem 0rem 2rem 0rem;
+    padding: 1.6rem 0rem 2rem 0rem;
 }
 
-.price-update-container {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    margin: -0.4rem 0 0.6rem 0;
-}
-
-.date {
-    font-size: 1.2rem;
-    margin-left: 2.6rem;
-    height: 44px;
-    line-height: 44px;
+.grid-container {
+    display: grid;
+    grid-template-columns: 70px 1fr 52px;
+    grid-template-rows: 0.5fr 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 8px;
+    align-items: center;
+    max-width: 32rem;
+    margin: 0 auto;
 }
 
 #update-prices {
@@ -74,12 +70,12 @@ body {
     background: none;
     border: 2px solid #E9EBEB;
     border-radius: 8px;
-    padding: 0;
     margin: 0;
+    margin-left: 4px;
+    padding: 0;
     outline: none;
-    margin-left: 1rem;
     font-size: 0;
-    width: 44px;
+    width: 52px;
     height: 44px;
 }
 
@@ -115,14 +111,12 @@ body {
     animation: rotateAnimation 0.8s forwards;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: 65px 1fr 52px;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    row-gap: 8px;
-    align-items: center;
-    max-width: 32rem;
-    margin: 0 auto;
+.date {
+    text-align: center;
+    font-size: 1.2rem;
+    height: 44px;
+    line-height: 44px;
+    padding-left: 15px;
 }
 
 .grid-container button {
@@ -130,14 +124,15 @@ body {
     cursor: pointer;
     background: none;
     background-color: rgb(245, 247, 246);
-    border: 2px solid #E9EBEB;
-    border-radius: 8px;
+    border: 0px solid #393640;
+    border-radius: 10px;
     padding: 0;
     margin: 0;
+    margin-left: 4px;
     outline: none;
     font-size: 0;
     width: 52px;
-    height: 65px;
+    height: 67px;
 }
 
 .grid-container img {
@@ -162,8 +157,8 @@ button > img {
     background-color: rgb(245, 247, 246);
     font-size: 2rem;
     height: 65px;
-    border-radius: 0.6rem;
-    border: 1px solid #E9EBEB;
+    border-radius: 10px;
+    border: 0px solid #E9EBEB;
     text-align: right;
     min-width: 13rem;
     padding-right: 15px;
@@ -205,6 +200,7 @@ button > img {
 }
 
 .sns button {
+    cursor: pointer;
     background: none;
     border: none;
     padding: 0;
