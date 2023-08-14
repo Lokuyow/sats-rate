@@ -327,7 +327,7 @@ function generateShareLinks(queryParams, shareText) {
 function copySingleCurrencyToClipboardEvent(event) {
     const currency = event.target.dataset.currency;
     const values = getValuesFromElements();
-    copyToClipboard(values[currency], event);
+    copyToClipboard(values[currency], event, 'left');
 }
 
 // クリップボードにコピー　全体
@@ -336,16 +336,24 @@ function copyToClipboardEvent(event) {
     const baseText = generateCopyText(values);
     const queryParams = generateQueryStringFromValues();
     const textToCopy = `${baseText} ${BASE_URL}${queryParams}`;
-    copyToClipboard(textToCopy, event);
+    copyToClipboard(textToCopy, event, 'right');
 }
 
 // コピーポップアップ表示
-function copyToClipboard(text, event) {
+function copyToClipboard(text, event, align = 'right') {
     navigator.clipboard.writeText(text).then(() => {
         const notification = getDomElementById('notification');
         notification.textContent = 'クリップボードにコピーしました';
-        notification.style.left = event.clientX + 'px';
-        notification.style.top = (event.clientY + 20) + 'px';
+        
+        notification.style.left = event.pageX + 'px';
+        notification.style.top = (event.pageY + 20) + 'px';
+        
+        if (align === 'left') {
+            notification.style.transform = 'translateX(0)';
+        } else {
+            notification.style.transform = 'translateX(-100%)';
+        }
+
         notification.style.visibility = 'visible';
 
         setTimeout(() => {
