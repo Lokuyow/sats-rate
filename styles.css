@@ -119,9 +119,8 @@ body {
     display: grid;
     grid-template-columns: 56px 1fr 56px;
     grid-template-rows: 1fr 1fr 1fr 1fr;
-    row-gap: 10px;
+    row-gap: 8px;
     align-items: center;
-    justify-items: auto;
     max-width: 32rem;
     margin: 0 auto;
 }
@@ -133,9 +132,19 @@ body {
 }
 
 .grid-container input {
+    font-family: 
+        'San Francisco', 
+        -apple-system, 
+        BlinkMacSystemFont, 
+        'Segoe UI', 
+        Roboto, 
+        Calibri, 
+        Helvetica, 
+        Arial, 
+        sans-serif;
     background-color: rgb(245, 247, 246);
     font-size: 2.3rem;
-    height: 70px;
+    height: 65px;
     border-radius: 0.6rem;
     border: 1px solid #E9EBEB;
     text-align: right;
@@ -144,11 +153,11 @@ body {
 }
 
 .grid-container label {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.15rem;
+    font-weight: 600;
     text-align: left;
-    margin-right: 10px;
-    margin-left: 8px;
+    align-self: end;
+    margin: 0 10px 12px 6px;
 }
 
 
