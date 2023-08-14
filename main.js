@@ -8,6 +8,9 @@ const formatOptions = {
     minute: '2-digit'
 };
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
+let touchStartTime = 0;
+let longPressed = false;
+let touchMoved = false;
 
 document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -37,10 +40,6 @@ async function getCoinGeckoData() {
     return response.json();
 }
 
-let touchStartTime = 0;
-let longPressed = false; // 長押し判定用のフラグ
-let touchMoved = false;  // タッチ移動を検出するフラグ
-
 function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getDomElementById(id);
@@ -65,6 +64,7 @@ function getDomElementById(id) {
     return document.getElementById(id);
 }
 
+// 選択
 function handleFocus(event) {
     event.target.select();
 }
@@ -119,10 +119,6 @@ function formatInputWithCommas(event) {
     addCommasToInput(event.target);
 }
 
-function getInputValue(id) {
-    return getDomElementById(id).value.replace(/,/g, '');
-}
-
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const formatter = new Intl.DateTimeFormat('ja-JP', formatOptions);
@@ -134,6 +130,10 @@ function updateButtonAppearanceOnVisibilityChange() {
     if (document.visibilityState === 'visible') {
         updateButtonAppearance();
     }
+}
+
+function getInputValue(id) {
+    return getDomElementById(id).value.replace(/,/g, '');
 }
 
 // 計算
