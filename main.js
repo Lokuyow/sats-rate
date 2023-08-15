@@ -425,7 +425,7 @@ function handleServiceWorker() {
 function notifyUserOfNewVersion() {
     const updateNotice = document.createElement('div');
     updateNotice.className = 'update-notice-0';
-    updateNotice.innerHTML = '新しいバージョンが見つかりました!';
+    updateNotice.innerHTML = 'テスト表示';
     document.body.appendChild(updateNotice);
 }
 
