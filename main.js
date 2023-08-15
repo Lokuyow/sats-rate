@@ -1,3 +1,4 @@
+const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3";
 const satsInBtc = 1e8;
 const inputFields = ['btc', 'sats', 'jpy', 'usd', 'eur'];
 const dateTimeFormatOptions = {
@@ -16,6 +17,7 @@ const BASE_TEXTS = {
     eur: "€：{value} EUR"
 };
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
+let lastUpdatedTimestamp = null;
 let touchStartTime = 0;
 let longPressed = false;
 let touchMoved = false;
@@ -36,7 +38,7 @@ async function initializeApp() {
 }
 
 async function getCoinGeckoData() {
-    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=2");
+    const response = await fetch(COINGECKO_URL);
     return response.json();
 }
 
@@ -205,6 +207,7 @@ function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const formatter = new Intl.DateTimeFormat('ja-JP', dateTimeFormatOptions);
     getDomElementById('last-updated').textContent = formatter.format(updatedAt);
+    lastUpdatedTimestamp = timestamp;
     updateButtonAppearance();
 }
 
@@ -216,14 +219,11 @@ function updateButtonAppearanceOnVisibilityChange() {
 
 // 更新ボタンの見た目
 function updateButtonAppearance() {
-    const timestampElem = getDomElementById('last-updated');
-    const updatedAtTimestamp = new Date(timestampElem.textContent).getTime();
-    const now = Date.now();
-    const diffMinutes = (now - updatedAtTimestamp) / (1000 * 60);
-
+    const now = Math.floor(Date.now() / 1000);
+    const diffTime = now - lastUpdatedTimestamp;
     const updateButton = getDomElementById('update-prices');
 
-    if (diffMinutes >= 10) {
+    if (diffTime >= 610) {
         updateButton.classList.add('outdated');
         updateButton.classList.remove('recent');
     } else {
