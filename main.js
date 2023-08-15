@@ -169,9 +169,14 @@ function handleInputFormatting(event) {
 // 数値入力時のカンマ追加とカーソル位置調整
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
-    const originalLength = inputElement.value.length;
+    const originalValue = inputElement.value.replace(/,/g, '');
+    const originalLength = originalValue.length;
 
-    inputElement.value = formatCurrency(inputElement.value.replace(/,/g, ''));
+    if (originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.'))) {
+        inputElement.value = originalValue;
+    } else {
+        inputElement.value = formatCurrency(originalValue);
+    }
 
     const newLength = inputElement.value.length;
     const lengthDifference = newLength - originalLength;
