@@ -406,30 +406,16 @@ function handleServiceWorker() {
 
     navigator.serviceWorker.register('./sw.js').then(reg => {
         reg.addEventListener('updatefound', () => {
-            // 新しいバージョンのサービスワーカーが見つかったので、通知を表示
-            notifyUserOfNewVersion();
-
             const newWorker = reg.installing;
             newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    if (reg.waiting) {
-                        // インストールが完了し、waiting状態になったら、更新ボタン付きの通知を表示
-                        notifyUserToUpdate(reg);
-                    }
+                    notifyUserOfUpdate(reg);
                 }
             });
         });
     });
 }
-
-function notifyUserOfNewVersion() {
-    const updateNotice = document.createElement('div');
-    updateNotice.className = 'update-notice-0';
-    updateNotice.innerHTML = 'テスト表示';
-    document.body.appendChild(updateNotice);
-}
-
-function notifyUserToUpdate(reg) {
+function notifyUserOfUpdate(reg) {
     const updateNotice = document.createElement('div');
     updateNotice.className = 'update-notice';
 
@@ -438,11 +424,11 @@ function notifyUserToUpdate(reg) {
     updateNotice.appendChild(updateBox);
 
     const title = document.createElement('h3');
-    title.innerHTML = '新しいバージョンのインストール完了';
+    title.innerHTML = 'アップデート通知';
     updateBox.appendChild(title);
 
     const text = document.createElement('p');
-    text.innerHTML = 'アップデートを適用してください。';
+    text.innerHTML = '新しいバージョンが利用可能です。';
     updateBox.appendChild(text);
 
     const updateButton = document.createElement('button');
