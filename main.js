@@ -37,11 +37,6 @@ async function initializeApp() {
     }
 }
 
-async function getCoinGeckoData() {
-    const response = await fetch(COINGECKO_URL);
-    return response.json();
-}
-
 async function fetchDataFromCoinGecko() {
     const data = await getCoinGeckoData();
     updateCurrencyRates(data);
@@ -50,17 +45,19 @@ async function fetchDataFromCoinGecko() {
     recalculateValues();
 }
 
+async function getCoinGeckoData() {
+    const response = await fetch(COINGECKO_URL);
+    return response.json();
+}
+
 function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getDomElementById(id);
         setupInputFieldEventListeners(element);
     });
 
-    inputFields.forEach(currency => {
-        getDomElementById('copy-' + currency).addEventListener('click', copySingleCurrencyToClipboardEvent);
-    });
+    setupEventListenersForCurrencyButtons()
 
-    getDomElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
     getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getDomElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
 }
@@ -348,6 +345,20 @@ function generateShareLinks(queryParams, shareText) {
     };
 }
 
+function setupEventListenersForCurrencyButtons() {
+    ['sats', 'btc', 'jpy', 'usd', 'eur'].forEach(currency => {
+        getDomElementById('copy-' + currency).addEventListener('click', function(event) {
+            copySingleCurrencyToClipboardEvent(event);
+        });
+
+        getDomElementById('paste-' + currency).addEventListener('click', function(event) {
+            pasteFromClipboardToInput(currency);
+        });
+    });
+
+    getDomElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
+}
+
 // クリップボードにコピー　各通貨
 function copySingleCurrencyToClipboardEvent(event) {
     const currency = event.target.dataset.currency;
@@ -364,7 +375,7 @@ function copyToClipboardEvent(event) {
     copyToClipboard(textToCopy, event, 'right');
 }
 
-// コピーポップアップ表示
+// コピー、ポップアップ表示
 function copyToClipboard(text, event, align = 'right') {
     navigator.clipboard.writeText(text).then(() => {
         const notification = getDomElementById('notification');
@@ -387,6 +398,29 @@ function copyToClipboard(text, event, align = 'right') {
     }).catch(err => {
         console.error('クリップボードへのコピーに失敗しました', err);
     });
+}
+
+// クリップボードから読み取り
+async function readFromClipboard() {
+    try {
+        return await navigator.clipboard.readText();
+    } catch (error) {
+        console.error("クリップボードからの読み取りに失敗しました:", error);
+        return null;
+    }
+}
+
+// クリップボードから貼り付け
+async function pasteFromClipboardToInput(currency) {
+    const clipboardData = await readFromClipboard();
+    const numericValue = parseFloat(clipboardData);
+    console.log(numericValue)
+    if (!isNaN(numericValue)) {
+        getDomElementById(currency).value = numericValue;
+        calculateValues(currency);
+    } else {
+        console.log("クリップボードの内容が数値ではありません。");
+    }
 }
 
 // Web Share API

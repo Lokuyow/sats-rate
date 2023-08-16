@@ -1,6 +1,9 @@
 :root {
     --main-font: -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, メイリオ, Meiryo, sans-serif;
 }
+*{
+    font-family: inherit;
+}
 
 body {
     background-color: #F7F6F2;
@@ -129,12 +132,18 @@ button > svg {
     padding: 0 10px 0 0;
 }
 
-.grid-container label {
+.currency-units {
+    color: #4D4846;
     font-size: 1.15rem;
     font-weight: 600;
     text-align: left;
     align-self: center;
     margin: 0 8px 0 8px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    outline: none;
 }
 
 #update-prices {
