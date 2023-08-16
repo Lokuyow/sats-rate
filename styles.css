@@ -94,6 +94,7 @@ body {
     cursor: pointer;
     background: none;
     border: 1px solid #e6e4e1;
+    border-right: 0;
     border-radius: 10px 0 0 10px;
     padding: 0;
     margin: 0 0 0 0;
@@ -103,32 +104,26 @@ body {
     height: 100%;
 }
 
-.currency-icons:nth-child(4) {
-    border-right: 2px solid #fcd303;
+.grid-container input:nth-child(5) {
+    border-left: 2px solid #fcd303;
 }
 .grid-container input:nth-child(5):focus {
     outline: 2px solid #fcd303;
     outline-offset: -2px;
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
 }  
-.currency-icons:nth-child(7) {
-    border-right: 2px solid #F7931A;
+.grid-container input:nth-child(8) {
+    border-left: 2px solid #F7931A;
 }
 .grid-container input:nth-child(8):focus {
     outline: 2px solid #F7931A;
     outline-offset: -2px;
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
 }  
-.currency-icons:nth-child(3n+10) {
-    border-right: 2px solid #E65073;
+.grid-container input:nth-child(3n+11) {
+    border-left: 2px solid #E65073;
 }
 .grid-container input:nth-child(3n+11):focus {
     outline: 2px solid #E65073;
     outline-offset: -2px;
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
 }  
 .currency-icons img {
     justify-self: center;
@@ -155,8 +150,6 @@ button > svg {
     font-size: 2rem;
     height: 68px;
     border: 1px solid #e6e4e1;
-    border-right: 0;
-    border-left: 0;
     text-align: right;
     min-width: 13rem;
     padding: 0 10px 0 0;
@@ -173,6 +166,7 @@ button > svg {
     background: none;
     padding: 0 3px 0 0;
     border: 1px solid #e6e4e1;
+    border-left: 0;
     border-radius: 0 10px 10px 0;
     width: 80%;
     height: 100%;
