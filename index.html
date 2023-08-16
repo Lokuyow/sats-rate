@@ -88,47 +88,48 @@
                     <button class="currency-icons" id="copy-sats" data-currency="sats">
                         <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）">
                     </button>
-                    <input type="text" id="sats" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                    <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <button class="currency-units" id="paste-sats" data-currency="sats">
                         sats
                     </button>
-
+                    
                     <button class="currency-icons" id="copy-btc" data-currency="btc">
                         <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン">
                     </button>
-                    <input type="text" id="btc" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                    <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <button class="currency-units" id="paste-btc" data-currency="btc">
                         BTC
                     </button>
-
+                    
                     <button class="currency-icons" id="copy-jpy" data-currency="jpy">
                         <img src="images/白抜きの円アイコン.svg" alt="日本円">
                     </button>
-                    <input type="text" id="jpy" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                    <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
                     <button class="currency-units" id="paste-jpy">
                         JPY
                     </button>
-
+                    
                     <button class="currency-icons" id="copy-usd" data-currency="usd">
                         <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル">
                     </button>
-                    <input type="text" id="usd" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                    <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
-                        <button class="currency-units" id="paste-usd" data-currency="usd">
-                            USD
-                        </button>
-
+                    <button class="currency-units" id="paste-usd" data-currency="usd">
+                        USD
+                    </button>
+                    
                     <button class="currency-icons" id="copy-eur" data-currency="eur">
                         <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ">
                     </button>
-                    <input type="text" id="eur" oninput="calculateValues('eur')" pattern="^([1-9]\d*|0)(\.\d+)?$"
+                    <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')" pattern="^([1-9]\d*|0)(\.\d+)?$"
                         inputmode="decimal">
-                        <button class="currency-units" id="paste-eur" data-currency="eur">
-                            EUR
-                        </button>
+                    <button class="currency-units" id="paste-eur" data-currency="eur">
+                        EUR
+                    </button>
+                    
 
                     <button id="update-prices" aria-label="価格の更新">
                         <svg xmlns="http://www.w3.org/2000/svg"
