@@ -42,7 +42,9 @@ async function fetchDataFromCoinGecko() {
     updateCurrencyRates(data);
     updateLastUpdated(data.bitcoin.last_updated_at);
     setDefaultValues();
-    recalculateValues();
+    if (lastUpdatedField) {
+        calculateValues(lastUpdatedField);
+    }
 }
 
 async function getCoinGeckoData() {
@@ -195,13 +197,6 @@ function formatCurrency(num, id) {
         eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
     };
     return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
-}
-
-// 更新時再計算
-function recalculateValues() {
-    if (lastUpdatedField) {
-        calculateValues(lastUpdatedField);
-    }
 }
 
 // 価格更新日時
@@ -414,7 +409,6 @@ async function readFromClipboard() {
 async function pasteFromClipboardToInput(currency) {
     const clipboardData = await readFromClipboard();
     const numericValue = parseFloat(clipboardData);
-    console.log(numericValue)
     if (!isNaN(numericValue)) {
         getDomElementById(currency).value = numericValue;
         calculateValues(currency);
