@@ -160,11 +160,11 @@ button > svg {
     grid-column: 1 / -1;
 }
 #update-prices.outdated {
-    border: 2px solid #4D4846;
+    border: 1px solid #4D4846;
     fill: #4D4846;
 }
 #update-prices.recent {
-    border: 2px solid rgba(77, 72, 70, 0.2);
+    border: 1px solid rgba(77, 72, 70, 0.2);
     fill: rgba(77, 72, 70, 0.2);
 }
 #update-prices svg {
