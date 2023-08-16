@@ -1,6 +1,6 @@
 const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3";
 const satsInBtc = 1e8;
-const inputFields = ['btc', 'sats', 'jpy', 'usd', 'eur'];
+const inputFields = ['sats', 'btc', 'jpy', 'usd', 'eur'];
 const dateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -10,8 +10,8 @@ const dateTimeFormatOptions = {
 };
 const BASE_URL = "https://lokuyow.github.io/sats-rate/";
 const BASE_TEXTS = {
-    btc: "₿：{value} BTC",
     sats: "₿：{value} sats",
+    btc: "₿：{value} BTC",
     jpy: "¥：{value} JPY",
     usd: "$：{value} USD",
     eur: "€：{value} EUR"
