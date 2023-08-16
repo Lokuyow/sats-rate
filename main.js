@@ -413,7 +413,8 @@ async function pasteFromClipboardToInput(currency) {
     const clipboardData = await readFromClipboard();
     const numericValue = parseFloat(clipboardData);
     if (!isNaN(numericValue)) {
-        getDomElementById(currency).value = numericValue;
+        const formattedValue = formatCurrency(numericValue, currency);
+        getDomElementById(currency).value = formattedValue;
         calculateValues(currency);
     } else {
         console.log("クリップボードの内容が数値ではありません。");
