@@ -330,6 +330,6 @@ button {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }  
 input:focus {
-    outline: 2px solid #4D4846;
+    outline: 2px solid #99908D;
     outline-offset: -2px;
   }  
