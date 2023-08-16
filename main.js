@@ -194,7 +194,7 @@ function addCommasToInput(inputElement) {
 function formatCurrency(num, id) {
     const currencyFormatOptions = {
         btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+        sats: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
         jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
         usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
         eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
