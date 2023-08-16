@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #F7F6F2;
+    background-color: #F7F7F5;
     font-family: var(--main-font);
     color: #4D4846;
 }
@@ -30,7 +30,7 @@ body {
     width: 100%;
     max-width: 40rem;
     margin: 0.3rem 0rem;
-    padding: 1.2rem 0 2.4rem 0;
+    padding: 1.2rem 0 1.5rem 0;
 }
 
 .title-flex {
@@ -121,7 +121,7 @@ button > svg {
         Helvetica, 
         Arial, 
         sans-serif;
-    background-color: rgb(247, 246, 245);
+    background-color: #FAF9F7;
     color: #262322;
     font-size: 2rem;
     height: 68px;
