@@ -11,6 +11,8 @@ const urlsToCache = [
   './images/maskable_icon_x192.png',
   './images/maskable_icon_x512.png',
   './images/title.svg',
+  './images/copy-regular.svg',
+  './images/paste-regular.svg',
   './images/白抜きのビットコインアイコン.svg',
   './images/白抜きの円アイコン.svg',
   './images/白抜きのドルアイコン.svg',

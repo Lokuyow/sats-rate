@@ -58,12 +58,18 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: 74px auto auto;
+    grid-template-columns: 70px auto 60px;
     grid-template-rows: 0.5fr 1fr 1fr 1fr 1fr 1fr 0.6fr;
     row-gap: 6px;
     align-items: center;
     max-width: 32rem;
     margin: 0 auto;
+}
+
+.copy-icon {
+    justify-self: end;
+    margin: 5px 18px 0 0;
+    align-self: center;
 }
 
 .date {
@@ -77,14 +83,20 @@ body {
     color: #4D4846;
 }
 
+.paste-icon {
+    justify-self: start;
+    margin: 5px 0 0 10px;
+    align-self: center;
+}
+
 .currency-icons {
-    justify-self: center;
+    justify-self: end;
     cursor: pointer;
-    background-color: #ffffff;
-    border: 1px solid #4D4846;
+    background: none;
+    border: 1px solid #e6e4e1;
     border-radius: 10px 0 0 10px;
     padding: 0;
-    margin: 0 0 0 5px;
+    margin: 0 0 0 0;
     outline: none;
     font-size: 0;
     width: 80%;
@@ -98,7 +110,7 @@ body {
     border-right: 2px solid #F7931A;
 }
 .currency-icons:nth-child(3n+10) {
-    border-right: 2px solid #F26183;
+    border-right: 2px solid #E65073;
 }
 
 .currency-icons img {
@@ -125,8 +137,9 @@ button > svg {
     color: #262322;
     font-size: 2rem;
     height: 68px;
-    border-radius: 0 10px 10px 0;
     border: 1px solid #e6e4e1;
+    border-right: 0;
+    border-left: 0;
     text-align: right;
     min-width: 13rem;
     padding: 0 10px 0 0;
@@ -136,22 +149,25 @@ button > svg {
     color: #4D4846;
     font-size: 1.15rem;
     font-weight: 600;
-    text-align: left;
+    text-align: center;
     align-self: center;
-    margin: 0 8px 0 8px;
+    margin: 0 0 0 0;
     cursor: pointer;
     background: none;
-    border: none;
-    padding: 0;
-    outline: none;
+    padding: 0 3px 0 0;
+    border: 1px solid #e6e4e1;
+    border-radius: 0 10px 10px 0;
+    width: 80%;
+    height: 100%;
 }
+
 
 #update-prices {
     visibility: hidden;
     cursor: pointer;
     background: none;
     border-radius: 8px;
-    margin: 0 10px 0 10px;
+    margin: 0 10px 0 14px;
     padding: 0 0 0 0;
     outline: none;
     font-size: 0;
@@ -186,6 +202,7 @@ button > svg {
 .rotated {
     animation: rotateAnimation 0.8s forwards;
 }
+
 
 .share-bgcolor {
     background-color: rgb(255, 255, 255);
