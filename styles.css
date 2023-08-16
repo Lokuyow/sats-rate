@@ -106,13 +106,30 @@ body {
 .currency-icons:nth-child(4) {
     border-right: 2px solid #fcd303;
 }
+.grid-container input:nth-child(5):focus {
+    outline: 2px solid #fcd303;
+    outline-offset: -2px;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+}  
 .currency-icons:nth-child(7) {
     border-right: 2px solid #F7931A;
 }
+.grid-container input:nth-child(8):focus {
+    outline: 2px solid #F7931A;
+    outline-offset: -2px;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+}  
 .currency-icons:nth-child(3n+10) {
     border-right: 2px solid #E65073;
 }
-
+.grid-container input:nth-child(3n+11):focus {
+    outline: 2px solid #E65073;
+    outline-offset: -2px;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+}  
 .currency-icons img {
     justify-self: center;
 }
@@ -329,7 +346,7 @@ button > svg {
 button {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }  
-input:focus {
+/* input:focus {
     outline: 2px solid #99908D;
     outline-offset: -2px;
-  }  
+  }   */
