@@ -226,17 +226,23 @@ function updateButtonAppearanceOnVisibilityChange() {
 function updateButtonAppearance() {
     const now = Math.floor(Date.now() / 1000);
     const diffTime = now - lastUpdatedTimestamp;
-    const updateButton = getDomElementById('update-prices');
+    
+    // Elements to be updated
+    const elementsToUpdate = [
+        getDomElementById('update-prices'),
+        getDomElementById('last-updated')
+    ];
 
-    if (diffTime >= 610) {
-        updateButton.classList.add('outdated');
-        updateButton.classList.remove('recent');
-    } else {
-        updateButton.classList.remove('outdated');
-        updateButton.classList.add('recent');
-    }
-
-    updateButton.style.visibility = 'visible';
+    elementsToUpdate.forEach(element => {
+        if (diffTime >= 610) {
+            element.classList.add('outdated');
+            element.classList.remove('recent');
+        } else {
+            element.classList.remove('outdated');
+            element.classList.add('recent');
+        }
+        element.style.visibility = 'visible';
+    });
 }
 
 // 更新ボタンの回転
