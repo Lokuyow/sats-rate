@@ -169,19 +169,22 @@ function handleInputFormatting(event) {
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
     const originalValue = inputElement.value.replace(/,/g, '');
-    const originalLength = originalValue.length;
 
-    if (originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.'))) {
-        inputElement.value = originalValue;
-    } else {
-        inputElement.value = formatCurrency(originalValue);
+    let preCommaCount = (inputElement.value.slice(0, originalCaretPos).match(/,/g) || []).length;
+
+    let formattedValue = originalValue;
+    if (!(originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.')))) {
+        formattedValue = formatCurrency(originalValue);
     }
 
-    const newLength = inputElement.value.length;
-    const lengthDifference = newLength - originalLength;
+    let postCommaCount = (formattedValue.slice(0, originalCaretPos).match(/,/g) || []).length;
+    let diffCommaCount = postCommaCount - preCommaCount;
 
-    let newCaretPos = originalCaretPos + lengthDifference;
+    let newCaretPos = originalCaretPos + diffCommaCount;
+    inputElement.value = formattedValue;
+
     if (newCaretPos < 0) newCaretPos = 0;
+    if (newCaretPos > formattedValue.length) newCaretPos = formattedValue.length;
 
     inputElement.selectionStart = newCaretPos;
     inputElement.selectionEnd = newCaretPos;
