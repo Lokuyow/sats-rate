@@ -77,59 +77,59 @@
         <div class="main">
             <div class="main-bgcolor">
                 <div class="title-flex">
-                    <img class="title" src="./images/title.svg" alt="おいくらサッツ" />
+                    <img class="title" src="./images/title.svg" alt="おいくらサッツ" width="224px" height="28.469px" />
                     <img class="icon" src="./images/icon_x192.png" alt="アイコン" />
                 </div>
                 <div class="grid-container">
-                    <img class="copy-icon" src="./images/copy-regular.svg" alt="コピー">
+                    <img class="copy-icon" src="./images/copy-regular.svg" alt="コピー" width="20px" height="20px">
                     <div class="date" id="last-updated"></div>
-                    <img class="paste-icon" src="./images/paste-regular.svg" alt="ペースト">
+                    <img class="paste-icon" src="./images/paste-regular.svg" alt="ペースト" width="20px" height="20px">
 
                     <button class="currency-icons" id="copy-sats" data-currency="sats">
-                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）">
+                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）" width="36px" height="36px">
                     </button>
-                    <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')" pattern="^([1-9]\d*|0)(\.\d+)?$"
-                        inputmode="decimal">
+                    <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')"
+                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
                     <button class="currency-units" id="paste-sats" data-currency="sats">
                         sats
                     </button>
-                    
+
                     <button class="currency-icons" id="copy-btc" data-currency="btc">
-                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン">
+                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン" width="36px" height="36px">
                     </button>
-                    <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')" pattern="^([1-9]\d*|0)(\.\d+)?$"
-                        inputmode="decimal">
+                    <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')"
+                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
                     <button class="currency-units" id="paste-btc" data-currency="btc">
                         BTC
                     </button>
-                    
+
                     <button class="currency-icons" id="copy-jpy" data-currency="jpy">
-                        <img src="images/白抜きの円アイコン.svg" alt="日本円">
+                        <img src="images/白抜きの円アイコン.svg" alt="日本円" width="36px" height="36px">
                     </button>
-                    <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')" pattern="^([1-9]\d*|0)(\.\d+)?$"
-                        inputmode="decimal">
+                    <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')"
+                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
                     <button class="currency-units" id="paste-jpy">
                         JPY
                     </button>
-                    
+
                     <button class="currency-icons" id="copy-usd" data-currency="usd">
-                        <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル">
+                        <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル" width="36px" height="36px">
                     </button>
-                    <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')" pattern="^([1-9]\d*|0)(\.\d+)?$"
-                        inputmode="decimal">
+                    <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')"
+                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
                     <button class="currency-units" id="paste-usd" data-currency="usd">
                         USD
                     </button>
-                    
+
                     <button class="currency-icons" id="copy-eur" data-currency="eur">
-                        <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ">
+                        <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ" width="36px" height="36px">
                     </button>
-                    <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')" pattern="^([1-9]\d*|0)(\.\d+)?$"
-                        inputmode="decimal">
+                    <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')"
+                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
                     <button class="currency-units" id="paste-eur" data-currency="eur">
                         EUR
                     </button>
-                    
+
 
                     <button id="update-prices" aria-label="価格の更新">
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -146,20 +146,21 @@
                     SNSに共有
                 </div>
                 <div class="sns">
-                    <a href="#" id="share-twitter" target="_blank">
+                    <a href="#" id="share-twitter" target="_blank" width="38px" height="38px">
                         <img src="./images/square-x-twitter.svg" alt="Twitter">
                     </a>
                     <a href="#" id="share-nostter" target="_blank">
-                        <img src="./images/nostr-icon-purple-on-white.svg" alt="nostter（Nostr）">
+                        <img src="./images/nostr-icon-purple-on-white.svg" alt="nostter（Nostr）" width="50px"
+                            height="50px">
                     </a>
                     <a href="#" id="share-mass-driver" target="_blank">
-                        <img src="./images/cloud-solid.svg" alt="Mass Driver（Bluesky）">
+                        <img src="./images/cloud-solid.svg" alt="Mass Driver（Bluesky）" width="38px" height="38px">
                     </a>
                     <button id="share-via-webapi">
-                        <img src="./images/share-nodes-solid.svg" alt="共有">
+                        <img src="./images/share-nodes-solid.svg" alt="共有" width="35px" height="35px">
                     </button>
                     <button id="copy-to-clipboard">
-                        <img src="./images/clipboard-solid.svg" alt="クリップボード">
+                        <img src="./images/clipboard-solid.svg" alt="クリップボード" width="34px" height="34px">
                     </button>
                     <div id="notification"></div>
                 </div>
@@ -176,7 +177,8 @@
                 </div>
                 <div class="satoshi-bgcolor">
                     <p class="link">
-                        <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">Sats, Sat, Satoshi (単位)</a>
+                        <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">Sats, Sat,
+                            Satoshi (単位)</a>
                     </p>
                     <p class="table">
                         1億 sats = 1 BTC<br>
