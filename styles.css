@@ -6,9 +6,10 @@
 }
 
 body {
-    background-color: #F7F7F5;
+    background-color: #F5F4F2;
     font-family: var(--main-font);
     color: #4D4846;
+    margin: 12px;
 }
 
 .page {
@@ -29,7 +30,7 @@ body {
     border-radius: 1rem;
     width: 100%;
     max-width: 40rem;
-    margin: 0.3rem 0rem;
+    margin: 0 0 0.3rem 0;
     padding: 1.2rem 0 1.5rem 0;
 }
 
@@ -77,7 +78,7 @@ body {
     font-size: 1.2rem;
 }
 .date.outdated {
-    color: rgba(77, 72, 70, 0.2);
+    color: #E0DFDA;
 }
 .date.recent {
     color: #4D4846;
@@ -93,7 +94,7 @@ body {
     justify-self: end;
     cursor: pointer;
     background: none;
-    border: 1px solid #e6e4e1;
+    border: 1px solid #E0DFDA;
     border-right: 0;
     border-radius: 10px 0 0 10px;
     padding: 0;
@@ -145,13 +146,12 @@ button > svg {
         Helvetica, 
         Arial, 
         sans-serif;
-    background-color: #FAF9F7;
     color: #262322;
     font-size: 2rem;
     height: 68px;
-    border: 1px solid #e6e4e1;
+    border: 1px solid #E0DFDA;
     text-align: right;
-    min-width: 13rem;
+    min-width: 140px;
     padding: 0 10px 0 0;
 }
 
@@ -165,7 +165,7 @@ button > svg {
     cursor: pointer;
     background: none;
     padding: 0 3px 0 0;
-    border: 1px solid #e6e4e1;
+    border: 1px solid #E0DFDA;
     border-left: 0;
     border-radius: 0 10px 10px 0;
     width: 80%;
@@ -191,8 +191,8 @@ button > svg {
     fill: #4D4846;
 }
 #update-prices.recent {
-    border: 1px solid rgba(77, 72, 70, 0.2);
-    fill: rgba(77, 72, 70, 0.2);
+    border: 1px solid #E0DFDA;
+    fill: #E0DFDA;
 }
 #update-prices svg {
     width: 28px;
