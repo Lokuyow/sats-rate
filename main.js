@@ -30,8 +30,7 @@ async function initializeApp() {
         setupEventListeners();
         handleServiceWorker();
         loadValuesFromQueryParams();
-        initializeUpdateButtonRotation();
-        document.addEventListener('visibilitychange', updateButtonAppearanceOnVisibilityChange);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
     } catch (err) {
         handleError(err);
     }
@@ -45,6 +44,7 @@ async function fetchDataFromCoinGecko() {
     if (lastUpdatedField) {
         calculateValues(lastUpdatedField);
     }
+    updateElementClass(getDomElementById('update-prices'), false);
 }
 
 async function getCoinGeckoData() {
@@ -57,11 +57,9 @@ function setupEventListeners() {
         const element = getDomElementById(id);
         setupInputFieldEventListeners(element);
     });
-
     setupEventListenersForCurrencyButtons()
-
     getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
-    getDomElementById('update-prices').addEventListener('click', fetchDataFromCoinGecko);
+    getDomElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
 }
 
 function setupInputFieldEventListeners(element) {
@@ -202,55 +200,58 @@ function formatCurrency(num, id) {
     return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
 }
 
-// 価格更新日時
+// 価格更新日時の表示
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const formatter = new Intl.DateTimeFormat('ja-JP', dateTimeFormatOptions);
     getDomElementById('last-updated').textContent = formatter.format(updatedAt);
     lastUpdatedTimestamp = timestamp;
-    updateButtonAppearance();
 }
 
-function updateButtonAppearanceOnVisibilityChange() {
-    if (document.visibilityState === 'visible') {
-        updateButtonAppearance();
+// 更新ボタン
+function handleVisibilityChange() {
+    if (document.hidden) return;
+
+    const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+    const updatePricesElement = getDomElementById('update-prices');
+    const lastUpdatedElement = getDomElementById('last-updated');
+
+    updateElementClass(updatePricesElement, diffTime >= 610);
+    updateElementClass(lastUpdatedElement, diffTime >= 610);
+}
+
+async function updateElementsBasedOnTimestamp() {
+    const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+
+    if (diffTime >= 610) {
+        await fetchDataFromCoinGecko();
+        const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+
+        const updatePricesElement = getDomElementById('update-prices');
+        const lastUpdatedElement = getDomElementById('last-updated');
+
+        updateElementClass(updatePricesElement, updatedDiffTime >= 610);
+        updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
+
+        let svg = updatePricesElement.querySelector('svg');
+        if (svg && !svg.classList.contains('rotated')) {
+            svg.classList.add('rotated');
+            svg.addEventListener('animationend', function() {
+                svg.classList.remove('rotated');
+            }, { once: true });
+        }
     }
 }
 
-// 更新ボタンの見た目
-function updateButtonAppearance() {
-    const now = Math.floor(Date.now() / 1000);
-    const diffTime = now - lastUpdatedTimestamp;
-    
-    // Elements to be updated
-    const elementsToUpdate = [
-        getDomElementById('update-prices'),
-        getDomElementById('last-updated')
-    ];
-
-    elementsToUpdate.forEach(element => {
-        if (diffTime >= 610) {
-            element.classList.add('outdated');
-            element.classList.remove('recent');
-        } else {
-            element.classList.remove('outdated');
-            element.classList.add('recent');
-        }
-        element.style.visibility = 'visible';
-    });
-}
-
-// 更新ボタンの回転
-function initializeUpdateButtonRotation() {
-    const updateButton = getDomElementById('update-prices');
-    updateButton.addEventListener('click', function() {
-        if (this.classList.contains('recent')) return;
-        let svg = this.querySelector('svg');
-        svg.classList.add('rotated');
-        svg.addEventListener('animationend', function() {
-            svg.classList.remove('rotated');
-        }, { once: true });
-    });
+function updateElementClass(element, isOutdated) {
+    if (isOutdated) {
+        element.classList.add('outdated');
+        element.classList.remove('recent');
+    } else {
+        element.classList.remove('outdated');
+        element.classList.add('recent');
+    }
+    element.style.visibility = 'visible';
 }
 
 // 選択
