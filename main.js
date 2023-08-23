@@ -25,31 +25,35 @@ let touchMoved = false;
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
-    try {
-        await fetchDataFromCoinGecko();
-        setupEventListeners();
-        handleServiceWorker();
-        loadValuesFromQueryParams();
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-    } catch (err) {
-        handleError(err);
-    }
+    await fetchDataFromCoinGecko();
+    setupEventListeners();
+    handleServiceWorker();
+    loadValuesFromQueryParams();
+    handleVisibilityChange();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', handleOnline);
 }
 
 async function fetchDataFromCoinGecko() {
-    const data = await getCoinGeckoData();
-    updateCurrencyRates(data);
-    updateLastUpdated(data.bitcoin.last_updated_at);
+    let data;
+
+    try {
+        const response = await fetch(COINGECKO_URL);
+        data = await response.json();
+    } catch (err) {
+        handleCoinGeckoRequestError(err);
+    }
+
+    if (data) {
+        updateCurrencyRates(data);
+        updateLastUpdated(data.bitcoin.last_updated_at);
+        updateElementClass(getDomElementById('last-updated'), false);
+    }
     setDefaultValues();
     if (lastUpdatedField) {
         calculateValues(lastUpdatedField);
+        updateElementClass(getDomElementById('update-prices'), false);
     }
-    updateElementClass(getDomElementById('update-prices'), false);
-}
-
-async function getCoinGeckoData() {
-    const response = await fetch(COINGECKO_URL);
-    return response.json();
 }
 
 function setupEventListeners() {
@@ -66,7 +70,7 @@ function setupInputFieldEventListeners(element) {
     element.addEventListener('keyup', handleInputFormatting);
     element.addEventListener('focus', handleFocus);
     element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: true });    
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });
     element.addEventListener('touchend', handleTouchEnd);
     element.addEventListener('contextmenu', handleContextMenu);
 }
@@ -75,9 +79,14 @@ function getDomElementById(id) {
     return document.getElementById(id);
 }
 
-function handleError(err) {
+function handleOnline() {
+    console.log('オンラインに復帰しました。最新データを取得します。');
+    fetchDataFromCoinGecko();
+}
+
+function handleCoinGeckoRequestError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
-    alert("価格データの取得に失敗しました。しばらく時間をおいてからページをリロードしてみてください。");
+    alert("価格レートの取得に失敗しました。時間をおいてからリロードしてみてください。");
 }
 
 function setDefaultValues() {
@@ -200,15 +209,17 @@ function formatCurrency(num, id) {
     return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
 }
 
-// 価格更新日時の表示
+// 価格レート更新日時の表示
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
-    const formatter = new Intl.DateTimeFormat('ja-JP', dateTimeFormatOptions);
+    const userLocale = navigator.language || navigator.userLanguage;
+    const formatter = new Intl.DateTimeFormat(userLocale, dateTimeFormatOptions);
+
     getDomElementById('last-updated').textContent = formatter.format(updatedAt);
     lastUpdatedTimestamp = timestamp;
 }
 
-// 更新ボタン
+// 画面を切り替えたときのレート更新ボタンと取得日時表示
 function handleVisibilityChange() {
     if (document.hidden) return;
 
@@ -220,6 +231,7 @@ function handleVisibilityChange() {
     updateElementClass(lastUpdatedElement, diffTime >= 610);
 }
 
+// レート更新ボタンを押したとき
 async function updateElementsBasedOnTimestamp() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
 
@@ -236,13 +248,14 @@ async function updateElementsBasedOnTimestamp() {
         let svg = updatePricesElement.querySelector('svg');
         if (svg && !svg.classList.contains('rotated')) {
             svg.classList.add('rotated');
-            svg.addEventListener('animationend', function() {
+            svg.addEventListener('animationend', function () {
                 svg.classList.remove('rotated');
             }, { once: true });
         }
     }
 }
 
+// レート更新ボタンと取得日時表示の見た目
 function updateElementClass(element, isOutdated) {
     if (isOutdated) {
         element.classList.add('outdated');
@@ -324,7 +337,7 @@ function generateCopyText(values) {
 // 共有ボタン
 function updateShareButton(btc, sats, jpy, usd, eur) {
     const values = { btc, sats, jpy, usd, eur };
-    
+
     const shareText = generateCopyText(values);
     const queryParams = generateQueryStringFromValues();
 
@@ -346,11 +359,11 @@ function generateShareLinks(queryParams, shareText) {
 
 function setupEventListenersForCurrencyButtons() {
     ['sats', 'btc', 'jpy', 'usd', 'eur'].forEach(currency => {
-        getDomElementById('copy-' + currency).addEventListener('click', function(event) {
+        getDomElementById('copy-' + currency).addEventListener('click', function (event) {
             copySingleCurrencyToClipboardEvent(event);
         });
 
-        getDomElementById('paste-' + currency).addEventListener('click', function(event) {
+        getDomElementById('paste-' + currency).addEventListener('click', function (event) {
             pasteFromClipboardToInput(currency);
         });
     });
@@ -379,10 +392,10 @@ function copyToClipboard(text, event, align = 'right') {
     navigator.clipboard.writeText(text).then(() => {
         const notification = getDomElementById('notification');
         notification.textContent = 'クリップボードにコピーしました';
-        
+
         notification.style.left = event.pageX + 'px';
         notification.style.top = (event.pageY + 20) + 'px';
-        
+
         if (align === 'left') {
             notification.style.transform = 'translateX(0)';
         } else {
