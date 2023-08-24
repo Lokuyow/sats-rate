@@ -21,6 +21,7 @@ let lastUpdatedTimestamp = null;
 let touchStartTime = 0;
 let longPressed = false;
 let touchMoved = false;
+let selectedLocale = navigator.language || navigator.languages[0];
 
 document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -104,7 +105,7 @@ function updateCurrencyRates(data) {
 }
 
 function getInputValue(id) {
-    return getDomElementById(id).value.replace(/,/g, '');
+    return parseInput(getDomElementById(id).value, selectedLocale);
 }
 
 // 計算
@@ -172,22 +173,50 @@ function handleInputFormatting(event) {
     addCommasToInput(event.target);
 }
 
-// 数値入力時のカンマ追加とカーソル位置調整
+function getLocaleSeparators(locale) {
+    const formattedNumber = new Intl.NumberFormat(locale).format(1000.1);
+    return {
+        groupSeparator: formattedNumber[1], // 桁区切り文字
+        decimalSeparator: formattedNumber[5] // 小数点の区切り文字
+    };
+}
+
+function parseInput(inputValue, locale) {
+    const separators = getLocaleSeparators(locale);
+    const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), '').replace(separators.decimalSeparator, '.');
+    return sanitizedValue;
+}
+
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
-    const originalValue = inputElement.value.replace(/,/g, '');
+    const separators = getLocaleSeparators(selectedLocale);
+    const originalValue = parseInput(inputElement.value, selectedLocale);
 
-    let preCommaCount = (inputElement.value.slice(0, originalCaretPos).match(/,/g) || []).length;
-
-    let formattedValue = originalValue;
-    if (!(originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.')))) {
-        formattedValue = formatCurrency(originalValue);
+    if (originalValue === '') {
+        inputElement.value = '0';
+        inputElement.selectionStart = 1;
+        inputElement.selectionEnd = 1;
+        return; // この関数の残りの部分をスキップ
     }
 
-    let postCommaCount = (formattedValue.slice(0, originalCaretPos).match(/,/g) || []).length;
-    let diffCommaCount = postCommaCount - preCommaCount;
+    let preSeparatorCount = (inputElement.value.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
 
-    let newCaretPos = originalCaretPos + diffCommaCount;
+    let formattedValue;
+    if (originalValue.endsWith('.') || (originalValue.includes(separators.decimalSeparator) && originalCaretPos > originalValue.indexOf(separators.decimalSeparator))) {
+        // 小数点が入力された場合、桁区切りを保持する
+        const parts = originalValue.split(separators.decimalSeparator);
+        const integerPart = parts[0];
+        formattedValue = new Intl.NumberFormat(selectedLocale).format(parseFloat(integerPart));
+        formattedValue += separators.decimalSeparator + (parts[1] ? parts[1] : '');
+    } else {
+        const currencyId = inputElement.id; // 通貨のIDを入力エレメントのIDから取得
+        formattedValue = formatCurrency(originalValue, currencyId);
+    }
+
+    let postSeparatorCount = (formattedValue.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
+    let diffSeparatorCount = postSeparatorCount - preSeparatorCount;
+
+    let newCaretPos = originalCaretPos + diffSeparatorCount;
     inputElement.value = formattedValue;
 
     if (newCaretPos < 0) newCaretPos = 0;
@@ -197,16 +226,16 @@ function addCommasToInput(inputElement) {
     inputElement.selectionEnd = newCaretPos;
 }
 
-// カンマ追加と小数点
+// 計算結果のカンマ追加と桁数処理
 function formatCurrency(num, id) {
     const currencyFormatOptions = {
-        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         sats: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
         usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
         eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
     };
-    return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
+    return Number(num).toLocaleString(selectedLocale, currencyFormatOptions[id]);
 }
 
 // 価格レート更新日時の表示
@@ -302,28 +331,40 @@ function isMobileDevice() {
 // URLクエリパラメータ
 function loadValuesFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
+    const decimalFormat = urlParams.get('d') || 'p'; // dパラメータから小数点のフォーマット情報を取得
+    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US'; // dパラメータに基づいてロケールを設定
+
     ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
         if (urlParams.has(field)) {
             const element = getDomElementById(field);
-            element.value = formatCurrency(urlParams.get(field));
+            const rawValue = urlParams.get(field);
+            const parsedValue = parseInput(rawValue, locale); // クエリパラメータのロケール情報で解析
+            const formattedValue = formatCurrency(parsedValue, field); // 数値をロケールに応じてフォーマット
+            element.value = formattedValue;
             calculateValues(field);
         }
     });
 }
+
 function getQueryString(field, value) {
-    return `?${field}=${value.replace(/,/g, '')}`;
+    const separators = getLocaleSeparators(selectedLocale);
+    const formattedValue = value.replace('.', separators.decimalSeparator); // 小数点をロケールに合わせて置換
+    const decimalFormat = separators.decimalSeparator === '.' ? 'p' : 'c'; // 小数点のフォーマットを設定
+    return `?${field}=${formattedValue}&d=${decimalFormat}`; // dパラメータを追加
 }
+
 function generateQueryStringFromValues() {
     if (!lastUpdatedField) return '';
     const values = getValuesFromElements();
     return getQueryString(lastUpdatedField, values[lastUpdatedField]);
 }
 
-// インプットフィールドからカンマを取り除いた数値を取得
+// インプットフィールドから桁区切りを取り除いた数値を取得
 function getValuesFromElements() {
     const values = {};
     inputFields.forEach(field => {
-        values[field] = getDomElementById(field).value.replace(/,/g, '');
+        const rawValue = getDomElementById(field).value;
+        values[field] = parseInput(rawValue, selectedLocale);
     });
     return values;
 }
@@ -374,8 +415,10 @@ function setupEventListenersForCurrencyButtons() {
 // クリップボードにコピー　各通貨
 function copySingleCurrencyToClipboardEvent(event) {
     const currency = event.target.dataset.currency;
-    const values = getValuesFromElements();
-    copyToClipboard(values[currency], event, 'left');
+    const inputValue = getDomElementById(currency).value;
+    const separators = getLocaleSeparators(selectedLocale);
+    const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), ''); // 桁区切りを削除
+    copyToClipboard(sanitizedValue, event, 'left');
 }
 
 // クリップボードにコピー　全体
@@ -425,7 +468,8 @@ async function readFromClipboard() {
 // クリップボードから貼り付け
 async function pasteFromClipboardToInput(currency) {
     const clipboardData = await readFromClipboard();
-    const numericValue = parseFloat(clipboardData);
+    const sanitizedValue = parseInput(clipboardData, selectedLocale); // クリップボードのデータをロケールに応じて解析
+    const numericValue = parseFloat(sanitizedValue);
     if (!isNaN(numericValue)) {
         const formattedValue = formatCurrency(numericValue, currency);
         getDomElementById(currency).value = formattedValue;
