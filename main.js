@@ -257,16 +257,11 @@ function handleVisibilityChange() {
 async function updateElementsBasedOnTimestamp() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
 
+    const updatePricesElement = getDomElementById('update-prices');
+    const lastUpdatedElement = getDomElementById('last-updated');
+
     if (diffTime >= 610) {
-        await fetchDataFromCoinGecko();
-        const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
-
-        const updatePricesElement = getDomElementById('update-prices');
-        const lastUpdatedElement = getDomElementById('last-updated');
-
-        updateElementClass(updatePricesElement, updatedDiffTime >= 610);
-        updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
-
+        // すぐにアニメーションを開始
         let svg = updatePricesElement.querySelector('svg');
         if (svg && !svg.classList.contains('rotated')) {
             svg.classList.add('rotated');
@@ -274,6 +269,14 @@ async function updateElementsBasedOnTimestamp() {
                 svg.classList.remove('rotated');
             }, { once: true });
         }
+
+        // データを取得
+        await fetchDataFromCoinGecko();
+        const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+
+        // 要素のクラスを更新
+        updateElementClass(updatePricesElement, updatedDiffTime >= 610);
+        updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
     }
 }
 
@@ -382,9 +385,9 @@ function generateCopyText(values) {
 }
 
 function getCurrencyText(key, value, baseCurrencyKey) {
-    const includeSymbol = (baseCurrencyKey === 'sats' && key === 'btc') || 
-                          (baseCurrencyKey === 'btc' && key === 'sats') || 
-                          (baseCurrencyKey === key);
+    const includeSymbol = (baseCurrencyKey === 'sats' && key === 'btc') ||
+        (baseCurrencyKey === 'btc' && key === 'sats') ||
+        (baseCurrencyKey === key);
 
     const baseTexts = {
         sats: "₿ {value} sats",
