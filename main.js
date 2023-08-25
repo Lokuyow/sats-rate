@@ -9,13 +9,6 @@ const dateTimeFormatOptions = {
     minute: '2-digit'
 };
 const BASE_URL = "https://lokuyow.github.io/sats-rate/";
-const BASE_TEXTS = {
-    sats: "₿：{value} sats",
-    btc: "₿：{value} BTC",
-    jpy: "¥：{value} JPY",
-    usd: "$：{value} USD",
-    eur: "€：{value} EUR"
-};
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let touchStartTime = 0;
@@ -371,45 +364,36 @@ function getValuesFromElements() {
 
 // 共有テキスト生成
 function generateCopyText(values) {
-    // 基準通貨を取得（lastUpdatedFieldに基づいて）
     const baseCurrencyKey = lastUpdatedField;
-    const baseCurrencySymbol = getCurrencySymbol(baseCurrencyKey);
-    const baseCurrencyText = `${baseCurrencySymbol} ${formatCurrency(values[baseCurrencyKey], baseCurrencyKey)} ${(baseCurrencyKey !== 'sats') ? baseCurrencyKey.toUpperCase() : 'sats'} =`;
+    const baseCurrencyText = `${getCurrencyText(baseCurrencyKey, values[baseCurrencyKey], baseCurrencyKey)} =`;
 
-    // 他の通貨の整形（基準通貨、sats、btc以外）
-    const excludeKeys = ['sats', 'btc', baseCurrencyKey];
-    const otherCurrencies = Object.keys(values).filter(key => !excludeKeys.includes(key));
-    const otherCurrencyTexts = otherCurrencies.map(key => {
-        const symbol = getCurrencySymbol(key);
-        return `${symbol} ${formatCurrency(values[key], key)} ${key.toUpperCase()}`;
-    });
+    const otherCurrencyKeys = ['sats', 'btc'].filter(key => key !== baseCurrencyKey);
+    const otherCurrencyTexts = otherCurrencyKeys.map(key => getCurrencyText(key, values[key], baseCurrencyKey)).join(', ');
 
-    // satsとBTCを一緒に表示
-    let satsAndBtcText = '';
-    if (baseCurrencyKey === 'sats') {
-        satsAndBtcText = `₿ ${formatCurrency(values['btc'], 'btc')} BTC`;
-    } else if (baseCurrencyKey === 'btc') {
-        satsAndBtcText = `₿ ${formatCurrency(values['sats'], 'sats')} sats`;
-    } else {
-        satsAndBtcText = `₿ ${formatCurrency(values['sats'], 'sats')} sats, ${formatCurrency(values['btc'], 'btc')} BTC`;
-    }
-    otherCurrencyTexts.unshift(satsAndBtcText);
+    const remainingCurrencies = Object.keys(values).filter(key => !['sats', 'btc', baseCurrencyKey].includes(key))
+        .map(key => getCurrencyText(key, values[key]));
 
-    // 結果の組み立て
-    const resultText = [baseCurrencyText, ...otherCurrencyTexts].filter(Boolean).join('\n');
-
-    return `${resultText}\nPowered by CoinGecko,`;
+    return [
+        baseCurrencyText,
+        otherCurrencyTexts,
+        ...remainingCurrencies,
+        'Powered by CoinGecko,'
+    ].filter(Boolean).join('\n');
 }
 
-function getCurrencySymbol(key) {
-    const symbols = {
-        sats: '₿',
-        btc: '₿',
-        jpy: '¥',
-        usd: '$',
-        eur: '€'
+function getCurrencyText(key, value, baseCurrencyKey) {
+    const includeSymbol = (baseCurrencyKey === 'sats' && key === 'btc') || 
+                          (baseCurrencyKey === 'btc' && key === 'sats') || 
+                          (baseCurrencyKey === key);
+
+    const baseTexts = {
+        sats: "₿ {value} sats",
+        btc: includeSymbol ? "₿ {value} BTC" : "{value} BTC",
+        jpy: "¥ {value} JPY",
+        usd: "$ {value} USD",
+        eur: "€ {value} EUR"
     };
-    return symbols[key] || '';
+    return baseTexts[key]?.replace('{value}', formatCurrency(value, key)) || '';
 }
 
 // 共有ボタン
