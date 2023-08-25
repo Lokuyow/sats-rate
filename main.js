@@ -222,7 +222,7 @@ function addCommasToInput(inputElement) {
 // 計算結果のカンマ追加と桁数処理
 function formatCurrency(num, id) {
     const currencyFormatOptions = {
-        sats: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
         btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
         jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
         usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
@@ -236,9 +236,12 @@ function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const userLocale = navigator.language || navigator.userLanguage;
     const formatter = new Intl.DateTimeFormat(userLocale, dateTimeFormatOptions);
+    const formattedDate = formatter.format(updatedAt);
 
-    getDomElementById('last-updated').textContent = formatter.format(updatedAt);
+    getDomElementById('last-updated').textContent = formattedDate;
     lastUpdatedTimestamp = timestamp;
+
+    return formattedDate;
 }
 
 // 画面を切り替えたときのレート更新ボタンと取得日時表示
@@ -376,10 +379,13 @@ function generateCopyText(values) {
     const remainingCurrencies = Object.keys(values).filter(key => !['sats', 'btc', baseCurrencyKey].includes(key))
         .map(key => getCurrencyText(key, values[key]));
 
+    const lastUpdatedText = updateLastUpdated(lastUpdatedTimestamp);
+
     return [
         baseCurrencyText,
         otherCurrencyTexts,
         ...remainingCurrencies,
+        lastUpdatedText,
         'Powered by CoinGecko,'
     ].filter(Boolean).join('\n');
 }
