@@ -371,8 +371,45 @@ function getValuesFromElements() {
 
 // 共有テキスト生成
 function generateCopyText(values) {
-    const formattedTexts = inputFields.map(field => BASE_TEXTS[field].replace('{value}', formatCurrency(values[field], field))).join('\n');
-    return `${formattedTexts}\nPowered by CoinGecko,`;
+    // 基準通貨を取得（lastUpdatedFieldに基づいて）
+    const baseCurrencyKey = lastUpdatedField;
+    const baseCurrencySymbol = getCurrencySymbol(baseCurrencyKey);
+    const baseCurrencyText = `${baseCurrencySymbol} ${formatCurrency(values[baseCurrencyKey], baseCurrencyKey)} ${(baseCurrencyKey !== 'sats') ? baseCurrencyKey.toUpperCase() : 'sats'} =`;
+
+    // 他の通貨の整形（基準通貨、sats、btc以外）
+    const excludeKeys = ['sats', 'btc', baseCurrencyKey];
+    const otherCurrencies = Object.keys(values).filter(key => !excludeKeys.includes(key));
+    const otherCurrencyTexts = otherCurrencies.map(key => {
+        const symbol = getCurrencySymbol(key);
+        return `${symbol} ${formatCurrency(values[key], key)} ${key.toUpperCase()}`;
+    });
+
+    // satsとBTCを一緒に表示
+    let satsAndBtcText = '';
+    if (baseCurrencyKey === 'sats') {
+        satsAndBtcText = `₿ ${formatCurrency(values['btc'], 'btc')} BTC`;
+    } else if (baseCurrencyKey === 'btc') {
+        satsAndBtcText = `₿ ${formatCurrency(values['sats'], 'sats')} sats`;
+    } else {
+        satsAndBtcText = `₿ ${formatCurrency(values['sats'], 'sats')} sats, ${formatCurrency(values['btc'], 'btc')} BTC`;
+    }
+    otherCurrencyTexts.unshift(satsAndBtcText);
+
+    // 結果の組み立て
+    const resultText = [baseCurrencyText, ...otherCurrencyTexts].filter(Boolean).join('\n');
+
+    return `${resultText}\nPowered by CoinGecko,`;
+}
+
+function getCurrencySymbol(key) {
+    const symbols = {
+        sats: '₿',
+        btc: '₿',
+        jpy: '¥',
+        usd: '$',
+        eur: '€'
+    };
+    return symbols[key] || '';
 }
 
 // 共有ボタン
