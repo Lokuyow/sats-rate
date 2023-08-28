@@ -1,4 +1,5 @@
 const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3";
+const BASE_URL = "https://lokuyow.github.io/sats-rate/";
 const satsInBtc = 1e8;
 const inputFields = ['sats', 'btc', 'jpy', 'usd', 'eur'];
 const dateTimeFormatOptions = {
@@ -8,7 +9,14 @@ const dateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit'
 };
-const BASE_URL = "https://lokuyow.github.io/sats-rate/";
+const currencyFormatOptions = {
+    sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+    btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
+    jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+    usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
+    eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
+};
+const significantDigits = 8;
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let touchStartTime = 0;
@@ -86,7 +94,7 @@ function handleCoinGeckoRequestError(err) {
 function setDefaultValues() {
     const satsField = getDomElementById('sats');
     if (!satsField.value) {
-        satsField.value = formatCurrency("100");
+        satsField.value = formatCurrency("100", "sats", selectedLocale);
         calculateValues('sats');
     }
 }
@@ -153,7 +161,7 @@ function calculateValues(inputField) {
             const caretPos = element.selectionStart;
             element.setSelectionRange(caretPos, caretPos);
         } else {
-            getDomElementById(id).value = formatCurrency(values[id], id);
+            getDomElementById(id).value = formatCurrency(values[id], id, selectedLocale);
         }
     });
 
@@ -203,7 +211,7 @@ function addCommasToInput(inputElement) {
         formattedValue += separators.decimalSeparator + (parts[1] ? parts[1] : '');
     } else {
         const currencyId = inputElement.id; // 通貨のIDを入力エレメントのIDから取得
-        formattedValue = formatCurrency(originalValue, currencyId);
+        formattedValue = formatCurrency(originalValue, currencyId, selectedLocale);
     }
 
     let postSeparatorCount = (formattedValue.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
@@ -220,15 +228,22 @@ function addCommasToInput(inputElement) {
 }
 
 // 計算結果のカンマ追加と桁数処理
-function formatCurrency(num, id) {
-    const currencyFormatOptions = {
-        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
-        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
-        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
-        eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
-    };
-    return Number(num).toLocaleString(selectedLocale, currencyFormatOptions[id]);
+function formatCurrency(num, id, selectedLocale) {
+    const maximumFractionDigits = currencyFormatOptions[id].maximumFractionDigits;
+    const roundedNum = roundToSignificantDigits(num, maximumFractionDigits);
+    return Number(roundedNum).toLocaleString(selectedLocale, currencyFormatOptions[id]);
+}
+
+function roundToSignificantDigits(num, decimalPlaces) {
+    let exp = significantDigits - 1 - Math.floor(Math.log10(Math.abs(num)));
+    exp = clamp(exp, 0, 100); // 範囲制限
+    let scaleFactorSignificant = Number("1e" + exp);
+    num = (Math.round(num * scaleFactorSignificant) / scaleFactorSignificant).toFixed(exp);
+    return parseFloat(num);
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(value, max));
 }
 
 // 価格レート更新日時の表示
@@ -338,7 +353,7 @@ function loadValuesFromQueryParams() {
             const element = getDomElementById(field);
             const rawValue = urlParams.get(field);
             const parsedValue = parseInput(rawValue, locale); // クエリパラメータのロケール情報で解析
-            const formattedValue = formatCurrency(parsedValue, field); // 数値をロケールに応じてフォーマット
+            const formattedValue = formatCurrency(parsedValue, field, selectedLocale); // 数値をロケールに応じてフォーマット
             element.value = formattedValue;
             calculateValues(field);
         }
@@ -402,7 +417,7 @@ function getCurrencyText(key, value, baseCurrencyKey) {
         usd: "$ {value} USD",
         eur: "€ {value} EUR"
     };
-    return baseTexts[key]?.replace('{value}', formatCurrency(value, key)) || '';
+    return baseTexts[key]?.replace('{value}', formatCurrency(value, key, selectedLocale)) || '';
 }
 
 // 共有ボタン
@@ -501,7 +516,7 @@ async function pasteFromClipboardToInput(currency) {
     const sanitizedValue = parseInput(clipboardData, selectedLocale); // クリップボードのデータをロケールに応じて解析
     const numericValue = parseFloat(sanitizedValue);
     if (!isNaN(numericValue)) {
-        const formattedValue = formatCurrency(numericValue, currency);
+        const formattedValue = formatCurrency(numericValue, currency, selectedLocale);
         getDomElementById(currency).value = formattedValue;
         calculateValues(currency);
     } else {
