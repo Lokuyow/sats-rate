@@ -1,7 +1,8 @@
 :root {
     --main-font: -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, メイリオ, Meiryo, sans-serif;
 }
-*{
+
+* {
     font-family: inherit;
 }
 
@@ -77,9 +78,11 @@ body {
     text-align: center;
     font-size: 1.2rem;
 }
+
 .date.outdated {
     color: #E0DFDA;
 }
+
 .date.recent {
     color: #4D4846;
 }
@@ -108,43 +111,49 @@ body {
 .grid-container input:nth-child(5) {
     border-left: 2px solid #fcd303;
 }
+
 .grid-container input:nth-child(5):focus {
     outline: 2px solid #fcd303;
     outline-offset: -2px;
-}  
+}
+
 .grid-container input:nth-child(8) {
     border-left: 2px solid #F7931A;
 }
+
 .grid-container input:nth-child(8):focus {
     outline: 2px solid #F7931A;
     outline-offset: -2px;
-}  
+}
+
 .grid-container input:nth-child(3n+11) {
     border-left: 2px solid #D95773;
 }
+
 .grid-container input:nth-child(3n+11):focus {
     outline: 2px solid #D95773;
     outline-offset: -2px;
-}  
+}
+
 .currency-icons img {
     justify-self: center;
 }
 
-button > img,
-button > svg {
+button>img,
+button>svg {
     pointer-events: none;
 }
 
 .grid-container input {
-    font-family: 
-        'San Francisco', 
-        -apple-system, 
-        BlinkMacSystemFont, 
-        'Segoe UI', 
-        Roboto, 
-        Calibri, 
-        Helvetica, 
-        Arial, 
+    font-family:
+        'San Francisco',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Calibri,
+        Helvetica,
+        Arial,
         sans-serif;
     color: #262322;
     font-size: 2rem;
@@ -186,30 +195,37 @@ button > svg {
     height: 100%;
     grid-column: 1 / -1;
 }
+
 #update-prices.outdated {
     border: 1px solid #4D4846;
     fill: #4D4846;
 }
+
 #update-prices.recent {
     border: 1px solid #E0DFDA;
     fill: #E0DFDA;
 }
+
 #update-prices svg {
     width: 28px;
     height: 28px;
     line-height: 28px;
 }
+
 #update-prices:active {
     transform: scale(0.95);
 }
+
 @keyframes rotateAnimation {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
 }
+
 .rotated {
     animation: rotateAnimation 0.8s forwards;
 }
@@ -286,11 +302,24 @@ button > svg {
 }
 
 
-.footer {
+footer {
     flex-shrink: 0;
     text-align: right;
     font-size: 0.85rem;
-    margin: 1rem 0.5rem 0 0;
+    margin: 2rem 0.25rem 0 0;
+}
+
+footer div {
+    margin-bottom: 10px;
+}
+
+footer div button {
+    color: #4D4846;
+    background-color: #ffffff;
+    border: 1px solid #E0DFDA;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 12px;
 }
 
 .update-notice {
@@ -339,8 +368,4 @@ button > svg {
 
 button {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}  
-/* input:focus {
-    outline: 2px solid #99908D;
-    outline-offset: -2px;
-  }   */
+}
