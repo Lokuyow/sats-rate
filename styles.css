@@ -266,6 +266,45 @@ button>svg {
     outline: none;
 }
 
+.zap-bgcolor {
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0.3rem 0;
+    padding: 1.8rem 0;
+}
+
+.zap-subject {
+    font-weight: 600;
+    text-align: center;
+    margin: -8px 0 16px 0;
+}
+
+.zap {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#nostr-zap-target {
+    display: flex;
+    color: #4D4846;
+    background-color: #ffffff;
+    border: 1px solid #E0DFDA;
+    border-radius: 10px;
+    cursor: pointer;
+    align-items: center;
+    padding: 12px 25px;
+    & div {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    & img {
+        margin: 0 0 0 3px;
+    }
+}
+
 #notification {
     position: absolute;
     visibility: hidden;
@@ -310,16 +349,7 @@ footer {
 }
 
 footer div {
-    margin-bottom: 10px;
-}
-
-footer div button {
-    color: #4D4846;
-    background-color: #ffffff;
-    border: 1px solid #E0DFDA;
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 5px 12px;
+    margin-bottom: 4px;
 }
 
 .update-notice {
