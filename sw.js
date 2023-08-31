@@ -23,7 +23,8 @@ const urlsToCache = [
     './images/nostr-icon-purple-on-white.svg',
     './images/cloud-solid.svg',
     './images/share-nodes-solid.svg',
-    './images/clipboard-solid.svg'
+    './images/clipboard-solid.svg',
+    './images/bolt-solid.svg'
 ];
 
 self.addEventListener('install', (event) => {
