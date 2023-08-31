@@ -39,23 +39,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255, 255, 255);
-    border-radius: 1rem;
     margin: 0 0 1rem 0;
     padding: 0 0 0 0;
-    width: 100%;
-    max-width: 40rem;
-}
 
-.title {
-    margin-left: 1rem;
-}
+    & a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-.icon {
-    width: 70px;
-    height: 70px;
-    margin-left: 0.8rem;
-    margin-bottom: 1rem;
+        .title {
+            margin-left: 1rem;
+        }
+
+        .icon {
+            width: 70px;
+            height: 70px;
+            margin-left: 0.8rem;
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 .grid-container {
@@ -296,10 +298,12 @@ button>svg {
     cursor: pointer;
     align-items: center;
     padding: 12px 22px;
+
     & div {
         font-size: 1.2rem;
         font-weight: bold;
     }
+
     & img {
         margin: 0 0 0 2px;
     }
