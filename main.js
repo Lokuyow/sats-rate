@@ -171,7 +171,16 @@ function calculateValues(inputField) {
 
 // キー入力
 function handleInputFormatting(event) {
-    addCommasToInput(event.target);
+    const inputElement = event.target;
+    addCommasToInput(inputElement);
+
+    const queryString = generateQueryStringFromValues();
+
+    if (queryString) {
+        const currentUrl = new URL(window.location.href);
+        const newUrl = `${currentUrl.origin}${currentUrl.pathname}${queryString}`;
+        window.history.replaceState(null, '', newUrl);
+    }
 }
 
 function getLocaleSeparators(locale) {
