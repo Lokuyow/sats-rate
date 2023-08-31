@@ -295,13 +295,13 @@ button>svg {
     border-radius: 10px;
     cursor: pointer;
     align-items: center;
-    padding: 12px 25px;
+    padding: 12px 22px;
     & div {
         font-size: 1.2rem;
         font-weight: bold;
     }
     & img {
-        margin: 0 0 0 3px;
+        margin: 0 0 0 2px;
     }
 }
 
