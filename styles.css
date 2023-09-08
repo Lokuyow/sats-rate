@@ -242,12 +242,6 @@ button>svg {
     padding: 1.8rem 0;
 }
 
-.sns-subject {
-    font-weight: 600;
-    text-align: center;
-    margin: -0.5rem 0 0.8rem 0;
-}
-
 .sns {
     display: flex;
     justify-content: space-evenly;
@@ -268,7 +262,7 @@ button>svg {
     outline: none;
 }
 
-.zap-bgcolor {
+.links-bgcolor {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
     width: 100%;
@@ -277,10 +271,42 @@ button>svg {
     padding: 1.8rem 0;
 }
 
-.zap-subject {
-    font-weight: 600;
+.subject {
+    color: #736b68;
+    font-weight: bold;
     text-align: center;
     margin: -8px 0 16px 0;
+}
+
+.links {
+    display: grid;
+    grid-template-columns: 32px auto;
+    grid-template-rows: 40px 40px 40px 40px;
+    justify-content: center;
+    align-items: center;
+    row-gap: 16px;
+
+    & .link-icon {
+        display: flex;
+        width: 100%;
+        height: auto;
+    }
+
+    & .link-text {
+        color: #4D4846;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 0 0 0 14px;
+    }
+}
+
+.zap-bgcolor {
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0.3rem 0;
+    padding: 1.8rem 0;
 }
 
 .zap {
@@ -337,7 +363,7 @@ button>svg {
 }
 
 .description,
-.link,
+.unit-link,
 .table {
     font-size: 0.9rem;
     text-align: left;
