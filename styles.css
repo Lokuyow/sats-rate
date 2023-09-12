@@ -26,13 +26,21 @@ body {
     align-items: center;
 }
 
-.main-bgcolor {
+.bgcolor {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
     width: 100%;
     max-width: 40rem;
-    margin: 0 0 0.3rem 0;
-    padding: 1.2rem 0 1.5rem 0;
+    margin: 0 0 12px 0;
+    padding: 16px 0 28px 0;
+}
+
+.subject {
+    color: #736b68;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 6px 0 18px 0;
 }
 
 .title-flex {
@@ -161,6 +169,7 @@ button>svg {
     font-size: 2rem;
     height: 68px;
     border: 1px solid #E0DFDA;
+    border-radius: 0;
     text-align: right;
     min-width: 140px;
     padding: 0 10px 0 0;
@@ -232,7 +241,6 @@ button>svg {
     animation: rotateAnimation 0.8s forwards;
 }
 
-
 .share-bgcolor {
     background-color: rgb(255, 255, 255);
     border-radius: 1rem;
@@ -269,13 +277,6 @@ button>svg {
     max-width: 40rem;
     margin: 0.3rem 0;
     padding: 1.8rem 0;
-}
-
-.subject {
-    color: #736b68;
-    font-weight: bold;
-    text-align: center;
-    margin: -8px 0 16px 0;
 }
 
 .links {
@@ -347,29 +348,31 @@ button>svg {
     white-space: nowrap;
 }
 
+.description-bgcolor {
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0.3rem 0;
+    padding: 1.8rem 0;
+}
+
 .flex-descriptions {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 40rem;
 }
 
-.description-bgcolor,
-.satoshi-bgcolor {
-    background-color: rgb(255, 255, 255);
-    border-radius: 1rem;
-    margin: 0.3rem 0;
-    padding: 1.2rem 0rem;
+.description {
+    margin: 0 26px;
 }
 
-.description,
-.unit-link,
-.table {
-    font-size: 0.9rem;
-    text-align: left;
-    margin: 0 0 0 12%;
+.unit-link {
+    font-size: 1.07rem;
+    margin: 16px 0 6px 0;
 }
-
 
 footer {
     flex-shrink: 0;
