@@ -281,23 +281,35 @@ button>svg {
 
 .links {
     display: grid;
-    grid-template-columns: 32px auto;
-    grid-template-rows: 40px 40px 40px 40px;
+    grid-template-columns: 48px  minmax(220px, 300px);
+    grid-template-rows: 54px 54px 54px 54px 54px;
     justify-content: center;
     align-items: center;
-    row-gap: 16px;
+    row-gap: 6px;
+    margin: 0 26px;
 
     & .link-icon {
         display: flex;
+        align-items: center;
+        justify-content: end;
+        height: 100%;
         width: 100%;
-        height: auto;
+        border: 1px solid #E0DFDA;
+        border-right: none;
+        border-radius: 10px 0 0 10px;
     }
 
     & .link-text {
+        display: flex;
+        align-items: center;
         color: #4D4846;
         font-weight: bold;
         text-decoration: none;
-        padding: 0 0 0 14px;
+        padding: 0 0 0 18px;
+        border: 1px solid #E0DFDA;
+        border-left: none;
+        border-radius: 0 10px 10px 0;
+        height: 100%;
     }
 }
 
