@@ -199,6 +199,7 @@ function parseInput(inputValue, locale) {
 
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
+    const originalSelectionEnd = inputElement.selectionEnd; // 追加
     const separators = getLocaleSeparators(selectedLocale);
     const originalValue = parseInput(inputElement.value, selectedLocale);
 
@@ -226,14 +227,23 @@ function addCommasToInput(inputElement) {
     let postSeparatorCount = (formattedValue.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
     let diffSeparatorCount = postSeparatorCount - preSeparatorCount;
 
-    let newCaretPos = originalCaretPos + diffSeparatorCount;
-    inputElement.value = formattedValue;
+    if (inputElement.value !== formattedValue) {
+        inputElement.value = formattedValue;
 
-    if (newCaretPos < 0) newCaretPos = 0;
-    if (newCaretPos > formattedValue.length) newCaretPos = formattedValue.length;
+        if (originalCaretPos === 0 && originalSelectionEnd === originalValue.length) {
+            inputElement.selectionStart = 0;
+            inputElement.selectionEnd = formattedValue.length;
+            return;
+        }
 
-    inputElement.selectionStart = newCaretPos;
-    inputElement.selectionEnd = newCaretPos;
+        let newCaretPos = originalCaretPos + diffSeparatorCount;
+
+        if (newCaretPos < 0) newCaretPos = 0;
+        if (newCaretPos > formattedValue.length) newCaretPos = formattedValue.length;
+
+        inputElement.selectionStart = newCaretPos;
+        inputElement.selectionEnd = newCaretPos;
+    }
 }
 
 // 有効数字、小数点以下の制限、ロケールごとの記法
