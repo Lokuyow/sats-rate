@@ -112,7 +112,6 @@ body {
     border-radius: 10px 0 0 10px;
     padding: 0;
     margin: 0 0 0 0;
-    outline: none;
     font-size: 0;
     width: 80%;
     height: 100%;
@@ -200,7 +199,6 @@ button>svg {
     border-radius: 8px;
     margin: 0 10px 0 14px;
     padding: 0 0 0 0;
-    outline: none;
     font-size: 0;
     width: auto;
     height: 100%;
@@ -267,7 +265,6 @@ button>svg {
     border: none;
     padding: 0;
     margin: 0;
-    outline: none;
 }
 
 .links-bgcolor {

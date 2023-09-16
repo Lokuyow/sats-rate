@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.33';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.34';
 const RATE_CACHE_NAME = 'rate-cache';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=5';
 // Cache targets
@@ -24,6 +24,11 @@ const urlsToCache = [
     './images/cloud-solid.svg',
     './images/share-nodes-solid.svg',
     './images/clipboard-solid.svg',
+    './images/lostinbitcoin.webp',
+    './images/alby_icon_head_yellow_48x48.svg',
+    './images/btcmap-logo.svg',
+    './images/robosats-favicon.ico',
+    './images/mempool-favicon.ico',
     './images/bolt-solid.svg'
 ];
 
