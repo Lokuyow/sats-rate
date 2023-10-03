@@ -320,31 +320,35 @@ button>svg {
     }
 }
 
-.flex-site-descriptions {
+/* .flex-site-descriptions {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 40rem;
-}
+} */
 
 .site-description {
     margin: 0 26px;
 }
 
 .unit-link {
+    display: flex;
+    justify-content: center;
     font-size: 1.07rem;
-    margin: 30px 0 6px 0;
+    margin: 26px 0 6px 0;
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
 }
 
 .zap {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-}
-
-.table {
-    font-size: 1rem;
 }
 
 #nostr-zap-target {
@@ -535,14 +539,14 @@ svg {
     transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-image: url('./images/sun-regular.svg');
     background-position: left 9px center;
     background-size: 18px;
     background-color: var(--accent-color);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(32px);
 }
 
