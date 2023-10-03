@@ -34,8 +34,7 @@ const urlsToCache = [
     './images/magnifying-glass-solid.svg',
     './images/sun-regular.svg',
     './images/moon-regular.svg',
-    './images/bolt-solid.svg',
-    './images/bolt-solid.svg',
+    './images/angle-down-solid.svg'
 ];
 
 self.addEventListener('install', (event) => {
