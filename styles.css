@@ -343,6 +343,10 @@ button>svg {
     align-items: center;
 }
 
+.table {
+    font-size: 1rem;
+}
+
 #nostr-zap-target {
     display: flex;
     align-items: center;
