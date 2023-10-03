@@ -70,193 +70,271 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./favicons/icon-16x16.png">
     <link rel="icon" type="image/png" sizes="24x24" href="./favicons/icon-24x24.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicons/icon-32x32.png">
+
+    <script>
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const getInitialTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            return prefersDarkScheme.matches ? 'dark' : 'light';
+        };
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        setTheme(getInitialTheme());
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.querySelector('.switch input');
+            themeToggle.checked = document.documentElement.getAttribute('data-theme') === 'light';
+
+            themeToggle.addEventListener('change', () => {
+                setTheme(themeToggle.checked ? 'light' : 'dark');
+            });
+        });
+    </script>
 </head>
 
 <body>
-    <div class="page">
-        <div class="main">
-            <div class="bgcolor">
-                <div class="title-flex">
-                    <a href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
-                        <img class="title" src="./images/title.svg" alt="おいくらサッツ" width="224px" height="28.469px" />
-                        <img class="icon" src="./images/icon_x192.png" alt="アイコン" />
-                    </a>
-                </div>
-                <div class="grid-container">
-                    <img class="copy-icon" src="./images/copy-regular.svg" alt="コピー" width="20px" height="20px">
-                    <div class="date" id="last-updated"></div>
-                    <img class="paste-icon" src="./images/paste-regular.svg" alt="ペースト" width="20px" height="20px">
-
-                    <button class="currency-icons" id="copy-sats" data-currency="sats">
-                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン（サッツ）" width="36px" height="36px">
-                    </button>
-                    <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')"
-                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-sats" data-currency="sats">
-                        sats
-                    </button>
-
-                    <button class="currency-icons" id="copy-btc" data-currency="btc">
-                        <img src="images/白抜きのビットコインアイコン.svg" alt="ビットコイン" width="36px" height="36px">
-                    </button>
-                    <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')"
-                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-btc" data-currency="btc">
-                        BTC
-                    </button>
-
-                    <button class="currency-icons" id="copy-jpy" data-currency="jpy">
-                        <img src="images/白抜きの円アイコン.svg" alt="日本円" width="36px" height="36px">
-                    </button>
-                    <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')"
-                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-jpy">
-                        JPY
-                    </button>
-
-                    <button class="currency-icons" id="copy-usd" data-currency="usd">
-                        <img src="images/白抜きのドルアイコン.svg" alt="アメリカドル" width="36px" height="36px">
-                    </button>
-                    <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')"
-                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-usd" data-currency="usd">
-                        USD
-                    </button>
-
-                    <button class="currency-icons" id="copy-eur" data-currency="eur">
-                        <img src="images/白抜きのユーロアイコン.svg" alt="ユーロ" width="36px" height="36px">
-                    </button>
-                    <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')"
-                        pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-eur" data-currency="eur">
-                        EUR
-                    </button>
-
-
-                    <button id="update-prices" aria-label="価格の更新">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                            <path
-                                d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
-                        </svg>
-                    </button>
-                </div>
+    <div class="main">
+        <div class="bgcolor">
+            <div class="title-flex">
+                <a href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
+                    <svg width="224px" height="28.469px">
+                        <use xlink:href="./images/title.svg#a"></use>
+                    </svg>
+                    <img class="icon" src="./images/icon_x192.png" alt="アイコン" />
+                </a>
             </div>
+            <div class="grid-container">
 
-            <div class="bgcolor">
-                <div class="subject">
-                    SNSに共有
+                <div class="flex-copy">
+                    <svg class="copy-icon" width="20px" height="20px">
+                        <use xlink:href="./images/copy-regular.svg#a"></use>
+                    </svg>
+                    <svg class="arrow" width="18px" height="18px">
+                        <use xlink:href="./images/angle-down-solid.svg#a"></use>
+                    </svg>
                 </div>
-                <div class="sns">
-                    <a href="#" id="share-twitter" target="_blank">
-                        <img src="./images/square-x-twitter.svg" alt="Twitter" width="38px" height="38px">
-                    </a>
-                    <a href="#" id="share-nostter" target="_blank">
-                        <img src="./images/nostr-icon-purple-on-white.svg" alt="nostter（Nostr）" width="50px"
-                            height="50px">
-                    </a>
-                    <a href="#" id="share-mass-driver" target="_blank">
-                        <img src="./images/cloud-solid.svg" alt="Mass Driver（Bluesky）" width="38px" height="38px">
-                    </a>
-                    <button id="share-via-webapi">
-                        <img src="./images/share-nodes-solid.svg" alt="共有" width="35px" height="35px">
-                    </button>
-                    <button id="copy-to-clipboard">
-                        <img src="./images/clipboard-solid.svg" alt="クリップボード" width="34px" height="34px">
-                    </button>
-                    <div id="notification"></div>
-                </div>
-            </div>
 
-            <div class="bgcolor">
-                <div class="subject">
-                    おいくらサッツ とは
-                </div>
-                <div class="flex-descriptions">
-                    <div class="description">
-                        サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）、ユーロ（EUR）の相互換算ツールです。
-                    </div>
-                    <a class="unit-link" href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi"
-                        target="_blank">Sats, Sat,
-                        Satoshi (単位)</a>
-                    <div class="table">
-                        1億 sats = 1 BTC<br>
-                        1 sat = 0.00000001 BTC
-                    </div>
-                </div>
-            </div>
+                <div class="date" id="last-updated"></div>
 
-            <div class="bgcolor">
-                <div class="subject">
-                    おすすめサイト
+                <div class="flex-paste">
+                    <svg class="paste-icon" width="20px" height="20px">
+                        <use xlink:href="./images/paste-regular.svg#a"></use>
+                    </svg>
+                    <svg class="arrow" width="18px" height="18px">
+                        <use xlink:href="./images/angle-down-solid.svg#a"></use>
+                    </svg>
                 </div>
-                <div class="links">
-                    <a class="link-icon" href="https://lostinbitcoin.jp/" target="_blank">
-                        <img src="./images/lostinbitcoin.webp" alt="ロストイン・ビットコイン" width="32px" height="32px">
-                    </a>
-                    <a class="link-text" href="https://lostinbitcoin.jp/" target="_blank">
-                        ロストイン・ビットコイン
-                    </a>
 
-                    <a class="link-icon" href="https://getalby.com/" target="_blank">
-                        <img src="./images/alby_icon_head_yellow_48x48.svg" alt="Alby" width="32px" height="32px">
-                    </a>
-                    <a class="link-text" href="https://getalby.com/" target="_blank">
-                        Alby
-                    </a>
+                <button class="currency-icons" id="copy-sats" data-currency="sats">
+                    <svg width="36px" height="36px">
+                        <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
+                    </svg>
+                </button>
+                <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')"
+                    pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <button class="currency-units" id="paste-sats" data-currency="sats">
+                    sats
+                </button>
 
-                    <a class="link-icon" href="https://btcmap.org/" target="_blank">
-                        <img src="./images/btcmap-logo.svg" alt="BTC Map" width="32px" height="38px">
-                    </a>
-                    <a class="link-text" href="https://btcmap.org/" target="_blank">
-                        BTC Map
-                    </a>
+                <button class="currency-icons" id="copy-btc" data-currency="btc">
+                    <svg width="36px" height="36px">
+                        <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
+                    </svg>
+                </button>
+                <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')"
+                    pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <button class="currency-units" id="paste-btc" data-currency="btc">
+                    BTC
+                </button>
 
-                    <a class="link-icon" href="https://learn.robosats.com/" target="_blank">
-                        <img src="./images/robosats-favicon.ico" alt="RoboSats" width="32px" height="32px">
-                    </a>
-                    <a class="link-text" href="https://learn.robosats.com/" target="_blank">
-                        RoboSats
-                    </a>
+                <button class="currency-icons" id="copy-jpy" data-currency="jpy">
+                    <svg width="36px" height="36px">
+                        <use xlink:href="./images/白抜きの円アイコン.svg#a"></use>
+                    </svg>
+                </button>
+                <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')"
+                    pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <button class="currency-units" id="paste-jpy">
+                    JPY
+                </button>
 
-                    <a class="link-icon" href="https://mempool.space/" target="_blank">
-                        <img src="./images/mempool-favicon.ico" alt="mempool.space" width="32px" height="32px">
-                    </a>
-                    <a class="link-text" href="https://mempool.space/" target="_blank">
-                        mempool.space
-                    </a>
-                </div>
-            </div>
+                <button class="currency-icons" id="copy-usd" data-currency="usd">
+                    <svg width="36px" height="36px">
+                        <use xlink:href="./images/白抜きのドルアイコン.svg#a"></use>
+                    </svg>
+                </button>
+                <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')"
+                    pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <button class="currency-units" id="paste-usd" data-currency="usd">
+                    USD
+                </button>
 
-            <div class="bgcolor">
-                <div class="subject">
-                    おいくらサッツ制作にZap
-                </div>
-                <div class="zap">
-                    <button id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
-                        data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
-                        data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly"
-                        data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://nostr.bitcoiner.social,wss://yabu.me,wss://nostr-relay.nokotaro.com,wss://relay.nostr.wirednet.jp">
-                        <div>Zap</div>
-                        <img src="./images/bolt-solid.svg" alt="Zapマーク" width="28px" height="28px">
-                    </button>
-                    <div class="zap-list">
-                        <a href="https://nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly/zaps"
-                            target="_blank">Zap一覧</a>
-                    </div>
-                    <div class="zap-description">
-                        <a href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは</a>
-                    </div>
-                </div>
+                <button class="currency-icons" id="copy-eur" data-currency="eur">
+                    <svg width="36px" height="36px">
+                        <use xlink:href="./images/白抜きのユーロアイコン.svg#a"></use>
+                    </svg>
+                </button>
+                <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')"
+                    pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
+                <button class="currency-units" id="paste-eur" data-currency="eur">
+                    EUR
+                </button>
+
+
+                <button id="update-prices" aria-label="価格の更新">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px"
+                        viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path
+                            d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
+                    </svg>
+                </button>
             </div>
         </div>
 
-        <footer class="footer">
+        <div class="bgcolor">
+            <div class="subject">
+                SNSに共有
+            </div>
+            <div class="sns">
+                <a href="#" id="share-twitter" target="_blank">
+                    <svg width="38px" height="38px">
+                        <use xlink:href="./images/square-x-twitter.svg#a"></use>
+                    </svg>
+                </a>
+                <a href="#" id="share-nostter" target="_blank">
+                    <svg width="38px" height="38px">
+                        <use xlink:href="./images/nostr-icon-purple-on-white.svg#a"></use>
+                    </svg>
+                </a>
+                <a href="#" id="share-mass-driver" target="_blank">
+                    <svg width="38px" height="38px">
+                        <use xlink:href="./images/cloud-solid.svg#a"></use>
+                    </svg>
+                </a>
+                <button id="share-via-webapi">
+                    <svg width="35px" height="35px">
+                        <use xlink:href="./images/share-nodes-solid.svg#a"></use>
+                    </svg>
+                </button>
+                <button id="copy-to-clipboard">
+                    <svg width="34px" height="34px">
+                        <use xlink:href="./images/clipboard-solid.svg#a"></use>
+                    </svg>
+                </button>
+                <div id="notification"></div>
+            </div>
+        </div>
+
+        <div class="bgcolor">
+            <div class="subject">
+                おいくらサッツ とは
+            </div>
+            <div class="flex-site-descriptions">
+                <div class="site-description">
+                    サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）、ユーロ（EUR）の相互換算ツールです。
+                </div>
+                <a class="unit-link" href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">Sats,
+                    Sat,
+                    Satoshi (単位)</a>
+                <div class="table">
+                    1億 sats = 1 BTC<br>
+                    1 sat = 0.00000001 BTC
+                </div>
+            </div>
+
+            <div class="flex-dark">
+                ダークモード・ライトモード
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="bgcolor">
+            <div class="subject">
+                おいくらサッツ制作にZap
+            </div>
+            <div class="zap">
+                <button id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
+                    data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
+                    data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly"
+                    data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://nostr.bitcoiner.social,wss://yabu.me,wss://nostr-relay.nokotaro.com,wss://relay.nostr.wirednet.jp">
+                    Zap
+                    <svg width="24px" height="24px">
+                        <use xlink:href="./images/bolt-solid.svg#a"></use>
+                    </svg>
+                </button>
+                <a class="zap-list"
+                    href="https://nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly/zaps"
+                    target="_blank">Zap一覧
+                    <svg width="24px" height="24px">
+                        <use xlink:href="./images/list-ol-solid.svg#a"></use>
+                    </svg>
+                </a>
+                <a class="zap-description" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
+                    <svg width="22px" height="22px">
+                        <use xlink:href="./images/magnifying-glass-solid.svg#a"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="bgcolor">
+            <div class="subject">
+                おすすめサイト
+            </div>
+            <div class="links">
+                <a class="link-icon" href="https://lostinbitcoin.jp/" target="_blank">
+                    <img src="./images/fulgur-favicon.ico" alt="ロストイン・ビットコイン" width="32px" height="32px">
+                </a>
+                <a class="link-text" href="https://lostinbitcoin.jp/" target="_blank">
+                    ロストイン・ビットコイン
+                </a>
+
+                <a class="link-icon" href="https://getalby.com/" target="_blank">
+                    <img src="./images/alby_icon_head_yellow_48x48.svg" alt="Alby" width="32px" height="32px">
+                </a>
+                <a class="link-text" href="https://getalby.com/" target="_blank">
+                    Alby
+                </a>
+
+                <a class="link-icon" href="https://btcmap.org/" target="_blank">
+                    <img src="./images/btcmap-logo.svg" alt="BTC Map" width="32px" height="38px">
+                </a>
+                <a class="link-text" href="https://btcmap.org/" target="_blank">
+                    BTC Map
+                </a>
+
+                <a class="link-icon" href="https://learn.robosats.com/" target="_blank">
+                    <img src="./images/robosats-favicon.ico" alt="RoboSats" width="32px" height="32px">
+                </a>
+                <a class="link-text" href="https://learn.robosats.com/" target="_blank">
+                    RoboSats
+                </a>
+
+                <a class="link-icon" href="https://mempool.space/" target="_blank">
+                    <img src="./images/mempool-favicon.ico" alt="mempool.space" width="32px" height="32px">
+                </a>
+                <a class="link-text" href="https://mempool.space/" target="_blank">
+                    mempool.space
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="flex-ref">
+        <div class="reference">
             サイト制作：<a href="https://lokuyow.github.io" target="_blank">ロクヨウ</a><br>
             ソースコード：<a href="https://github.com/Lokuyow/sats-rate" target="_blank">GitHub</a><br>
             データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a><br>
             <div>おいくらサッツ：Version 1.34</div>
-        </footer>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/nostr-zap@0.21.0"></script>

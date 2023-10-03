@@ -1,0 +1,6 @@
+{
+    "livePreview.portNumber": 3000,
+    "livePreview.autoRefreshPreview": "On Changes to Saved Files",
+    "livePreview.openPreviewTarget": "Embedded Preview",
+    "livePreview.serverKeepAliveAfterEmbeddedPreviewClose": 1
+}

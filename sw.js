@@ -24,12 +24,18 @@ const urlsToCache = [
     './images/cloud-solid.svg',
     './images/share-nodes-solid.svg',
     './images/clipboard-solid.svg',
-    './images/lostinbitcoin.webp',
+    './images/fulgur-favicon.ico',
     './images/alby_icon_head_yellow_48x48.svg',
     './images/btcmap-logo.svg',
     './images/robosats-favicon.ico',
     './images/mempool-favicon.ico',
-    './images/bolt-solid.svg'
+    './images/bolt-solid.svg',
+    './images/list-ol-solid.svg',
+    './images/magnifying-glass-solid.svg',
+    './images/sun-regular.svg',
+    './images/moon-regular.svg',
+    './images/bolt-solid.svg',
+    './images/bolt-solid.svg',
 ];
 
 self.addEventListener('install', (event) => {
