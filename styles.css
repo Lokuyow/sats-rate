@@ -408,6 +408,7 @@ button>svg {
 .reference {
     text-align: right;
     font-size: 0.85rem;
+    width: 100%;
 }
 
 .update-notice {
