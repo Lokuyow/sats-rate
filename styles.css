@@ -320,14 +320,6 @@ button>svg {
     }
 }
 
-/* .flex-site-descriptions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 40rem;
-} */
-
 .site-description {
     margin: 0 26px;
 }
