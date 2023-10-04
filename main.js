@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 async function initializeApp() {
     await fetchDataFromCoinGecko();
     setupEventListeners();
-    handleServiceWorker();
     loadValuesFromQueryParams();
     handleVisibilityChange();
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -579,56 +578,4 @@ function shareViaWebAPI(originalShareText, queryParams) {
     } else {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
     }
-}
-
-// サービスワーカー
-function handleServiceWorker() {
-    if (!('serviceWorker' in navigator)) return;
-
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-        reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    notifyUserOfUpdate(reg);
-                }
-            });
-        });
-    });
-}
-function notifyUserOfUpdate(reg) {
-    const updateNotice = document.createElement('div');
-    updateNotice.className = 'update-notice';
-
-    const updateBox = document.createElement('div');
-    updateBox.className = 'update-notice-box';
-    updateNotice.appendChild(updateBox);
-
-    const title = document.createElement('h3');
-    title.innerHTML = 'アップデート通知';
-    updateBox.appendChild(title);
-
-    const text = document.createElement('p');
-    text.innerHTML = '新しいバージョンが利用可能です。';
-    updateBox.appendChild(text);
-
-    const updateButton = document.createElement('button');
-    updateButton.id = 'updateBtn';
-    updateButton.innerHTML = '更新';
-    updateBox.appendChild(updateButton);
-
-    document.body.appendChild(updateNotice);
-
-    getDomElementById('updateBtn').addEventListener('click', () => {
-        if (reg.waiting) {
-            reg.waiting.postMessage('skipWaiting');
-            reg.waiting.addEventListener('statechange', () => {
-                if (reg.waiting == null) {
-                    window.location.reload();
-                }
-            });
-        } else {
-            console.warn('Service Worker is not waiting.');
-        }
-    });
 }
