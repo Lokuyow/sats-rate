@@ -42,8 +42,22 @@ async function fetchDataFromCoinGecko() {
     try {
         const response = await fetch(COINGECKO_URL);
         data = await response.json();
+
+        // 価格データをローカルストレージに保存
+        localStorage.setItem("priceData", JSON.stringify(data));
+
     } catch (err) {
-        handleCoinGeckoRequestError(err);
+        console.warn("Failed to fetch data from CoinGecko. Trying to get data from localStorage...");
+
+        // ローカルストレージから価格データを取得
+        const storedData = localStorage.getItem("priceData");
+
+        if (storedData) {
+            data = JSON.parse(storedData);
+        } else {
+            handleCoinGeckoRequestError(err);
+            return;
+        }
     }
 
     if (data) {
