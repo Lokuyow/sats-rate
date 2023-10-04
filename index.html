@@ -78,7 +78,7 @@
                     </svg>
                 </a>
                 <a class="icon" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
-                    <img src="./images/icon_x192.png" alt="アイコン" />
+                    <img src="./images/icon_x192.png" alt="アイコン" width="70px" height="70px" />
                 </a>
             </div>
 
@@ -105,58 +105,58 @@
                         </svg>
                     </div>
 
-                    <button class="currency-icons" id="copy-sats" data-currency="sats">
+                    <button class="currency-icons" id="copy-sats" data-currency="sats" aria-label="サッツの数値をコピー">
                         <svg width="36px" height="36px">
                             <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
                         </svg>
                     </button>
-                    <input type="text" id="sats" aria-label="ビットコイン（サッツ）の金額" oninput="calculateValues('sats')"
+                    <input type="text" id="sats" aria-label="サッツの金額" oninput="calculateValues('sats')"
                         pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-sats" data-currency="sats">
+                    <button class="currency-units" id="paste-sats" data-currency="sats" aria-label="サッツの数値をペースト">
                         sats
                     </button>
 
-                    <button class="currency-icons" id="copy-btc" data-currency="btc">
+                    <button class="currency-icons" id="copy-btc" data-currency="btc" aria-label="ビットコインの数値をコピー">
                         <svg width="36px" height="36px">
                             <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
                         </svg>
                     </button>
                     <input type="text" id="btc" aria-label="ビットコインの金額" oninput="calculateValues('btc')"
                         pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-btc" data-currency="btc">
+                    <button class="currency-units" id="paste-btc" data-currency="btc" aria-label="ビットコインの数値をペースト">
                         BTC
                     </button>
 
-                    <button class="currency-icons" id="copy-jpy" data-currency="jpy">
+                    <button class="currency-icons" id="copy-jpy" data-currency="jpy" aria-label="円の数値をコピー">
                         <svg width="36px" height="36px">
                             <use xlink:href="./images/白抜きの円アイコン.svg#a"></use>
                         </svg>
                     </button>
                     <input type="text" id="jpy" aria-label="日本円の金額" oninput="calculateValues('jpy')"
                         pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-jpy">
+                    <button class="currency-units" id="paste-jpy" aria-label="円の数値をペースト">
                         JPY
                     </button>
 
-                    <button class="currency-icons" id="copy-usd" data-currency="usd">
+                    <button class="currency-icons" id="copy-usd" data-currency="usd" aria-label="USドルの数値をコピー">
                         <svg width="36px" height="36px">
                             <use xlink:href="./images/白抜きのドルアイコン.svg#a"></use>
                         </svg>
                     </button>
                     <input type="text" id="usd" aria-label="アメリカドルの金額" oninput="calculateValues('usd')"
                         pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-usd" data-currency="usd">
+                    <button class="currency-units" id="paste-usd" data-currency="usd" aria-label="USドルの数値をペースト">
                         USD
                     </button>
 
-                    <button class="currency-icons" id="copy-eur" data-currency="eur">
+                    <button class="currency-icons" id="copy-eur" data-currency="eur" aria-label="ユーロの数値をコピー">
                         <svg width="36px" height="36px">
                             <use xlink:href="./images/白抜きのユーロアイコン.svg#a"></use>
                         </svg>
                     </button>
                     <input type="text" id="eur" aria-label="ユーロの金額" oninput="calculateValues('eur')"
                         pattern="^([1-9]\d*|0)(\.\d+)?$" inputmode="decimal">
-                    <button class="currency-units" id="paste-eur" data-currency="eur">
+                    <button class="currency-units" id="paste-eur" data-currency="eur" aria-label="ユーロの数値をペースト">
                         EUR
                     </button>
 
@@ -177,27 +177,27 @@
                 SNSに共有
             </div>
             <div class="sns">
-                <a href="#" id="share-twitter" target="_blank">
+                <a href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
                     <svg width="38px" height="38px">
                         <use xlink:href="./images/square-x-twitter.svg#a"></use>
                     </svg>
                 </a>
-                <a href="#" id="share-nostter" target="_blank">
+                <a href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
                     <svg width="38px" height="38px">
                         <use xlink:href="./images/nostr-icon-purple-on-white.svg#a"></use>
                     </svg>
                 </a>
-                <a href="#" id="share-mass-driver" target="_blank">
+                <a href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
                     <svg width="38px" height="38px">
                         <use xlink:href="./images/cloud-solid.svg#a"></use>
                     </svg>
                 </a>
-                <button id="share-via-webapi">
+                <button id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
                     <svg width="35px" height="35px">
                         <use xlink:href="./images/share-nodes-solid.svg#a"></use>
                     </svg>
                 </button>
-                <button id="copy-to-clipboard">
+                <button id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
                     <svg width="34px" height="34px">
                         <use xlink:href="./images/clipboard-solid.svg#a"></use>
                     </svg>
@@ -224,7 +224,7 @@
             <div class="flex-dark">
                 ダークモード・ライトモード
                 <label class="switch">
-                    <input type="checkbox" id="themeToggle">
+                    <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
                     <span class="slider round"></span>
                 </label>
             </div>
