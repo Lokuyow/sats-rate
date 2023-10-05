@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sats-rate-caches-v1.36.2';
+const CACHE_NAME = 'sats-rate-caches-v1.36.3';
 const urlsToCache = [
     './index.html',
     './styles.css',
@@ -35,6 +35,7 @@ const urlsToCache = [
 ];
 
 const MY_CACHES = new Set([CACHE_NAME]);
+
 self.addEventListener('install', (ev) => void ev.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     await cache.addAll(urlsToCache);
@@ -49,8 +50,22 @@ self.addEventListener('install', (ev) => void ev.waitUntil((async () => {
 })()));
 
 self.addEventListener('fetch', (ev) => void ev.respondWith((async () => {
-    const cacheResponse = await caches.match(ev.request);
-    return cacheResponse || fetch(ev.request);
+    const url = new URL(ev.request.url);
+    if (url.origin === location.origin) {
+        url.search = '';
+    }
+
+    let requestToFetch = ev.request;
+
+    if (ev.request.mode === 'navigate') {
+        requestToFetch = new Request(ev.request, {
+            mode: 'cors'
+        });
+    }
+
+    const cacheResponse = await caches.match(url.toString());
+
+    return cacheResponse || fetch(requestToFetch);
 })()));
 
 self.addEventListener('activate', (ev) => void ev.waitUntil((async () => {
