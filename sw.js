@@ -1,8 +1,9 @@
-const CACHE_NAME = 'sats-rate-caches-v1.36';
+const CACHE_NAME = 'sats-rate-caches-v1.36.1';
 const urlsToCache = [
     './index.html',
     './styles.css',
     './main.js',
+    './manifest.json',
     './favicons/favicon.ico',
     './images/icon_x192.png',
     './images/icon_x512.png',
