@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 async function initializeApp() {
     await fetchDataFromCoinGecko();
     setupEventListeners();
+    await handleServiceWorker();
     loadValuesFromQueryParams();
     handleVisibilityChange();
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -578,4 +579,73 @@ function shareViaWebAPI(originalShareText, queryParams) {
     } else {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
     }
+}
+
+// サービスワーカー
+async function handleServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+
+    try {
+        const reg = await navigator.serviceWorker.register('./sw.js');
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    notifyUserOfUpdate(reg);
+                }
+            });
+        });
+    } catch (e) {
+        console.error("Service Worker registration failed:", e);
+    }
+}
+
+function notifyUserOfUpdate(reg) {
+    const updateNotice = createUpdateNoticeElement();
+    document.body.appendChild(updateNotice);
+
+    document.getElementById('updateBtn').addEventListener('click', async () => {
+        if (reg.waiting) {
+            reg.waiting.postMessage('skipWaiting');
+            await new Promise(resolve => {
+                reg.waiting.addEventListener('statechange', (event) => {
+                    if (!reg.waiting) {
+                        resolve();
+                    }
+                });
+            });
+            window.location.reload();
+        } else {
+            console.warn('Service Worker is not waiting.');
+            window.location.reload();
+        }
+    });
+}
+
+function createUpdateNoticeElement() {
+    const updateNotice = document.createElement('div');
+    updateNotice.className = 'update-notice';
+
+    const updateBox = document.createElement('div');
+    updateBox.className = 'update-notice-box';
+
+    const title = createElementWithContent('h3', 'アップデート通知');
+    const text = createElementWithContent('p', '新しいバージョンが利用可能です。');
+    const updateButton = createElementWithContent('button', '更新', { id: 'updateBtn' });
+
+    updateBox.append(title, text, updateButton);
+    updateNotice.appendChild(updateBox);
+
+    return updateNotice;
+}
+
+function createElementWithContent(tag, content, attributes = {}) {
+    const element = document.createElement(tag);
+    element.innerHTML = content;
+
+    for (const key in attributes) {
+        element.setAttribute(key, attributes[key]);
+    }
+
+    return element;
 }

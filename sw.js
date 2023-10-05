@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sats-rate-caches-v1.36.1';
+const CACHE_NAME = 'sats-rate-caches-v1.36.2';
 const urlsToCache = [
     './index.html',
     './styles.css',
@@ -34,41 +34,34 @@ const urlsToCache = [
     './images/angle-down-solid.svg'
 ];
 
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches
-            .open(CACHE_NAME)
-            .then((cache) => {
-                return cache.addAll(urlsToCache);
-            })
-    );
-});
+const MY_CACHES = new Set([CACHE_NAME]);
+self.addEventListener('install', (ev) => void ev.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(urlsToCache);
 
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches
-            .match(event.request)
-            .then((response) => {
-                return response ? response : fetch(event.request);
-            })
+    const keys = await caches.keys();
+    await Promise.all(
+        keys
+        .filter(key => !MY_CACHES.has(key))
+        .map(key => caches.delete(key))
     );
-});
+    return self.skipWaiting();
+})()));
 
-self.addEventListener('activate', (event) => {
-    var cacheWhitelist = [CACHE_NAME];
+self.addEventListener('fetch', (ev) => void ev.respondWith((async () => {
+    const cacheResponse = await caches.match(ev.request);
+    return cacheResponse || fetch(ev.request);
+})()));
 
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+self.addEventListener('activate', (ev) => void ev.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+        keys
+        .filter(key => !MY_CACHES.has(key))
+        .map(key => caches.delete(key))
     );
-});
+    return clients.claim();
+})()));
 
 self.addEventListener('message', (event) => {
     if (event.data === 'skipWaiting') {
