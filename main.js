@@ -19,9 +19,6 @@ const currencyFormatOptions = {
 const significantDigits = 10;
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
-let touchStartTime = 0;
-let longPressed = false;
-let touchMoved = false;
 let selectedLocale = navigator.language || navigator.languages[0];
 
 document.addEventListener('DOMContentLoaded', initializeApp);
@@ -85,9 +82,6 @@ function setupEventListeners() {
 function setupInputFieldEventListeners(element) {
     element.addEventListener('keyup', handleInputFormatting);
     element.addEventListener('focus', handleFocus);
-    element.addEventListener('touchstart', handleTouchStart, { passive: true });
-    element.addEventListener('touchmove', handleTouchMove, { passive: true });
-    element.addEventListener('touchend', handleTouchEnd);
     element.addEventListener('contextmenu', handleContextMenu);
 }
 
@@ -350,25 +344,8 @@ function handleFocus(event) {
     event.target.select();
 }
 
-function handleTouchStart(event) {
-    touchMoved = false;
-    longPressed = false;
-    longPressTimer = setTimeout(() => {
-        longPressed = true;
-    }, 500);
-}
-
-function handleTouchMove(event) {
-    touchMoved = true;
-    clearTimeout(longPressTimer);
-}
-
-function handleTouchEnd(event) {
-    clearTimeout(longPressTimer);
-}
-
 function handleContextMenu(event) {
-    if (isMobileDevice() && !longPressed) {
+    if (isMobileDevice() && event.target.tagName.toLowerCase() === 'input') {
         event.preventDefault();
     }
 }
