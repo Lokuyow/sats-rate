@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sats-rate-caches-v1.35.4';
+const CACHE_NAME = 'sats-rate-caches-v1.36';
 const urlsToCache = [
     './index.html',
     './styles.css',
