@@ -110,21 +110,30 @@ svg#b {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: -12px;
+    margin-bottom: -10px;
 }
 
 .flex-copy {
     margin-left: 2px;
+
+    & div {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--invalid-color);
+        margin-bottom: -2px;
+    }
 }
 
 .flex-paste {
     margin-right: 4px;
-}
 
-.copy-icon,
-.paste-icon {
-    fill: var(--invalid-color);
-    margin-bottom: -1px;
+    & div {
+        font-size: 0.8rem;
+        font-weight: bold;
+        letter-spacing: -0.1rem;
+        color: var(--invalid-color);
+        margin-bottom: -2px;
+    }
 }
 
 .arrow {
