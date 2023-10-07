@@ -12,11 +12,11 @@ const dateTimeFormatOptions = {
 const currencyFormatOptions = {
     sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
     btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-    jpy: { maximumFractionDigits: 3, minimumFractionDigits: 0 },
+    jpy: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
     usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
     eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
 };
-const significantDigits = 10;
+const significantDigits = 7;
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
