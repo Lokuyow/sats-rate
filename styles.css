@@ -25,6 +25,29 @@ body {
     margin: 12px;
 }
 
+a,
+a:visited {
+    color: var(--main-text-color);
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+a,
+span,
+button {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+svg {
+    fill: var(--main-text-color);
+}
+
+svg#b {
+    fill: var(--invalid-color);
+}
+
 .main {
     flex: 1 0 auto;
     display: flex;
@@ -449,25 +472,6 @@ button>svg {
 
 #updateBtn:hover {
     background-color: #F7A94A;
-}
-
-a,
-a:visited {
-    color: var(--main-text-color);
-}
-
-a:hover {
-    color: var(--accent-color);
-}
-
-a,
-span,
-button {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-svg {
-    fill: var(--main-text-color);
 }
 
 /* ダークモード切り替えボタン */
