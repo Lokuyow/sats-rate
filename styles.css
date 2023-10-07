@@ -556,26 +556,26 @@ input:checked+.slider:before {
 
     :root[data-theme="dark"] {
         --input-text-color: #FFFFFF;
-        --main-text-color: #EBEBEB;
+        --main-text-color: #E6E6E6;
         --subject-text-color: #BFBFBF;
-        --main-bg-color: #333333;
-        --sub-bg-color: #1F1F1F;
-        --input-bg-color: #424242;
-        --unit-bg-color: #4A4A4A;
-        --invalid-color: #525252;
+        --main-bg-color: #292929;
+        --sub-bg-color: #1A1A1A;
+        --input-bg-color: #303030;
+        --unit-bg-color: #383838;
+        --invalid-color: #4D4D4D;
     }
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --input-text-color: #FFFFFF;
-        --main-text-color: #EBEBEB;
+        --main-text-color: #E6E6E6;
         --subject-text-color: #BFBFBF;
-        --main-bg-color: #333333;
-        --sub-bg-color: #1F1F1F;
-        --input-bg-color: #424242;
-        --unit-bg-color: #4A4A4A;
-        --invalid-color: #525252;
+        --main-bg-color: #292929;
+        --sub-bg-color: #1A1A1A;
+        --input-bg-color: #303030;
+        --unit-bg-color: #383838;
+        --invalid-color: #4D4D4D;
     }
 
     :root[data-theme="light"] {
