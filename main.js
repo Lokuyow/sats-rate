@@ -25,12 +25,9 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
     await fetchDataFromCoinGecko();
-    setupEventListeners();
     await handleServiceWorker();
     loadValuesFromQueryParams();
-    handleVisibilityChange();
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('online', handleOnline);
+    setupEventListeners();
 }
 
 async function fetchDataFromCoinGecko() {
@@ -69,14 +66,18 @@ async function fetchDataFromCoinGecko() {
     }
 }
 
-function setupEventListeners() {
+async function setupEventListeners() {
     inputFields.forEach(id => {
         const element = getDomElementById(id);
         setupInputFieldEventListeners(element);
     });
+    
+    await displaySiteVersion();
     setupEventListenersForCurrencyButtons()
     getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getDomElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', handleOnline);
 }
 
 function setupInputFieldEventListeners(element) {
@@ -564,39 +565,45 @@ async function handleServiceWorker() {
 
     try {
         const reg = await navigator.serviceWorker.register('./sw.js');
-        reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    notifyUserOfUpdate(reg);
-                }
-            });
-        });
+        monitorServiceWorkerUpdate(reg);
     } catch (e) {
         console.error("Service Worker registration failed:", e);
     }
 }
 
-function notifyUserOfUpdate(reg) {
+function monitorServiceWorkerUpdate(reg) {
+    reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                promptUserToUpdate(reg);
+            }
+        });
+    });
+}
+
+function promptUserToUpdate(reg) {
     const updateNotice = createUpdateNoticeElement();
     document.body.appendChild(updateNotice);
 
-    document.getElementById('updateBtn').addEventListener('click', async () => {
-        if (reg.waiting) {
-            reg.waiting.postMessage('skipWaiting');
-            await new Promise(resolve => {
-                reg.waiting.addEventListener('statechange', (event) => {
-                    if (!reg.waiting) {
-                        resolve();
-                    }
-                });
+    getDomElementById('updateBtn').addEventListener('click', () => reloadWhenWorkerUpdated(reg));
+}
+
+async function reloadWhenWorkerUpdated(reg) {
+    if (reg.waiting) {
+        reg.waiting.postMessage('skipWaiting');
+        await new Promise(resolve => {
+            reg.waiting.addEventListener('statechange', () => {
+                if (!reg.waiting) {
+                    resolve();
+                }
             });
-            window.location.reload();
-        } else {
-            console.warn('Service Worker is not waiting.');
-            window.location.reload();
-        }
-    });
+        });
+        window.location.reload();
+    } else {
+        console.warn('Service Worker is not waiting.');
+        window.location.reload();
+    }
 }
 
 function createUpdateNoticeElement() {
@@ -625,4 +632,30 @@ function createElementWithContent(tag, content, attributes = {}) {
     }
 
     return element;
+}
+
+async function fetchVersionFromSW() {
+    if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        return new Promise((resolve, reject) => {
+            const messageChannel = new MessageChannel();
+            messageChannel.port1.onmessage = (event) => {
+                if (event.data.error) {
+                    reject(event.data.error);
+                } else {
+                    resolve(event.data.version);
+                }
+            };
+
+            registration.active.postMessage({ action: 'getVersion' }, [messageChannel.port2]);
+        });
+    }
+    return null;
+}
+
+async function displaySiteVersion() {
+    const siteVersion = await fetchVersionFromSW();
+    if (siteVersion) {
+        getDomElementById('siteVersion').textContent = siteVersion;
+    }
 }

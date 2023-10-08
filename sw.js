@@ -1,4 +1,3 @@
-const CACHE_NAME = 'sats-rate-caches-v1.36.4';
 const urlsToCache = [
     './index.html',
     './styles.css',
@@ -10,8 +9,6 @@ const urlsToCache = [
     './images/maskable_icon_x192.png',
     './images/maskable_icon_x512.png',
     './images/title.svg',
-    './images/copy-regular.svg',
-    './images/paste-regular.svg',
     './images/白抜きのビットコインアイコン.svg',
     './images/白抜きの円アイコン.svg',
     './images/白抜きのドルアイコン.svg',
@@ -34,9 +31,11 @@ const urlsToCache = [
     './images/angle-down-solid.svg'
 ];
 
+const VERSION = '1.36.4';
+let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
-self.addEventListener('install', (ev) => void ev.waitUntil((async () => {
+self.addEventListener('install', (ev) => ev.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     await cache.addAll(urlsToCache);
 
@@ -79,6 +78,9 @@ self.addEventListener('activate', (ev) => void ev.waitUntil((async () => {
 })()));
 
 self.addEventListener('message', (event) => {
+    if (event.data.action === 'getVersion') {
+        event.ports[0].postMessage({ version: VERSION });
+    }
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
     }
