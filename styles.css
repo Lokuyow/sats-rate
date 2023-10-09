@@ -224,7 +224,7 @@ button>svg {
 }
 
 .last-input-field {
-    background-color: var(--unit-bg-color);
+    background-color: var(--main-bg-color);
 }
 
 .currency-units {
@@ -364,7 +364,7 @@ button>svg {
     cursor: pointer;
     background: none;
     border-radius: 6px;
-    padding: 10px 10px;
+    padding: 8px 10px;
     margin-left: 12px;
 }
 
