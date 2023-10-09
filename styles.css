@@ -48,6 +48,11 @@ svg#b {
     fill: var(--invalid-color);
 }
 
+button>img,
+button>svg {
+    pointer-events: none;
+}
+
 .main {
     flex: 1 0 auto;
     display: flex;
@@ -165,43 +170,38 @@ svg#b {
     height: 100%;
 }
 
-.grid-container input:nth-child(5) {
-    border-left: 3px solid var(--sub-color);
-}
-
-.grid-container input:nth-child(5):focus {
-    outline: 2px solid var(--sub-color);
-    outline-offset: -2px;
-}
-
-.grid-container input:nth-child(8) {
-    border-left: 3px solid var(--accent-color);
-}
-
-.grid-container input:nth-child(8):focus {
-    outline: 2px solid var(--accent-color);
-    outline-offset: -2px;
-}
-
-.grid-container input:nth-child(3n+11) {
-    border-left: 3px solid var(--base-color);
-}
-
-.grid-container input:nth-child(3n+11):focus {
-    outline: 2px solid var(--base-color);
-    outline-offset: -2px;
-}
-
 .currency-icons img {
     justify-self: center;
 }
 
-button>img,
-button>svg {
-    pointer-events: none;
+.currency-input:nth-child(5) {
+    border-left: 3px solid var(--sub-color);
 }
 
-.grid-container input {
+.currency-input:nth-child(8) {
+    border-left: 3px solid var(--accent-color);
+}
+
+.currency-input:nth-child(3n+11) {
+    border-left: 3px solid var(--base-color);
+}
+
+.currency-input:nth-child(5):focus {
+    outline: 2px solid var(--sub-color);
+    outline-offset: -2px;
+}
+
+.currency-input:nth-child(8):focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: -2px;
+}
+
+.currency-input:nth-child(3n+11):focus {
+    outline: 2px solid var(--base-color);
+    outline-offset: -2px;
+}
+
+.currency-input {
     font-family:
         'San Francisco',
         -apple-system,
@@ -221,6 +221,10 @@ button>svg {
     text-align: right;
     min-width: 140px;
     padding: 0 10px 0 0;
+}
+
+.last-input-field {
+    background-color: var(--unit-bg-color);
 }
 
 .currency-units {

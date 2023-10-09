@@ -19,6 +19,7 @@ const currencyFormatOptions = {
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
+const inputs = document.querySelectorAll('.currency-input');
 
 document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -205,6 +206,7 @@ function calculateValues(inputField) {
 
     lastUpdatedField = inputField;
     updateShareButton(values.btc, values.sats, values.jpy, values.usd, values.eur);
+    changeBackgroundColorFromId(inputField);
 }
 
 // キー入力
@@ -397,6 +399,14 @@ function handleContextMenu(event) {
 
 function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+//計算元フィールドの色変更
+function changeBackgroundColorFromId(id) {
+    inputs.forEach(input => input.classList.remove('last-input-field'));
+
+    const targetInput = document.getElementById(id);
+    targetInput.classList.add('last-input-field');
 }
 
 // URLクエリパラメータ
