@@ -346,6 +346,24 @@ button>svg {
     }
 }
 
+.default-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#saveDefaultValuesButton {
+    color: var(--main-text-color);
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px solid var(--invalid-color);
+    cursor: pointer;
+    background: none;
+    border-radius: 6px;
+    padding: 10px 10px;
+    margin-left: 12px;
+}
+
 .site-description {
     margin: 0 26px;
 }
@@ -488,7 +506,7 @@ button>svg {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 25px;
 }
 
 .switch {

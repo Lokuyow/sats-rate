@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 async function initializeApp() {
     await fetchDataFromCoinGecko();
     await handleServiceWorker();
+    await displaySiteVersion();
     loadValuesFromQueryParams();
     setupEventListeners();
 }
@@ -71,11 +72,11 @@ async function setupEventListeners() {
         const element = getDomElementById(id);
         setupInputFieldEventListeners(element);
     });
-    
-    await displaySiteVersion();
+
     setupEventListenersForCurrencyButtons()
     getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getDomElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
+    getDomElementById('saveDefaultValuesButton').addEventListener('click', saveCurrentValuesAsDefault);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('online', handleOnline);
 }
@@ -100,12 +101,38 @@ function handleCoinGeckoRequestError(err) {
     alert("価格レートの取得に失敗しました。時間をおいてからリロードしてみてください。");
 }
 
+//デフォルト入力値
 function setDefaultValues() {
-    const satsField = getDomElementById('sats');
-    if (!satsField.value) {
-        satsField.value = formatCurrency("100", "sats", selectedLocale, currencyFormatOptions);
-        calculateValues('sats');
+    const storedDefaultValues = JSON.parse(localStorage.getItem('defaultValues')) || {};
+    const lastFieldFromLocalStorage = Object.keys(storedDefaultValues)[0];
+
+    if (lastFieldFromLocalStorage) {
+        const field = getDomElementById(lastFieldFromLocalStorage);
+        if (field) {
+            const formattedValue = new Intl.NumberFormat(selectedLocale).format(storedDefaultValues[lastFieldFromLocalStorage]);
+            field.value = formattedValue;
+            calculateValues(lastFieldFromLocalStorage);
+        }
+    } else {
+        const satsField = getDomElementById('sats');
+        if (!satsField.value) {
+            satsField.value = formatCurrency("100", "sats", selectedLocale, currencyFormatOptions);
+            calculateValues('sats');
+        }
     }
+}
+
+//デフォルト入力値の保存
+function saveCurrentValuesAsDefault() {
+    const currentValues = {};
+
+    if (lastUpdatedField) {
+        const rawValue = getDomElementById(lastUpdatedField).value;
+        const sanitizedValue = parseInput(rawValue, selectedLocale);
+        currentValues[lastUpdatedField] = sanitizedValue;
+    }
+
+    localStorage.setItem('defaultValues', JSON.stringify(currentValues));
 }
 
 function updateCurrencyRates(data) {
