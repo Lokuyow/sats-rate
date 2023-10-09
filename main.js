@@ -16,7 +16,6 @@ const currencyFormatOptions = {
     usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
     eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
 };
-const significantDigits = 7;
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
@@ -116,7 +115,7 @@ function setDefaultValues() {
     } else {
         const satsField = getDomElementById('sats');
         if (!satsField.value) {
-            satsField.value = formatCurrency("100", "sats", selectedLocale, currencyFormatOptions);
+            satsField.value = "100";
             calculateValues('sats');
         }
     }
@@ -154,6 +153,9 @@ function calculateValues(inputField) {
         usd: getInputValue('usd'),
         eur: getInputValue('eur')
     };
+
+    const inputDigits = values[inputField].toString().replace('.', '').length;
+    const significantDigits = calculateSignificantDigits(inputDigits);
 
     switch (inputField) {
         case 'btc':
@@ -197,7 +199,7 @@ function calculateValues(inputField) {
             const caretPos = element.selectionStart;
             element.setSelectionRange(caretPos, caretPos);
         } else {
-            getDomElementById(id).value = formatCurrency(values[id], id, selectedLocale, currencyFormatOptions);
+            getDomElementById(id).value = formatCurrency(values[id], id, selectedLocale, currencyFormatOptions, true, significantDigits);
         }
     });
 
@@ -229,13 +231,15 @@ function getLocaleSeparators(locale) {
 
 function parseInput(inputValue, locale) {
     const separators = getLocaleSeparators(locale);
-    const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), '').replace(separators.decimalSeparator, '.');
+    const sanitizedValue = inputValue
+        .replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), '')
+        .replace(separators.decimalSeparator, '.');
     return sanitizedValue;
 }
 
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
-    const originalSelectionEnd = inputElement.selectionEnd; // 追加
+    const originalSelectionEnd = inputElement.selectionEnd;
     const separators = getLocaleSeparators(selectedLocale);
     const originalValue = parseInput(inputElement.value, selectedLocale);
 
@@ -243,21 +247,25 @@ function addCommasToInput(inputElement) {
         inputElement.value = '0';
         inputElement.selectionStart = 1;
         inputElement.selectionEnd = 1;
-        return; // この関数の残りの部分をスキップ
+        return;
     }
 
     let preSeparatorCount = (inputElement.value.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
 
     let formattedValue;
-    if (originalValue.endsWith('.') || (originalValue.includes(separators.decimalSeparator) && originalCaretPos > originalValue.indexOf(separators.decimalSeparator))) {
-        // 小数点が入力された場合、桁区切りを保持する
-        const parts = originalValue.split(separators.decimalSeparator);
+    if (originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.'))) {
+        const parts = originalValue.split('.');
         const integerPart = parts[0];
         formattedValue = new Intl.NumberFormat(selectedLocale).format(parseFloat(integerPart));
-        formattedValue += separators.decimalSeparator + (parts[1] ? parts[1] : '');
+
+        if (parts[1] !== undefined) {
+            formattedValue += separators.decimalSeparator + parts[1];
+        } else if (originalValue.endsWith('.')) {
+            formattedValue += separators.decimalSeparator;
+        }
     } else {
-        const currencyId = inputElement.id; // 通貨のIDを入力エレメントのIDから取得
-        formattedValue = formatCurrency(originalValue, currencyId, selectedLocale, currencyFormatOptions);
+        const currencyId = inputElement.id;
+        formattedValue = formatCurrency(originalValue, currencyId, selectedLocale, currencyFormatOptions, false);
     }
 
     let postSeparatorCount = (formattedValue.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, 'g')) || []).length;
@@ -282,8 +290,9 @@ function addCommasToInput(inputElement) {
     }
 }
 
+
 // 有効数字、小数点以下の制限、ロケールごとの記法
-function formatCurrency(num, id, selectedLocale, currencyFormatOptions) {
+function formatCurrency(num, id, selectedLocale, currencyFormatOptions, shouldRound = true, significantDigits) {
     if (typeof num !== 'number') {
         num = parseFloat(num);
         if (isNaN(num)) {
@@ -292,7 +301,7 @@ function formatCurrency(num, id, selectedLocale, currencyFormatOptions) {
         }
     }
 
-    let roundedNum = Number(num.toPrecision(significantDigits));
+    let roundedNum = shouldRound ? Number(num.toPrecision(significantDigits)) : num;
     const maximumFractionDigits = currencyFormatOptions[id].maximumFractionDigits;
     const numFractionDigits = (roundedNum.toString().split('.')[1] || '').length;
 
@@ -301,6 +310,14 @@ function formatCurrency(num, id, selectedLocale, currencyFormatOptions) {
     }
 
     return Number(roundedNum).toLocaleString(selectedLocale, currencyFormatOptions[id]);
+}
+
+function calculateSignificantDigits(inputDigits) {
+    let dynamicSignificantDigits = 7;
+    if (inputDigits > 1) {
+        dynamicSignificantDigits += (inputDigits - 1);
+    }
+    return Math.min(dynamicSignificantDigits, 10);
 }
 
 // 価格レート更新日時の表示
