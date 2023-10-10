@@ -76,7 +76,9 @@ async function setupEventListeners() {
     setupEventListenersForCurrencyButtons()
     getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
     getDomElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
-    getDomElementById('saveDefaultValuesButton').addEventListener('click', saveCurrentValuesAsDefault);
+    getDomElementById('saveDefaultValuesButton').addEventListener('click', (event) => {
+        saveCurrentValuesAsDefault(event);
+    });
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('online', handleOnline);
 }
@@ -123,7 +125,7 @@ function setDefaultValues() {
 }
 
 //デフォルト入力値の保存
-function saveCurrentValuesAsDefault() {
+function saveCurrentValuesAsDefault(event) {
     const currentValues = {};
 
     if (lastUpdatedField) {
@@ -133,6 +135,8 @@ function saveCurrentValuesAsDefault() {
     }
 
     localStorage.setItem('defaultValues', JSON.stringify(currentValues));
+
+    showNotification('設定完了', event);
 }
 
 function updateCurrencyRates(data) {
@@ -401,12 +405,33 @@ function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-//計算元フィールドの色変更
+//計算元の入力ボックスの色を変更
 function changeBackgroundColorFromId(id) {
     inputs.forEach(input => input.classList.remove('last-input-field'));
 
     const targetInput = document.getElementById(id);
     targetInput.classList.add('last-input-field');
+}
+
+// ポップアップ表示
+function showNotification(message, event, align = 'right') {
+    const notification = getDomElementById('notification');
+    notification.textContent = message;
+
+    notification.style.left = event.pageX + 'px';
+    notification.style.top = (event.pageY + 20) + 'px';
+
+    if (align === 'left') {
+        notification.style.transform = 'translateX(0)';
+    } else {
+        notification.style.transform = 'translateX(-100%)';
+    }
+
+    notification.style.visibility = 'visible';
+
+    setTimeout(() => {
+        notification.style.visibility = 'hidden';
+    }, 1000);
 }
 
 // URLクエリパラメータ
@@ -542,26 +567,10 @@ function copyToClipboardEvent(event) {
     copyToClipboard(textToCopy, event, 'right');
 }
 
-// コピー、ポップアップ表示
+// コピー
 function copyToClipboard(text, event, align = 'right') {
     navigator.clipboard.writeText(text).then(() => {
-        const notification = getDomElementById('notification');
-        notification.textContent = 'クリップボードにコピーしました';
-
-        notification.style.left = event.pageX + 'px';
-        notification.style.top = (event.pageY + 20) + 'px';
-
-        if (align === 'left') {
-            notification.style.transform = 'translateX(0)';
-        } else {
-            notification.style.transform = 'translateX(-100%)';
-        }
-
-        notification.style.visibility = 'visible';
-
-        setTimeout(() => {
-            notification.style.visibility = 'hidden';
-        }, 1000);
+        showNotification('クリップボードにコピーしました', event, align);  // 通知を表示
     }).catch(err => {
         console.error('クリップボードへのコピーに失敗しました', err);
     });

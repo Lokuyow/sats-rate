@@ -435,18 +435,6 @@ button>svg {
     color: var(--main-text-color);
 }
 
-#notification {
-    position: absolute;
-    visibility: hidden;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    font-size: 0.8rem;
-    color: #333;
-    white-space: nowrap;
-}
-
 .flex-ref {
     display: flex;
     justify-content: flex-end;
@@ -570,6 +558,20 @@ input:checked+.slider {
 
 input:checked+.slider:before {
     transform: translateX(32px);
+}
+
+/* ポップアップ通知 */
+#notification {
+    position: absolute;
+    visibility: hidden;
+    color: var(--input-text-color);
+    font-size: 0.9rem;
+    /* font-weight: bold; */
+    background-color: var(--main-bg-color);
+    border: 1px solid var(--invalid-color);
+    border-radius: 4px;
+    padding: 10px;
+    white-space: nowrap;
 }
 
 /* ダークモード設定 */
