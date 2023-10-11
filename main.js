@@ -79,6 +79,7 @@ async function setupEventListeners() {
     getDomElementById('saveDefaultValuesButton').addEventListener('click', (event) => {
         saveCurrentValuesAsDefault(event);
     });
+    getDomElementById('checkForUpdateBtn').addEventListener('click', reload);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('online', handleOnline);
 }
@@ -409,7 +410,7 @@ function isMobileDevice() {
 function changeBackgroundColorFromId(id) {
     inputs.forEach(input => input.classList.remove('last-input-field'));
 
-    const targetInput = document.getElementById(id);
+    const targetInput = getDomElementById(id);
     targetInput.classList.add('last-input-field');
 }
 
@@ -645,40 +646,57 @@ function monitorServiceWorkerUpdate(reg) {
     });
 }
 
-function promptUserToUpdate(reg) {
-    const updateNotice = createUpdateNoticeElement();
-    document.body.appendChild(updateNotice);
+async function reload(event) {
+    if (!('serviceWorker' in navigator)) return;
 
-    getDomElementById('updateBtn').addEventListener('click', () => reloadWhenWorkerUpdated(reg));
-}
-
-async function reloadWhenWorkerUpdated(reg) {
-    if (reg.waiting) {
-        reg.waiting.postMessage('skipWaiting');
-        await new Promise(resolve => {
-            reg.waiting.addEventListener('statechange', () => {
-                if (!reg.waiting) {
-                    resolve();
-                }
-            });
-        });
-        window.location.reload();
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (registration.waiting) {
+        promptUserToUpdate(registration);
     } else {
-        console.warn('Service Worker is not waiting.');
-        window.location.reload();
+        await checkForUpdate(registration, event);
     }
 }
 
-function createUpdateNoticeElement() {
-    const updateNotice = document.createElement('div');
-    updateNotice.className = 'update-notice';
+async function checkForUpdate(registration, event) {
+    const updatedRegistration = await registration.update();
+    const installingWorker = updatedRegistration.installing;
 
-    const updateBox = document.createElement('div');
-    updateBox.className = 'update-notice-box';
+    if (installingWorker) {
+        handleInstallingWorker(installingWorker, registration);
+    } else {
+        showNotification('更新はありませんでした', event);
+    }
+}
+
+function handleInstallingWorker(worker, registration) {
+    worker.onstatechange = e => {
+        if (e.target.state == 'installed') {
+            promptUserToUpdate(registration);
+        }
+    }
+}
+
+function promptUserToUpdate(reg) {
+    const existingNotice = getDomElementById('applyUpdateBtn');
+    if (existingNotice) {
+        existingNotice.parentElement.removeChild(existingNotice);
+    }
+
+    const updateNotice = createUpdateNoticeElement();
+    document.body.appendChild(updateNotice);
+    const applyUpdateButton = getDomElementById('applyUpdateBtn');
+
+    applyUpdateButton.removeEventListener('click', () => reloadWhenWorkerUpdated(reg));
+    applyUpdateButton.addEventListener('click', () => reloadWhenWorkerUpdated(reg));
+}
+
+function createUpdateNoticeElement() {
+    const updateNotice = createElementWithContent('div', '', { className: 'update-notice' });
+    const updateBox = createElementWithContent('div', '', { className: 'update-notice-box' });
 
     const title = createElementWithContent('h3', 'アップデート通知');
     const text = createElementWithContent('p', '新しいバージョンが利用可能です。');
-    const updateButton = createElementWithContent('button', '更新', { id: 'updateBtn' });
+    const updateButton = createElementWithContent('button', '更新', { id: 'applyUpdateBtn' });
 
     updateBox.append(title, text, updateButton);
     updateNotice.appendChild(updateBox);
@@ -689,11 +707,7 @@ function createUpdateNoticeElement() {
 function createElementWithContent(tag, content, attributes = {}) {
     const element = document.createElement(tag);
     element.innerHTML = content;
-
-    for (const key in attributes) {
-        element.setAttribute(key, attributes[key]);
-    }
-
+    Object.entries(attributes).forEach(([key, value]) => element[key] = value);
     return element;
 }
 
@@ -720,5 +734,22 @@ async function displaySiteVersion() {
     const siteVersion = await fetchVersionFromSW();
     if (siteVersion) {
         getDomElementById('siteVersion').textContent = siteVersion;
+    }
+}
+
+async function reloadWhenWorkerUpdated(reg) {
+    if (reg.waiting) {
+        reg.waiting.postMessage('skipWaiting');
+        await new Promise(resolve => {
+            reg.waiting.addEventListener('statechange', () => {
+                if (!reg.waiting) {
+                    resolve();
+                }
+            });
+        });
+        window.location.reload();
+    } else {
+        console.warn('Service Worker is not waiting.');
+        window.location.reload();
     }
 }

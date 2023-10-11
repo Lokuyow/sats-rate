@@ -350,10 +350,14 @@ button>svg {
     }
 }
 
-.default-value {
-    display: flex;
+.grid-settings {
+    display: grid;
+    grid-template-columns: minmax(126px, 220px) minmax(170px, 220px);
+    grid-template-rows: 42px 42px 42px;
     justify-content: center;
     align-items: center;
+    row-gap: 14px;
+    margin: 0 26px;
 }
 
 #saveDefaultValuesButton {
@@ -365,7 +369,17 @@ button>svg {
     background: none;
     border-radius: 6px;
     padding: 8px 10px;
-    margin-left: 12px;
+}
+
+#checkForUpdateBtn {
+    color: var(--main-text-color);
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px solid var(--invalid-color);
+    cursor: pointer;
+    background: none;
+    border-radius: 6px;
+    padding: 8px 10px;
 }
 
 .site-description {
@@ -376,7 +390,7 @@ button>svg {
     display: flex;
     justify-content: center;
     font-size: 1.07rem;
-    margin: 26px 0 6px 0;
+    margin: 24px 0 6px 0;
 }
 
 .table {
@@ -477,7 +491,7 @@ button>svg {
     margin: 0.5rem 0;
 }
 
-#updateBtn {
+#applyUpdateBtn {
     background-color: var(--accent-color);
     font-size: 1.2rem;
     font-weight: bold;
@@ -489,22 +503,16 @@ button>svg {
     cursor: pointer;
 }
 
-#updateBtn:hover {
+#applyUpdateBtn:hover {
     background-color: #F7A94A;
 }
 
 /* ダークモード切り替えボタン */
-.flex-dark {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 25px;
-}
 
 .switch {
     position: relative;
     display: inline-block;
-    margin: 0 0 0 12px;
+    justify-self: center;
     width: 66px;
     height: 34px;
 }

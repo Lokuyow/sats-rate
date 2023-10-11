@@ -211,12 +211,20 @@
             <div class="subject">
                 設定
             </div>
-            <div class="default-value">
-                現在の入力数値
+            <div class="grid-settings">
+                <div class="theme-DefaultValue">
+                    現在の入力数値
+                </div>
                 <button id="saveDefaultValuesButton">デフォルトに設定</button>
-            </div>
-            <div class="flex-dark">
-                ダークモード・ライトモード
+
+                <div class="theme-ver">
+                    Version&nbsp;<span id="siteVersion"></span>
+                </div>
+                <button id="checkForUpdateBtn">更新をチェック</button>
+
+                <div class="theme-dark">
+                    ダークモード
+                </div>
                 <label class="switch">
                     <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
                     <span class="slider round"></span>
@@ -316,7 +324,6 @@
             サイト制作：<a href="https://lokuyow.github.io" target="_blank">ロクヨウ</a><br>
             ソースコード：<a href="https://github.com/Lokuyow/sats-rate" target="_blank">GitHub</a><br>
             データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a><br>
-            おいくらサッツ：Version <span id="siteVersion"></span>
         </div>
     </div>
     <div id="notification"></div>
