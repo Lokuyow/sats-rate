@@ -386,11 +386,14 @@ button>svg {
     margin: 0 26px;
 }
 
-.unit-link {
+.flex-unit-link {
     display: flex;
     justify-content: center;
-    font-size: 1.07rem;
-    margin: 24px 0 6px 0;
+
+    .unit-link {
+        font-size: 1.07rem;
+        margin: 24px 0 6px 0;
+    }
 }
 
 .table {
