@@ -5,7 +5,7 @@
     --subject-text-color: #666666;
     --main-bg-color: #FFFFFF;
     --sub-bg-color: #EDEFF0;
-    --input-bg-color: #FAFAFA;
+    --input-bg-color: #F7F7F7;
     --unit-bg-color: #F2F4F5;
     --invalid-color: #E0E0E0;
     --accent-color: #F7931A;
@@ -593,7 +593,7 @@ input:checked+.slider:before {
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
-        --input-bg-color: #FAFAFA;
+        --input-bg-color: #F7F7F7;
         --unit-bg-color: #F2F4F5;
         --invalid-color: #E0E0E0;
     }
@@ -604,7 +604,7 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #292929;
         --sub-bg-color: #1A1A1A;
-        --input-bg-color: #303030;
+        --input-bg-color: #333333;
         --unit-bg-color: #383838;
         --invalid-color: #4D4D4D;
     }
@@ -617,7 +617,7 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #292929;
         --sub-bg-color: #1A1A1A;
-        --input-bg-color: #303030;
+        --input-bg-color: #333333;
         --unit-bg-color: #383838;
         --invalid-color: #4D4D4D;
     }
@@ -628,7 +628,7 @@ input:checked+.slider:before {
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
-        --input-bg-color: #FAFAFA;
+        --input-bg-color: #F7F7F7;
         --unit-bg-color: #F2F4F5;
         --invalid-color: #E0E0E0;
     }
