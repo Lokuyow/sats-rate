@@ -27,8 +27,11 @@ async function initializeApp() {
     await fetchDataFromCoinGecko();
     await handleServiceWorker();
     await displaySiteVersion();
+    setDefaultValues()
     loadValuesFromQueryParams();
     setupEventListeners();
+    checkAndUpdateElements();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 }
 
 async function fetchDataFromCoinGecko() {
@@ -59,10 +62,6 @@ async function fetchDataFromCoinGecko() {
         updateCurrencyRates(data);
         updateLastUpdated(data.bitcoin.last_updated_at);
         updateElementClass(getDomElementById('last-updated'), false);
-    }
-    setDefaultValues();
-    if (lastUpdatedField) {
-        calculateValues(lastUpdatedField);
         updateElementClass(getDomElementById('update-prices'), false);
     }
 }
@@ -80,7 +79,6 @@ async function setupEventListeners() {
         saveCurrentValuesAsDefault(event);
     });
     getDomElementById('checkForUpdateBtn').addEventListener('click', reload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('online', handleOnline);
 }
 
@@ -340,16 +338,20 @@ function updateLastUpdated(timestamp) {
     return formattedDate;
 }
 
-// 画面を切り替えたときのレート更新ボタンと取得日時表示
-function handleVisibilityChange() {
-    if (document.hidden) return;
-
+// ページ読み込みもしくは表示状態が変わった際の要素更新処理
+function checkAndUpdateElements() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
     const updatePricesElement = getDomElementById('update-prices');
     const lastUpdatedElement = getDomElementById('last-updated');
 
     updateElementClass(updatePricesElement, diffTime >= 610);
     updateElementClass(lastUpdatedElement, diffTime >= 610);
+}
+
+function handleVisibilityChange() {
+    if (document.hidden) return;
+
+    checkAndUpdateElements();
 }
 
 // レート更新ボタンを押したとき
@@ -372,6 +374,11 @@ async function updateElementsBasedOnTimestamp() {
         // データを取得
         await fetchDataFromCoinGecko();
         const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+
+        // 現在の入力数値を元に再計算
+        if (lastUpdatedField) {
+            calculateValues(lastUpdatedField);
+        }
 
         // 要素のクラスを更新
         updateElementClass(updatePricesElement, updatedDiffTime >= 610);
