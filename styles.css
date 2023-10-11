@@ -6,7 +6,7 @@
     --main-bg-color: #FFFFFF;
     --sub-bg-color: #EDEFF0;
     --input-bg-color: #F7F7F7;
-    --unit-bg-color: #F2F4F5;
+    --unit-bg-color: #F5F5F5;
     --invalid-color: #E0E0E0;
     --accent-color: #F7931A;
     --base-color: #B3475F;
@@ -594,7 +594,7 @@ input:checked+.slider:before {
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F7F7F7;
-        --unit-bg-color: #F2F4F5;
+        --unit-bg-color: #F5F5F5;
         --invalid-color: #E0E0E0;
     }
 
@@ -629,7 +629,7 @@ input:checked+.slider:before {
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F7F7F7;
-        --unit-bg-color: #F2F4F5;
+        --unit-bg-color: #F5F5F5;
         --invalid-color: #E0E0E0;
     }
 }
