@@ -7,7 +7,7 @@
     --sub-bg-color: #EDEFF0;
     --input-bg-color: #F5F5F5;
     --unit-bg-color: #F0F0F0;
-    --invalid-color: #E0E0E0;
+    --invalid-color: #D6D6D6;
     --accent-color: #F7931A;
     --base-color: #D94162;
     --sub-color: #FAD102;
@@ -595,7 +595,7 @@ input:checked+.slider:before {
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F5F5F5;
         --unit-bg-color: #F0F0F0;
-        --invalid-color: #E0E0E0;
+        --invalid-color: #D6D6D6;
     }
 
     :root[data-theme="dark"] {
@@ -606,7 +606,7 @@ input:checked+.slider:before {
         --sub-bg-color: #1A1A1A;
         --input-bg-color: #363636;
         --unit-bg-color: #3B3B3B;
-        --invalid-color: #4D4D4D;
+        --invalid-color: #545454;
     }
 }
 
@@ -619,7 +619,7 @@ input:checked+.slider:before {
         --sub-bg-color: #1A1A1A;
         --input-bg-color: #363636;
         --unit-bg-color: #3B3B3B;
-        --invalid-color: #4D4D4D;
+        --invalid-color: #545454;
     }
 
     :root[data-theme="light"] {
@@ -630,6 +630,6 @@ input:checked+.slider:before {
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F5F5F5;
         --unit-bg-color: #F0F0F0;
-        --invalid-color: #E0E0E0;
+        --invalid-color: #D6D6D6;
     }
 }
