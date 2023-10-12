@@ -5,11 +5,11 @@
     --subject-text-color: #666666;
     --main-bg-color: #FFFFFF;
     --sub-bg-color: #EDEFF0;
-    --input-bg-color: #F7F7F7;
-    --unit-bg-color: #F5F5F5;
+    --input-bg-color: #F5F5F5;
+    --unit-bg-color: #F0F0F0;
     --invalid-color: #E0E0E0;
     --accent-color: #F7931A;
-    --base-color: #B3475F;
+    --base-color: #D94162;
     --sub-color: #FAD102;
 }
 
@@ -102,7 +102,7 @@ button>svg {
 .grid-container {
     display: grid;
     grid-template-columns: 58px auto 50px;
-    grid-template-rows: 32px 1fr 1fr 1fr 1fr 1fr 42px;
+    grid-template-rows: 32px 1fr 1fr 1fr 1fr 1fr 44px;
     row-gap: 6px;
     align-items: center;
     width: auto;
@@ -593,8 +593,8 @@ input:checked+.slider:before {
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
-        --input-bg-color: #F7F7F7;
-        --unit-bg-color: #F5F5F5;
+        --input-bg-color: #F5F5F5;
+        --unit-bg-color: #F0F0F0;
         --invalid-color: #E0E0E0;
     }
 
@@ -604,8 +604,8 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #292929;
         --sub-bg-color: #1A1A1A;
-        --input-bg-color: #333333;
-        --unit-bg-color: #383838;
+        --input-bg-color: #363636;
+        --unit-bg-color: #3B3B3B;
         --invalid-color: #4D4D4D;
     }
 }
@@ -617,8 +617,8 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #292929;
         --sub-bg-color: #1A1A1A;
-        --input-bg-color: #333333;
-        --unit-bg-color: #383838;
+        --input-bg-color: #363636;
+        --unit-bg-color: #3B3B3B;
         --invalid-color: #4D4D4D;
     }
 
@@ -628,8 +628,8 @@ input:checked+.slider:before {
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
-        --input-bg-color: #F7F7F7;
-        --unit-bg-color: #F5F5F5;
+        --input-bg-color: #F5F5F5;
+        --unit-bg-color: #F0F0F0;
         --invalid-color: #E0E0E0;
     }
 }
