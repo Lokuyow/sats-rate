@@ -372,14 +372,41 @@ button>svg {
 }
 
 #checkForUpdateBtn {
+    position: relative;
     color: var(--main-text-color);
     font-size: 1rem;
     font-weight: bold;
     border: 1px solid var(--invalid-color);
     cursor: pointer;
     background: none;
+    min-width: 170px;
+    min-height: 42px;
     border-radius: 6px;
     padding: 8px 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    border: 6px solid var(--invalid-color);
+    border-top: 6px solid var(--accent-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
 }
 
 .site-description {

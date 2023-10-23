@@ -653,16 +653,38 @@ function monitorServiceWorkerUpdate(reg) {
     });
 }
 
+function delay(duration) {
+    return new Promise(resolve => setTimeout(resolve, duration));
+}
+
 async function reload(event) {
     if (!('serviceWorker' in navigator)) return;
 
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (registration.waiting) {
-        promptUserToUpdate(registration);
+    const button = getDomElementById('checkForUpdateBtn');
+    const spinner = button.querySelector('.spinner');
+    const buttonText = button.querySelector('#buttonText');
+
+    buttonText.style.display = 'none';
+    spinner.style.display = 'inline-block';
+
+    // 更新と遅延を開始
+    const registration = navigator.serviceWorker.getRegistration();
+    const delayPromise = delay(500);  // 少なくとも0.5秒間表示されるようにします。
+
+    // Promise.allを使用して、両方のプロセスが完了するのを待ちます。
+    const results = await Promise.all([registration, delayPromise]);
+
+    // 更新処理を実行
+    if (results[0].waiting) {
+        promptUserToUpdate(results[0]);
     } else {
-        await checkForUpdate(registration, event);
+        await checkForUpdate(results[0], event);
     }
+
+    spinner.style.display = 'none';
+    buttonText.style.display = 'inline';
 }
+
 
 async function checkForUpdate(registration, event) {
     const updatedRegistration = await registration.update();
