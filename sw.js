@@ -42,8 +42,8 @@ self.addEventListener('install', (ev) => ev.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(
         keys
-        .filter(key => !MY_CACHES.has(key))
-        .map(key => caches.delete(key))
+            .filter(key => !MY_CACHES.has(key))
+            .map(key => caches.delete(key))
     );
     return self.skipWaiting();
 })()));
@@ -67,15 +67,16 @@ self.addEventListener('fetch', (ev) => void ev.respondWith((async () => {
     return cacheResponse || fetch(requestToFetch);
 })()));
 
-self.addEventListener('activate', (ev) => void ev.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(
-        keys
-        .filter(key => !MY_CACHES.has(key))
-        .map(key => caches.delete(key))
-    );
-    return clients.claim();
-})()));
+self.addEventListener('activate', (event) => {
+    event.waitUntil((async () => {
+      const clientsList = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
+      for (const client of clientsList) {
+        client.postMessage({ type: 'NEW_VERSION_ACTIVE' });
+      }
+  
+      return self.clients.claim();
+    })());
+  });
 
 self.addEventListener('message', (event) => {
     if (event.data.action === 'getVersion') {

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
     await fetchDataFromCoinGecko();
-    await handleServiceWorker();
+    await registerAndHandleServiceWorker();
     await displaySiteVersion();
     setDefaultValues()
     loadValuesFromQueryParams();
@@ -78,7 +78,7 @@ async function setupEventListeners() {
     getDomElementById('saveDefaultValuesButton').addEventListener('click', (event) => {
         saveCurrentValuesAsDefault(event);
     });
-    getDomElementById('checkForUpdateBtn').addEventListener('click', reload);
+    getDomElementById('checkForUpdateBtn').addEventListener('click', checkForUpdates);
     window.addEventListener('online', handleOnline);
 }
 
@@ -630,130 +630,87 @@ function shareViaWebAPI(originalShareText, queryParams) {
     }
 }
 
+
 // サービスワーカー
-async function handleServiceWorker() {
-    if (!('serviceWorker' in navigator)) return;
+let newVersionAvailable = false;
+
+navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'NEW_VERSION_ACTIVE') {
+        newVersionAvailable = true;
+
+        const updateUI = getDomElementById('buttonText');
+        if (updateUI) {
+            updateUI.textContent = '更新があります';
+        }
+    }
+});
+
+async function registerAndHandleServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.warn("Service Worker is not supported in this browser.");
+        return;
+    }
 
     try {
-        const reg = await navigator.serviceWorker.register('./sw.js');
-        monitorServiceWorkerUpdate(reg);
-    } catch (e) {
-        console.error("Service Worker registration failed:", e);
+        const registration = await navigator.serviceWorker.register('./sw.js');
+
+        registration.addEventListener('updatefound', () => {
+            const installingWorker = registration.installing;
+
+            installingWorker.addEventListener('statechange', async () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    newVersionAvailable = true;
+                    const updateUI = getDomElementById('buttonText');
+                    if (updateUI) {
+                        updateUI.textContent = '更新があります';
+                    }
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Service Worker registration failed:", error);
     }
 }
 
-//新しいService Workerが見つかった場合に発生する'updatefound'イベントをリッスン
-function monitorServiceWorkerUpdate(reg) {
-    reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                promptUserToUpdate(reg);
-            }
-        });
-    });
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function delay(duration) {
-    return new Promise(resolve => setTimeout(resolve, duration));
-}
-
-//Service Workerの登録を取得し、画面上のUI要素を更新
-async function reload(event) {
-    if (!('serviceWorker' in navigator)) return;
-
-    const button = getDomElementById('checkForUpdateBtn');
-    const spinner = button.querySelector('.spinner');
-    const buttonText = button.querySelector('#buttonText');
+async function checkForUpdates() {
+    const updateButton = getDomElementById('checkForUpdateBtn');
+    const buttonText = getDomElementById('buttonText');
+    const spinner = updateButton.querySelector('.spinner');
 
     buttonText.style.display = 'none';
     spinner.style.display = 'inline-block';
 
-    const registration = navigator.serviceWorker.getRegistration();
-    const delayPromise = delay(500);
-    const results = await Promise.all([registration, delayPromise]);
+    try {
+        await delay(250);
 
-    if (results[0].waiting) {
-        promptUserToUpdate(results[0]);
-    } else {
-        await checkForUpdate(results[0], event);
-    }
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (!registration) throw new Error("No active service worker registration found");
 
-    spinner.style.display = 'none';
-    buttonText.style.display = 'inline';
-}
+        await registration.update();
 
-//Service Workerの更新をチェック
-async function checkForUpdate(registration, event) {
-    const updatedRegistration = await registration.update();
-    const installingWorker = updatedRegistration.installing;
+        if (registration && registration.waiting) {
+            registration.waiting.postMessage('skipWaiting');
 
-    if (installingWorker) {
-        handleInstallingWorker(installingWorker, registration);
-    } else {
-        showNotification('更新はありませんでした', event);
-    }
-}
-
-//新しいService Workerの状態変化をリッスンし、'installed'状態になったら、ユーザーに更新を促す
-function handleInstallingWorker(worker, registration) {
-    worker.onstatechange = e => {
-        if (e.target.state == 'installed') {
-            promptUserToUpdate(registration);
-        }
-    }
-}
-
-function promptUserToUpdate(reg) {
-    const existingNotice = getDomElementById('applyUpdateBtn');
-    if (existingNotice) {
-        existingNotice.parentElement.removeChild(existingNotice);
-    }
-
-    const updateNotice = createUpdateNoticeElement();
-    document.body.appendChild(updateNotice);
-    const applyUpdateButton = getDomElementById('applyUpdateBtn');
-
-    applyUpdateButton.removeEventListener('click', () => reloadWhenWorkerUpdated(reg));
-    applyUpdateButton.addEventListener('click', () => reloadWhenWorkerUpdated(reg));
-}
-
-function createUpdateNoticeElement() {
-    const updateNotice = createElementWithContent('div', '', { className: 'update-notice' });
-    const updateBox = createElementWithContent('div', '', { className: 'update-notice-box' });
-
-    const title = createElementWithContent('h3', 'アップデート通知');
-    const text = createElementWithContent('p', '新しいバージョンが利用可能です。');
-    const updateButton = createElementWithContent('button', '更新', { id: 'applyUpdateBtn' });
-
-    updateBox.append(title, text, updateButton);
-    updateNotice.appendChild(updateBox);
-
-    return updateNotice;
-}
-
-function createElementWithContent(tag, content, attributes = {}) {
-    const element = document.createElement(tag);
-    element.innerHTML = content;
-    Object.entries(attributes).forEach(([key, value]) => element[key] = value);
-    return element;
-}
-
-//新しいService Workerが待機中の場合、それをアクティブにしてページをリロード
-async function reloadWhenWorkerUpdated(reg) {
-    if (reg.waiting) {
-        reg.waiting.postMessage('skipWaiting');
-        await new Promise(resolve => {
-            reg.waiting.addEventListener('statechange', () => {
-                if (!reg.waiting) {
-                    resolve();
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (newVersionAvailable) {
+                    window.location.reload();
                 }
             });
-        });
-        window.location.reload();
-    } else {
-        console.warn('Service Worker is not waiting.');
-        window.location.reload();
+        } else if (newVersionAvailable) {
+            window.location.reload();
+        } else {
+            console.log('No update found.');
+        }
+    } catch (error) {
+        console.error("An error occurred while checking for updates:", error);
+        buttonText.textContent = '更新エラー';
+    } finally {
+        spinner.style.display = 'none';
+        buttonText.style.display = '';
     }
 }
 
