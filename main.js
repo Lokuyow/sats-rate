@@ -642,6 +642,7 @@ async function handleServiceWorker() {
     }
 }
 
+//新しいService Workerが見つかった場合に発生する'updatefound'イベントをリッスン
 function monitorServiceWorkerUpdate(reg) {
     reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
@@ -657,6 +658,7 @@ function delay(duration) {
     return new Promise(resolve => setTimeout(resolve, duration));
 }
 
+//Service Workerの登録を取得し、画面上のUI要素を更新
 async function reload(event) {
     if (!('serviceWorker' in navigator)) return;
 
@@ -667,14 +669,10 @@ async function reload(event) {
     buttonText.style.display = 'none';
     spinner.style.display = 'inline-block';
 
-    // 更新と遅延を開始
     const registration = navigator.serviceWorker.getRegistration();
-    const delayPromise = delay(500);  // 少なくとも0.5秒間表示されるようにします。
-
-    // Promise.allを使用して、両方のプロセスが完了するのを待ちます。
+    const delayPromise = delay(500);
     const results = await Promise.all([registration, delayPromise]);
 
-    // 更新処理を実行
     if (results[0].waiting) {
         promptUserToUpdate(results[0]);
     } else {
@@ -685,7 +683,7 @@ async function reload(event) {
     buttonText.style.display = 'inline';
 }
 
-
+//Service Workerの更新をチェック
 async function checkForUpdate(registration, event) {
     const updatedRegistration = await registration.update();
     const installingWorker = updatedRegistration.installing;
@@ -697,6 +695,7 @@ async function checkForUpdate(registration, event) {
     }
 }
 
+//新しいService Workerの状態変化をリッスンし、'installed'状態になったら、ユーザーに更新を促す
 function handleInstallingWorker(worker, registration) {
     worker.onstatechange = e => {
         if (e.target.state == 'installed') {
@@ -740,6 +739,25 @@ function createElementWithContent(tag, content, attributes = {}) {
     return element;
 }
 
+//新しいService Workerが待機中の場合、それをアクティブにしてページをリロード
+async function reloadWhenWorkerUpdated(reg) {
+    if (reg.waiting) {
+        reg.waiting.postMessage('skipWaiting');
+        await new Promise(resolve => {
+            reg.waiting.addEventListener('statechange', () => {
+                if (!reg.waiting) {
+                    resolve();
+                }
+            });
+        });
+        window.location.reload();
+    } else {
+        console.warn('Service Worker is not waiting.');
+        window.location.reload();
+    }
+}
+
+//Service Workerからサイトのバージョン情報を取得
 async function fetchVersionFromSW() {
     if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
@@ -759,26 +777,10 @@ async function fetchVersionFromSW() {
     return null;
 }
 
+//サイトのバージョン情報を画面に表示
 async function displaySiteVersion() {
     const siteVersion = await fetchVersionFromSW();
     if (siteVersion) {
         getDomElementById('siteVersion').textContent = siteVersion;
-    }
-}
-
-async function reloadWhenWorkerUpdated(reg) {
-    if (reg.waiting) {
-        reg.waiting.postMessage('skipWaiting');
-        await new Promise(resolve => {
-            reg.waiting.addEventListener('statechange', () => {
-                if (!reg.waiting) {
-                    resolve();
-                }
-            });
-        });
-        window.location.reload();
-    } else {
-        console.warn('Service Worker is not waiting.');
-        window.location.reload();
     }
 }
