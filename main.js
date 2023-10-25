@@ -500,9 +500,10 @@ function generateCopyText(values) {
         baseCurrencyText,
         otherCurrencyTexts,
         ...remainingCurrencies,
+        '',
         lastUpdatedText,
         'Powered by CoinGecko,'
-    ].filter(Boolean).join('\n');
+    ].join('\n');
 }
 
 function getCurrencyText(key, value, baseCurrencyKey) {
