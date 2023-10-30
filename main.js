@@ -238,6 +238,7 @@ function handleInputFormatting(event) {
     }
 }
 
+//ロケールから桁区切りと小数点の文字を取得
 function getLocaleSeparators(locale) {
     const formattedNumber = new Intl.NumberFormat(locale).format(1000.1);
     return {
@@ -246,11 +247,17 @@ function getLocaleSeparators(locale) {
     };
 }
 
+//ピリオドを小数点とし、桁区切り文字を使わないよう変換
 function parseInput(inputValue, locale) {
     const separators = getLocaleSeparators(locale);
-    const sanitizedValue = inputValue
+
+    // 数字、小数点、桁区切り文字以外の文字を削除
+    const onlyNumbersAndSeparators = inputValue.replace(/[^0-9\.,]/g, '');
+
+    const sanitizedValue = onlyNumbersAndSeparators
         .replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), '')
         .replace(separators.decimalSeparator, '.');
+
     return sanitizedValue;
 }
 
