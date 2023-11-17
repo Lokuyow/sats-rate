@@ -555,8 +555,8 @@ function getCurrencyText(key, value, baseCurrencyKey) {
 }
 
 // 共有ボタン
-function updateShareButton(btc, sats, jpy, usd, eur) {
-    const values = { btc, sats, jpy, usd, eur };
+function updateShareButton() {
+    const values = getValuesFromElements();
 
     const shareText = generateCopyText(values);
     const queryParams = generateQueryStringFromValues();
