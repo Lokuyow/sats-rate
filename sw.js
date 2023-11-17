@@ -31,7 +31,7 @@ const urlsToCache = [
     './images/angle-down-solid.svg'
 ];
 
-const VERSION = '1.38';
+const VERSION = '1.38.1';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
