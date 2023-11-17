@@ -98,6 +98,11 @@ function setupInputFieldEventListeners(element) {
     element.addEventListener('keyup', handleInputFormatting);
     element.addEventListener('focus', handleFocus);
     element.addEventListener('contextmenu', handleContextMenu);
+    element.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            this.blur();
+        }
+    });
 }
 
 function getDomElementById(id) {
