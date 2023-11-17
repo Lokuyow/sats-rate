@@ -442,12 +442,13 @@ button>svg {
     color: var(--main-text-color);
     font-size: 1rem;
     font-weight: bold;
-    background-color: var(--main-bg-color);
+    background-color: #ffffff00;
     border: 1px solid var(--invalid-color);
     border-radius: 6px;
     cursor: pointer;
     height: 52px;
     width: 80px;
+    padding: 0;
 
     & svg {
         margin: 0 0 0 3px;
