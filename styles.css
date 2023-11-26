@@ -49,8 +49,7 @@ svg#b {
     fill: var(--invalid-color);
 }
 
-button>img,
-button>svg {
+button>* {
     pointer-events: none;
 }
 
@@ -383,7 +382,7 @@ button>svg {
     min-width: 170px;
     min-height: 42px;
     border-radius: 6px;
-    padding: 8px 10px;
+    padding: 0;
 }
 
 @keyframes spin {
@@ -396,12 +395,15 @@ button>svg {
     }
 }
 
-.spinner {
+.spinner-wrapper {
     display: none;
     position: absolute;
-    top: 20%;
-    left: 45%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.spinner {
     border: 6px solid var(--invalid-color);
     border-top: 6px solid var(--accent-color);
     border-radius: 50%;

@@ -713,10 +713,10 @@ function delay(ms) {
 async function checkForUpdates() {
     const updateButton = getDomElementById('checkForUpdateBtn');
     const buttonText = getDomElementById('buttonText');
-    const spinner = updateButton.querySelector('.spinner');
+    const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
 
     buttonText.style.display = 'none';
-    spinner.style.display = 'inline-block';
+    spinnerWrapper.style.display = 'block';
 
     try {
         await delay(250);
@@ -743,7 +743,7 @@ async function checkForUpdates() {
         console.error("An error occurred while checking for updates:", error);
         buttonText.textContent = '更新エラー';
     } finally {
-        spinner.style.display = 'none';
+        spinnerWrapper.style.display = 'none';
         buttonText.style.display = '';
     }
 }
