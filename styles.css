@@ -220,7 +220,7 @@ button>* {
 
 .last-input-field {
     background-color: var(--main-bg-color);
-    border: 1px solid var(--invalid-color);
+    border: 2px solid var(--input-bg-color);
     border-right: 0;
 }
 
@@ -298,7 +298,7 @@ button>* {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    max-width: 630px;
+    max-width: 620px;
     margin: auto;
 }
 
@@ -574,11 +574,10 @@ input:checked+.slider:before {
 #notification {
     position: absolute;
     visibility: hidden;
-    color: var(--input-text-color);
-    font-size: 0.9rem;
-    background-color: var(--main-bg-color);
-    border: 1px solid var(--invalid-color);
-    border-radius: 4px;
+    color: var(--main-text-color);
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--unit-bg-color);
     padding: 10px;
     white-space: nowrap;
 }
@@ -593,7 +592,7 @@ input:checked+.slider:before {
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F0F0F0;
-        --unit-bg-color: #E6E6E6;
+        --unit-bg-color: #E0E0E0;
         --invalid-color: #D6D6D6;
     }
 
@@ -631,7 +630,7 @@ input:checked+.slider:before {
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F0F0F0;
-        --unit-bg-color: #E6E6E6;
+        --unit-bg-color: #E0E0E0;
         --invalid-color: #D6D6D6;
     }
 }
