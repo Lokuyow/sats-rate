@@ -24,7 +24,7 @@ a:visited {
 }
 
 a:hover {
-    color: var(--accent-color);
+    color: var(--two-color);
 }
 
 a,
@@ -76,8 +76,8 @@ button>* {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 8px 0 30px 0;
-    padding: 0 0 0 0;
+    margin-bottom: 18px;
+    padding: 0;
 
     .icon {
         transform: translate(10px, -8px);
@@ -130,7 +130,6 @@ button>* {
     & div {
         font-size: 0.8rem;
         font-weight: bold;
-        letter-spacing: -0.1rem;
         color: var(--invalid-color);
         margin-bottom: -2px;
     }
@@ -143,6 +142,7 @@ button>* {
 .date {
     text-align: center;
     font-size: 1.3rem;
+    margin-bottom: -4px;
 }
 
 .date.outdated {
@@ -254,7 +254,7 @@ button>* {
 }
 
 #update-prices.outdated {
-    background-color: var(--base-color);
+    background-color: var(--two-color);
     border: 0;
 
     & svg {
@@ -375,7 +375,7 @@ button>* {
 
 .spinner {
     border: 6px solid var(--main-text-color);
-    border-top: 6px solid var(--accent-color);
+    border-top: 6px solid var(--two-color);
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -386,7 +386,7 @@ button>* {
     font-size: 1rem;
     word-break: keep-all;
     overflow-wrap: break-word;
-    max-width: 550px;
+    max-width: 530px;
     margin: auto;
     padding: 0 20px;
 }
@@ -586,6 +586,7 @@ input:checked+.slider:before {
 /* ダークモード設定 */
 @media (prefers-color-scheme: light) {
     :root {
+        --two-color: var(--accent-color);
         --input-text-color: #000000;
         --main-text-color: #4D4D4D;
         --subject-text-color: #666666;
@@ -597,6 +598,7 @@ input:checked+.slider:before {
     }
 
     :root[data-theme="dark"] {
+        --two-color: var(--base-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --subject-text-color: #BFBFBF;
@@ -610,6 +612,7 @@ input:checked+.slider:before {
 
 @media (prefers-color-scheme: dark) {
     :root {
+        --two-color: var(--base-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --subject-text-color: #BFBFBF;
@@ -621,6 +624,7 @@ input:checked+.slider:before {
     }
 
     :root[data-theme="light"] {
+        --two-color: var(--accent-color);
         --input-text-color: #000000;
         --main-text-color: #4D4D4D;
         --subject-text-color: #666666;
