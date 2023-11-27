@@ -710,7 +710,8 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function checkForUpdates() {
+// サイト更新ボタン
+async function checkForUpdates(event) {
     const updateButton = getDomElementById('checkForUpdateBtn');
     const buttonText = getDomElementById('buttonText');
     const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
@@ -719,7 +720,7 @@ async function checkForUpdates() {
     spinnerWrapper.style.display = 'block';
 
     try {
-        await delay(250);
+        await delay(250); // 最低250ミリ秒の遅延を保持
 
         const registration = await navigator.serviceWorker.getRegistration();
         if (!registration) throw new Error("No active service worker registration found");
@@ -731,19 +732,27 @@ async function checkForUpdates() {
 
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (newVersionAvailable) {
+                    buttonText.textContent = '更新があります'; // ここでUIを更新
+                    spinnerWrapper.style.display = 'none'; // スピナーを非表示にする
                     window.location.reload();
                 }
             });
         } else if (newVersionAvailable) {
+            buttonText.textContent = '更新があります'; // UI更新
+            spinnerWrapper.style.display = 'none'; // スピナー非表示
             window.location.reload();
         } else {
             console.log('No update found.');
+            showNotification('最新です', event); // 更新がない場合の通知
         }
     } catch (error) {
         console.error("An error occurred while checking for updates:", error);
         buttonText.textContent = '更新エラー';
+        spinnerWrapper.style.display = 'none'; // エラー時にスピナーを非表示
     } finally {
-        spinnerWrapper.style.display = 'none';
+        if (!newVersionAvailable) {
+            spinnerWrapper.style.display = 'none'; // 更新がない場合にスピナーを非表示
+        }
         buttonText.style.display = '';
     }
 }
