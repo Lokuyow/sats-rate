@@ -598,8 +598,8 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #1F1F1F;
         --sub-bg-color: #333333;
-        --input-bg-color: #2E2E2E;
-        --unit-bg-color: #3B3B3B;
+        --input-bg-color: #333333;
+        --unit-bg-color: #424242;
         --invalid-color: #545454;
     }
 }
@@ -611,8 +611,8 @@ input:checked+.slider:before {
         --subject-text-color: #BFBFBF;
         --main-bg-color: #1F1F1F;
         --sub-bg-color: #333333;
-        --input-bg-color: #2E2E2E;
-        --unit-bg-color: #3B3B3B;
+        --input-bg-color: #333333;
+        --unit-bg-color: #424242;
         --invalid-color: #545454;
     }
 
