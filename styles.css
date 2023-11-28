@@ -34,15 +34,11 @@ button {
 }
 
 svg {
-    fill: var(--main-text-color);
+    fill: var(--svg-color);
 }
 
 svg#b {
     fill: var(--invalid-color);
-}
-
-svg#c {
-    fill: var(--main-bg-color);
 }
 
 button>* {
@@ -590,7 +586,8 @@ input:checked+.slider:before {
     :root {
         --two-color: var(--accent-color);
         --input-text-color: #000000;
-        --main-text-color: #4D4D4D;
+        --main-text-color: #3D3D3D;
+        --svg-color: #525252;
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
@@ -603,6 +600,7 @@ input:checked+.slider:before {
         --two-color: var(--base-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
+        --svg-color: #F0F0F0;
         --subject-text-color: #BFBFBF;
         --main-bg-color: #1F1F1F;
         --sub-bg-color: #333333;
@@ -617,6 +615,7 @@ input:checked+.slider:before {
         --two-color: var(--base-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
+        --svg-color: #F0F0F0;
         --subject-text-color: #BFBFBF;
         --main-bg-color: #1F1F1F;
         --sub-bg-color: #333333;
@@ -628,7 +627,8 @@ input:checked+.slider:before {
     :root[data-theme="light"] {
         --two-color: var(--accent-color);
         --input-text-color: #000000;
-        --main-text-color: #4D4D4D;
+        --main-text-color: #3D3D3D;
+        --svg-color: #525252;
         --subject-text-color: #666666;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
