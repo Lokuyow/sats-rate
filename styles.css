@@ -318,11 +318,11 @@ button>* {
 
 .grid-settings {
     display: grid;
-    grid-template-columns: 120px minmax(auto, 330px);
+    grid-template-columns: 120px minmax(200px, 330px);
     grid-template-rows: auto auto auto;
     justify-content: center;
     align-items: center;
-    gap: 6px 26px;
+    gap: 6px 18px;
     margin: 0 26px;
 }
 
@@ -338,7 +338,9 @@ button>* {
     border: 0;
     cursor: pointer;
     border-radius: 6px;
-    padding: 8px 10px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
 }
 
 #checkForUpdateBtn {
@@ -350,7 +352,8 @@ button>* {
     border: 0;
     cursor: pointer;
     min-width: 160px;
-    min-height: 42px;
+    height: 42px;
+    line-height: 42px;
     border-radius: 6px;
     padding: 0;
 }
@@ -368,9 +371,9 @@ button>* {
 .spinner-wrapper {
     display: none;
     position: absolute;
+    right: 10px;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
 }
 
 .spinner {

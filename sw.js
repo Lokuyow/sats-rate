@@ -31,22 +31,29 @@ const urlsToCache = [
     './images/angle-down-solid.svg'
 ];
 
-const VERSION = '1.40.2';
+const VERSION = '1.40.3';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
-self.addEventListener('install', (ev) => ev.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    await cache.addAll(urlsToCache);
+self.addEventListener('install', (event) => {
+    event.waitUntil((async () => {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.addAll(urlsToCache);
 
-    const keys = await caches.keys();
-    await Promise.all(
-        keys
-            .filter(key => !MY_CACHES.has(key))
-            .map(key => caches.delete(key))
-    );
-    return self.skipWaiting();
-})()));
+        // 新しいバージョンがインストールされたことをクライアントに通知
+        self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
+            clients.forEach(client => client.postMessage({ type: 'NEW_VERSION_INSTALLED' }));
+        });
+
+        const keys = await caches.keys();
+        await Promise.all(
+            keys
+                .filter(key => !MY_CACHES.has(key))
+                .map(key => caches.delete(key))
+        );
+        return self.skipWaiting();
+    })());
+});
 
 self.addEventListener('fetch', (ev) => void ev.respondWith((async () => {
     const url = new URL(ev.request.url);
@@ -67,22 +74,28 @@ self.addEventListener('fetch', (ev) => void ev.respondWith((async () => {
     return cacheResponse || fetch(requestToFetch);
 })()));
 
-self.addEventListener('activate', (event) => {
-    event.waitUntil((async () => {
-      const clientsList = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
-      for (const client of clientsList) {
-        client.postMessage({ type: 'NEW_VERSION_ACTIVE' });
-      }
-  
-      return self.clients.claim();
-    })());
-  });
-
 self.addEventListener('message', (event) => {
-    if (event.data.action === 'getVersion') {
-        event.ports[0].postMessage({ version: VERSION });
-    }
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
+    }
+    if (event.data === 'CHECK_UPDATE_STATUS') {
+        if (self.registration.waiting) {
+            // 新しいバージョンがインストールされ、待機中であれば NEW_VERSION_INSTALLED を送信
+            event.source.postMessage({ type: 'NEW_VERSION_INSTALLED' });
+        } else if (self.registration.installing) {
+            // 新しいバージョンが現在インストール中であれば、インストールの完了を待機
+            const worker = self.registration.installing;
+            worker.addEventListener('statechange', () => {
+                if (worker.state === 'installed') {
+                    event.source.postMessage({ type: 'NEW_VERSION_INSTALLED' });
+                }
+            });
+        } else {
+            // 更新がない場合、あるいはまだ新しいバージョンが準備されていない場合は NO_UPDATE_FOUND を送信
+            event.source.postMessage({ type: 'NO_UPDATE_FOUND' });
+        }
+    }
+    if (event.data.action === 'getVersion') {
+        event.ports[0].postMessage({ version: VERSION });
     }
 });

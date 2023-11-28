@@ -677,16 +677,26 @@ function shareViaWebAPI(originalShareText, queryParams) {
 // サービスワーカー
 let newVersionAvailable = false;
 
+// サービスワーカーからのメッセージリスナー
 navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'NEW_VERSION_ACTIVE') {
-        newVersionAvailable = true;
+    const updateButton = getDomElementById('checkForUpdateBtn');
+    const buttonText = getDomElementById('buttonText');
+    const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
 
-        const updateUI = getDomElementById('buttonText');
-        if (updateUI) {
-            updateUI.textContent = '更新があります';
+    console.log('Message from Service Worker:', event.data);
+
+    if (event.data && event.data.type === 'NEW_VERSION_INSTALLED') {
+        newVersionAvailable = true;
+        if (buttonText) {
+            buttonText.textContent = '更新があります';
         }
+        spinnerWrapper.style.display = 'none';
+    } else if (event.data && event.data.type === 'NO_UPDATE_FOUND') {
+        showNotification('最新です', lastClickEvent);
+        spinnerWrapper.style.display = 'none';
     }
 });
+
 
 async function registerAndHandleServiceWorker() {
     if (!('serviceWorker' in navigator)) {
@@ -705,6 +715,7 @@ async function registerAndHandleServiceWorker() {
                     newVersionAvailable = true;
                     const updateUI = getDomElementById('buttonText');
                     if (updateUI) {
+                        console.log("Updating UI from Service Worker installation");
                         updateUI.textContent = '更新があります';
                     }
                 }
@@ -721,48 +732,36 @@ function delay(ms) {
 
 // サイト更新ボタン
 async function checkForUpdates(event) {
+    lastClickEvent = event; // クリックイベントを保存
     const updateButton = getDomElementById('checkForUpdateBtn');
-    const buttonText = getDomElementById('buttonText');
     const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
+    spinnerWrapper.style.display = 'block'; // スピナーを表示
 
-    buttonText.style.display = 'none';
-    spinnerWrapper.style.display = 'block';
+    // 新しいバージョンが利用可能な場合、ページをリロード
+    if (newVersionAvailable) {
+        window.location.reload();
+        return; // 以降の処理を実行させない
+    }
 
     try {
-        await delay(250); // 最低250ミリ秒の遅延を保持
+        await delay(300);
 
         const registration = await navigator.serviceWorker.getRegistration();
         if (!registration) throw new Error("No active service worker registration found");
 
-        await registration.update();
-
-        if (registration && registration.waiting) {
-            registration.waiting.postMessage('skipWaiting');
-
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (newVersionAvailable) {
-                    buttonText.textContent = '更新があります'; // ここでUIを更新
-                    spinnerWrapper.style.display = 'none'; // スピナーを非表示にする
-                    window.location.reload();
-                }
-            });
-        } else if (newVersionAvailable) {
-            buttonText.textContent = '更新があります'; // UI更新
-            spinnerWrapper.style.display = 'none'; // スピナー非表示
-            window.location.reload();
+        // サービスワーカーの状態を確認
+        if (registration.installing || registration.waiting) {
+            // サービスワーカーがインストール中または待機中であれば、更新状態をチェック
+            navigator.serviceWorker.controller.postMessage('CHECK_UPDATE_STATUS');
         } else {
-            console.log('No update found.');
-            showNotification('最新です', event); // 更新がない場合の通知
+            // それ以外の場合は、更新を試みる
+            await registration.update();
+            // 更新状態をチェック
+            navigator.serviceWorker.controller.postMessage('CHECK_UPDATE_STATUS');
         }
     } catch (error) {
         console.error("An error occurred while checking for updates:", error);
-        buttonText.textContent = '更新エラー';
-        spinnerWrapper.style.display = 'none'; // エラー時にスピナーを非表示
-    } finally {
-        if (!newVersionAvailable) {
-            spinnerWrapper.style.display = 'none'; // 更新がない場合にスピナーを非表示
-        }
-        buttonText.style.display = '';
+        spinnerWrapper.style.display = 'none';
     }
 }
 
