@@ -393,18 +393,27 @@ async function updateElementsBasedOnTimestamp() {
         let svg = updatePricesElement.querySelector('svg');
         if (svg && !svg.classList.contains('rotated')) {
             svg.classList.add('rotated');
-            svg.addEventListener('animationend', function () {
-                svg.classList.remove('rotated');
-            }, { once: true });
         }
 
-        // データを取得
+        // アニメーション開始時刻を記録
+        const animationStartTime = Date.now();
+
+        // データを取得し計算
         await fetchDataFromCoinGecko();
         const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
-
-        // 現在の入力数値を元に再計算
         if (lastUpdatedField) {
             calculateValues(lastUpdatedField);
+        }
+
+        // 最低アニメーション持続時間を保証
+        const animationDuration = Date.now() - animationStartTime;
+        if (animationDuration < 800) {
+            await new Promise(resolve => setTimeout(resolve, 800 - animationDuration));
+        }
+
+        // アニメーションを終了
+        if (svg) {
+            svg.classList.remove('rotated');
         }
 
         // 要素のクラスを更新
