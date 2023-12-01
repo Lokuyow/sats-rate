@@ -32,3 +32,20 @@ https://lokuyow.github.io/sats-rate/?{デフォルト入力値のクエリ}&{小
 「SNSに共有」右端のコピーボタンからクエリ付のURLをコピーできます。
 ## 価格レート取得先
 [CoinGecko](https://www.coingecko.com/ja)
+
+## ライセンス
+このリポジトリは、主にMITライセンスの下で公開されています。詳細は[LICENSE](./LICENSE)ファイルを参照してください。
+
+### 特別なライセンス条件
+以下のファイルは、MITライセンスの条件から除外され、特別なライセンスまたは著作権宣言が適用されます：
+
+- `/images/fulgur-favicon.ico`
+  - Copyright © フルグル合同会社
+- `/images/alby_icon_head_yellow_48x48.svg`
+  - (https://github.com/getAlby/media)
+- `/images/btcmap-logo.svg`
+  - Media assets are available for free to use for promotional purposes. (https://btcmap.org/media)
+- `/images/robosats-favicon.ico`
+  - © 2023 RoboSats.
+- `/images/mempool-favicon.ico`
+  - Mempool Space K.K. (https://mempool.space/trademark-policy)
