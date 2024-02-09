@@ -793,10 +793,12 @@ async function displaySiteVersion() {
     }
 }
 
+// モジュールのテスト
 import { consoleLog } from './lib/console.js';
 
 consoleLog('import test.');
 
+// html使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {
     calculateValues,
 }
