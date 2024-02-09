@@ -166,7 +166,7 @@ function getInputValue(id) {
 }
 
 // 計算
-function calculateValues(inputField) {
+export function calculateValues(inputField) {
     const values = {
         btc: getInputValue('btc'),
         sats: getInputValue('sats'),
