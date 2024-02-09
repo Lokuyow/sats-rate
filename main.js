@@ -166,7 +166,7 @@ function getInputValue(id) {
 }
 
 // 計算
-export function calculateValues(inputField) {
+function calculateValues(inputField) {
     const values = {
         btc: getInputValue('btc'),
         sats: getInputValue('sats'),
@@ -796,3 +796,7 @@ async function displaySiteVersion() {
 import { consoleLog } from './lib/console.js';
 
 consoleLog('import test.');
+
+window.satsRate = {
+    calculateValues,
+}

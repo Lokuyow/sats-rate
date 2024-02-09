@@ -113,7 +113,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="sats" aria-label="サッツの金額"
-                        oninput="calculateValues('sats')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('sats')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-sats" data-currency="sats" aria-label="サッツの数値をペースト">
                         sats
                     </button>
@@ -124,7 +124,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="btc" aria-label="ビットコインの金額"
-                        oninput="calculateValues('btc')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('btc')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-btc" data-currency="btc" aria-label="ビットコインの数値をペースト">
                         BTC
                     </button>
@@ -135,7 +135,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="jpy" aria-label="日本円の金額"
-                        oninput="calculateValues('jpy')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('jpy')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-jpy" aria-label="円の数値をペースト">
                         JPY
                     </button>
@@ -146,7 +146,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="usd" aria-label="アメリカドルの金額"
-                        oninput="calculateValues('usd')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('usd')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-usd" data-currency="usd" aria-label="USドルの数値をペースト">
                         USD
                     </button>
@@ -157,7 +157,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="eur" aria-label="ユーロの金額"
-                        oninput="calculateValues('eur')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('eur')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-eur" data-currency="eur" aria-label="ユーロの数値をペースト">
                         EUR
                     </button>
