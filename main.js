@@ -792,3 +792,7 @@ async function displaySiteVersion() {
         getDomElementById('siteVersion').textContent = siteVersion;
     }
 }
+
+import { consoleLog } from 'lib/console.js';
+
+consoleLog('import test.');
