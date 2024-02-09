@@ -793,6 +793,6 @@ async function displaySiteVersion() {
     }
 }
 
-import { consoleLog } from 'lib/console.js';
+import { consoleLog } from './lib/console.js';
 
 consoleLog('import test.');
