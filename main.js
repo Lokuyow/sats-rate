@@ -793,12 +793,13 @@ async function displaySiteVersion() {
     }
 }
 
-// モジュールのテスト
-import { consoleLog } from './lib/console.js';
+import { Pos } from './lib/pos.js';
 
-consoleLog('import test.');
+const pos = new Pos();
+pos.initialize();
 
-// html使用する関数をグローバルスコープで使用できるようにwindowに追加する
+// index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {
     calculateValues,
+    pos,
 }
