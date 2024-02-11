@@ -174,11 +174,11 @@
             </div>
         </div>
 
-        <div class="bgcolor">
+        <div class="bgcolor" id="lightning-pos-box">
             <div class="subject">
                 POS
             </div>
-                <input type="button" value="⚡支払">
+                <input onclick="window.satsRate.pos.pay()" type="button" id="pos-pay-button" value="⚡支払">
             <br />
             <form>
                 <label for="lightning-address">受取ライトニングアドレス
