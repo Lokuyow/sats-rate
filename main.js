@@ -798,6 +798,15 @@ import { Pos } from './lib/pos.js';
 const pos = new Pos();
 pos.initialize();
 
+// ライトニングアドレスの変更ダイアログの制御
+const showButton = document.getElementById('show-lightning-address-dialog');
+const lnDialog = document.getElementById('update-lightning-address-dialog');
+// const submitBtn = document.getElementById("lightning-address-submit-button");
+
+showButton.addEventListener("click", () => {
+    lnDialog.showModal();
+});
+
 // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {
     calculateValues,

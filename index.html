@@ -180,13 +180,21 @@
             </div>
                 <input onclick="window.satsRate.pos.pay()" type="button" id="pos-pay-button" value="⚡支払">
             <br />
-            <form>
-                <label for="lightning-address">受取ライトニングアドレス
-                    <!-- TODO: ダイアログから入力させる -->
-                    <input type="text" name="lightning-address" id="lightning-address-input">
-                    <button onclick="window.satsRate.pos.setLnAddress(form)" type="button" id="lightning-address-submit-button">変更</button>
-                </label>
-            </form>
+            <dialog id="update-lightning-address-dialog">
+                <form>
+                    <label for="lightning-address">受取ライトニングアドレス
+                        <!-- TODO: ダイアログから入力させる -->
+                        <input type="text" name="lightning-address" id="lightning-address-input">
+                        <div>
+                            <button value="cancel" formmethod="dialog">Cancel</button>
+                            <button id="lightning-address-submit-button" onclick="window.satsRate.pos.setLnAddress(form)" type="button" value="default" formmethod="dialog">変更</button>
+                          </div>
+                    </label>
+                </form>
+            </dialog>
+            <p>
+                <button id="show-lightning-address-dialog">Show the dialog</button>
+            </p>
             <div id="lightning-pos-qr-box"></div>
         </div>
 
