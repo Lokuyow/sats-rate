@@ -808,12 +808,23 @@ posPayButton.addEventListener('click', () => {
 const showButton = document.getElementById('show-lightning-address-dialog');
 const lnDialog = document.getElementById('update-lightning-address-dialog');
 const lnDialogSubmitButton = document.getElementById('lightning-address-submit-button');
+const lnDialogCloseButton = document.getElementById('lightning-address-close-button');
 const lnAddressForm = document.getElementById('lightning-address-form');
 
 showButton.addEventListener('click', () => {
     lnDialog.showModal();
 });
+lnDialogCloseButton.addEventListener('click', (event) => {
+    event.preventDefault(); // フォームを送信しない
+    lnDialog.close();
+});
+
 lnDialogSubmitButton.addEventListener('click', (event) => {
+    const isValid = lnAddressForm.checkValidity()
+    if(!isValid) {
+        return;
+    }
+
     pos.setLnAddress(lnAddressForm)
     event.preventDefault(); // フォームを送信しない
     lnDialog.close();

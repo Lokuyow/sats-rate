@@ -637,3 +637,17 @@ input:checked+.slider:before {
         --invalid-color: #D6D6D6;
     }
 }
+
+
+/* POS機能設定 */
+.lightning-address-label {
+    display: block;
+    margin-top: 1em;
+}
+
+.lightning-address-input:invalid {
+    background-color: ivory;
+    border: none;
+    outline: 2px solid red;
+    border-radius: 5px;
+  }
