@@ -798,7 +798,7 @@ import { Pos } from './lib/pos.js';
 const pos = new Pos();
 pos.initialize();
 
-// 支払いインボイスのQRコード表示のためのボタン
+// 支払いインボイスのQRコード表示の制御
 const posPayButton = document.getElementById('pos-pay-button');
 posPayButton.addEventListener('click', () => {
     pos.pay();
@@ -823,5 +823,4 @@ lnDialogSubmitButton.addEventListener('click', (event) => {
 // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {
     calculateValues,
-    pos, // 必要？
 }
