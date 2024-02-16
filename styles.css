@@ -641,8 +641,15 @@ input:checked+.slider:before {
 
 /* POS機能設定 */
 .lightning-address-label {
-    display: block;
     margin-top: 1em;
+    display: flex;
+    flex-flow: column;
+    padding: 16px;
+}
+
+.lightning-address-input{
+    margin: 1.5em;
+    height: 2em;
 }
 
 .lightning-address-input:invalid {
@@ -650,4 +657,4 @@ input:checked+.slider:before {
     border: none;
     outline: 2px solid red;
     border-radius: 5px;
-  }
+}
