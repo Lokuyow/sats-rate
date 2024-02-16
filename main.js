@@ -801,7 +801,7 @@ pos.initialize();
 // 支払いインボイスのQRコード表示の制御
 const posPayButton = document.getElementById('pos-pay-button');
 posPayButton.addEventListener('click', () => {
-    pos.pay();
+    pos.generateInvoice();
 });
 
 // ライトニングアドレスの変更ダイアログの制御
@@ -809,16 +809,27 @@ const showButton = document.getElementById('show-lightning-address-dialog');
 const lnDialog = document.getElementById('update-lightning-address-dialog');
 const lnDialogSubmitButton = document.getElementById('lightning-address-submit-button');
 const lnDialogCloseButton = document.getElementById('lightning-address-close-button');
+const lnDialogClearButton = document.getElementById('lightning-address-clear-button');
 const lnAddressForm = document.getElementById('lightning-address-form');
 
+// ダイアログを開く
 showButton.addEventListener('click', () => {
     lnDialog.showModal();
 });
+
+// ダイアログを閉じる
 lnDialogCloseButton.addEventListener('click', (event) => {
     event.preventDefault(); // フォームを送信しない
     lnDialog.close();
 });
 
+// フォームをクリア
+lnDialogClearButton.addEventListener('click', (event) => {
+    event.preventDefault(); // フォームを送信しない
+    pos.clearLnAddress();
+});
+
+// アドレスを設定する
 lnDialogSubmitButton.addEventListener('click', (event) => {
     const isValid = lnAddressForm.checkValidity()
     if(!isValid) {
