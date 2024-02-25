@@ -174,16 +174,18 @@
             </div>
         </div>
 
-        <div class="bgcolor">
+        <div class="bgcolor pos-wrapper">
             <div class="subject">
                 POS
             </div>
-                <input type="button" id="pos-pay-button" value="⚡請求書を表示">
-            <br />
-            <dialog id="update-lightning-address-dialog">
-                <form id="lightning-address-form">
-                    <label class="lightning-address-label" for="lightning-address">受取用ライトニングアドレス
-                        <input
+            <div class="pos">
+
+                <button id="pos-pay-button">⚡請求書を表示</button>
+                <br />
+                <dialog id="update-lightning-address-dialog">
+                    <form id="lightning-address-form">
+                        <label class="lightning-address-label" for="lightning-address">受取用ライトニングアドレス
+                            <input
                             type="text"
                             name="lightning-address"
                             id="lightning-address-input"
@@ -193,21 +195,22 @@
                             minlength="4"
                             required
                             title="ライトニングアドレスの形式で入力してください"
-                        />
-                        <div>
-                            <button id="lightning-address-submit-button" type="submit" formmethod="dialog">設定する</button>
-                            <button id="lightning-address-clear-button" value="clear" formmethod="dialog">削除</button>
-                            <button id="lightning-address-close-button" value="cancel" formmethod="dialog">閉じる</button>
-                          </div>
-                    </label>
-                </form>
-            </dialog>
-            <p>
-                <output id="lightning-address-output"></output>
-                <button id="show-lightning-address-dialog">🖊</button>
-            </p>
-            <div id="lightning-pos-qr-box"></div>
-            <div id="pos-message"></div>
+                            />
+                            <div>
+                                <button id="lightning-address-submit-button" type="submit" formmethod="dialog">設定する</button>
+                                <button id="lightning-address-clear-button" value="clear" formmethod="dialog">削除</button>
+                                <button id="lightning-address-close-button" value="cancel" formmethod="dialog">閉じる</button>
+                            </div>
+                        </label>
+                    </form>
+                </dialog>
+                <p>
+                    <output id="lightning-address-output"></output>
+                    <button id="show-lightning-address-dialog">🖊</button>
+                </p>
+                <div id="lightning-pos-qr-box"></div>
+                <div id="pos-message"></div>
+            </div>
         </div>
 
         <div class="bgcolor">

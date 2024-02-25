@@ -640,6 +640,26 @@ input:checked+.slider:before {
 
 
 /* POS機能設定 */
+
+.pos {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pos button {
+    color: var(--main-text-color);
+    background-color: var(--input-bg-color);
+    font-size: 1rem;
+    font-weight: bold;
+    border: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
+}
+
 .lightning-address-label {
     margin-top: 1em;
     display: flex;
