@@ -640,7 +640,6 @@ input:checked+.slider:before {
 
 
 /* POS機能設定 */
-
 .pos {
     display: flex;
     align-items: center;
@@ -663,10 +662,18 @@ input:checked+.slider:before {
 .pos .setting-btn {
     border: none;
     background: none;
+    display: flex;
+    align-items: center;
 }
 
 .pos svg {
     color: var(--svg-color);
+}
+
+.pos .lightning-address {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
 }
 
 .lightning-address-label {
