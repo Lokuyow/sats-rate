@@ -657,7 +657,16 @@ input:checked+.slider:before {
     border-radius: 6px;
     height: 42px;
     line-height: 42px;
-    padding: 0;
+    padding: 0 1em;
+}
+
+.pos .setting-btn {
+    border: none;
+    background: none;
+}
+
+.pos svg {
+    color: var(--svg-color);
 }
 
 .lightning-address-label {
