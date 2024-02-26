@@ -637,3 +637,69 @@ input:checked+.slider:before {
         --invalid-color: #D6D6D6;
     }
 }
+
+
+/* POS機能設定 */
+.pos {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pos button {
+    color: var(--main-text-color);
+    background-color: var(--input-bg-color);
+    font-size: 1rem;
+    font-weight: bold;
+    border: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 1em;
+}
+
+.pos .setting-btn {
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+}
+
+.pos svg {
+    color: var(--svg-color);
+}
+
+.pos .lightning-address {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.pos label {
+    color: var(--subject-text-color);
+    display: flex;
+    flex-flow: column;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 16px;
+    margin: 0.5em 0 0.2em;
+}
+
+.pos input{
+    margin: 1.5em 0;
+    height: 2em;
+}
+
+.pos input:invalid {
+    background-color: ivory;
+    border: none;
+    outline: 2px solid red;
+    border-radius: 5px;
+}
+
+.pos dialog {
+    border-radius: 1em;
+    border: 1px solid #333333;
+}

@@ -113,7 +113,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="sats" aria-label="サッツの金額"
-                        oninput="calculateValues('sats')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('sats')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-sats" data-currency="sats" aria-label="サッツの数値をペースト">
                         sats
                     </button>
@@ -124,7 +124,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="btc" aria-label="ビットコインの金額"
-                        oninput="calculateValues('btc')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('btc')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-btc" data-currency="btc" aria-label="ビットコインの数値をペースト">
                         BTC
                     </button>
@@ -135,7 +135,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="jpy" aria-label="日本円の金額"
-                        oninput="calculateValues('jpy')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('jpy')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-jpy" aria-label="円の数値をペースト">
                         JPY
                     </button>
@@ -146,7 +146,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="usd" aria-label="アメリカドルの金額"
-                        oninput="calculateValues('usd')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('usd')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-usd" data-currency="usd" aria-label="USドルの数値をペースト">
                         USD
                     </button>
@@ -157,7 +157,7 @@
                         </svg>
                     </button>
                     <input class="currency-input" type="text" id="eur" aria-label="ユーロの金額"
-                        oninput="calculateValues('eur')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+                        oninput="window.satsRate.calculateValues('eur')" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
                     <button class="currency-units" id="paste-eur" data-currency="eur" aria-label="ユーロの数値をペースト">
                         EUR
                     </button>
@@ -171,6 +171,48 @@
                         </svg>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <div class="bgcolor pos-wrapper">
+            <div class="subject">
+                POS
+            </div>
+            <div class="pos">
+                <button id="pos-pay-button">⚡請求書を表示</button>
+                <br />
+                <dialog id="update-lightning-address-dialog">
+                    <form id="lightning-address-form">
+                        <label class="lightning-address-label" for="lightning-address">受取用ライトニングアドレス
+                            <input
+                            type="text"
+                            name="lightning-address"
+                            id="lightning-address-input"
+                            class="lightning-address-input"
+                            pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$"
+                            maxlength="200"
+                            minlength="4"
+                            required
+                            title="ライトニングアドレスの形式で入力してください"
+                            />
+                            <div>
+                                <button id="lightning-address-submit-button" type="submit" formmethod="dialog">設定する</button>
+                                <button id="lightning-address-clear-button" value="clear" formmethod="dialog">削除</button>
+                                <button id="lightning-address-close-button" value="cancel" formmethod="dialog">閉じる</button>
+                            </div>
+                        </label>
+                    </form>
+                </dialog>
+                <p class="lightning-address">
+                    <output id="lightning-address-output"></output>
+                    <button class="setting-btn" id="show-lightning-address-dialog" aria-label="受取ライトニングアドレスの設定">
+                        <svg width="24px" height="24px">
+                            <use xlink:href="./images/settings-solid.svg#a"></use>
+                        </svg>
+                    </button>
+                </p>
+                <div id="lightning-pos-qr-box"></div>
+                <div id="pos-message"></div>
             </div>
         </div>
 
@@ -337,7 +379,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/nostr-zap@0.21.0"></script>
-    <script src="./main.js"></script>
+    <script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+    <script type="module" src="./main.js"></script>
 </body>
 
 </html>
