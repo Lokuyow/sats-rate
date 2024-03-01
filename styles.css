@@ -737,3 +737,26 @@ input:checked+.slider:before {
 #lightning-address-form button {
     background-color: var(--main-bg-color);
 }
+
+.marquee {
+    display: block;
+    width: 100%; /* ビューポートに合わせて幅を設定 */
+    overflow: hidden; /* コンテナ外のテキストを非表示に */
+    white-space: nowrap; /* テキストを1行に */
+    max-width: 800px;
+    padding-top: 6px;
+  }
+
+.marquee a {
+    display: inline-block;
+    animation: marquee 15s linear infinite;
+    text-decoration: none; /* リンクの下線を除去 */
+    font-size: 1rem;
+    color: var(--input-text-color);
+  }
+  
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  
