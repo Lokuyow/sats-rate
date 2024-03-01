@@ -678,7 +678,7 @@ input:checked+.slider:before {
 }
 
 .pos label {
-    color: var(--subject-text-color);
+    color: var(--main-text-color);
     display: flex;
     flex-flow: column;
     font-size: 1.1rem;
@@ -702,6 +702,8 @@ input:checked+.slider:before {
 }
 
 .pos dialog {
+    color: var(--main-text-color);
+    background-color: var(--unit-bg-color);
     border-radius: 1em;
     border: 1px solid #333333;
     padding: 0;
@@ -725,6 +727,13 @@ input:checked+.slider:before {
 
 .lightning-address-input {
     font-size: 1.2rem;
-    text-align:center;
+    color: var(--input-text-color);
+    background-color: var(--main-bg-color);
+    text-align: center;
     padding: 0 8px;
+    border: 0;
+}
+
+#lightning-address-form button {
+    background-color: var(--main-bg-color);
 }
