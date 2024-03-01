@@ -673,7 +673,8 @@ input:checked+.slider:before {
 .pos .lightning-address {
     display: flex;
     align-items: center;
-    margin-bottom: 0;
+    margin-bottom: 4px;
+    margin-top: 0;
 }
 
 .pos label {
@@ -687,7 +688,7 @@ input:checked+.slider:before {
     margin: 0.5em 0 0.2em;
 }
 
-.pos input{
+.pos input {
     margin: 1.5em 0;
     height: 2em;
 }
@@ -702,4 +703,19 @@ input:checked+.slider:before {
 .pos dialog {
     border-radius: 1em;
     border: 1px solid #333333;
+}
+
+#pos-pay-button {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+}
+
+#show-lightning-address-dialog {
+    background-color: var(--input-bg-color);
+    padding: 0 9px;
+}
+
+#lightning-address-output {
+    padding-right: 6px;
 }
