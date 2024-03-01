@@ -34,7 +34,7 @@ const urlsToCache = [
     './images/settings-solid.svg'
 ];
 
-const VERSION = '1.41.2';
+const VERSION = '1.41.3';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
