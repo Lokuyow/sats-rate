@@ -673,26 +673,28 @@ input:checked+.slider:before {
 .pos .lightning-address {
     display: flex;
     align-items: center;
-    margin-bottom: 0;
+    margin-bottom: 4px;
+    margin-top: 0;
 }
 
 .pos label {
-    color: var(--subject-text-color);
+    color: var(--main-text-color);
     display: flex;
     flex-flow: column;
     font-size: 1.1rem;
     font-weight: bold;
     text-align: center;
-    padding: 16px;
+    padding: 8px;
     margin: 0.5em 0 0.2em;
 }
 
-.pos input{
+.pos input {
     margin: 1.5em 0;
-    height: 2em;
+    height: 3rem;
 }
 
 .pos input:invalid {
+    color: black;
     background-color: ivory;
     border: none;
     outline: 2px solid red;
@@ -700,6 +702,38 @@ input:checked+.slider:before {
 }
 
 .pos dialog {
+    color: var(--main-text-color);
+    background-color: var(--unit-bg-color);
     border-radius: 1em;
     border: 1px solid #333333;
+    padding: 0;
+    width: 100%;
+}
+
+#pos-pay-button {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+}
+
+#show-lightning-address-dialog {
+    background-color: var(--input-bg-color);
+    padding: 0 9px;
+}
+
+#lightning-address-output {
+    padding-right: 6px;
+}
+
+.lightning-address-input {
+    font-size: 1.2rem;
+    color: var(--input-text-color);
+    background-color: var(--main-bg-color);
+    text-align: center;
+    padding: 0 8px;
+    border: 0;
+}
+
+#lightning-address-form button {
+    background-color: var(--main-bg-color);
 }

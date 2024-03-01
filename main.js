@@ -30,6 +30,7 @@ let currentFormatOptions = {};
 let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
+let lastClickEvent = null;
 const inputs = document.querySelectorAll('.currency-input');
 
 document.addEventListener('DOMContentLoaded', initializeApp);
