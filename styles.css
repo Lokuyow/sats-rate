@@ -710,6 +710,11 @@ input:checked+.slider:before {
     width: 100%;
 }
 
+.pos button:disabled {
+    background-color: #F0F0F0;
+    color: #D6D6D6;
+}
+
 #pos-pay-button {
     height: 50px;
     line-height: 50px;
