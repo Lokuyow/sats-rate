@@ -708,6 +708,12 @@ input:checked+.slider:before {
     border: 1px solid #333333;
     padding: 0;
     width: 100%;
+    max-width: 400px;
+}
+
+.pos button:disabled {
+    background-color: #F0F0F0;
+    color: #D6D6D6;
 }
 
 #pos-pay-button {
