@@ -3,6 +3,8 @@ const urlsToCache = [
     './styles.css',
     './main.js',
     './manifest.json',
+    './lib/lightning-address.js',
+    './lib/pos.js',
     './favicons/favicon.ico',
     './images/icon_x192.png',
     './images/icon_x512.png',
@@ -28,7 +30,8 @@ const urlsToCache = [
     './images/magnifying-glass-solid.svg',
     './images/sun-regular.svg',
     './images/moon-regular.svg',
-    './images/angle-down-solid.svg'
+    './images/angle-down-solid.svg',
+    './images/settings-solid.svg'
 ];
 
 const VERSION = '1.41';
