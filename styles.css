@@ -467,7 +467,7 @@ button>* {
 .links {
     display: grid;
     grid-template-columns: 80px minmax(auto, 400px);
-    grid-template-rows: 54px 54px 54px 54px 54px;
+    grid-template-rows: 54px 54px 54px 54px 54px 54px;
     justify-content: center;
     align-items: center;
     row-gap: 6px;

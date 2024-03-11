@@ -20,6 +20,7 @@ const urlsToCache = [
     './images/cloud-solid.svg',
     './images/share-nodes-solid.svg',
     './images/clipboard-solid.svg',
+    './images/bitcoin-zukan.png',
     './images/fulgur-favicon.ico',
     './images/alby_icon_head_yellow_48x48.svg',
     './images/btcmap-logo.svg',

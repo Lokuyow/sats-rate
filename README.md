@@ -39,6 +39,8 @@ https://lokuyow.github.io/sats-rate/?{デフォルト入力値のクエリ}&{小
 ### 特別なライセンス条件
 以下のファイルは、MITライセンスの条件から除外され、特別なライセンスまたは著作権宣言が適用されます：
 
+- `/images/bitcoin-zukan.png`
+  - © 2024 知っとこ！ビットコイン図鑑
 - `/images/fulgur-favicon.ico`
   - Copyright © フルグル合同会社
 - `/images/alby_icon_head_yellow_48x48.svg`
