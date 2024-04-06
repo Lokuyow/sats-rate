@@ -716,7 +716,7 @@ input:checked+.slider:before {
     color: #D6D6D6;
 }
 
-#pos-pay-button {
+#show-invoice-dialog {
     height: 50px;
     line-height: 50px;
     padding: 0 20px;
@@ -743,3 +743,63 @@ input:checked+.slider:before {
 #lightning-address-form button {
     background-color: var(--main-bg-color);
 }
+
+.pos .invoice-dialog {
+    min-height: 420px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2em;
+}
+
+.pos .lightning-pos-qr-box {
+    width: 340px;
+    height: 340px;
+    margin-bottom: 1em;
+}
+
+.pos .loader-position {
+    position: relative;
+    top: 170px;
+    z-index: -1;
+}
+
+.pos .loader {
+    width: 4px;
+    color: var(--base-color);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+      19px 0     0 5px, 38px 0     0 5px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px;
+    transform: translateX(-38px);
+    animation: l26 2s infinite linear;
+  }
+  @keyframes l26 {
+    12.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
+      19px 0     0 5px, 38px 0     0 0px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px}
+    25%   {box-shadow: 
+      19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 0px}
+    50%   {box-shadow: 
+      19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+    62.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+      19px 0     0 5px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 5px}
+    75%   {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+    87.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 5px, 57px 0     0 0px,
+      19px 19px  0 5px, 38px 19px  0 0px, 57px 19px  0 0px}
+  }
