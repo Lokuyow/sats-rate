@@ -848,13 +848,14 @@ const invoiceDialogCloseButton = document.getElementById('lightning-invoice-clos
 // ダイアログを開く
 showInvoiceButton.addEventListener('click', () => {
     invoiceDialog.showModal();
-    pos.generateInvoice();
+    pos.showInvoice();
 });
 
 // ダイアログを閉じる
 invoiceDialogCloseButton.addEventListener('click', (event) => {
     event.preventDefault(); // フォームを送信しない
     invoiceDialog.close();
+    pos.clearMessage();
 });
 
 

@@ -215,9 +215,39 @@
                     <div class="invoice-dialog">
                         <div class="loader loader-position"></div>
                         <div class="lightning-pos-qr-box" id="lightning-pos-qr-box"></div>
-                        <div id="pos-message"></div>
+                        <div class="error-message" id="pos-message"></div>
+                        <div class="amounts-grid">
+                            <div class="sats">
+                                <div id="current-sats" class="sats-amount amount-text"></div>
+                                <div class="sats-unit unit-text">sats</div>
+                            </div>
+                            <div class="amount amount-text">
+                                <div id="current-btc" class="value"></div>
+                            </div>
+                            <div class="unit unit-text">
+                                <div>BTC</div>
+                            </div>
+                            <div class="amount amount-text">
+                                <div id="current-jpy" class="value"></div>
+                            </div>
+                            <div class="unit unit-text">
+                                <div>JPY</div>
+                            </div>
+                            <div class="amount amount-text">
+                                <div id="current-usd" class="value"></div>
+                            </div>
+                            <div class="unit unit-text">
+                                <div>USD</div>
+                            </div>
+                            <div class="amount amount-text">
+                                <div id="current-eur" class="value"></div>
+                            </div>
+                            <div class="unit unit-text">
+                                <div>EUR</div>
+                            </div>
+                        </div>
                         <button class="lightning-invoice-close-button" id="lightning-invoice-close-button" value="cancel"
-                        formmethod="dialog">閉じる</button>
+                            formmethod="dialog">閉じる</button>
                     </div>
                 </dialog>
             </div>

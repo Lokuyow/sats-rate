@@ -759,6 +759,64 @@ input:checked+.slider:before {
     margin-bottom: 1em;
 }
 
+.pos .error-message {
+    color: var(--base-color);
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.pos .amounts-grid {
+    display: grid;
+    grid-template-columns: 100px 40px 100px 40px;
+    gap: 10px;
+    margin: 12px;
+    overflow-wrap: break-word;
+}
+
+.pos .amount-text {
+    color: var(--main-text-color);
+}
+
+.pos .unit-text {
+    color: var(--subject-text-color);
+}
+
+.amounts-grid .sats {
+    grid-column: 1 / 5;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    margin-bottom: 1rem;
+}
+
+.amounts-grid .sats-amount {
+    font-size: 2rem;
+    max-width: 100%;
+}
+
+.amounts-grid .sats-unit {
+    font-size: 1.4rem;
+    margin-left: 0.2em;
+}
+
+.amounts-grid .amount {
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.amount .value {
+    max-width: 100%;
+}
+
+.amounts-grid .unit {
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+}
+
 .pos .loader-position {
     position: relative;
     top: 170px;
