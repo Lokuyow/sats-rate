@@ -799,16 +799,10 @@ import { Pos } from './lib/pos.js';
 const pos = new Pos();
 pos.initialize();
 
-// 支払いインボイスのQRコード表示の制御
-const posPayButton = document.getElementById('pos-pay-button');
-posPayButton.addEventListener('click', () => {
-    pos.generateInvoice();
-});
-
 /**
- * ライトニングアドレスの変更ダイアログの制御
+ * ライトニングアドレスのダイアログの制御
  */
-const showButton = document.getElementById('show-lightning-address-dialog');
+const showAddressButton = document.getElementById('show-lightning-address-dialog');
 const lnDialog = document.getElementById('update-lightning-address-dialog');
 const lnDialogSubmitButton = document.getElementById('lightning-address-submit-button');
 const lnDialogCloseButton = document.getElementById('lightning-address-close-button');
@@ -816,7 +810,7 @@ const lnDialogClearButton = document.getElementById('lightning-address-clear-but
 const lnAddressForm = document.getElementById('lightning-address-form');
 
 // ダイアログを開く
-showButton.addEventListener('click', () => {
+showAddressButton.addEventListener('click', () => {
     lnDialog.showModal();
 });
 
@@ -843,6 +837,27 @@ lnDialogSubmitButton.addEventListener('click', (event) => {
     event.preventDefault(); // フォームを送信しない
     lnDialog.close();
 });
+
+/**
+ * 支払いインボイスのQRコードダイアログの制御
+ */
+const showInvoiceButton = document.getElementById('show-invoice-dialog');
+const invoiceDialog = document.getElementById('lightning-invoice-dialog');
+const invoiceDialogCloseButton = document.getElementById('lightning-invoice-close-button');
+
+// ダイアログを開く
+showInvoiceButton.addEventListener('click', () => {
+    invoiceDialog.showModal();
+    pos.showInvoice();
+});
+
+// ダイアログを閉じる
+invoiceDialogCloseButton.addEventListener('click', (event) => {
+    event.preventDefault(); // フォームを送信しない
+    invoiceDialog.close();
+    pos.clearMessage();
+});
+
 
 // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {

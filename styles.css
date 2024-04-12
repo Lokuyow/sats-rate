@@ -585,6 +585,7 @@ input:checked+.slider:before {
 @media (prefers-color-scheme: light) {
     :root {
         --two-color: var(--accent-color);
+        --two-color-r: var(--base-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
@@ -598,6 +599,7 @@ input:checked+.slider:before {
 
     :root[data-theme="dark"] {
         --two-color: var(--base-color);
+        --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
@@ -613,6 +615,7 @@ input:checked+.slider:before {
 @media (prefers-color-scheme: dark) {
     :root {
         --two-color: var(--base-color);
+        --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
@@ -626,6 +629,7 @@ input:checked+.slider:before {
 
     :root[data-theme="light"] {
         --two-color: var(--accent-color);
+        --two-color-r: var(--base-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
@@ -703,7 +707,7 @@ input:checked+.slider:before {
 
 .pos dialog {
     color: var(--main-text-color);
-    background-color: var(--unit-bg-color);
+    background-color: var(--main-bg-color);
     border-radius: 1em;
     border: 1px solid #333333;
     padding: 0;
@@ -716,7 +720,7 @@ input:checked+.slider:before {
     color: #D6D6D6;
 }
 
-#pos-pay-button {
+#show-invoice-dialog {
     height: 50px;
     line-height: 50px;
     padding: 0 20px;
@@ -734,12 +738,130 @@ input:checked+.slider:before {
 .lightning-address-input {
     font-size: 1.2rem;
     color: var(--input-text-color);
-    background-color: var(--main-bg-color);
+    background-color: var(--input-bg-color);
     text-align: center;
     padding: 0 8px;
     border: 0;
 }
 
 #lightning-address-form button {
-    background-color: var(--main-bg-color);
+    background-color: var(--input-bg-color);
 }
+
+.pos .invoice-dialog {
+    min-height: 420px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2em;
+}
+
+.pos .lightning-pos-qr-box {
+    width: 340px;
+    height: 340px;
+    margin-bottom: 1em;
+}
+
+.pos .error-message {
+    color: var(--two-color-r);
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.pos .amounts-grid {
+    display: grid;
+    grid-template-columns: 100px 40px 100px 40px;
+    gap: 10px;
+    margin: 12px;
+    overflow-wrap: break-word;
+}
+
+.pos .amount-text {
+    color: var(--main-text-color);
+}
+
+.pos .unit-text {
+    color: var(--subject-text-color);
+}
+
+.amounts-grid .sats {
+    grid-column: 1 / 5;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    margin-bottom: 1rem;
+}
+
+.amounts-grid .sats-amount {
+    font-size: 2rem;
+    max-width: 100%;
+}
+
+.amounts-grid .sats-unit {
+    font-size: 1.4rem;
+    margin-left: 0.2em;
+}
+
+.amounts-grid .amount {
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.amount .value {
+    max-width: 100%;
+}
+
+.amounts-grid .unit {
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+}
+
+.pos .loader-position {
+    position: relative;
+    top: 170px;
+    z-index: -1;
+}
+
+.pos .loader {
+    width: 4px;
+    color: var(--two-color);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+      19px 0     0 5px, 38px 0     0 5px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px;
+    transform: translateX(-38px);
+    animation: l26 2s infinite linear;
+  }
+  @keyframes l26 {
+    12.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
+      19px 0     0 5px, 38px 0     0 0px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px}
+    25%   {box-shadow: 
+      19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 0px}
+    50%   {box-shadow: 
+      19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+    62.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+      19px 0     0 5px, 38px 0     0 0px, 57px 0     0 0px,
+      19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 5px}
+    75%   {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 0px, 57px 0     0 5px,
+      19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+    87.5% {box-shadow: 
+      19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+      19px 0     0 0px, 38px 0     0 5px, 57px 0     0 0px,
+      19px 19px  0 5px, 38px 19px  0 0px, 57px 19px  0 0px}
+  }
