@@ -585,6 +585,7 @@ input:checked+.slider:before {
 @media (prefers-color-scheme: light) {
     :root {
         --two-color: var(--accent-color);
+        --two-color-r: var(--base-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
@@ -598,6 +599,7 @@ input:checked+.slider:before {
 
     :root[data-theme="dark"] {
         --two-color: var(--base-color);
+        --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
@@ -613,6 +615,7 @@ input:checked+.slider:before {
 @media (prefers-color-scheme: dark) {
     :root {
         --two-color: var(--base-color);
+        --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
@@ -626,6 +629,7 @@ input:checked+.slider:before {
 
     :root[data-theme="light"] {
         --two-color: var(--accent-color);
+        --two-color-r: var(--base-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
@@ -703,7 +707,7 @@ input:checked+.slider:before {
 
 .pos dialog {
     color: var(--main-text-color);
-    background-color: var(--unit-bg-color);
+    background-color: var(--main-bg-color);
     border-radius: 1em;
     border: 1px solid #333333;
     padding: 0;
@@ -734,14 +738,14 @@ input:checked+.slider:before {
 .lightning-address-input {
     font-size: 1.2rem;
     color: var(--input-text-color);
-    background-color: var(--main-bg-color);
+    background-color: var(--input-bg-color);
     text-align: center;
     padding: 0 8px;
     border: 0;
 }
 
 #lightning-address-form button {
-    background-color: var(--main-bg-color);
+    background-color: var(--input-bg-color);
 }
 
 .pos .invoice-dialog {
@@ -760,7 +764,7 @@ input:checked+.slider:before {
 }
 
 .pos .error-message {
-    color: var(--base-color);
+    color: var(--two-color-r);
     max-width: 100%;
     overflow-wrap: break-word;
 }
@@ -825,7 +829,7 @@ input:checked+.slider:before {
 
 .pos .loader {
     width: 4px;
-    color: var(--base-color);
+    color: var(--two-color);
     aspect-ratio: 1;
     border-radius: 50%;
     box-shadow: 
