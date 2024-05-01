@@ -2,19 +2,18 @@ const urlsToCache = [
     './index.html',
     './styles.css',
     './main.js',
-    './manifest.json',
+    './lib/currencyManager.js',
     './lib/lightning-address.js',
     './lib/pos.js',
+    './lib/currencies.json',
+    './manifest.json',
+    './fonts/MPLUSRounded1c-Medium.ttf',
+    './fonts/MPLUSRounded1c-Bold.ttf',
     './favicons/favicon.ico',
     './images/icon_x192.png',
     './images/icon_x512.png',
     './images/maskable_icon_x192.png',
     './images/maskable_icon_x512.png',
-    './images/title.svg',
-    './images/白抜きのビットコインアイコン.svg',
-    './images/白抜きの円アイコン.svg',
-    './images/白抜きのドルアイコン.svg',
-    './images/白抜きのユーロアイコン.svg',
     './images/square-x-twitter.svg',
     './images/nostr-icon-purple-on-white.svg',
     './images/cloud-solid.svg',
@@ -32,10 +31,11 @@ const urlsToCache = [
     './images/sun-regular.svg',
     './images/moon-regular.svg',
     './images/angle-down-solid.svg',
-    './images/settings-solid.svg'
+    './images/settings-solid.svg',
+    './images/bitcoin-icon.svg'
 ];
 
-const VERSION = '1.42';
+const VERSION = '1.43';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 

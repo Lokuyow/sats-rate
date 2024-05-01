@@ -1,7 +1,6 @@
-const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=5";
+import { CurrencyManager } from './lib/currencyManager.js';
+const currencyManager = new CurrencyManager();
 const BASE_URL = "https://lokuyow.github.io/sats-rate/";
-const satsInBtc = 1e8;
-const inputFields = ['sats', 'btc', 'jpy', 'usd', 'eur'];
 const dateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -9,89 +8,71 @@ const dateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit'
 };
-const currencyFormatOptionsSets = {
-    default: {
-        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
-        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        jpy: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
-        usd: { maximumFractionDigits: 5, minimumFractionDigits: 0 },
-        eur: { maximumFractionDigits: 5, minimumFractionDigits: 0 }
-    },
-    alt: {
-        sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
-        btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-        jpy: { maximumFractionDigits: 2, minimumFractionDigits: 0 },
-        usd: { maximumFractionDigits: 4, minimumFractionDigits: 0 },
-        eur: { maximumFractionDigits: 4, minimumFractionDigits: 0 }
-    }
-};
-let activeField = null;
-let currentFormatOptions = {};
-let btcToJpy, btcToUsd, btcToEur, lastUpdatedField;
+let lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
 let lastClickEvent = null;
-const inputs = document.querySelectorAll('.currency-input');
+let currencyRates = {};
+let selectedCurrencies = [];
+let currencyInputFields = [];
+export let baseCurrencyValue = {};
+let customOptions = {
+    sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
+    btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
+};
 
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
-    await fetchDataFromCoinGecko();
+    // CurrencyManagerのインスタンスを作成
+    currencyManager.setCurrenciesUpdateCallback(updateGlobalSelectedCurrencies);
+    currencyManager.setRatesUpdateCallback(updateGlobalCurrencyRates);
+
+    // 通貨データをロードし、UIコンポーネントを初期化
+    await currencyManager.loadCurrencies();
+
+    // クエリパラメータから通貨設定と計算元の通貨とその値を読み込み
+    loadValuesFromQueryParams();
+
+    // クエリパラメータがない場合、デフォルト値を設定
+    if (!window.location.search) {
+        setDefaultValues();
+    }
+
+    await currencyManager.fetchCurrencyData(selectedCurrencies);
+
+    // UIを更新
+    currencyManager.generateCurrencyCheckboxes();
+    currencyManager.updateCheckboxStates(selectedCurrencies);
+    currencyManager.updateCurrencyInputs(selectedCurrencies);
+
+    // inputs変数を更新
+    currencyInputFields = selectedCurrencies.map(id => document.getElementById(id));
+
+    // 保存ボタンのイベントリスナーを設定
+    const saveButton = document.getElementById('saveSelectedCurrencies');
+    saveButton.addEventListener('click', () => currencyManager.saveSelectedCurrencies());
+
+    // その他の初期化処理
     await registerAndHandleServiceWorker();
     await displaySiteVersion();
-    currentFormatOptions = currencyFormatOptionsSets.default;
-    setDefaultValues()
-    loadValuesFromQueryParams();
     setupEventListeners();
     checkAndUpdateElements();
     document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // 計算
+    prepareAndCalculate(baseCurrencyValue);
 }
 
-async function fetchDataFromCoinGecko() {
-    let data;
-
-    try {
-        const response = await fetch(COINGECKO_URL);
-        data = await response.json();
-
-        // 価格データをローカルストレージに保存
-        localStorage.setItem("priceData", JSON.stringify(data));
-
-    } catch (err) {
-        console.warn("Failed to fetch data from CoinGecko. Trying to get data from localStorage...");
-
-        // ローカルストレージから価格データを取得
-        const storedData = localStorage.getItem("priceData");
-
-        if (storedData) {
-            data = JSON.parse(storedData);
-        } else {
-            handleCoinGeckoRequestError(err);
-            return;
-        }
-    }
-
-    if (data) {
-        updateCurrencyRates(data);
-        updateLastUpdated(data.bitcoin.last_updated_at);
-        updateElementClass(getDomElementById('last-updated'), false);
-        updateElementClass(getDomElementById('update-prices'), false);
-    }
-}
-
-async function setupEventListeners() {
-    inputFields.forEach(id => {
-        const element = getDomElementById(id);
-        setupInputFieldEventListeners(element);
-    });
-
-    setupEventListenersForCurrencyButtons()
-    getDomElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
-    getDomElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
-    getDomElementById('saveDefaultValuesButton').addEventListener('click', (event) => {
+function setupEventListeners() {
+    setupInputFieldsEventListeners();
+    setupEventListenersForCurrencyButtons();
+    document.getElementById('share-via-webapi').addEventListener('click', shareViaWebAPIEvent);
+    document.getElementById('update-prices').addEventListener('click', updateElementsBasedOnTimestamp);
+    document.getElementById('saveDefaultValuesButton').addEventListener('click', (event) => {
         saveCurrentValuesAsDefault(event);
     });
-    getDomElementById('checkForUpdateBtn').addEventListener('click', checkForUpdates);
+    document.getElementById('checkForUpdateBtn').addEventListener('click', checkForUpdates);
     window.addEventListener('online', handleOnline);
 }
 
@@ -99,6 +80,7 @@ function setupInputFieldEventListeners(element) {
     element.addEventListener('keyup', handleInputFormatting);
     element.addEventListener('focus', handleFocus);
     element.addEventListener('contextmenu', handleContextMenu);
+    element.addEventListener('paste', handleInputFormatting);
     element.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             this.blur();
@@ -106,136 +88,187 @@ function setupInputFieldEventListeners(element) {
     });
 }
 
-function getDomElementById(id) {
-    return document.getElementById(id);
+// 通貨レートの更新をグローバル変数に反映するコールバック関数
+function updateGlobalCurrencyRates(rates) {
+    currencyRates = rates;
+    updateCustomOptions(currencyRates);
+    updateLastUpdated(currencyRates.last_updated_at);
 }
 
-function handleOnline() {
-    console.log('オンラインに復帰しました。最新データを取得します。');
-    fetchDataFromCoinGecko();
+// 選択された通貨の更新をグローバル変数に反映するコールバック関数
+function updateGlobalSelectedCurrencies(currencies) {
+    selectedCurrencies = currencies;
+    updateCurrencyInputFields(); // 通貨が更新されたらDOM要素も更新
 }
 
-function handleCoinGeckoRequestError(err) {
-    console.error("Failed to fetch price data from CoinGecko:", err);
-    alert("価格レートの取得に失敗しました。時間をおいてからリロードしてみてください。");
+function updateCurrencyInputFields() {
+    currencyInputFields = selectedCurrencies.map(id => document.getElementById(id));
+    setupInputFieldsEventListeners(); // 全ての入力フィールドにイベントリスナーを設定
 }
 
-//デフォルト入力値
-function setDefaultValues() {
-    const storedDefaultValues = JSON.parse(localStorage.getItem('defaultValues')) || {};
-    const lastFieldFromLocalStorage = Object.keys(storedDefaultValues)[0];
+function setupInputFieldsEventListeners() {
+    currencyInputFields.forEach(element => {
+        if (!element) return; // elementがnullでないことを保証
+        setupInputFieldEventListeners(element);
+    });
+}
 
-    if (lastFieldFromLocalStorage) {
-        const field = getDomElementById(lastFieldFromLocalStorage);
-        if (field) {
-            const formattedValue = new Intl.NumberFormat(selectedLocale).format(storedDefaultValues[lastFieldFromLocalStorage]);
-            field.value = formattedValue;
-            calculateValues(lastFieldFromLocalStorage);
+// baseCurrencyValue を設定する関数
+export function setBaseCurrencyValue(value) {
+    baseCurrencyValue = value;
+}
+
+// baseCurrencyValue を取得する関数
+export function getBaseCurrencyValue() {
+    return baseCurrencyValue;
+}
+
+async function handleOnline() {
+    await currencyManager.fetchCurrencyData(selectedCurrencies);
+    checkAndUpdateElements();
+    alert('オンラインに復帰しました。最新データを取得します。');
+}
+
+//入力の初期値
+export function setDefaultValues() {
+    // ローカルストレージから値を読み込む
+    selectedCurrencies = JSON.parse(localStorage.getItem('selectedCurrenciesLS')) || [];
+    baseCurrencyValue = JSON.parse(localStorage.getItem('defaultValueLS')) || {};
+
+    if (!selectedCurrencies.length && !Object.keys(baseCurrencyValue).length) {
+        // selectedCurrencies と baseCurrencyValue が両方空の場合
+        selectedCurrencies = ['sats', 'btc', 'jpy', 'usd', 'eur'];
+        baseCurrencyValue = { sats: 100 };  // sats にデフォルト値 100 を設定
+    } else if (!selectedCurrencies.length) {
+        // selectedCurrencies だけ空の場合
+        selectedCurrencies = ['sats', 'btc', 'jpy', 'usd', 'eur'];
+        if (Object.keys(baseCurrencyValue).length) {
+            const baseCurrency = Object.keys(baseCurrencyValue)[0];
+            selectedCurrencies.push(baseCurrency); // baseCurrencyValue の通貨を含む
         }
-    } else {
-        const satsField = getDomElementById('sats');
-        if (!satsField.value) {
-            satsField.value = "100";
-            calculateValues('sats');
-        }
+    } else if (!Object.keys(baseCurrencyValue).length) {
+        // baseCurrencyValue だけ空の場合
+        const firstCurrency = selectedCurrencies[0];
+        baseCurrencyValue[firstCurrency] = 100;  // 最初の通貨に 100 を設定
+    }
+
+    // 次に、baseCurrencyValue の通貨が selectedCurrencies に含まれているかどうかを確認し、含まれていなければ設定
+    const baseCurrencyKey = Object.keys(baseCurrencyValue)[0];
+    if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+        // baseCurrencyValue の通貨が selectedCurrencies にない場合
+        const firstCurrency = selectedCurrencies[0];
+        baseCurrencyValue = {}; // baseCurrencyValue をクリア
+        baseCurrencyValue[firstCurrency] = 100;  // 最初の通貨に 100 を設定
     }
 }
 
-//デフォルト入力値の保存
+// 現在の入力値をデフォルト値としてローカルストレージに保存
 function saveCurrentValuesAsDefault(event) {
     const currentValues = {};
 
     if (lastUpdatedField) {
-        const rawValue = getDomElementById(lastUpdatedField).value;
+        const rawValue = document.getElementById(lastUpdatedField).value;
         const sanitizedValue = parseInput(rawValue, selectedLocale);
         currentValues[lastUpdatedField] = sanitizedValue;
     }
 
-    localStorage.setItem('defaultValues', JSON.stringify(currentValues));
+    localStorage.setItem('defaultValueLS', JSON.stringify(currentValues));
 
     showNotification('設定完了', event);
 }
 
-function updateCurrencyRates(data) {
-    btcToJpy = data.bitcoin.jpy;
-    btcToUsd = data.bitcoin.usd;
-    btcToEur = data.bitcoin.eur;
+function getInputValue(id) {
+    return parseInput(document.getElementById(id).value, selectedLocale);
 }
 
-function getInputValue(id) {
-    return parseInput(getDomElementById(id).value, selectedLocale);
+// 計算前に入力値をフォーマットしインプットフィールドに入れる
+export function prepareAndCalculate(baseCurrencyValue) {
+    // baseCurrencyValue から最初の通貨コードを取得
+    const baseCurrency = Object.keys(baseCurrencyValue)[0];
+    const currencyValue = baseCurrencyValue[baseCurrency];
+    const currencyInputField = document.getElementById(baseCurrency);
+
+    if (baseCurrency && currencyInputField) {
+        // 通貨値をフォーマット
+        const formattedValue = formatCurrency(currencyValue, baseCurrency, selectedLocale, true);
+
+        // 通貨の入力フィールドにフォーマットされた値を設定
+        currencyInputField.value = formattedValue;
+
+        // calculateValues 関数を呼び出して計算を実行
+        calculateValues(baseCurrency);
+    } else {
+        console.error('Base currency is not valid or element does not exist.');
+    }
 }
 
 // 計算
 function calculateValues(inputField) {
-    const values = {
-        btc: getInputValue('btc'),
-        sats: getInputValue('sats'),
-        jpy: getInputValue('jpy'),
-        usd: getInputValue('usd'),
-        eur: getInputValue('eur')
-    };
+    const satsInBtc = 1e8;
 
-    const inputDigits = values[inputField].toString().replace('.', '').length;
-    const significantDigits = calculateSignificantDigits(inputDigits);
+    const inputValues = selectedCurrencies.reduce((acc, currency) => {
+        acc[currency] = parseFloat(getInputValue(currency)) || 0;
+        return acc;
+    }, {});
 
-    switch (inputField) {
-        case 'btc':
-            values.sats = values.btc * satsInBtc;
-            values.jpy = values.btc * btcToJpy;
-            values.usd = values.btc * btcToUsd;
-            values.eur = values.btc * btcToEur;
-            break;
-        case 'sats':
-            values.btc = values.sats / satsInBtc;
-            values.jpy = values.btc * btcToJpy;
-            values.usd = values.btc * btcToUsd;
-            values.eur = values.btc * btcToEur;
-            break;
-        case 'jpy':
-            values.btc = values.jpy / btcToJpy;
-            values.sats = values.btc * satsInBtc;
-            values.usd = values.btc * btcToUsd;
-            values.eur = values.btc * btcToEur;
-            break;
-        case 'usd':
-            values.btc = values.usd / btcToUsd;
-            values.sats = values.btc * satsInBtc;
-            values.jpy = values.btc * btcToJpy;
-            values.eur = values.btc * btcToEur;
-            break;
-        case 'eur':
-            values.btc = values.eur / btcToEur;
-            values.sats = values.btc * satsInBtc;
-            values.jpy = values.btc * btcToJpy;
-            values.usd = values.btc * btcToUsd;
-            break;
-        default:
-            console.error("Unknown inputField:", inputField);
-            return;
+    if (inputField === 'sats') {
+        inputValues['btc'] = inputValues['sats'] / satsInBtc;
+    } else if (inputField === 'btc') {
+        inputValues['sats'] = inputValues['btc'] * satsInBtc;
+    } else {
+        inputValues['btc'] = inputValues[inputField] / currencyRates[inputField];
+        inputValues['sats'] = inputValues['btc'] * satsInBtc;
     }
 
-    inputFields.forEach(id => {
-        if (id === inputField) {
-            const element = getDomElementById(id);
-            const caretPos = element.selectionStart;
-            element.setSelectionRange(caretPos, caretPos);
-        } else {
-            getDomElementById(id).value = formatCurrency(values[id], id, selectedLocale, true, significantDigits);
+    selectedCurrencies.forEach(currency => {
+        if (currency !== 'btc' && currency !== 'sats') {
+            inputValues[currency] = inputValues['btc'] * (currencyRates[currency] || 0);
         }
     });
 
+    // 最後に更新されたフィールドを記録
     lastUpdatedField = inputField;
-    updateShareButton(values.btc, values.sats, values.jpy, values.usd, values.eur);
+
+    // 有効桁数の計算
+    const inputDigits = inputValues[inputField].toString().replace('.', '').length;
+    const significantDigits = calculateSignificantDigits(inputDigits);
+
+    // 入力フィールドの更新
+    selectedCurrencies.forEach(currency => {
+        const element = document.getElementById(currency);
+
+        if (element) {
+            // 直接入力ボックス
+            if (currency === inputField) {
+                // カーソル位置の維持
+                const caretPos = element.selectionStart;
+                element.setSelectionRange(caretPos, caretPos);
+                // 計算されるボックス
+            } else {
+                // 値のフォーマットと更新
+                // formatCurrencyをsignificantDigitsを使って動的にフォーマットするように修正
+                element.value = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
+            }
+        }
+    });
+
     changeBackgroundColorFromId(inputField);
+    updateShareButton();
 }
 
-// キー入力
+// キーボードから入力したときの直接入力フィールドの処理
 function handleInputFormatting(event) {
     const inputElement = event.target;
     addCommasToInput(inputElement);
+    const values = getValuesFromElements();
 
-    const queryString = generateQueryStringFromValues();
+    // 計算元の通貨とその値を保存
+    const currencyId = inputElement.id;
+    const inputValue = values[currencyId];
+    baseCurrencyValue = {};
+    baseCurrencyValue[currencyId] = parseFloat(inputValue) || 0;
+
+    const queryString = generateQueryStringFromValues(values);
 
     if (queryString) {
         const currentUrl = new URL(window.location.href);
@@ -244,7 +277,7 @@ function handleInputFormatting(event) {
     }
 }
 
-//ロケールから桁区切りと小数点の文字を取得
+//　ロケールから桁区切りと小数点の文字を取得
 function getLocaleSeparators(locale) {
     const formattedNumber = new Intl.NumberFormat(locale).format(1000.1);
     return {
@@ -320,12 +353,31 @@ function addCommasToInput(inputElement) {
     }
 }
 
+// カスタムオプションを更新する関数
+function updateCustomOptions(rates) {
+    // 各通貨についてループ
+    for (const [key, value] of Object.entries(rates)) {
+        // sats と btc はスキップ
+        if (key === "sats" || key === "btc" || key === "last_updated_at") continue;
 
-// 有効数字、小数点以下の制限、ロケールごとの記法
+        // 小数点以上の桁数を計算
+        let integerDigits = Math.floor(value).toString().length;
+        let maximumFractionDigits = 10 - integerDigits;
+
+        // maximumFractionDigitsは0以上でなければならない
+        maximumFractionDigits = Math.max(0, maximumFractionDigits);
+
+        // カスタムオプションの更新
+        customOptions[key] = {
+            maximumFractionDigits: maximumFractionDigits,
+            minimumFractionDigits: 0
+        };
+    }
+}
+
+// 小数点以下の制限、ロケールごとの記法
 function formatCurrency(num, id, selectedLocale, shouldRound = true, significantDigits) {
-    // 現在選択されているフォーマットオプションを取得
-    const formatOptions = currentFormatOptions[id];
-
+    // numが数値でない場合、数値に変換
     if (typeof num !== 'number') {
         num = parseFloat(num);
         if (isNaN(num)) {
@@ -334,17 +386,25 @@ function formatCurrency(num, id, selectedLocale, shouldRound = true, significant
         }
     }
 
+    // significantDigitsが指定されている場合、指定の桁数で数値を丸める
     let roundedNum = shouldRound ? Number(num.toPrecision(significantDigits)) : num;
+
+    // 通貨ごとのフォーマットオプションを取得
+    const formatOptions = customOptions[id];
     const maximumFractionDigits = formatOptions.maximumFractionDigits;
     const numFractionDigits = (roundedNum.toString().split('.')[1] || '').length;
 
+    // 小数点以下の桁数が規定以上の場合丸める
     if (numFractionDigits > maximumFractionDigits) {
         roundedNum = Number(roundedNum.toFixed(maximumFractionDigits));
     }
 
-    return Number(roundedNum).toLocaleString(selectedLocale, formatOptions);
+    // ロケールに応じて数値をフォーマットし、返却
+    return roundedNum.toLocaleString(selectedLocale, formatOptions);
 }
 
+// 有効桁数を算出する
+// 基本桁数7 + 入力桁数 - 1 = 有効桁数(最大10)
 function calculateSignificantDigits(inputDigits) {
     let dynamicSignificantDigits = 7;
     if (inputDigits > 1) {
@@ -353,24 +413,24 @@ function calculateSignificantDigits(inputDigits) {
     return Math.min(dynamicSignificantDigits, 10);
 }
 
-// 価格レート更新日時の表示
+// データ取得日時のunixtimeの変換と表示
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const userLocale = navigator.language || navigator.userLanguage;
     const formatter = new Intl.DateTimeFormat(userLocale, dateTimeFormatOptions);
     const formattedDate = formatter.format(updatedAt);
 
-    getDomElementById('last-updated').textContent = formattedDate;
+    document.getElementById('last-updated').textContent = formattedDate;
     lastUpdatedTimestamp = timestamp;
 
     return formattedDate;
 }
 
 // ページ読み込みもしくは表示状態が変わった際の要素更新処理
-function checkAndUpdateElements() {
+export function checkAndUpdateElements() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
-    const updatePricesElement = getDomElementById('update-prices');
-    const lastUpdatedElement = getDomElementById('last-updated');
+    const updatePricesElement = document.getElementById('update-prices');
+    const lastUpdatedElement = document.getElementById('last-updated');
 
     updateElementClass(updatePricesElement, diffTime >= 610);
     updateElementClass(lastUpdatedElement, diffTime >= 610);
@@ -386,8 +446,8 @@ function handleVisibilityChange() {
 async function updateElementsBasedOnTimestamp() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
 
-    const updatePricesElement = getDomElementById('update-prices');
-    const lastUpdatedElement = getDomElementById('last-updated');
+    const updatePricesElement = document.getElementById('update-prices');
+    const lastUpdatedElement = document.getElementById('last-updated');
 
     if (diffTime >= 610) {
         // すぐにアニメーションを開始
@@ -400,7 +460,7 @@ async function updateElementsBasedOnTimestamp() {
         const animationStartTime = Date.now();
 
         // データを取得し計算
-        await fetchDataFromCoinGecko();
+        await currencyManager.fetchCurrencyData(selectedCurrencies);
         const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
         if (lastUpdatedField) {
             calculateValues(lastUpdatedField);
@@ -438,12 +498,6 @@ function updateElementClass(element, isOutdated) {
 // 選択
 function handleFocus(event) {
     event.target.select();
-    activeField = event.target.id;
-    if (activeField === 'jpy' || activeField === 'usd' || activeField === 'eur') {
-        currentFormatOptions = currencyFormatOptionsSets.alt;
-    } else {
-        currentFormatOptions = currencyFormatOptionsSets.default;
-    }
 }
 
 function handleContextMenu(event) {
@@ -458,15 +512,15 @@ function isMobileDevice() {
 
 //計算元の入力ボックスの色を変更
 function changeBackgroundColorFromId(id) {
-    inputs.forEach(input => input.classList.remove('last-input-field'));
+    currencyInputFields.forEach(input => input.classList.remove('last-input-field'));
 
-    const targetInput = getDomElementById(id);
+    const targetInput = document.getElementById(id);
     targetInput.classList.add('last-input-field');
 }
 
 // ポップアップ表示
 function showNotification(message, event, align = 'right') {
-    const notification = getDomElementById('notification');
+    const notification = document.getElementById('notification');
     notification.textContent = message;
 
     notification.style.left = event.pageX + 'px';
@@ -488,17 +542,14 @@ function showNotification(message, event, align = 'right') {
 // URLクエリパラメータ
 function loadValuesFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
-    const decimalFormat = urlParams.get('d') || 'p'; // dパラメータから小数点のフォーマット情報を取得
-    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US'; // dパラメータに基づいてロケールを設定
+    selectedCurrencies = urlParams.get('currencies') ? urlParams.get('currencies').split(',') : [];
+    baseCurrencyValue = {};
+    const decimalFormat = urlParams.get('d') || 'p';
+    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
 
-    ['btc', 'sats', 'jpy', 'usd', 'eur'].forEach(field => {
-        if (urlParams.has(field)) {
-            const element = getDomElementById(field);
-            const rawValue = urlParams.get(field);
-            const parsedValue = parseInput(rawValue, locale); // クエリパラメータのロケール情報で解析
-            const formattedValue = formatCurrency(parsedValue, field, selectedLocale, true); // 数値をロケールに応じてフォーマット
-            element.value = formattedValue;
-            calculateValues(field);
+    urlParams.forEach((value, key) => {
+        if (key !== 'd' && key !== 'currencies') {
+            baseCurrencyValue[key] = parseInput(value, locale);
         }
     });
 }
@@ -507,20 +558,25 @@ function getQueryString(field, value) {
     const separators = getLocaleSeparators(selectedLocale);
     const formattedValue = value.replace('.', separators.decimalSeparator); // 小数点をロケールに合わせて置換
     const decimalFormat = separators.decimalSeparator === '.' ? 'p' : 'c'; // 小数点のフォーマットを設定
-    return `?${field}=${formattedValue}&d=${decimalFormat}`; // dパラメータを追加
+
+    const currencies = selectedCurrencies.join(','); // すべての選択された通貨をカンマ区切りでリスト化
+
+    // フォーマットされた値、通貨リスト、小数点フォーマット情報を含むクエリ文字列を生成
+    return `?${field}=${formattedValue}&currencies=${currencies}&d=${decimalFormat}`;
 }
 
-function generateQueryStringFromValues() {
-    if (!lastUpdatedField) return '';
-    const values = getValuesFromElements();
+function generateQueryStringFromValues(values) {
+    if (!lastUpdatedField || !selectedCurrencies.length) return '';
     return getQueryString(lastUpdatedField, values[lastUpdatedField]);
 }
 
 // インプットフィールドから桁区切りを取り除いた数値を取得
 function getValuesFromElements() {
     const values = {};
+    const inputFields = selectedCurrencies;
+
     inputFields.forEach(field => {
-        const rawValue = getDomElementById(field).value;
+        const rawValue = document.getElementById(field).value;
         values[field] = parseInput(rawValue, selectedLocale);
     });
     return values;
@@ -528,40 +584,33 @@ function getValuesFromElements() {
 
 // 共有テキスト生成
 function generateCopyText(values) {
-    const baseCurrencyKey = lastUpdatedField;
-    const baseCurrencyText = `${getCurrencyText(baseCurrencyKey, values[baseCurrencyKey], baseCurrencyKey)} =`;
+    const baseCurrencyKey = lastUpdatedField;  // 基本通貨キーをlastUpdatedFieldから取得
+    const baseCurrencyText = `${getCurrencyText(baseCurrencyKey, values[baseCurrencyKey])} =`; // 基本通貨のテキストを生成し、最後に " =" を追加
 
-    const otherCurrencyKeys = ['sats', 'btc'].filter(key => key !== baseCurrencyKey);
-    const otherCurrencyTexts = otherCurrencyKeys.map(key => getCurrencyText(key, values[key], baseCurrencyKey)).join(', ');
+    // baseCurrency以外の通貨キーを取得
+    const otherCurrencyKeys = selectedCurrencies.filter(key => key !== baseCurrencyKey);
+    // それぞれの通貨についてテキストを生成し、改行で結合
+    const otherCurrencyTexts = otherCurrencyKeys.map(key => getCurrencyText(key, values[key])).join('\n');
 
-    const remainingCurrencies = Object.keys(values).filter(key => !['sats', 'btc', baseCurrencyKey].includes(key))
-        .map(key => getCurrencyText(key, values[key]));
+    const lastUpdatedText = updateLastUpdated(lastUpdatedTimestamp); // 最終更新日時のテキストを生成
 
-    const lastUpdatedText = updateLastUpdated(lastUpdatedTimestamp);
-
+    // すべてのテキストを結合して返す
     return [
         baseCurrencyText,
         otherCurrencyTexts,
-        ...remainingCurrencies,
         '',
         lastUpdatedText,
         'Powered by CoinGecko,'
     ].join('\n');
 }
 
-function getCurrencyText(key, value, baseCurrencyKey) {
-    const includeSymbol = (baseCurrencyKey === 'sats' && key === 'btc') ||
-        (baseCurrencyKey === 'btc' && key === 'sats') ||
-        (baseCurrencyKey === key);
-
-    const baseTexts = {
-        sats: "₿ {value} sats",
-        btc: includeSymbol ? "₿ {value} BTC" : "{value} BTC",
-        jpy: "¥ {value} JPY",
-        usd: "$ {value} USD",
-        eur: "€ {value} EUR"
-    };
-    return baseTexts[key]?.replace('{value}', formatCurrency(value, key, selectedLocale, true)) || '';
+// コピー用テキストの作成
+function getCurrencyText(key, value) {
+    const symbol = currencyManager.currencySymbols[key] || ''; // 通貨記号を取得
+    const formattedValue = formatCurrency(value, key, selectedLocale,  false); // 通貨の値をフォーマット
+    // 通貨コードが "sats" の場合は大文字に変換しない
+    const currencyCode = key === "sats" ? "sats" : key.toUpperCase();
+    return `${symbol} ${formattedValue} ${currencyCode}`; // 通貨記号、フォーマットされた値、適切にフォーマットされた通貨コードを含むテキストを生成
 }
 
 // 共有ボタン
@@ -569,13 +618,13 @@ function updateShareButton() {
     const values = getValuesFromElements();
 
     const shareText = generateCopyText(values);
-    const queryParams = generateQueryStringFromValues();
+    const queryParams = generateQueryStringFromValues(values);
 
     const links = generateShareLinks(queryParams, shareText);
 
-    getDomElementById('share-twitter').href = links.twitter;
-    getDomElementById('share-nostter').href = links.nostter;
-    getDomElementById('share-mass-driver').href = links.massDriver;
+    document.getElementById('share-twitter').href = links.twitter;
+    document.getElementById('share-nostter').href = links.nostter;
+    document.getElementById('share-mass-driver').href = links.massDriver;
 }
 
 function generateShareLinks(queryParams, shareText) {
@@ -587,24 +636,36 @@ function generateShareLinks(queryParams, shareText) {
     };
 }
 
-function setupEventListenersForCurrencyButtons() {
-    ['sats', 'btc', 'jpy', 'usd', 'eur'].forEach(currency => {
-        getDomElementById('copy-' + currency).addEventListener('click', function (event) {
-            copySingleCurrencyToClipboardEvent(event);
-        });
+export function setupEventListenersForCurrencyButtons() {
+    selectedCurrencies.forEach(currency => {
+        // コピーイベントリスナーの設定
+        const copyButton = document.getElementById('copy-' + currency);
+        if (copyButton) { // ボタンが存在するか確認
+            copyButton.addEventListener('click', function (event) {
+                copySingleCurrencyToClipboardEvent(event);
+            });
+        }
 
-        getDomElementById('paste-' + currency).addEventListener('click', function (event) {
-            pasteFromClipboardToInput(currency);
-        });
+        // ペーストイベントリスナーの設定
+        const pasteButton = document.getElementById('paste-' + currency);
+        if (pasteButton) { // ボタンが存在するか確認
+            pasteButton.addEventListener('click', function () {
+                pasteFromClipboardToInput(currency);
+            });
+        }
     });
 
-    getDomElementById('copy-to-clipboard').addEventListener('click', copyToClipboardEvent);
+    // すべての通貨をコピーするためのイベントリスナーの設定
+    const copyToClipboardButton = document.getElementById('copy-to-clipboard');
+    if (copyToClipboardButton) { // ボタンが存在するか確認
+        copyToClipboardButton.addEventListener('click', copyToClipboardEvent);
+    }
 }
 
 // クリップボードにコピー　各通貨
 function copySingleCurrencyToClipboardEvent(event) {
     const currency = event.target.dataset.currency;
-    const inputValue = getDomElementById(currency).value;
+    const inputValue = document.getElementById(currency).value;
     const separators = getLocaleSeparators(selectedLocale);
     const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, 'g'), ''); // 桁区切りを削除
     copyToClipboard(sanitizedValue, event, 'left');
@@ -614,7 +675,7 @@ function copySingleCurrencyToClipboardEvent(event) {
 function copyToClipboardEvent(event) {
     const values = getValuesFromElements();
     const baseText = generateCopyText(values);
-    const queryParams = generateQueryStringFromValues();
+    const queryParams = generateQueryStringFromValues(values);
     const textToCopy = `${baseText} ${BASE_URL}${queryParams}`;
     copyToClipboard(textToCopy, event, 'right');
 }
@@ -641,22 +702,18 @@ async function readFromClipboard() {
 // クリップボードから貼り付け
 async function pasteFromClipboardToInput(currency) {
     const clipboardData = await readFromClipboard();
-    const sanitizedValue = parseInput(clipboardData, selectedLocale); // クリップボードのデータをロケールに応じて解析
-    const numericValue = parseFloat(sanitizedValue);
-    if (!isNaN(numericValue)) {
-        const formattedValue = formatCurrency(numericValue, currency, selectedLocale, true);
-        getDomElementById(currency).value = formattedValue;
-        calculateValues(currency);
-    } else {
-        console.log("クリップボードの内容が数値ではありません。");
-    }
+    const inputElement = document.getElementById(currency);
+    inputElement.value = clipboardData;
+    lastUpdatedField = currency;
+    handleInputFormatting({ target: inputElement });
+    calculateValues(currency);
 }
 
 // Web Share API
 function shareViaWebAPIEvent() {
     const values = getValuesFromElements();
     const shareText = generateCopyText(values);
-    const queryParams = generateQueryStringFromValues();
+    const queryParams = generateQueryStringFromValues(values);
     shareViaWebAPI(shareText, queryParams);
 }
 
@@ -680,8 +737,8 @@ let newVersionAvailable = false;
 
 // サービスワーカーからのメッセージリスナー
 navigator.serviceWorker.addEventListener('message', (event) => {
-    const updateButton = getDomElementById('checkForUpdateBtn');
-    const buttonText = getDomElementById('buttonText');
+    const updateButton = document.getElementById('checkForUpdateBtn');
+    const buttonText = document.getElementById('buttonText');
     const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
 
     console.log('Message from Service Worker:', event.data);
@@ -714,7 +771,7 @@ async function registerAndHandleServiceWorker() {
             installingWorker.addEventListener('statechange', async () => {
                 if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
                     newVersionAvailable = true;
-                    const updateUI = getDomElementById('buttonText');
+                    const updateUI = document.getElementById('buttonText');
                     if (updateUI) {
                         console.log("Updating UI from Service Worker installation");
                         updateUI.textContent = '更新があります';
@@ -734,7 +791,7 @@ function delay(ms) {
 // サイト更新ボタン
 async function checkForUpdates(event) {
     lastClickEvent = event; // クリックイベントを保存
-    const updateButton = getDomElementById('checkForUpdateBtn');
+    const updateButton = document.getElementById('checkForUpdateBtn');
     const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
     spinnerWrapper.style.display = 'block'; // スピナーを表示
 
@@ -790,9 +847,10 @@ async function fetchVersionFromSW() {
 async function displaySiteVersion() {
     const siteVersion = await fetchVersionFromSW();
     if (siteVersion) {
-        getDomElementById('siteVersion').textContent = siteVersion;
+        document.getElementById('siteVersion').textContent = siteVersion;
     }
 }
+
 
 import { Pos } from './lib/pos.js';
 
@@ -829,7 +887,7 @@ lnDialogClearButton.addEventListener('click', (event) => {
 // アドレスを設定する
 lnDialogSubmitButton.addEventListener('click', (event) => {
     const isValid = lnAddressForm.checkValidity()
-    if(!isValid) {
+    if (!isValid) {
         return;
     }
 

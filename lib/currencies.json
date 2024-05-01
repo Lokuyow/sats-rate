@@ -1,0 +1,368 @@
+[
+    {
+        "symbol": "₿",
+        "abbreviation": "sats",
+        "name": "Satoshi",
+        "japanese_name": "サトシ"
+    },
+    {
+        "symbol": "₿",
+        "abbreviation": "btc",
+        "name": "Bitcoin",
+        "japanese_name": "ビットコイン"
+    },
+    {
+        "symbol": "Ξ",
+        "abbreviation": "eth",
+        "name": "Ethereum",
+        "japanese_name": "イーサリアム"
+    },
+    {
+        "symbol": "Ł",
+        "abbreviation": "ltc",
+        "name": "Litecoin",
+        "japanese_name": "ライトコイン"
+    },
+    {
+        "symbol": "BCH",
+        "abbreviation": "bch",
+        "name": "Bitcoin Cash",
+        "japanese_name": "ビットコインキャッシュ"
+    },
+    {
+        "symbol": "BNB",
+        "abbreviation": "bnb",
+        "name": "Binance Coin",
+        "japanese_name": "バイナンスコイン"
+    },
+    {
+        "symbol": "EOS",
+        "abbreviation": "eos",
+        "name": "EOS",
+        "japanese_name": "イオス"
+    },
+    {
+        "symbol": "XRP",
+        "abbreviation": "xrp",
+        "name": "Ripple",
+        "japanese_name": "リップル"
+    },
+    {
+        "symbol": "XLM",
+        "abbreviation": "xlm",
+        "name": "Stellar Lumens",
+        "japanese_name": "ステラルーメン"
+    },
+    {
+        "symbol": "LINK",
+        "abbreviation": "link",
+        "name": "Chainlink",
+        "japanese_name": "チェーンリンク"
+    },
+    {
+        "symbol": "DOT",
+        "abbreviation": "dot",
+        "name": "Polkadot",
+        "japanese_name": "ポルカドット"
+    },
+    {
+        "symbol": "YFI",
+        "abbreviation": "yfi",
+        "name": "Yearn.finance",
+        "japanese_name": "イヤーファイナンス"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "usd",
+        "name": "United States Dollar",
+        "japanese_name": "アメリカドル"
+    },
+    {
+        "symbol": "د.إ",
+        "abbreviation": "aed",
+        "name": "United Arab Emirates Dirham",
+        "japanese_name": "アラブ首長国連邦ディルハム"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "ars",
+        "name": "Argentine Peso",
+        "japanese_name": "アルゼンチンペソ"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "aud",
+        "name": "Australian Dollar",
+        "japanese_name": "オーストラリアドル"
+    },
+    {
+        "symbol": "৳",
+        "abbreviation": "bdt",
+        "name": "Bangladeshi Taka",
+        "japanese_name": "バングラデシュタカ"
+    },
+    {
+        "symbol": ".د.ب",
+        "abbreviation": "bhd",
+        "name": "Bahraini Dinar",
+        "japanese_name": "バーレーンディナール"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "bmd",
+        "name": "Bermudian Dollar",
+        "japanese_name": "バミューダドル"
+    },
+    {
+        "symbol": "R$",
+        "abbreviation": "brl",
+        "name": "Brazilian Real",
+        "japanese_name": "ブラジルレアル"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "cad",
+        "name": "Canadian Dollar",
+        "japanese_name": "カナダドル"
+    },
+    {
+        "symbol": "CHF",
+        "abbreviation": "chf",
+        "name": "Swiss Franc",
+        "japanese_name": "スイスフラン"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "clp",
+        "name": "Chilean Peso",
+        "japanese_name": "チリペソ"
+    },
+    {
+        "symbol": "¥",
+        "abbreviation": "cny",
+        "name": "Chinese Yuan",
+        "japanese_name": "中国人民元"
+    },
+    {
+        "symbol": "Kč",
+        "abbreviation": "czk",
+        "name": "Czech Koruna",
+        "japanese_name": "チェココルナ"
+    },
+    {
+        "symbol": "kr",
+        "abbreviation": "dkk",
+        "name": "Danish Krone",
+        "japanese_name": "デンマーククローネ"
+    },
+    {
+        "symbol": "€",
+        "abbreviation": "eur",
+        "name": "Euro",
+        "japanese_name": "ユーロ"
+    },
+    {
+        "symbol": "£",
+        "abbreviation": "gbp",
+        "name": "British Pound Sterling",
+        "japanese_name": "英ポンド"
+    },
+    {
+        "symbol": "₾",
+        "abbreviation": "gel",
+        "name": "Georgian Lari",
+        "japanese_name": "ジョージアラリ"
+    },
+    {
+        "symbol": "HK$",
+        "abbreviation": "hkd",
+        "name": "Hong Kong Dollar",
+        "japanese_name": "香港ドル"
+    },
+    {
+        "symbol": "Ft",
+        "abbreviation": "huf",
+        "name": "Hungarian Forint",
+        "japanese_name": "ハンガリーフォリント"
+    },
+    {
+        "symbol": "Rp",
+        "abbreviation": "idr",
+        "name": "Indonesian Rupiah",
+        "japanese_name": "インドネシアルピア"
+    },
+    {
+        "symbol": "₪",
+        "abbreviation": "ils",
+        "name": "Israeli New Shekel",
+        "japanese_name": "イスラエル新シェケル"
+    },
+    {
+        "symbol": "₹",
+        "abbreviation": "inr",
+        "name": "Indian Rupee",
+        "japanese_name": "インドルピー"
+    },
+    {
+        "symbol": "¥",
+        "abbreviation": "jpy",
+        "name": "Japanese Yen",
+        "japanese_name": "日本円"
+    },
+    {
+        "symbol": "₩",
+        "abbreviation": "krw",
+        "name": "South Korean Won",
+        "japanese_name": "韓国ウォン"
+    },
+    {
+        "symbol": "د.ك",
+        "abbreviation": "kwd",
+        "name": "Kuwaiti Dinar",
+        "japanese_name": "クウェートディナール"
+    },
+    {
+        "symbol": "Rs",
+        "abbreviation": "lkr",
+        "name": "Sri Lankan Rupee",
+        "japanese_name": "スリランカルピー"
+    },
+    {
+        "symbol": "K",
+        "abbreviation": "mmk",
+        "name": "Myanmar Kyat",
+        "japanese_name": "ミャンマーキャット"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "mxn",
+        "name": "Mexican Peso",
+        "japanese_name": "メキシコペソ"
+    },
+    {
+        "symbol": "RM",
+        "abbreviation": "myr",
+        "name": "Malaysian Ringgit",
+        "japanese_name": "マレーシアリンギット"
+    },
+    {
+        "symbol": "₦",
+        "abbreviation": "ngn",
+        "name": "Nigerian Naira",
+        "japanese_name": "ナイジェリアナイラ"
+    },
+    {
+        "symbol": "kr",
+        "abbreviation": "nok",
+        "name": "Norwegian Krone",
+        "japanese_name": "ノルウェークローネ"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "nzd",
+        "name": "New Zealand Dollar",
+        "japanese_name": "ニュージーランドドル"
+    },
+    {
+        "symbol": "₱",
+        "abbreviation": "php",
+        "name": "Philippine Peso",
+        "japanese_name": "フィリピンペソ"
+    },
+    {
+        "symbol": "₨",
+        "abbreviation": "pkr",
+        "name": "Pakistani Rupee",
+        "japanese_name": "パキスタンルピー"
+    },
+    {
+        "symbol": "zł",
+        "abbreviation": "pln",
+        "name": "Polish Złoty",
+        "japanese_name": "ポーランドズロチ"
+    },
+    {
+        "symbol": "₽",
+        "abbreviation": "rub",
+        "name": "Russian Ruble",
+        "japanese_name": "ロシアルーブル"
+    },
+    {
+        "symbol": "ر.س",
+        "abbreviation": "sar",
+        "name": "Saudi Riyal",
+        "japanese_name": "サウジアラビアリヤル"
+    },
+    {
+        "symbol": "kr",
+        "abbreviation": "sek",
+        "name": "Swedish Krona",
+        "japanese_name": "スウェーデンクローナ"
+    },
+    {
+        "symbol": "$",
+        "abbreviation": "sgd",
+        "name": "Singapore Dollar",
+        "japanese_name": "シンガポールドル"
+    },
+    {
+        "symbol": "฿",
+        "abbreviation": "thb",
+        "name": "Thai Baht",
+        "japanese_name": "タイバーツ"
+    },
+    {
+        "symbol": "₺",
+        "abbreviation": "try",
+        "name": "Turkish Lira",
+        "japanese_name": "トルコリラ"
+    },
+    {
+        "symbol": "NT$",
+        "abbreviation": "twd",
+        "name": "New Taiwan Dollar",
+        "japanese_name": "台湾ドル"
+    },
+    {
+        "symbol": "₴",
+        "abbreviation": "uah",
+        "name": "Ukrainian Hryvnia",
+        "japanese_name": "ウクライナグリブナ"
+    },
+    {
+        "symbol": "Bs",
+        "abbreviation": "vef",
+        "name": "Venezuelan Bolívar (pre-2018)",
+        "japanese_name": "ベネズエラボリバル（旧）"
+    },
+    {
+        "symbol": "₫",
+        "abbreviation": "vnd",
+        "name": "Vietnamese Đồng",
+        "japanese_name": "ベトナムドン"
+    },
+    {
+        "symbol": "R",
+        "abbreviation": "zar",
+        "name": "South African Rand",
+        "japanese_name": "南アフリカランド"
+    },
+    {
+        "symbol": "SDR",
+        "abbreviation": "xdr",
+        "name": "Special Drawing Rights",
+        "japanese_name": "特別引出権"
+    },
+    {
+        "symbol": "XAG",
+        "abbreviation": "xag",
+        "name": "Silver",
+        "japanese_name": "銀"
+    },
+    {
+        "symbol": "XAU",
+        "abbreviation": "xau",
+        "name": "Gold",
+        "japanese_name": "金"
+    }
+]

@@ -9,14 +9,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="ビットコイン（bitcoin, BTC）、サッツ（Sats, Sat, Satoshi）、日本円（JPY）、米ドル（USD）、ユーロ（EUR）の相互換算ツールです。最新の為替レートを取得し計算、瞬時に表示します。">
-
+        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨の相互換算ができるツールです。">
     <meta property="og:site_name" content="おいくらサッツ">
     <meta property="og:title" content="おいくらサッツ">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lokuyow.github.io/sats-rate/">
     <meta property="og:image" content="https://lokuyow.github.io/sats-rate/images/ogp.png">
-    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドル、ユーロの換算ツール">
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨換算ツール">
     <meta property="og:locale" content="ja_JP">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -77,11 +76,10 @@
 <body>
     <div class="main">
         <div class="bgcolor">
+
             <div class="title-flex">
-                <a class="title" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
-                    <svg width="224px" height="28.469px">
-                        <use xlink:href="./images/title.svg#a"></use>
-                    </svg>
+                <a class="title" href="https://lokuyow.github.io/sats-rate/">
+                    おいくらサッツ
                 </a>
                 <a class="icon" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
                     <img src="./images/icon_x192.png" alt="アイコン" width="70px" height="70px" />
@@ -107,66 +105,7 @@
                         </svg>
                     </div>
 
-                    <button class="currency-icons" id="copy-sats" data-currency="sats" aria-label="サッツの数値をコピー">
-                        <svg width="36px" height="36px">
-                            <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
-                        </svg>
-                    </button>
-                    <input class="currency-input" type="text" id="sats" aria-label="サッツの金額"
-                        oninput="window.satsRate.calculateValues('sats')" pattern="[0-9]+([\.,][0-9]+)?"
-                        inputmode="decimal">
-                    <button class="currency-units" id="paste-sats" data-currency="sats" aria-label="サッツの数値をペースト">
-                        sats
-                    </button>
-
-                    <button class="currency-icons" id="copy-btc" data-currency="btc" aria-label="ビットコインの数値をコピー">
-                        <svg width="36px" height="36px">
-                            <use xlink:href="./images/白抜きのビットコインアイコン.svg#a"></use>
-                        </svg>
-                    </button>
-                    <input class="currency-input" type="text" id="btc" aria-label="ビットコインの金額"
-                        oninput="window.satsRate.calculateValues('btc')" pattern="[0-9]+([\.,][0-9]+)?"
-                        inputmode="decimal">
-                    <button class="currency-units" id="paste-btc" data-currency="btc" aria-label="ビットコインの数値をペースト">
-                        BTC
-                    </button>
-
-                    <button class="currency-icons" id="copy-jpy" data-currency="jpy" aria-label="円の数値をコピー">
-                        <svg width="36px" height="36px">
-                            <use xlink:href="./images/白抜きの円アイコン.svg#a"></use>
-                        </svg>
-                    </button>
-                    <input class="currency-input" type="text" id="jpy" aria-label="日本円の金額"
-                        oninput="window.satsRate.calculateValues('jpy')" pattern="[0-9]+([\.,][0-9]+)?"
-                        inputmode="decimal">
-                    <button class="currency-units" id="paste-jpy" aria-label="円の数値をペースト">
-                        JPY
-                    </button>
-
-                    <button class="currency-icons" id="copy-usd" data-currency="usd" aria-label="USドルの数値をコピー">
-                        <svg width="36px" height="36px">
-                            <use xlink:href="./images/白抜きのドルアイコン.svg#a"></use>
-                        </svg>
-                    </button>
-                    <input class="currency-input" type="text" id="usd" aria-label="アメリカドルの金額"
-                        oninput="window.satsRate.calculateValues('usd')" pattern="[0-9]+([\.,][0-9]+)?"
-                        inputmode="decimal">
-                    <button class="currency-units" id="paste-usd" data-currency="usd" aria-label="USドルの数値をペースト">
-                        USD
-                    </button>
-
-                    <button class="currency-icons" id="copy-eur" data-currency="eur" aria-label="ユーロの数値をコピー">
-                        <svg width="36px" height="36px">
-                            <use xlink:href="./images/白抜きのユーロアイコン.svg#a"></use>
-                        </svg>
-                    </button>
-                    <input class="currency-input" type="text" id="eur" aria-label="ユーロの金額"
-                        oninput="window.satsRate.calculateValues('eur')" pattern="[0-9]+([\.,][0-9]+)?"
-                        inputmode="decimal">
-                    <button class="currency-units" id="paste-eur" data-currency="eur" aria-label="ユーロの数値をペースト">
-                        EUR
-                    </button>
-
+                    <div class="currency-inputs-container"></div>
 
                     <button id="update-prices" aria-label="価格の更新">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px"
@@ -176,6 +115,16 @@
                         </svg>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <div class="bgcolor">
+            <div class="subject">
+                通貨設定
+            </div>
+            <div class="setting-c">
+                <div id="currency-container"></div>
+                <button id="saveSelectedCurrencies">Save & Fetch Data</button>
             </div>
         </div>
 
@@ -246,8 +195,8 @@
                                 <div>EUR</div>
                             </div>
                         </div>
-                        <button class="lightning-invoice-close-button" id="lightning-invoice-close-button" value="cancel"
-                            formmethod="dialog">閉じる</button>
+                        <button class="lightning-invoice-close-button" id="lightning-invoice-close-button"
+                            value="cancel" formmethod="dialog">閉じる</button>
                     </div>
                 </dialog>
             </div>
@@ -321,7 +270,7 @@
                 おいくらサッツ とは
             </div>
             <div class="site-description">
-                サッツ<wbr>（Sats, Sat, Satoshi）、<wbr>ビットコイン<wbr>（bitcoin, BTC）、<wbr>日本円<wbr>（JPY）、<wbr>米ドル<wbr>（USD）、<wbr>ユーロ<wbr>（EUR）の<wbr>相互換算<wbr>ツール<wbr>です。
+                サッツ（Sats, Sat, Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
             </div>
             <div class="flex-unit-link">
                 <a class="unit-link" href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
@@ -348,14 +297,14 @@
                         <use xlink:href="./images/bolt-solid.svg#a"></use>
                     </svg>
                 </button>
-                <a class="zap-list"
+                <a class="zap-list no-color-change"
                     href="https://new.nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received"
                     target="_blank">Zap一覧
                     <svg width="24px" height="24px">
                         <use xlink:href="./images/list-ol-solid.svg#a"></use>
                     </svg>
                 </a>
-                <a class="zap-description" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
+                <a class="zap-description no-color-change" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
                     <svg width="22px" height="22px">
                         <use xlink:href="./images/magnifying-glass-solid.svg#a"></use>
                     </svg>
