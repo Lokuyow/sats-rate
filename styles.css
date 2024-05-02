@@ -65,7 +65,7 @@ button>* {
     }
 }
 
-.reverse-button {
+.reverse-btn {
     color: var(--main-text-color);
     background-color: var(--unit-bg-color);
 
@@ -80,7 +80,7 @@ button>* {
 }
 
 @media (hover: hover) {
-    .reverse-button:hover {
+    .reverse-btn:hover {
         background-color: var(--input-bg-color);
     }
 }
