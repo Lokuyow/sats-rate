@@ -32,10 +32,10 @@ async function initializeApp() {
     await currencyManager.loadCurrencies();
 
     // クエリパラメータから通貨設定と計算元の通貨とその値を読み込み
-    loadValuesFromQueryParams();
+    const hasQueryParams = loadValuesFromQueryParams();
 
     // クエリパラメータがない場合、デフォルト値を設定
-    if (!window.location.search) {
+    if (!hasQueryParams) {
         setDefaultValues();
     }
 
@@ -267,14 +267,6 @@ function handleInputFormatting(event) {
     const inputValue = values[currencyId];
     baseCurrencyValue = {};
     baseCurrencyValue[currencyId] = parseFloat(inputValue) || 0;
-
-    const queryString = generateQueryStringFromValues(values);
-
-    if (queryString) {
-        const currentUrl = new URL(window.location.href);
-        const newUrl = `${currentUrl.origin}${currentUrl.pathname}${queryString}`;
-        window.history.replaceState(null, '', newUrl);
-    }
 }
 
 //　ロケールから桁区切りと小数点の文字を取得
@@ -542,6 +534,10 @@ function showNotification(message, event, align = 'right') {
 // URLクエリパラメータ
 function loadValuesFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.toString()) {
+        return false;  // クエリパラメータが存在しない場合は false を返す
+    }
+
     selectedCurrencies = urlParams.get('currencies') ? urlParams.get('currencies').split(',') : [];
     baseCurrencyValue = {};
     const decimalFormat = urlParams.get('d') || 'p';
@@ -552,6 +548,13 @@ function loadValuesFromQueryParams() {
             baseCurrencyValue[key] = parseInput(value, locale);
         }
     });
+
+    // 処理後のURLからクエリパラメータを削除
+    const currentUrl = new URL(window.location.href);
+    const newUrl = `${currentUrl.origin}${currentUrl.pathname}`;
+    window.history.replaceState(null, '', newUrl);
+
+    return true;  // クエリパラメータが存在した場合は true を返す
 }
 
 function getQueryString(field, value) {
@@ -607,7 +610,7 @@ function generateCopyText(values) {
 // コピー用テキストの作成
 function getCurrencyText(key, value) {
     const symbol = currencyManager.currencySymbols[key] || ''; // 通貨記号を取得
-    const formattedValue = formatCurrency(value, key, selectedLocale,  false); // 通貨の値をフォーマット
+    const formattedValue = formatCurrency(value, key, selectedLocale, false); // 通貨の値をフォーマット
     // 通貨コードが "sats" の場合は大文字に変換しない
     const currencyCode = key === "sats" ? "sats" : key.toUpperCase();
     return `${symbol} ${formattedValue} ${currencyCode}`; // 通貨記号、フォーマットされた値、適切にフォーマットされた通貨コードを含むテキストを生成
