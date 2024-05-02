@@ -78,11 +78,9 @@
         <div class="bgcolor">
 
             <div class="title-flex">
-                <a class="title" href="https://lokuyow.github.io/sats-rate/">
-                    おいくらサッツ
-                </a>
-                <a class="icon" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
-                    <img src="./images/icon_x192.png" alt="アイコン" width="70px" height="70px" />
+                <a class="title-link" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
+                    <span class="title">おいくらサッツ</span>
+                    <img class="icon" src="./images/icon_x192.png" alt="アイコン" width="70px" height="70px" />
                 </a>
             </div>
 
@@ -133,7 +131,7 @@
                 POS
             </div>
             <div class="pos">
-                <button disabled id="show-invoice-dialog">⚡請求書を表示</button>
+                <button disabled class="normal-btn" id="show-invoice-dialog">⚡請求書を表示</button>
                 <br />
                 <dialog id="update-lightning-address-dialog">
                     <form id="lightning-address-form">
@@ -142,11 +140,11 @@
                                 class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$"
                                 maxlength="200" minlength="4" required title="ライトニングアドレスの形式で入力してください" />
                             <div>
-                                <button id="lightning-address-submit-button" type="submit"
+                                <button class="normal-btn" id="lightning-address-submit-button" type="submit"
                                     formmethod="dialog">設定する</button>
-                                <button id="lightning-address-clear-button" value="clear"
+                                <button class="normal-btn" id="lightning-address-clear-button" value="clear"
                                     formmethod="dialog">削除</button>
-                                <button id="lightning-address-close-button" value="cancel"
+                                <button class="normal-btn" id="lightning-address-close-button" value="cancel"
                                     formmethod="dialog">閉じる</button>
                             </div>
                         </label>
@@ -154,7 +152,8 @@
                 </dialog>
                 <p class="lightning-address">
                     <output id="lightning-address-output"></output>
-                    <button class="setting-btn" id="show-lightning-address-dialog" aria-label="受取ライトニングアドレスの設定">
+                    <button class="setting-btn normal-btn" id="show-lightning-address-dialog"
+                        aria-label="受取ライトニングアドレスの設定">
                         <svg width="24px" height="24px">
                             <use xlink:href="./images/settings-solid.svg#a"></use>
                         </svg>
@@ -195,7 +194,7 @@
                                 <div>EUR</div>
                             </div>
                         </div>
-                        <button class="lightning-invoice-close-button" id="lightning-invoice-close-button"
+                        <button class="lightning-invoice-close-button normal-btn" id="lightning-invoice-close-button"
                             value="cancel" formmethod="dialog">閉じる</button>
                     </div>
                 </dialog>
@@ -251,13 +250,17 @@
                 <div class="theme-DefaultValue">
                     現在の入力数値
                 </div>
-                <button id="saveDefaultValuesButton">デフォルトに設定</button>
+                <button class="normal-btn" id="saveDefaultValuesButton">
+                    デフォルトに設定
+                </button>
 
                 <div class="theme-ver">
                     Version&nbsp;<span id="siteVersion"></span>
                 </div>
-                <button id="checkForUpdateBtn">
-                    <span id="buttonText">更新をチェック</span>
+                <button class="normal-btn" id="checkForUpdateBtn">
+                    <span id="buttonText">
+                        更新をチェック
+                    </span>
                     <div class="spinner-wrapper">
                         <div class="spinner"></div>
                     </div>
@@ -270,7 +273,8 @@
                 おいくらサッツ とは
             </div>
             <div class="site-description">
-                サッツ（Sats, Sat, Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
+                サッツ（Sats, Sat,
+                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
             </div>
             <div class="flex-unit-link">
                 <a class="unit-link" href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
@@ -288,7 +292,7 @@
                 おいくらサッツ制作にZap
             </div>
             <div class="zap">
-                <button id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
+                <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
                     data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
                     data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly"
                     data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://relayable.org,wss://nos.lol,wss://nostr.bitcoiner.social,wss://yabu.me,wss://nostr-relay.nokotaro.com,wss://relay.nostr.wirednet.jp">
@@ -297,14 +301,14 @@
                         <use xlink:href="./images/bolt-solid.svg#a"></use>
                     </svg>
                 </button>
-                <a class="zap-list no-color-change"
+                <a class="zap-list normal-btn"
                     href="https://new.nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received"
                     target="_blank">Zap一覧
                     <svg width="24px" height="24px">
                         <use xlink:href="./images/list-ol-solid.svg#a"></use>
                     </svg>
                 </a>
-                <a class="zap-description no-color-change" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
+                <a class="zap-description normal-btn" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
                     <svg width="22px" height="22px">
                         <use xlink:href="./images/magnifying-glass-solid.svg#a"></use>
                     </svg>
@@ -317,50 +321,64 @@
                 おすすめサイト
             </div>
             <div class="links">
-                <a class="link-icon" href="https://bitcoin-zukan.com/" target="_blank">
-                    <img src="./images/bitcoin-zukan.png" alt="ビットコイン図鑑" width="32px" height="32px">
-                </a>
-                <a class="link-text" href="https://bitcoin-zukan.com/" target="_blank">
-                    ビットコイン図鑑
-                </a>
-
-                <a class="link-icon" href="https://lostinbitcoin.jp/" target="_blank">
-                    <img src="./images/fulgur-favicon.ico" alt="ロストイン・ビットコイン" width="32px" height="32px">
-                </a>
-                <a class="link-text" href="https://lostinbitcoin.jp/" target="_blank">
-                    ロストイン・ビットコイン
+                <a class="links-container normal-btn" href="https://bitcoin-zukan.com/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/bitcoin-zukan.png" alt="ビットコイン図鑑" width="32px" height="32px">
+                    </div>
+                    <div class="link-text">
+                        ビットコイン図鑑
+                    </div>
                 </a>
 
-                <a class="link-icon" href="https://getalby.com/" target="_blank">
-                    <img src="./images/alby_icon_head_yellow_48x48.svg" alt="Alby" width="32px" height="32px">
-                </a>
-                <a class="link-text" href="https://getalby.com/" target="_blank">
-                    Alby
-                </a>
-
-                <a class="link-icon" href="https://btcmap.org/" target="_blank">
-                    <img src="./images/btcmap-logo.svg" alt="BTC Map" width="32px" height="38px">
-                </a>
-                <a class="link-text" href="https://btcmap.org/" target="_blank">
-                    BTC Map
+                <a class="normal-btn" href="https://lostinbitcoin.jp/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/fulgur-favicon.ico" alt="ロストイン・ビットコイン" width="32px" height="32px">
+                    </div>
+                    <div class="link-text">
+                        ロストイン・ビットコイン
+                    </div>
                 </a>
 
-                <a class="link-icon" href="https://learn.robosats.com/" target="_blank">
-                    <img src="./images/robosats-favicon.ico" alt="RoboSats" width="32px" height="32px">
-                </a>
-                <a class="link-text" href="https://learn.robosats.com/" target="_blank">
-                    RoboSats
+                <a class="normal-btn" href="https://getalby.com/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/alby_icon_head_yellow_48x48.svg" alt="Alby" width="32px" height="32px">
+                    </div>
+                    <div class="link-text">
+                        Alby
+                    </div>
                 </a>
 
-                <a class="link-icon" href="https://mempool.space/" target="_blank">
-                    <img src="./images/mempool-favicon.ico" alt="mempool.space" width="32px" height="32px">
+                <a class="normal-btn" href="https://btcmap.org/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/btcmap-logo.svg" alt="BTC Map" width="32px" height="38px">
+                    </div>
+                    <div class="link-text">
+                        BTC Map
+                    </div>
                 </a>
-                <a class="link-text" href="https://mempool.space/" target="_blank">
-                    mempool.space
+
+                <a class="normal-btn" href="https://learn.robosats.com/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/robosats-favicon.ico" alt="RoboSats" width="32px" height="32px">
+                    </div>
+                    <div class="link-text">
+                        RoboSats
+                    </div>
+                </a>
+
+                <a class="normal-btn" href="https://mempool.space/" target="_blank">
+                    <div class="link-icon">
+                        <img src="./images/mempool-favicon.ico" alt="mempool.space" width="32px" height="32px">
+                    </div>
+                    <div class="link-text">
+                        mempool.space
+                    </div>
                 </a>
             </div>
         </div>
+
         <div id="notification"></div>
+
     </div>
 
     <div class="flex-ref">
