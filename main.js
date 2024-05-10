@@ -1,5 +1,5 @@
-import { CurrencyManager } from './lib/currencyManager.js';
-const currencyManager = new CurrencyManager();
+import { currencyManager } from './lib/currencyManager.js';
+
 const BASE_URL = "https://lokuyow.github.io/sats-rate/";
 const dateTimeFormatOptions = {
     year: 'numeric',
@@ -42,16 +42,10 @@ async function initializeApp() {
     await currencyManager.fetchCurrencyData(selectedCurrencies);
 
     // UIを更新
-    currencyManager.generateCurrencyCheckboxes();
-    currencyManager.updateCheckboxStates(selectedCurrencies);
     currencyManager.updateCurrencyInputs(selectedCurrencies);
 
     // inputs変数を更新
     currencyInputFields = selectedCurrencies.map(id => document.getElementById(id));
-
-    // 保存ボタンのイベントリスナーを設定
-    const saveButton = document.getElementById('saveSelectedCurrencies');
-    saveButton.addEventListener('click', () => currencyManager.saveSelectedCurrencies());
 
     // その他の初期化処理
     await registerAndHandleServiceWorker();
@@ -133,7 +127,7 @@ async function handleOnline() {
 export function setDefaultValues() {
     // ローカルストレージから値を読み込む
     selectedCurrencies = JSON.parse(localStorage.getItem('selectedCurrenciesLS')) || [];
-    baseCurrencyValue = JSON.parse(localStorage.getItem('defaultValueLS')) || {};
+    baseCurrencyValue = JSON.parse(localStorage.getItem('baseCurrencyValueLS')) || {};
 
     if (!selectedCurrencies.length && !Object.keys(baseCurrencyValue).length) {
         // selectedCurrencies と baseCurrencyValue が両方空の場合
@@ -172,7 +166,7 @@ function saveCurrentValuesAsDefault(event) {
         currentValues[lastUpdatedField] = sanitizedValue;
     }
 
-    localStorage.setItem('defaultValueLS', JSON.stringify(currentValues));
+    localStorage.setItem('baseCurrencyValueLS', JSON.stringify(currentValues));
 
     showNotification('設定完了', event);
 }

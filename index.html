@@ -116,16 +116,6 @@
             </div>
         </div>
 
-        <div class="bgcolor">
-            <div class="subject">
-                通貨設定
-            </div>
-            <div class="setting-c">
-                <div id="currency-container"></div>
-                <button id="saveSelectedCurrencies">Save & Fetch Data</button>
-            </div>
-        </div>
-
         <div class="bgcolor pos-wrapper">
             <div class="subject">
                 POS
@@ -247,19 +237,26 @@
                     <span class="slider round"></span>
                 </label>
 
-                <div class="theme-DefaultValue">
-                    現在の入力数値
+                <div>
+                    通貨
                 </div>
-                <button class="normal-btn" id="saveDefaultValuesButton">
-                    デフォルトに設定
+                <a class="settings-btn normal-btn" href="currency-selection.html">
+                    変更する
+                </a>
+
+                <div class="theme-DefaultValue">
+                    現在の入力値
+                </div>
+                <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
+                    デフォルトに設定する
                 </button>
 
                 <div class="theme-ver">
                     Version&nbsp;<span id="siteVersion"></span>
                 </div>
-                <button class="normal-btn" id="checkForUpdateBtn">
+                <button class="settings-btn normal-btn" id="checkForUpdateBtn">
                     <span id="buttonText">
-                        更新をチェック
+                        更新をチェックする
                     </span>
                     <div class="spinner-wrapper">
                         <div class="spinner"></div>

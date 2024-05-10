@@ -1,5 +1,4 @@
 :root {
-    color-scheme: light dark;
     --main-font: -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
     --accent-color: #F7931A;
     --base-color: #D14765;
@@ -48,6 +47,7 @@ button>* {
 .normal-btn {
     color: var(--main-text-color);
     background-color: var(--input-bg-color);
+    text-decoration: none;
 
     &:hover {
         color: var(--main-text-color);
@@ -437,7 +437,7 @@ svg#icon {
 .grid-settings {
     display: grid;
     grid-template-columns: 120px minmax(200px, 330px);
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     justify-content: center;
     align-items: center;
     gap: 6px 18px;
@@ -448,27 +448,17 @@ svg#icon {
     text-align: right;
 }
 
-#saveDefaultValuesButton {
-    font-size: 1rem;
-    font-weight: bold;
-    border: 0;
-    cursor: pointer;
-    border-radius: 6px;
-    height: 42px;
-    line-height: 42px;
-    padding: 0;
-}
-
-#checkForUpdateBtn {
+.settings-btn {
     position: relative;
+    text-align: center;
     font-size: 1rem;
     font-weight: bold;
     border: 0;
     cursor: pointer;
-    min-width: 160px;
-    height: 42px;
-    line-height: 42px;
     border-radius: 6px;
+    height: 52px;
+    line-height: 52px;
+    min-width: 160px;
     padding: 0;
 }
 
@@ -689,9 +679,97 @@ input:checked+.slider:before {
     white-space: nowrap;
 }
 
+@font-face {
+    font-family: 'NotoColorEmoji-Regular';
+    src: url('./fonts/NotoColorEmoji-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.currency-selection .bgcolor {
+    max-width: 800px;
+    padding-bottom: 80px;
+}
+
+#currency-container {
+    display: grid;
+    grid-template-columns: auto minmax(22px, 56px) minmax(42px, 48px) auto;
+    grid-auto-rows: 40px;
+    line-height: 40px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.currency-row {
+    display: contents;
+}
+
+.currency-selection-checkbox {
+    height: 17px;
+    width: 17px;
+    margin: 0;
+    margin-bottom: 1px;
+}
+
+.currency-selection-emojiLabel {
+    display: flex;
+    justify-content: flex-end;
+    font-family: 'NotoColorEmoji-Regular';
+    border-bottom: solid 1px var(--sub-bg-color);
+    height: 100%;
+    width: 100%;
+    padding-right: 14px;
+    & img {
+        height: 19px;
+        width: auto;
+        margin: auto 0;
+    }
+}
+
+.currency-selection-abbreviationLabel {
+    justify-self: start;
+    border-bottom: solid 1px var(--sub-bg-color);
+    height: 100%;
+    width: 100%;
+}
+
+.currency-selection-name {
+    justify-self: start;
+    border-bottom: solid 1px var(--sub-bg-color);
+    height: 100%;
+    width: 100%;
+}
+
+.saveSelectedCurrencies-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--sub-bg-color);
+    padding: 10px 0;
+}
+
+#saveSelectedCurrenciesBtn {
+    font-size: large;
+    color: #fff;
+    cursor: pointer;
+    background-color: var(--two-color);
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 10px;
+    padding: 0;
+}
+
 /* ダークモード設定 */
 @media (prefers-color-scheme: light) {
     :root {
+        color-scheme: light;
         --two-color: var(--accent-color);
         --two-color-r: var(--base-color);
         --input-text-color: #000000;
@@ -706,6 +784,7 @@ input:checked+.slider:before {
     }
 
     :root[data-theme="dark"] {
+        color-scheme: dark;
         --two-color: var(--base-color);
         --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
@@ -722,6 +801,7 @@ input:checked+.slider:before {
 
 @media (prefers-color-scheme: dark) {
     :root {
+        color-scheme: dark;
         --two-color: var(--base-color);
         --two-color-r: var(--accent-color);
         --input-text-color: #FFFFFF;
@@ -736,6 +816,7 @@ input:checked+.slider:before {
     }
 
     :root[data-theme="light"] {
+        color-scheme: light;
         --two-color: var(--accent-color);
         --two-color-r: var(--base-color);
         --input-text-color: #000000;

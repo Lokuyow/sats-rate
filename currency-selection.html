@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通貨設定</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+
+    <script>
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const getInitialTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            return prefersDarkScheme.matches ? 'dark' : 'light';
+        };
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+        };
+
+        setTheme(getInitialTheme());
+    </script>
+</head>
+
+<body class="currency-selection">
+    <div class="main">
+        <div class="bgcolor">
+            <div id="currency-container"></div>
+        </div>
+    </div>
+
+    <div class="saveSelectedCurrencies-container">
+        <button id="saveSelectedCurrenciesBtn">
+            Save
+        </button>
+    </div>
+
+    <script type="module" src="./lib/currencySelection.js"></script>
+</body>
+
+</html>

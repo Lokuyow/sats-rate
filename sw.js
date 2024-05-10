@@ -1,14 +1,17 @@
 const urlsToCache = [
     './index.html',
+    './currency-selection.html',
     './styles.css',
     './main.js',
     './lib/currencyManager.js',
+    './lib/currencySelection.js',
     './lib/lightning-address.js',
     './lib/pos.js',
     './lib/currencies.json',
     './manifest.json',
     './fonts/MPLUSRounded1c-Medium.ttf',
     './fonts/MPLUSRounded1c-Bold.ttf',
+    './fonts/NotoColorEmoji-Regular.ttf',
     './favicons/favicon.ico',
     './images/icon_x192.png',
     './images/icon_x512.png',
@@ -32,7 +35,20 @@ const urlsToCache = [
     './images/moon-regular.svg',
     './images/angle-down-solid.svg',
     './images/settings-solid.svg',
-    './images/bitcoin-icon.svg'
+    './images/bitcoin-icon.svg',
+    './images/currency-icons/btc.png',
+    './images/currency-icons/eth.png',
+    './images/currency-icons/ltc.png',
+    './images/currency-icons/bch.png',
+    './images/currency-icons/bnb.png',
+    './images/currency-icons/eos.png',
+    './images/currency-icons/xrp.png',
+    './images/currency-icons/xlm.png',
+    './images/currency-icons/link.png',
+    './images/currency-icons/dot.png',
+    './images/currency-icons/yfi.png',
+    './images/currency-icons/silver-icon.png',
+    './images/currency-icons/gold-icon.png'
 ];
 
 const VERSION = '1.43';
