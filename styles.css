@@ -223,14 +223,14 @@ button>* {
 
 @font-face {
     font-family: 'MPLUSRounded1c-Medium';
-    src: url('./fonts/MPLUSRounded1c-Medium.ttf') format('truetype');
+    src: url('./fonts/MPLUSRounded1c-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'MPLUSRounded1c-Bold';
-    src: url('./fonts/MPLUSRounded1c-Bold.ttf') format('truetype');
+    src: url('./fonts/MPLUSRounded1c-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
 }
@@ -679,7 +679,7 @@ input:checked+.slider:before {
 
 @font-face {
     font-family: 'NotoColorEmoji-Regular';
-    src: url('./fonts/NotoColorEmoji-Regular.ttf') format('truetype');
+    src: url('./fonts/NotoColorEmoji-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
