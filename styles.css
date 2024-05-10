@@ -47,6 +47,8 @@ button>* {
 .normal-btn {
     color: var(--main-text-color);
     background-color: var(--input-bg-color);
+    border: none;
+    border-radius: 6px;
     text-decoration: none;
 
     &:hover {
@@ -455,7 +457,6 @@ svg#icon {
     font-weight: bold;
     border: 0;
     cursor: pointer;
-    border-radius: 6px;
     height: 52px;
     line-height: 52px;
     min-width: 160px;
@@ -529,7 +530,6 @@ svg#icon {
     font-size: 1rem;
     font-weight: bold;
     border: 0;
-    border-radius: 6px;
     cursor: pointer;
     height: 52px;
     width: 80px;
@@ -553,7 +553,6 @@ svg#icon {
     font-weight: bold;
     text-decoration: none;
     border: 0;
-    border-radius: 6px;
     cursor: pointer;
     height: 52px;
     width: 123px;
@@ -572,7 +571,6 @@ svg#icon {
     & a {
         display: flex;
         text-decoration: none;
-        border-radius: 6px;
         height: 54px;
         width: 100%;
         max-width: 480px;
@@ -721,6 +719,7 @@ input:checked+.slider:before {
     height: 100%;
     width: 100%;
     padding-right: 14px;
+
     & img {
         height: 19px;
         width: auto;
@@ -754,6 +753,7 @@ input:checked+.slider:before {
 
 #saveSelectedCurrenciesBtn {
     font-size: large;
+    font-weight: 500;
     color: #fff;
     cursor: pointer;
     background-color: var(--two-color);
@@ -765,6 +765,23 @@ input:checked+.slider:before {
     margin: 0 10px;
     padding: 0;
 }
+
+.checkBtn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: -8px;
+    margin-bottom: 16px;
+
+    & button {
+        font-size: 1rem;
+        font-weight: 500;
+        height: 40px;
+        width: 100%;
+        max-width: 162px;
+        margin: 0 3px;
+    }
+}
+
 
 /* ダークモード設定 */
 @media (prefers-color-scheme: light) {
@@ -845,7 +862,6 @@ input:checked+.slider:before {
     font-weight: bold;
     border: 0;
     cursor: pointer;
-    border-radius: 6px;
     height: 42px;
     line-height: 42px;
     padding: 0 1em;
