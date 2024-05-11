@@ -195,32 +195,40 @@
             <div class="subject">
                 SNSに計算結果を共有
             </div>
-            <div class="sns">
-                <a href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
-                    <svg width="38px" height="38px">
-                        <use xlink:href="./images/square-x-twitter.svg#a"></use>
-                    </svg>
-                </a>
-                <a href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
-                    <svg width="38px" height="38px">
-                        <use xlink:href="./images/nostr-icon-purple-on-white.svg#a"></use>
-                    </svg>
-                </a>
-                <a href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
-                    <svg width="38px" height="38px">
-                        <use xlink:href="./images/cloud-solid.svg#a"></use>
-                    </svg>
-                </a>
-                <button id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
-                    <svg width="35px" height="35px">
-                        <use xlink:href="./images/share-nodes-solid.svg#a"></use>
-                    </svg>
-                </button>
-                <button id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
-                    <svg width="34px" height="34px">
-                        <use xlink:href="./images/clipboard-solid.svg#a"></use>
-                    </svg>
-                </button>
+            <div class="sns-share-container">
+                <div>
+
+                    <a class="normal-btn" href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
+                        <svg width="32px" height="32px">
+                            <use xlink:href="./images/square-x-twitter.svg#a"></use>
+                        </svg>
+                    </a>
+
+                    <a class="normal-btn" href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
+                        <svg width="32px" height="32px">
+                            <use xlink:href="./images/nostr-icon-purple-on-white.svg#a"></use>
+                        </svg>
+                    </a>
+
+                    <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
+                        <svg width="32px" height="32px">
+                            <use xlink:href="./images/cloud-solid.svg#a"></use>
+                        </svg>
+                    </a>
+
+                    <button class="normal-btn" id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
+                        <svg width="30px" height="30px">
+                            <use xlink:href="./images/share-nodes-solid.svg#a"></use>
+                        </svg>
+                    </button>
+
+                    <button class="normal-btn" id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
+                        <svg width="29px" height="29px">
+                            <use xlink:href="./images/clipboard-solid.svg#a"></use>
+                        </svg>
+                    </button>
+                    
+                </div>
             </div>
         </div>
 
