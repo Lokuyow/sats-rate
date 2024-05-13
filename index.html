@@ -57,17 +57,18 @@
 
         const setTheme = (theme) => {
             document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
         };
 
         setTheme(getInitialTheme());
 
         window.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.querySelector('.switch input');
+            const themeToggle = document.querySelector('.theme-switch input');
             themeToggle.checked = document.documentElement.getAttribute('data-theme') === 'light';
 
             themeToggle.addEventListener('change', () => {
-                setTheme(themeToggle.checked ? 'light' : 'dark');
+                const newTheme = themeToggle.checked ? 'light' : 'dark';
+                setTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
             });
         });
     </script>
@@ -79,7 +80,7 @@
 
             <div class="title-flex">
                 <a class="title-link" href="https://lokuyow.github.io/sats-rate/" aria-label="おいくらサッツ">
-                    <span class="title">おいくらサッツ</span>
+                    <h1 class="title">おいくらサッツ</h1>
                     <img class="icon" src="./images/icon_x192.png" alt="アイコン" width="70px" height="70px" />
                 </a>
             </div>
@@ -117,9 +118,9 @@
         </div>
 
         <div class="bgcolor pos-wrapper">
-            <div class="subject">
+            <h2 class="subject">
                 POS
-            </div>
+            </h2>
             <div class="pos">
                 <button disabled class="normal-btn" id="show-invoice-dialog">⚡請求書を表示</button>
                 <br />
@@ -192,9 +193,9 @@
         </div>
 
         <div class="bgcolor">
-            <div class="subject">
+            <h2 class="subject">
                 SNSに計算結果を共有
-            </div>
+            </h2>
             <div class="sns-share-container">
                 <div>
 
@@ -227,23 +228,31 @@
                             <use xlink:href="./images/clipboard-solid.svg#a"></use>
                         </svg>
                     </button>
-                    
+
                 </div>
             </div>
         </div>
 
         <div class="bgcolor">
-            <div class="subject">
+            <h2 class="subject">
                 設定
-            </div>
+            </h2>
             <div class="grid-settings">
-                <div class="theme-dark">
-                    ダーク / ライト
+
+                <div>
+                    テーマ
                 </div>
-                <label class="switch">
-                    <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
-                    <span class="slider round"></span>
-                </label>
+                <div class="theme-switch-container"><svg width="30px" height="30px">
+                        <use xlink:href="./images/moon-regular.svg#a"></use>
+                    </svg>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
+                        <span class="slider round"></span>
+                    </label>
+                    <svg width="26px" height="26px">
+                        <use xlink:href="./images/sun-regular.svg#a"></use>
+                    </svg>
+                </div>
 
                 <div>
                     通貨
@@ -270,32 +279,14 @@
                         <div class="spinner"></div>
                     </div>
                 </button>
+
             </div>
         </div>
 
         <div class="bgcolor">
-            <div class="subject">
-                おいくらサッツ とは
-            </div>
-            <div class="site-description">
-                サッツ（Sats, Sat,
-                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
-            </div>
-            <div class="flex-unit-link">
-                <a class="unit-link" href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
-                    Sats,Sat,Satoshi (単位)
-                </a>
-            </div>
-            <div class="table">
-                1億 sats = 1 BTC<br>
-                1 sat = 0.00000001 BTC
-            </div>
-        </div>
-
-        <div class="bgcolor">
-            <div class="subject">
+            <h2 class="subject">
                 おいくらサッツ制作にZap
-            </div>
+            </h2>
             <div class="zap">
                 <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
                     data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
@@ -322,9 +313,9 @@
         </div>
 
         <div class="bgcolor">
-            <div class="subject">
+            <h2 class="subject">
                 おすすめサイト
-            </div>
+            </h2>
             <div class="links">
                 <a class="links-container normal-btn" href="https://bitcoin-zukan.com/" target="_blank">
                     <div class="link-icon">
@@ -386,12 +377,30 @@
 
     </div>
 
-    <div class="flex-ref">
+    <div class="footer-container">
+
+        <div class="site-description-container">
+            <h3>おいくらサッツ とは</h3>
+            <p>
+                サッツ（Sats, Sat,
+                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
+            </p>
+            <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
+                Sats,Sat,Satoshi (単位)
+            </a>
+            <p>
+                1億 sats = 1 BTC<br>
+                1 sat = 0.00000001 BTC
+            </p>
+        </div>
+
         <div class="reference">
-            サイト制作：<a href="https://lokuyow.github.io" target="_blank">ロクヨウ</a><br>
-            貢献：<a href="https://ocknamo.com/" target="_blank">ocknamo</a><br>
-            ソースコード：<a href="https://github.com/Lokuyow/sats-rate" target="_blank">GitHub</a><br>
-            データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a><br>
+            <p>
+                サイト制作：<a href="https://lokuyow.github.io" target="_blank">ロクヨウ</a><br>
+                貢献：<a href="https://ocknamo.com/" target="_blank">ocknamo</a><br>
+                ソースコード：<a href="https://github.com/Lokuyow/sats-rate" target="_blank">GitHub</a><br>
+                データ提供：<a href="https://www.coingecko.com" target="_blank">CoinGecko</a><br>
+            </p>
         </div>
     </div>
 

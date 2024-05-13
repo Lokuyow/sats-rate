@@ -1,5 +1,5 @@
 :root {
-    --main-font: -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
+    --main-font: RoundedMplus1c, -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
     --accent-color: #F7931A;
     --base-color: #D14765;
     --sub-color: #FAD102;
@@ -46,6 +46,7 @@ button>* {
 
 .normal-btn {
     cursor: pointer;
+    font-weight: 500;
     color: var(--main-text-color);
     background-color: var(--input-bg-color);
     border: none;
@@ -58,35 +59,42 @@ button>* {
 
     &:active {
         color: var(--main-text-color);
-        background-color: var(--unit-bg-color);
+        background-color: var(--hover-color);
     }
 }
 
 @media (hover: hover) {
     .normal-btn:hover {
-        background-color: var(--unit-bg-color);
+        background-color: var(--hover-color);
     }
 }
 
-.reverse-btn {
-    cursor: pointer;
-    color: var(--main-text-color);
-    background-color: var(--unit-bg-color);
-
-    &:hover {
-        color: var(--main-text-color);
-    }
-
-    &:active {
-        color: var(--main-text-color);
-        background-color: var(--input-bg-color);
-    }
+@font-face {
+    font-family: 'RoundedMplus1c';
+    src: url('./fonts/RoundedMplus1c-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
-@media (hover: hover) {
-    .reverse-btn:hover {
-        background-color: var(--input-bg-color);
-    }
+@font-face {
+    font-family: 'RoundedMplus1c';
+    src: url('./fonts/RoundedMplus1c-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RoundedMplus1c';
+    src: url('./fonts/RoundedMplus1c-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NotoColorEmoji-Regular';
+    src: url('./fonts/NotoColorEmoji-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
 .main {
@@ -100,23 +108,24 @@ button>* {
     background-color: var(--main-bg-color);
     width: 100%;
     max-width: 800px;
-    margin: 0 0 4px 0;
-    padding: 24px 0 38px 0;
+    margin-bottom: 4px;
+    padding-bottom: 40px;
 }
 
 .subject {
     color: var(--subject-text-color);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: bold;
     text-align: center;
-    margin: 6px 0 22px 0;
+    margin-top: 16px;
+    margin-bottom: 32px;
 }
 
 .title-flex {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: -14px 0 14px 0;
+    margin: 10px 0 16px 0;
     padding: 0;
 
     & .title-link {
@@ -125,15 +134,16 @@ button>* {
         text-decoration: none;
         color: var(--main-text-color);
         border-radius: 6px;
-        padding: 12px 26px;
+        padding: 0 26px;
 
         &:hover {
             background-color: var(--input-bg-color);
         }
 
         .title {
-            font-family: 'MPLUSRounded1c-Medium', 'Roboto', Arial, 'Noto Sans', sans-serif;
+            font-family: 'RoundedMplus1c', 'Roboto', Arial, 'Noto Sans', sans-serif;
             font-size: 2.1rem;
+            font-weight: 500;
             text-decoration: none;
         }
 
@@ -157,7 +167,7 @@ button>* {
     display: grid;
     grid-template-columns: 56px auto 56px;
     grid-template-rows: 32px 1fr 44px;
-    row-gap: 6px;
+    row-gap: 4px;
     align-items: center;
     width: auto;
     max-width: 32rem;
@@ -169,7 +179,7 @@ button>* {
     display: grid;
     grid-template-columns: 56px auto 56px;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    row-gap: 6px;
+    row-gap: 4px;
     align-items: center;
     max-width: 32rem;
     margin: 0;
@@ -223,25 +233,12 @@ button>* {
     color: var(--main-text-color);
 }
 
-@font-face {
-    font-family: 'MPLUSRounded1c-Medium';
-    src: url('./fonts/MPLUSRounded1c-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'MPLUSRounded1c-Bold';
-    src: url('./fonts/MPLUSRounded1c-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-}
-
 .currency-icons {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'MPLUSRounded1c-Medium', 'Roboto', Arial, 'Noto Sans', sans-serif;
+    font-family: 'RoundedMplus1c', 'Roboto', Arial, 'Noto Sans', sans-serif;
+    font-weight: 500;
     font-size: 1.4rem;
     border: 0;
     border-right: 0;
@@ -304,7 +301,7 @@ svg#icon {
 
 @media (hover: hover) {
     .currency-input:hover {
-        background-color: var(--unit-bg-color);
+        background-color: var(--hover-color);
     }
 }
 
@@ -313,8 +310,14 @@ svg#icon {
     border: 2px solid var(--input-bg-color);
     border-right: 0;
 
-    &:hover {
-        background-color: var(--main-bg-color);
+    /* &:hover {
+        background-color: var(--hover-color3);
+    } */
+}
+
+@media (hover: hover) {
+    .last-input-field:hover {
+        background-color: var(--hover-color3);
     }
 }
 
@@ -349,8 +352,9 @@ svg#icon {
 }
 
 .currency-units {
+    background-color: var(--unit-bg-color);
     font-size: 1.15rem;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
     align-self: center;
     padding: 0 3px 0 0;
@@ -359,8 +363,17 @@ svg#icon {
     border-radius: 0 6px 6px 0;
     width: 100%;
     height: 100%;
+
+    &:active {
+        background-color: var(--hover-color2);
+    }
 }
 
+@media (hover: hover) {
+    .currency-units:hover {
+        background-color: var(--hover-color2);
+    }
+}
 
 #update-prices {
     visibility: hidden;
@@ -417,7 +430,7 @@ svg#icon {
 .sns-share-container {
     display: flex;
     justify-content: center;
-    margin: 0 18px;
+    margin: 0 12px;
 
     & div {
         display: flex;
@@ -439,20 +452,20 @@ svg#icon {
         & .normal-btn {
             display: flex;
             justify-content: center;
-            height: 54px;
-            width: 54px;
+            height: 50px;
+            width: 60px;
         }
     }
 }
 
 .grid-settings {
     display: grid;
-    grid-template-columns: 120px minmax(200px, 330px);
-    grid-template-rows: auto auto auto auto;
+    grid-template-columns: 100px minmax(200px, 330px);
+    grid-auto-rows: auto;
     justify-content: center;
     align-items: center;
-    gap: 6px 18px;
-    margin: 0 26px;
+    gap: 4px 14px;
+    margin: 0 12px;
 }
 
 .grid-settings>*:nth-child(2n+1) {
@@ -463,10 +476,9 @@ svg#icon {
     position: relative;
     text-align: center;
     font-size: 1rem;
-    font-weight: bold;
     border: 0;
-    height: 52px;
-    line-height: 52px;
+    height: 50px;
+    line-height: 50px;
     min-width: 160px;
     padding: 0;
 }
@@ -498,31 +510,6 @@ svg#icon {
     animation: spin 1s linear infinite;
 }
 
-.site-description {
-    font-size: 1rem;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-    max-width: 530px;
-    margin: auto;
-    padding: 0 20px;
-}
-
-.flex-unit-link {
-    display: flex;
-    justify-content: center;
-
-    .unit-link {
-        font-size: 1.07rem;
-        margin: 20px 0 6px 0;
-    }
-}
-
-.table {
-    display: flex;
-    justify-content: center;
-    font-size: 1rem;
-}
-
 .zap {
     display: flex;
     justify-content: space-evenly;
@@ -536,9 +523,8 @@ svg#icon {
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    font-weight: bold;
     border: 0;
-    height: 52px;
+    height: 54px;
     width: 80px;
     padding: 0;
 
@@ -557,7 +543,6 @@ svg#icon {
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    font-weight: bold;
     text-decoration: none;
     border: 0;
     height: 52px;
@@ -572,7 +557,7 @@ svg#icon {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 18px;
+    margin: 0 12px;
 
     & a {
         display: flex;
@@ -580,7 +565,7 @@ svg#icon {
         height: 54px;
         width: 100%;
         max-width: 480px;
-        margin: 3px 0;
+        margin-bottom: 4px;
 
         & .link-icon {
             display: flex;
@@ -593,34 +578,88 @@ svg#icon {
         & .link-text {
             display: flex;
             align-items: center;
-            font-weight: bold;
             height: auto;
         }
     }
 }
 
-.flex-ref {
+.footer-container {
     display: flex;
-    justify-content: flex-end;
-    margin: 14px 18px 14px 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 824px;
+    margin: auto;
+    padding: 12px;
+}
+
+.site-description-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-right: auto;
+    padding-right: 24px;
+
+    & h3 {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    & p {
+        font-size: 0.8rem;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        max-width: 420px;
+        margin: 0;
+    }
+
+    & a {
+        font-size: 1rem;
+        margin-top: 12px;
+    }
 }
 
 .reference {
-    text-align: right;
-    font-size: 0.85rem;
-    width: 100%;
+    margin-top: auto;
+    margin-left: auto;
+    padding-top: 12px;
+
+    & p {
+        text-align: right;
+        font-size: 12px;
+        margin: 0;
+    }
 }
 
 /* ダークモード切り替えボタン */
-.switch {
+.theme-switch-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 2px;
+
+    &>:nth-child(1) {
+        justify-self: end;
+        margin-right: 13px;
+        margin-top: 1px;
+    }
+
+    &>:nth-child(3) {
+        justify-self: start;
+        margin-left: 14px;
+    }
+}
+
+.theme-switch {
     position: relative;
     display: inline-block;
     justify-self: center;
-    width: 66px;
-    height: 34px;
+    width: 80px;
+    height: 38px;
 }
 
-.switch input {
+.theme-switch input {
     opacity: 0;
     width: 0;
     height: 0;
@@ -633,16 +672,12 @@ svg#icon {
     right: 0;
     bottom: 0;
     cursor: pointer;
-    background-repeat: no-repeat;
     transition: 0.4s;
-    background-image: url('./images/moon-regular.svg');
-    background-position: right 8px center;
-    background-size: 16px;
-    background-color: var(--base-color);
+    background-color: var(--svg-color);
 }
 
 .slider.round {
-    border-radius: 34px;
+    border-radius: 20px;
 }
 
 .slider.round:before {
@@ -652,23 +687,21 @@ svg#icon {
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 30px;
+    width: 30px;
     left: 4px;
     bottom: 4px;
-    background-color: #FFFFFF;
+    background-color: var(--input-bg-color);
     transition: 0.4s;
 }
 
 input:checked+.slider {
-    background-image: url('./images/sun-regular.svg');
     background-position: left 9px center;
     background-size: 18px;
-    background-color: var(--accent-color);
 }
 
 input:checked+.slider:before {
-    transform: translateX(32px);
+    transform: translateX(40px);
 }
 
 /* ポップアップ通知 */
@@ -677,17 +710,10 @@ input:checked+.slider:before {
     visibility: hidden;
     color: var(--main-text-color);
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 500;
     background-color: var(--unit-bg-color);
     padding: 10px;
     white-space: nowrap;
-}
-
-@font-face {
-    font-family: 'NotoColorEmoji-Regular';
-    src: url('./fonts/NotoColorEmoji-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
 }
 
 .currency-selection .bgcolor {
@@ -708,6 +734,7 @@ input:checked+.slider:before {
 
 .currency-row {
     display: contents;
+    cursor: pointer;
 }
 
 .currency-selection-checkbox {
@@ -775,7 +802,7 @@ input:checked+.slider:before {
 .checkBtn-container {
     display: flex;
     justify-content: center;
-    margin-top: -8px;
+    margin-top: 10px;
     margin-bottom: 16px;
 
     & button {
@@ -784,7 +811,7 @@ input:checked+.slider:before {
         height: 40px;
         width: 100%;
         max-width: 162px;
-        margin: 0 3px;
+        margin: 0 2px;
     }
 }
 
@@ -798,12 +825,15 @@ input:checked+.slider:before {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
-        --subject-text-color: #666666;
+        --subject-text-color: #6B6B6B;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F0F0F0;
         --unit-bg-color: #E0E0E0;
-        --invalid-color: #D6D6D6;
+        --hover-color: #E0E0E0;
+        --hover-color2: #D1D1D1;
+        --hover-color3: #F7F7F7;
+        --invalid-color: #D1D1D1;
     }
 
     :root[data-theme="dark"] {
@@ -813,12 +843,15 @@ input:checked+.slider:before {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
-        --subject-text-color: #BFBFBF;
-        --main-bg-color: #1F1F1F;
-        --sub-bg-color: #333333;
-        --input-bg-color: #333333;
-        --unit-bg-color: #424242;
-        --invalid-color: #545454;
+        --subject-text-color: #B8B8B8;
+        --main-bg-color: #1A1A1A;
+        --sub-bg-color: #2E2E2E;
+        --input-bg-color: #2E2E2E;
+        --unit-bg-color: #3D3D3D;
+        --hover-color: #3D3D3D;
+        --hover-color2: #4D4D4D;
+        --hover-color3: #242424;
+        --invalid-color: #4D4D4D;
     }
 }
 
@@ -830,12 +863,15 @@ input:checked+.slider:before {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
-        --subject-text-color: #BFBFBF;
-        --main-bg-color: #1F1F1F;
-        --sub-bg-color: #333333;
-        --input-bg-color: #333333;
-        --unit-bg-color: #424242;
-        --invalid-color: #545454;
+        --subject-text-color: #B8B8B8;
+        --main-bg-color: #1A1A1A;
+        --sub-bg-color: #2E2E2E;
+        --input-bg-color: #2E2E2E;
+        --unit-bg-color: #3D3D3D;
+        --hover-color: #3D3D3D;
+        --hover-color2: #4D4D4D;
+        --hover-color3: #242424;
+        --invalid-color: #4D4D4D;
     }
 
     :root[data-theme="light"] {
@@ -845,12 +881,15 @@ input:checked+.slider:before {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
-        --subject-text-color: #666666;
+        --subject-text-color: #6B6B6B;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEFF0;
         --input-bg-color: #F0F0F0;
         --unit-bg-color: #E0E0E0;
-        --invalid-color: #D6D6D6;
+        --hover-color: #E0E0E0;
+        --hover-color2: #D1D1D1;
+        --hover-color3: #F7F7F7;
+        --invalid-color: #D1D1D1;
     }
 }
 
@@ -865,7 +904,6 @@ input:checked+.slider:before {
 .pos button {
     color: var(--main-text-color);
     font-size: 1rem;
-    font-weight: bold;
     border: 0;
     height: 42px;
     line-height: 42px;
