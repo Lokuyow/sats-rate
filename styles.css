@@ -641,13 +641,13 @@ svg#icon {
 
     &>:nth-child(1) {
         justify-self: end;
-        margin-right: 13px;
-        margin-top: 1px;
+        margin-right: 14px;
     }
 
     &>:nth-child(3) {
         justify-self: start;
-        margin-left: 14px;
+        margin-left: 13px;
+        margin-top: 1px;
     }
 }
 
@@ -672,7 +672,7 @@ svg#icon {
     right: 0;
     bottom: 0;
     cursor: pointer;
-    transition: 0.4s;
+    transition: 0.8s;
     background-color: var(--svg-color);
 }
 
@@ -684,24 +684,32 @@ svg#icon {
     border-radius: 50%;
 }
 
-.slider:before {
+.theme-switch .slider:before {
     position: absolute;
     content: "";
     height: 30px;
     width: 30px;
-    left: 4px;
     bottom: 4px;
     background-color: var(--input-bg-color);
     transition: 0.4s;
 }
 
-input:checked+.slider {
-    background-position: left 9px center;
-    background-size: 18px;
+/* ライトモード固定スタイル */
+.light-static .theme-switch .slider:before {
+    left: 4px;
 }
 
-input:checked+.slider:before {
+.light-static .theme-switch input:checked+.slider:before {
     transform: translateX(40px);
+}
+
+/* ダークモード固定スタイル */
+.dark-static .theme-switch .slider:before {
+    right: 4px;
+}
+
+.dark-static .theme-switch input:checked+.slider:before {
+    transform: translateX(-40px);
 }
 
 /* ポップアップ通知 */

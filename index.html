@@ -56,17 +56,21 @@
         };
 
         const setTheme = (theme) => {
+            if (!document.documentElement.classList.contains('light-static') &&
+                !document.documentElement.classList.contains('dark-static')) {
+                document.documentElement.classList.add(theme + '-static');
+            }
             document.documentElement.setAttribute('data-theme', theme);
         };
 
         setTheme(getInitialTheme());
 
         window.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.querySelector('.theme-switch input');
-            themeToggle.checked = document.documentElement.getAttribute('data-theme') === 'light';
-
+            const themeToggle = document.querySelector('#themeToggle');
+            themeToggle.checked = false;
             themeToggle.addEventListener('change', () => {
-                const newTheme = themeToggle.checked ? 'light' : 'dark';
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 setTheme(newTheme);
                 localStorage.setItem('theme', newTheme);
             });
@@ -242,15 +246,16 @@
                 <div>
                     テーマ
                 </div>
-                <div class="theme-switch-container"><svg width="30px" height="30px">
-                        <use xlink:href="./images/moon-regular.svg#a"></use>
+                <div class="theme-switch-container">
+                    <svg width="26px" height="26px">
+                        <use xlink:href="./images/sun-regular.svg#a"></use>
                     </svg>
                     <label class="theme-switch">
                         <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
                         <span class="slider round"></span>
                     </label>
-                    <svg width="26px" height="26px">
-                        <use xlink:href="./images/sun-regular.svg#a"></use>
+                    <svg width="30px" height="30px">
+                        <use xlink:href="./images/moon-regular.svg#a"></use>
                     </svg>
                 </div>
 
