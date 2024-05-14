@@ -117,7 +117,7 @@ button>* {
     font-size: 1.3rem;
     font-weight: bold;
     text-align: center;
-    margin-top: 16px;
+    margin-top: 20px;
     margin-bottom: 32px;
 }
 
@@ -430,7 +430,7 @@ svg#icon {
 .sns-share-container {
     display: flex;
     justify-content: center;
-    margin: 0 12px;
+    margin: 0 8px;
 
     & div {
         display: flex;
@@ -452,8 +452,9 @@ svg#icon {
         & .normal-btn {
             display: flex;
             justify-content: center;
-            height: 50px;
-            width: 60px;
+            height: 54px;
+            width: 100%;
+            margin: 0 4px;
         }
     }
 }
@@ -514,43 +515,35 @@ svg#icon {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    max-width: 630px;
+    max-width: 480px;
     margin: auto;
+    padding: 0 8px;
+
+    & #nostr-zap-target,
+    & a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        text-decoration: none;
+        border: 0;
+        height: 54px;
+        width: 100%;
+        margin: 0 4px;
+        padding: 0;
+    }
 }
 
-#nostr-zap-target {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    border: 0;
-    height: 54px;
-    width: 80px;
-    padding: 0;
-
-    & svg {
-        margin: 0 0 0 3px;
-    }
+#nostr-zap-target svg {
+    margin: 0 0 0 3px;
 }
 
 .nostr-zap-dialog {
     color-scheme: normal;
 }
 
-.zap-list,
-.zap-description {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    text-decoration: none;
-    border: 0;
-    height: 52px;
-    width: 123px;
-
-    & svg {
-        margin: 0 0 0 8px;
-    }
+.zap a svg {
+    margin: 0 0 0 8px;
 }
 
 .links {
