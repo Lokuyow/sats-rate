@@ -30,24 +30,46 @@ https://lokuyow.github.io/sats-rate/?{デフォルト入力値のクエリ}&{小
 - d=c　小数点（decimal point）はカンマ「,」（comma）
 
 「SNSに共有」右端のコピーボタンからクエリ付のURLをコピーできます。
+
 ## 価格レート取得先
 [CoinGecko](https://www.coingecko.com/ja)
 
-## ライセンス
-このリポジトリは、主にMITライセンスの下で公開されています。詳細は[LICENSE](./LICENSE)ファイルを参照してください。
+## ライセンスおよび著作権
+このリポジトリは以下のライセンスおよび著作権に基づいています。
 
-### 特別なライセンス条件
-以下のファイルは、MITライセンスの条件から除外され、特別なライセンスまたは著作権宣言が適用されます：
+ [MIT License](./LICENSE). Copyright (c) 2023 Lokuyow.
 
-- `/images/bitcoin-zukan.png`
+以下のファイルについては個別の著作権宣言が適用されます：
+
+- `./lib/nostr-zap@0.21.0.js`
+  - MIT License
+  - Copyright (c) 2023 Sam Samskies.
+  - https://github.com/SamSamskies/nostr-zap/blob/main/LICENSE
+- `./lib/qr-code-styling@1.6.0-rc.1.js`
+  - MIT License
+  - Copyright (c) 2019 Denys Kozak.
+  - https://github.com/kozakdenys/qr-code-styling/blob/master/LICENSE 
+- その他の例外的な著作権宣言については個別にファイルを参照してください。
+
+### ライセンスの例外
+以下のファイルはこのリポジトリのライセンスから除外され、特別なライセンスまたは著作権宣言が適用されます：
+
+- `./images/bitcoin-zukan.png`
   - © 2024 知っとこ！ビットコイン図鑑
-- `/images/fulgur-favicon.ico`
-  - Copyright © フルグル合同会社
-- `/images/alby_icon_head_yellow_48x48.svg`
-  - (https://github.com/getAlby/media)
-- `/images/btcmap-logo.svg`
-  - Media assets are available for free to use for promotional purposes. (https://btcmap.org/media)
-- `/images/robosats-favicon.ico`
+  - https://bitcoin-zukan.com
+  - > Any use or reproducion of illustrations are prrohibited.
+- `./images/fulgur-favicon.ico`
+  - Copyright © フルグル合同会社 All Rights Reserved.
+  - https://lostinbitcoin.jp/copyright
+- `./images/alby_icon_head_yellow_48x48.svg`
+  - Copyright (c) Alby
+  - https://github.com/getAlby/media
+- `./images/btcmap-logo.svg`
+  - Copyright © 2022-2024 BTC Map
+  - https://btcmap.org/media
+- `./images/robosats-favicon.ico`
   - © 2023 RoboSats.
-- `/images/mempool-favicon.ico`
-  - Mempool Space K.K. (https://mempool.space/trademark-policy)
+  - https://github.com/RoboSats/robosats/blob/main/LICENSE
+- `./images/mempool-favicon.ico`
+  - Copyright (c) 2019-2023 Mempool Space K.K.
+  - https://mempool.space/trademark-policy

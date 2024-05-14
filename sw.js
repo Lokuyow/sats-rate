@@ -8,6 +8,8 @@ const urlsToCache = [
     './lib/lightning-address.js',
     './lib/pos.js',
     './lib/currencies.json',
+    './lib/nostr-zap@0.21.0.js',
+    './lib/qr-code-styling@1.6.0-rc.1.js',
     './manifest.json',
     './fonts/RoundedMplus1c-Regular.woff2',
     './fonts/RoundedMplus1c-Medium.woff2',
@@ -52,7 +54,7 @@ const urlsToCache = [
     './images/currency-icons/gold-icon.png'
 ];
 
-const VERSION = '1.43';
+const VERSION = '2.0β';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
