@@ -53,6 +53,7 @@ async function initializeApp() {
     setupEventListeners();
     checkAndUpdateElements();
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    setupThemeToggle();
 
     // 計算
     prepareAndCalculate(baseCurrencyValue);
@@ -728,6 +729,16 @@ function shareViaWebAPI(originalShareText, queryParams) {
     }
 }
 
+// テーマ変更トグル
+function setupThemeToggle() {
+    const themeToggle = document.querySelector('#themeToggle');
+    themeToggle.addEventListener('change', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}
 
 // サービスワーカー
 let newVersionAvailable = false;

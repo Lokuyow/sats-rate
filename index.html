@@ -64,17 +64,6 @@
         };
 
         setTheme(getInitialTheme());
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.querySelector('#themeToggle');
-            themeToggle.checked = false;
-            themeToggle.addEventListener('change', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-        });
     </script>
 </head>
 
