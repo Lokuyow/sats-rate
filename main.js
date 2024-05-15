@@ -14,8 +14,8 @@ let selectedLocale = navigator.language || navigator.languages[0];
 let lastClickEvent = null;
 let currencyRates = {};
 let selectedCurrencies = [];
+let baseCurrencyValue = {};
 let currencyInputFields = [];
-export let baseCurrencyValue = {};
 let customOptions = {
     sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
     btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
@@ -31,13 +31,7 @@ async function initializeApp() {
     // 通貨データをロードし、UIコンポーネントを初期化
     await currencyManager.loadCurrencies();
 
-    // クエリパラメータから通貨設定と計算元の通貨とその値を読み込み
-    const hasQueryParams = loadValuesFromQueryParams();
-
-    // クエリパラメータがない場合、デフォルト値を設定
-    if (!hasQueryParams) {
-        setDefaultValues();
-    }
+    initializeGlobalValues();
 
     await currencyManager.fetchCurrencyData(selectedCurrencies);
 
@@ -124,36 +118,72 @@ async function handleOnline() {
     alert('オンラインに復帰しました。最新データを取得します。');
 }
 
-//入力の初期値
-export function setDefaultValues() {
-    // ローカルストレージから値を読み込む
-    selectedCurrencies = JSON.parse(localStorage.getItem('selectedCurrenciesLS')) || [];
-    baseCurrencyValue = JSON.parse(localStorage.getItem('baseCurrencyValueLS')) || {};
+function initializeGlobalValues() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let querySelectedCurrencies = [];
+    let queryBaseCurrencyValue = {};
 
-    if (!selectedCurrencies.length && !Object.keys(baseCurrencyValue).length) {
-        // selectedCurrencies と baseCurrencyValue が両方空の場合
-        selectedCurrencies = ['sats', 'btc', 'jpy', 'usd', 'eur'];
-        baseCurrencyValue = { sats: 100 };  // sats にデフォルト値 100 を設定
-    } else if (!selectedCurrencies.length) {
-        // selectedCurrencies だけ空の場合
-        selectedCurrencies = ['sats', 'btc', 'jpy', 'usd', 'eur'];
-        if (Object.keys(baseCurrencyValue).length) {
-            const baseCurrency = Object.keys(baseCurrencyValue)[0];
-            selectedCurrencies.push(baseCurrency); // baseCurrencyValue の通貨を含む
-        }
-    } else if (!Object.keys(baseCurrencyValue).length) {
-        // baseCurrencyValue だけ空の場合
-        const firstCurrency = selectedCurrencies[0];
-        baseCurrencyValue[firstCurrency] = 100;  // 最初の通貨に 100 を設定
+    if (urlParams.toString()) {
+        // URLクエリパラメータを優先して読み込む
+        querySelectedCurrencies = urlParams.get('currencies') ? urlParams.get('currencies').split(',') : [];
+        const decimalFormat = urlParams.get('d') || 'p';
+        const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
+
+        urlParams.forEach((value, key) => {
+            if (key !== 'd' && key !== 'currencies') {
+                queryBaseCurrencyValue[key] = parseInput(value, locale);
+            }
+        });
     }
 
-    // 次に、baseCurrencyValue の通貨が selectedCurrencies に含まれているかどうかを確認し、含まれていなければ設定
+    // ローカルストレージからの読み込み
+    let storageSelectedCurrencies = JSON.parse(localStorage.getItem('selectedCurrenciesLS')) || [];
+    let storageBaseCurrencyValue = JSON.parse(localStorage.getItem('baseCurrencyValueLS')) || {};
+
+    // URLクエリパラメータが優先
+    selectedCurrencies = querySelectedCurrencies.length ? querySelectedCurrencies : storageSelectedCurrencies;
+    baseCurrencyValue = Object.keys(queryBaseCurrencyValue).length ? queryBaseCurrencyValue : storageBaseCurrencyValue;
+
+    // デフォルト値の設定
+    if (!selectedCurrencies.length) {
+        selectedCurrencies = ['sats', 'btc', 'jpy', 'usd', 'eur'];
+        localStorage.setItem('selectedCurrenciesLS', JSON.stringify(selectedCurrencies));
+    }
+
+    if (!Object.keys(baseCurrencyValue).length) {
+        baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
+    }
+
+    processGlobalValues(querySelectedCurrencies.length > 0, Object.keys(queryBaseCurrencyValue).length > 0);
+
+    // URLクエリパラメータの処理後に削除
+    if (urlParams.toString()) {
+        const currentUrl = new URL(window.location.href);
+        const newUrl = `${currentUrl.origin}${currentUrl.pathname}`;
+        window.history.replaceState(null, '', newUrl);
+    }
+}
+
+function processGlobalValues(queryParamsSelected, queryParamsBase) {
     const baseCurrencyKey = Object.keys(baseCurrencyValue)[0];
-    if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
-        // baseCurrencyValue の通貨が selectedCurrencies にない場合
-        const firstCurrency = selectedCurrencies[0];
-        baseCurrencyValue = {}; // baseCurrencyValue をクリア
-        baseCurrencyValue[firstCurrency] = 100;  // 最初の通貨に 100 を設定
+
+    if (queryParamsBase) {
+        // URLクエリパラメータでbaseCurrencyValueが設定された場合
+        if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+            selectedCurrencies.unshift(baseCurrencyKey);
+        }
+    }
+
+    if (queryParamsSelected) {
+        // URLクエリパラメータでselectedCurrenciesが設定された場合
+        if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+            baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
+        }
+    } else {
+        // ローカルストレージからselectedCurrenciesが設定された場合
+        if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+            baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
+        }
     }
 }
 
@@ -524,32 +554,6 @@ function showNotification(message, event, align = 'right') {
     setTimeout(() => {
         notification.style.visibility = 'hidden';
     }, 1000);
-}
-
-// URLクエリパラメータ
-function loadValuesFromQueryParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.toString()) {
-        return false;  // クエリパラメータが存在しない場合は false を返す
-    }
-
-    selectedCurrencies = urlParams.get('currencies') ? urlParams.get('currencies').split(',') : [];
-    baseCurrencyValue = {};
-    const decimalFormat = urlParams.get('d') || 'p';
-    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
-
-    urlParams.forEach((value, key) => {
-        if (key !== 'd' && key !== 'currencies') {
-            baseCurrencyValue[key] = parseInput(value, locale);
-        }
-    });
-
-    // 処理後のURLからクエリパラメータを削除
-    const currentUrl = new URL(window.location.href);
-    const newUrl = `${currentUrl.origin}${currentUrl.pathname}`;
-    window.history.replaceState(null, '', newUrl);
-
-    return true;  // クエリパラメータが存在した場合は true を返す
 }
 
 function getQueryString(field, value) {
