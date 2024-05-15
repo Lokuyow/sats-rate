@@ -704,8 +704,10 @@ svg#icon {
     color: var(--main-text-color);
     font-size: 1rem;
     font-weight: 500;
-    background-color: var(--unit-bg-color);
-    padding: 10px;
+    background-color: var(--main-bg-color);
+    border: 2px solid var(--input-bg-color);
+    border-radius: 6px;
+    padding: 12px 14px;
     white-space: nowrap;
 }
 
