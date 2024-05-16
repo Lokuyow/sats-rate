@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
     // CurrencyManagerのインスタンスを作成
-    currencyManager.setCurrenciesUpdateCallback(updateGlobalSelectedCurrencies);
     currencyManager.setRatesUpdateCallback(updateGlobalCurrencyRates);
 
     // 通貨データをロードし、UIコンポーネントを初期化
@@ -84,27 +83,11 @@ function updateGlobalCurrencyRates(rates) {
     updateLastUpdated(currencyRates.last_updated_at);
 }
 
-// 選択された通貨の更新をグローバル変数に反映するコールバック関数
-function updateGlobalSelectedCurrencies(currencies) {
-    selectedCurrencies = currencies;
-    updateCurrencyInputFields(); // 通貨が更新されたらDOM要素も更新
-}
-
-function updateCurrencyInputFields() {
-    currencyInputFields = selectedCurrencies.map(id => document.getElementById(id));
-    setupInputFieldsEventListeners(); // 全ての入力フィールドにイベントリスナーを設定
-}
-
 function setupInputFieldsEventListeners() {
     currencyInputFields.forEach(element => {
         if (!element) return; // elementがnullでないことを保証
         setupInputFieldEventListeners(element);
     });
-}
-
-// baseCurrencyValue を設定する関数
-export function setBaseCurrencyValue(value) {
-    baseCurrencyValue = value;
 }
 
 // baseCurrencyValue を取得する関数
