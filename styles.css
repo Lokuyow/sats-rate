@@ -390,6 +390,10 @@ svg#icon {
     & svg {
         fill: var(--invalid-color);
     }
+
+    &:active {
+        transform: none;
+    }
 }
 
 #update-prices svg {
@@ -399,7 +403,7 @@ svg#icon {
 }
 
 #update-prices:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 @keyframes rotateAnimation {
