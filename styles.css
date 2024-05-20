@@ -500,7 +500,7 @@ svg#icon {
     animation: spin 1s linear infinite;
 }
 
-.zap {
+.zapBtn-flex {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -531,7 +531,7 @@ svg#icon {
     color-scheme: normal;
 }
 
-.zap a svg {
+.zapBtn-flex a svg {
     margin: 0 0 0 8px;
 }
 
