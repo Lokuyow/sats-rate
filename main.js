@@ -12,9 +12,9 @@ let lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
 let lastClickEvent = null;
-let currencyRates = {};
+window.currencyRates = {};
+window.baseCurrencyValue = {};
 let selectedCurrencies = [];
-let baseCurrencyValue = {};
 let currencyInputFields = [];
 let customOptions = {
     sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
@@ -88,11 +88,6 @@ function setupInputFieldsEventListeners() {
         if (!element) return; // elementがnullでないことを保証
         setupInputFieldEventListeners(element);
     });
-}
-
-// baseCurrencyValue を取得する関数
-export function getBaseCurrencyValue() {
-    return baseCurrencyValue;
 }
 
 async function handleOnline() {
@@ -170,6 +165,19 @@ function processGlobalValues(queryParamsSelected, queryParamsBase) {
     }
 }
 
+// キーボードから入力したときの直接入力フィールドの処理
+function handleInputFormatting(event) {
+    const inputElement = event.target;
+    addCommasToInput(inputElement);
+    const values = getValuesFromElements();
+
+    // 計算元の通貨とその値を保存
+    const currencyId = inputElement.id;
+    const inputValue = values[currencyId];
+    baseCurrencyValue = {};
+    baseCurrencyValue[currencyId] = parseFloat(inputValue) || 0;
+}
+
 // 現在の入力値をデフォルト値としてローカルストレージに保存
 function saveCurrentValuesAsDefault(event) {
     const currentValues = {};
@@ -186,11 +194,12 @@ function saveCurrentValuesAsDefault(event) {
 }
 
 function getInputValue(id) {
-    return parseInput(document.getElementById(id).value, selectedLocale);
+    const element = document.getElementById(id);
+    return element ? parseInput(element.value, selectedLocale) : 0;
 }
 
 // 計算前に入力値をフォーマットしインプットフィールドに入れる
-export function prepareAndCalculate(baseCurrencyValue) {
+function prepareAndCalculate(baseCurrencyValue) {
     // baseCurrencyValue から最初の通貨コードを取得
     const baseCurrency = Object.keys(baseCurrencyValue)[0];
     const currencyValue = baseCurrencyValue[baseCurrency];
@@ -251,10 +260,8 @@ function calculateValues(inputField) {
                 // カーソル位置の維持
                 const caretPos = element.selectionStart;
                 element.setSelectionRange(caretPos, caretPos);
-                // 計算されるボックス
             } else {
                 // 値のフォーマットと更新
-                // formatCurrencyをsignificantDigitsを使って動的にフォーマットするように修正
                 element.value = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
             }
         }
@@ -262,19 +269,6 @@ function calculateValues(inputField) {
 
     changeBackgroundColorFromId(inputField);
     updateShareButton();
-}
-
-// キーボードから入力したときの直接入力フィールドの処理
-function handleInputFormatting(event) {
-    const inputElement = event.target;
-    addCommasToInput(inputElement);
-    const values = getValuesFromElements();
-
-    // 計算元の通貨とその値を保存
-    const currencyId = inputElement.id;
-    const inputValue = values[currencyId];
-    baseCurrencyValue = {};
-    baseCurrencyValue[currencyId] = parseFloat(inputValue) || 0;
 }
 
 //　ロケールから桁区切りと小数点の文字を取得
@@ -300,6 +294,7 @@ function parseInput(inputValue, locale) {
     return sanitizedValue;
 }
 
+// 直接入力時の数値処理
 function addCommasToInput(inputElement) {
     const originalCaretPos = inputElement.selectionStart;
     const originalSelectionEnd = inputElement.selectionEnd;
@@ -375,8 +370,8 @@ function updateCustomOptions(rates) {
     }
 }
 
-// 小数点以下の制限、ロケールごとの記法
-function formatCurrency(num, id, selectedLocale, shouldRound = true, significantDigits) {
+// 小数点以下の制限、ロケールごとの小数点記号の記法
+export function formatCurrency(num, id, selectedLocale, shouldRound = true, significantDigits) {
     // numが数値でない場合、数値に変換
     if (typeof num !== 'number') {
         num = parseFloat(num);

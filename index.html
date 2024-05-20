@@ -9,13 +9,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨の相互換算ができるツールです。">
+        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間の相互換算ができるツールです。">
     <meta property="og:site_name" content="おいくらサッツ">
     <meta property="og:title" content="おいくらサッツ">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lokuyow.github.io/sats-rate/">
     <meta property="og:image" content="https://lokuyow.github.io/sats-rate/images/ogp.png">
-    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨換算ツール">
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール">
     <meta property="og:locale" content="ja_JP">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -112,11 +112,15 @@
 
         <div class="bgcolor pos-wrapper">
             <h2 class="subject">
-                POS
+                ライトニング
             </h2>
             <div class="pos">
-                <button disabled class="normal-btn" id="show-invoice-dialog">⚡請求書を表示</button>
-                <br />
+                <button disabled class="show-invoice-dialog normal-btn" id="show-invoice-dialog">
+                    <svg width="24px" height="24px">
+                        <use xlink:href="./images/bolt-solid.svg#a"></use>
+                    </svg>
+                    インボイスを表示
+                </button>
                 <dialog id="update-lightning-address-dialog">
                     <form id="lightning-address-form">
                         <label class="lightning-address-label" for="lightning-address">受取用ライトニングアドレス
@@ -138,7 +142,7 @@
                     <output id="lightning-address-output"></output>
                     <button class="setting-btn normal-btn" id="show-lightning-address-dialog"
                         aria-label="受取ライトニングアドレスの設定">
-                        <svg width="24px" height="24px">
+                        <svg width="28px" height="28px">
                             <use xlink:href="./images/settings-solid.svg#a"></use>
                         </svg>
                     </button>
@@ -149,34 +153,10 @@
                         <div class="lightning-pos-qr-box" id="lightning-pos-qr-box"></div>
                         <div class="error-message" id="pos-message"></div>
                         <div class="amounts-grid">
-                            <div class="sats">
-                                <div id="current-sats" class="sats-amount amount-text"></div>
-                                <div class="sats-unit unit-text">sats</div>
-                            </div>
-                            <div class="amount amount-text">
-                                <div id="current-btc" class="value"></div>
-                            </div>
-                            <div class="unit unit-text">
-                                <div>BTC</div>
-                            </div>
-                            <div class="amount amount-text">
-                                <div id="current-jpy" class="value"></div>
-                            </div>
-                            <div class="unit unit-text">
-                                <div>JPY</div>
-                            </div>
-                            <div class="amount amount-text">
-                                <div id="current-usd" class="value"></div>
-                            </div>
-                            <div class="unit unit-text">
-                                <div>USD</div>
-                            </div>
-                            <div class="amount amount-text">
-                                <div id="current-eur" class="value"></div>
-                            </div>
-                            <div class="unit unit-text">
-                                <div>EUR</div>
-                            </div>
+                            <div id="current-sats" class="amount-text"></div>
+                            <div class="unit-text">sats</div>
+                            <div id="current-base" class="base-amaunt amount-text"></div>
+                            <div id="base-unit" class="unit-text"></div>
                         </div>
                         <button class="lightning-invoice-close-button normal-btn" id="lightning-invoice-close-button"
                             value="cancel" formmethod="dialog">閉じる</button>
@@ -377,7 +357,7 @@
             <h3>おいくらサッツ とは</h3>
             <p>
                 サッツ（Sats, Sat,
-                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
+                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨間<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
             </p>
             <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
                 Sats,Sat,Satoshi (単位)

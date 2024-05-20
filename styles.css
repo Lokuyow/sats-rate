@@ -114,11 +114,11 @@ button>* {
 
 .subject {
     color: var(--subject-text-color);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    margin-top: 20px;
-    margin-bottom: 32px;
+    margin-top: 24px;
+    margin-bottom: 34px;
 }
 
 .title-flex {
@@ -302,10 +302,6 @@ svg#icon {
     background-color: var(--main-bg-color);
     border: 2px solid var(--input-bg-color);
     border-right: 0;
-
-    /* &:hover {
-        background-color: var(--hover-color3);
-    } */
 }
 
 @media (hover: hover) {
@@ -900,8 +896,8 @@ svg#icon {
     color: var(--main-text-color);
     font-size: 1rem;
     border: 0;
-    height: 42px;
-    line-height: 42px;
+    height: 50px;
+    line-height: 50px;
     padding: 0 1em;
 }
 
@@ -909,6 +905,10 @@ svg#icon {
     border: none;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin-left: 6px;
 }
 
 .pos svg {
@@ -918,8 +918,7 @@ svg#icon {
 .pos .lightning-address {
     display: flex;
     align-items: center;
-    margin-bottom: 4px;
-    margin-top: 0;
+    margin: 0;
 }
 
 .pos label {
@@ -935,12 +934,14 @@ svg#icon {
 
 .pos input {
     margin: 1.5em 0;
-    height: 3rem;
+    height: 60px;
+
+    &:focus {
+        outline: 2px solid var(--main-text-color);
+    }
 }
 
 .pos input:invalid {
-    color: black;
-    background-color: ivory;
     border: none;
     outline: 2px solid red;
     border-radius: 5px;
@@ -956,30 +957,42 @@ svg#icon {
     max-width: 400px;
 }
 
-.pos button:disabled {
-    color: var(--invalid-color);
+.pos .show-invoice-dialog {
+    display: flex;
+    align-items: center;
+    height: 54px;
+    line-height: 54px;
+    margin-top: -12px;
+    margin-bottom: 12px;
+
+    & svg {
+        margin-right: 4px;
+    }
 }
 
-#show-invoice-dialog {
-    height: 50px;
+.pos button:disabled {
+    color: var(--invalid-color);
+    background-color: var(--main-bg-color);
+    border: 2px solid var(--input-bg-color);
     line-height: 50px;
-    padding: 0 20px;
+
+    & svg {
+        fill: var(--invalid-color);
+    }
 }
 
 #show-lightning-address-dialog {
     padding: 0 9px;
 }
 
-#lightning-address-output {
-    padding-right: 6px;
-}
-
 .lightning-address-input {
     font-size: 1.2rem;
     color: var(--input-text-color);
+    background-color: var(--input-bg-color);
     text-align: center;
     padding: 0 8px;
     border: 0;
+    border-radius: 6px;
 }
 
 .pos .invoice-dialog {
@@ -994,7 +1007,6 @@ svg#icon {
 .pos .lightning-pos-qr-box {
     width: 340px;
     height: 340px;
-    margin-bottom: 1em;
 }
 
 .pos .error-message {
@@ -1005,54 +1017,48 @@ svg#icon {
 
 .pos .amounts-grid {
     display: grid;
-    grid-template-columns: 100px 40px 100px 40px;
-    gap: 10px;
-    margin: 12px;
+    grid-template-columns: 1fr auto;
+    grid-auto-rows: auto;
+    align-items: baseline;
+    margin: 20px 0 28px 0;
     overflow-wrap: break-word;
+
+    & .amount-text {
+        font-size: 2rem;
+        max-width: 100%;
+        text-align: end;
+    }
+
+    & .unit-text {
+        font-size: 1.7rem;
+        margin-left: 10px;
+        text-align: start;
+    }
+
+    & #base-unit {
+        font-size: 1.6rem;
+        margin-left: 10px;
+        text-align: start;
+    }
 }
 
 .pos .amount-text {
     color: var(--main-text-color);
+    font-family:
+        'San Francisco',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Calibri,
+        Helvetica,
+        Arial,
+        sans-serif;
 }
 
 .pos .unit-text {
     color: var(--subject-text-color);
-}
-
-.amounts-grid .sats {
-    grid-column: 1 / 5;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: baseline;
-    margin-bottom: 1rem;
-}
-
-.amounts-grid .sats-amount {
-    font-size: 2rem;
-    max-width: 100%;
-}
-
-.amounts-grid .sats-unit {
-    font-size: 1.4rem;
-    margin-left: 0.2em;
-}
-
-.amounts-grid .amount {
-    grid-column: auto;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.amount .value {
-    max-width: 100%;
-}
-
-.amounts-grid .unit {
-    grid-column: auto;
-    display: flex;
-    align-items: center;
+    font-weight: 500;
 }
 
 .pos .loader-position {
