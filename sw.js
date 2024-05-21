@@ -54,8 +54,8 @@ const urlsToCache = [
     './images/currency-icons/gold-icon.png'
 ];
 
-const VERSION = '2.0';
-let CACHE_NAME = 'osats-caches-' + VERSION;
+const VERSION = '2.01';
+let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
 self.addEventListener('install', (event) => {
