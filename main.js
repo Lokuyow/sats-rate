@@ -1,6 +1,6 @@
 import { currencyManager } from './lib/currencyManager.js';
 
-const BASE_URL = "https://lokuyow.github.io/sats-rate/";
+const BASE_URL = "https://osats.money/";
 const dateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -698,13 +698,13 @@ function shareViaWebAPIEvent() {
 }
 
 function shareViaWebAPI(originalShareText, queryParams) {
-    const modifiedShareText = originalShareText.replace(/https:\/\/lokuyow\.github\.io\/sats-rate\/.*$/, '');
+    const modifiedShareText = originalShareText.replace(/https:\/\/osats\.money\/.*$/, '');
 
     if (navigator.share) {
         navigator.share({
             title: 'おいくらサッツ',
             text: modifiedShareText,
-            url: `https://lokuyow.github.io/sats-rate/${queryParams}`
+            url: `https://osats.money/${queryParams}`
         });
     } else {
         alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
