@@ -55,7 +55,7 @@ const urlsToCache = [
 ];
 
 const VERSION = '2.01';
-let CACHE_NAME = 'sats-rate-caches-' + VERSION;
+let CACHE_NAME = 'osats-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
 self.addEventListener('install', (event) => {
