@@ -726,10 +726,10 @@ function setupThemeToggle() {
 let newVersionAvailable = false;
 
 // サービスワーカーからのメッセージリスナー
-navigator.serviceWorker.addEventListener('message', (event) => {
+navigator.serviceWorker.addEventListener('message', async (event) => {
     const updateButton = document.getElementById('checkForUpdateBtn');
-    const buttonText = document.getElementById('buttonText');
-    const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
+    const buttonText = updateButton.querySelector('#buttonText');
+    const spinnerWrapper = buttonText.querySelector('.spinner-wrapper');
 
     console.log('Message from Service Worker:', event.data);
 
@@ -738,13 +738,21 @@ navigator.serviceWorker.addEventListener('message', (event) => {
         if (buttonText) {
             buttonText.textContent = '更新があります';
         }
-        spinnerWrapper.style.display = 'none';
+        if (spinnerWrapper) {
+            spinnerWrapper.style.display = 'none';
+        }
     } else if (event.data && event.data.type === 'NO_UPDATE_FOUND') {
-        showNotification('最新です', lastClickEvent);
-        spinnerWrapper.style.display = 'none';
+        // 一定時間待機してからメッセージを確認
+        await delay(500); // 1秒待機
+
+        if (!newVersionAvailable) { // この間にNEW_VERSION_INSTALLEDが来ているか確認
+            showNotification('最新です', lastClickEvent);
+            if (spinnerWrapper) {
+                spinnerWrapper.style.display = 'none';
+            }
+        }
     }
 });
-
 
 async function registerAndHandleServiceWorker() {
     if (!('serviceWorker' in navigator)) {
@@ -782,8 +790,12 @@ function delay(ms) {
 async function checkForUpdates(event) {
     lastClickEvent = event; // クリックイベントを保存
     const updateButton = document.getElementById('checkForUpdateBtn');
-    const spinnerWrapper = updateButton.querySelector('.spinner-wrapper');
-    spinnerWrapper.style.display = 'block'; // スピナーを表示
+    const buttonText = updateButton.querySelector('#buttonText');
+    const spinnerWrapper = buttonText.querySelector('.spinner-wrapper');
+
+    if (spinnerWrapper) {
+        spinnerWrapper.style.display = 'block';
+    }
 
     // 新しいバージョンが利用可能な場合、ページをリロード
     if (newVersionAvailable) {
@@ -809,7 +821,9 @@ async function checkForUpdates(event) {
         }
     } catch (error) {
         console.error("An error occurred while checking for updates:", error);
-        spinnerWrapper.style.display = 'none';
+        if (spinnerWrapper) {
+            spinnerWrapper.style.display = 'none';
+        }
     }
 }
 

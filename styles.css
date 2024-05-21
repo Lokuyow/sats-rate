@@ -1,6 +1,6 @@
 :root {
     --main-font: RoundedMplus1c, -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
-    --accent-color: #F7931A;
+    --accent-color: #FCA73F;
     --base-color: #D14765;
     --sub-color: #FAD102;
 }
@@ -467,7 +467,6 @@ svg#icon {
 }
 
 .settings-btn {
-    position: relative;
     text-align: center;
     font-size: 1rem;
     border: 0;
@@ -475,6 +474,27 @@ svg#icon {
     line-height: 50px;
     min-width: 160px;
     padding: 0;
+
+    & #buttonText {
+        position: relative;
+
+        & .spinner-wrapper {
+            display: none;
+            position: absolute;
+            right: -36px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            & .spinner {
+                border: 7px solid var(--main-bg-color);
+                border-top: 7px solid var(--subject-text-color);
+                border-radius: 50%;
+                width: 28px;
+                height: 28px;
+                animation: spin 1s linear infinite;
+            }
+        }
+    }
 }
 
 @keyframes spin {
@@ -485,23 +505,6 @@ svg#icon {
     100% {
         transform: rotate(360deg);
     }
-}
-
-.spinner-wrapper {
-    display: none;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.spinner {
-    border: 6px solid var(--main-text-color);
-    border-top: 6px solid var(--two-color);
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
 }
 
 .zapBtn-flex {
@@ -829,6 +832,7 @@ svg#icon {
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #E0E0E0;
+        --spinner-color: #6B6B6B;
     }
 
     :root[data-theme="dark"] {
@@ -847,6 +851,7 @@ svg#icon {
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #3D3D3D;
+        --spinner-color: #1A1A1A;
     }
 }
 
@@ -867,6 +872,7 @@ svg#icon {
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #3D3D3D;
+        --spinner-color: #1A1A1A;
     }
 
     :root[data-theme="light"] {
@@ -885,6 +891,7 @@ svg#icon {
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #E0E0E0;
+        --spinner-color: #6B6B6B;
     }
 }
 
@@ -970,7 +977,7 @@ svg#icon {
     margin-bottom: 12px;
 
     & svg {
-        margin-right: 4px;
+        margin-right: 5px;
     }
 }
 
