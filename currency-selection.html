@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>おいくらサッツ - 通貨</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <meta name="description"
+        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間の相互換算ができるツールです。">
+    <meta property="og:site_name" content="おいくらサッツ">
+    <meta property="og:title" content="おいくらサッツ">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://osats.money/">
+    <meta property="og:image" content="https://osats.money/images/ogp.png">
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール">
+    <meta property="og:locale" content="ja_JP">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@Lokuyow">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg" color="#b3475f">
+    <link rel="shortcut icon" href="./favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="msapplication-config" content="./favicons/browserconfig.xml">
+    <meta name="theme-color" content="#B3475F" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="おいくらサッツ">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <script>
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const getInitialTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            return prefersDarkScheme.matches ? 'dark' : 'light';
+        };
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+        };
+
+        setTheme(getInitialTheme());
+    </script>
+</head>
+
+<body class="currency-selection">
+    <div class="main">
+        <div class="bgcolor">
+            <div class="checkBtn-container">
+                <button id="checkAllButton" class=" normal-btn">check all</button>
+                <button id="uncheckAllButton" class=" normal-btn">uncheck all</button>
+            </div>
+
+            <div id="currency-container"></div>
+        </div>
+    </div>
+
+    <div class="saveSelectedCurrencies-container">
+        <button id="saveSelectedCurrenciesBtn">
+            Save
+        </button>
+    </div>
+
+    <script type="module" src="./lib/currencySelection.js"></script>
+</body>
+
+</html>

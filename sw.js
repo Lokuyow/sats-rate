@@ -1,20 +1,25 @@
 const urlsToCache = [
     './index.html',
+    './currency-selection.html',
     './styles.css',
     './main.js',
-    './manifest.json',
+    './lib/currencyManager.js',
+    './lib/currencySelection.js',
     './lib/lightning-address.js',
     './lib/pos.js',
+    './lib/currencies.json',
+    './lib/nostr-zap@0.21.0.js',
+    './lib/qr-code-styling@1.6.0-rc.1.js',
+    './manifest.json',
+    './fonts/RoundedMplus1c-Regular.woff2',
+    './fonts/RoundedMplus1c-Medium.woff2',
+    './fonts/RoundedMplus1c-Bold.woff2',
+    './fonts/NotoColorEmoji-Regular.woff2',
     './favicons/favicon.ico',
     './images/icon_x192.png',
     './images/icon_x512.png',
     './images/maskable_icon_x192.png',
     './images/maskable_icon_x512.png',
-    './images/title.svg',
-    './images/白抜きのビットコインアイコン.svg',
-    './images/白抜きの円アイコン.svg',
-    './images/白抜きのドルアイコン.svg',
-    './images/白抜きのユーロアイコン.svg',
     './images/square-x-twitter.svg',
     './images/nostr-icon-purple-on-white.svg',
     './images/cloud-solid.svg',
@@ -32,11 +37,25 @@ const urlsToCache = [
     './images/sun-regular.svg',
     './images/moon-regular.svg',
     './images/angle-down-solid.svg',
-    './images/settings-solid.svg'
+    './images/settings-solid.svg',
+    './images/bitcoin-icon.svg',
+    './images/currency-icons/btc.png',
+    './images/currency-icons/eth.png',
+    './images/currency-icons/ltc.png',
+    './images/currency-icons/bch.png',
+    './images/currency-icons/bnb.png',
+    './images/currency-icons/eos.png',
+    './images/currency-icons/xrp.png',
+    './images/currency-icons/xlm.png',
+    './images/currency-icons/link.png',
+    './images/currency-icons/dot.png',
+    './images/currency-icons/yfi.png',
+    './images/currency-icons/silver-icon.png',
+    './images/currency-icons/gold-icon.png'
 ];
 
-const VERSION = '1.42';
-let CACHE_NAME = 'sats-rate-caches-' + VERSION;
+const VERSION = '2.0';
+let CACHE_NAME = 'osats-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
 self.addEventListener('install', (event) => {
