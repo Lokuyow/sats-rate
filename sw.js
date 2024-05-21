@@ -54,7 +54,7 @@ const urlsToCache = [
     './images/currency-icons/gold-icon.png'
 ];
 
-const VERSION = '2.0β';
+const VERSION = '2.0';
 let CACHE_NAME = 'sats-rate-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 

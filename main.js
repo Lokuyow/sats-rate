@@ -743,7 +743,7 @@ navigator.serviceWorker.addEventListener('message', async (event) => {
         }
     } else if (event.data && event.data.type === 'NO_UPDATE_FOUND') {
         // 一定時間待機してからメッセージを確認
-        await delay(500); // 1秒待機
+        await delay(300);
 
         if (!newVersionAvailable) { // この間にNEW_VERSION_INSTALLEDが来ているか確認
             showNotification('最新です', lastClickEvent);
@@ -804,8 +804,6 @@ async function checkForUpdates(event) {
     }
 
     try {
-        await delay(300);
-
         const registration = await navigator.serviceWorker.getRegistration();
         if (!registration) throw new Error("No active service worker registration found");
 
