@@ -1,7 +1,7 @@
 :root {
     --main-font: RoundedMplus1c, -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
-    --accent-color: #FCA73F;
-    --base-color: #D14765;
+    --light-accent-color: #FCA73F;
+    --dark-accent-color: #D14765;
     --sub-color: #FAD102;
 }
 
@@ -319,19 +319,19 @@ svg#icon {
 }
 
 .currency-input-btc {
-    border-left: 2px solid var(--accent-color);
+    border-left: 2px solid var(--light-accent-color);
 }
 
 .currency-input-btc:focus {
-    outline: 2px solid var(--accent-color);
+    outline: 2px solid var(--light-accent-color);
 }
 
 .currency-input-other {
-    border-left: 2px solid var(--base-color);
+    border-left: 2px solid var(--dark-accent-color);
 }
 
 .currency-input-other:focus {
-    outline: 2px solid var(--base-color);
+    outline: 2px solid var(--dark-accent-color);
 }
 
 .currency-input-sats:focus,
@@ -722,13 +722,14 @@ svg#icon {
 
 #currency-container {
     display: grid;
-    grid-template-columns: auto minmax(22px, 56px) minmax(42px, 48px) auto;
-    grid-auto-rows: 40px;
-    line-height: 40px;
+    grid-template-columns: auto minmax(22px, 56px) minmax(42px, 48px) 230px;
+    grid-auto-rows: 44px;
+    line-height: 44px;
     justify-content: center;
     justify-items: center;
     align-items: center;
     font-size: 1rem;
+    margin: 0 8px;
 }
 
 .currency-row {
@@ -791,7 +792,7 @@ svg#icon {
     background-color: var(--two-color);
     border: none;
     border-radius: 6px;
-    height: 40px;
+    height: 46px;
     width: 100%;
     max-width: 800px;
     margin: 0 10px;
@@ -802,15 +803,15 @@ svg#icon {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     & button {
         font-size: 1rem;
         font-weight: 500;
-        height: 40px;
+        height: 46px;
         width: 100%;
         max-width: 162px;
-        margin: 0 2px;
+        margin: 0 3px;
     }
 }
 
@@ -819,80 +820,76 @@ svg#icon {
 @media (prefers-color-scheme: light) {
     :root {
         color-scheme: light;
-        --two-color: var(--accent-color);
-        --two-color-r: var(--base-color);
+        --two-color: var(--light-accent-color);
+        --two-color-r: var(--dark-accent-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
         --subject-text-color: #6B6B6B;
         --main-bg-color: #FFFFFF;
-        --sub-bg-color: #F0F0F0;
-        --input-bg-color: #F0F0F0;
-        --unit-bg-color: #E0E0E0;
-        --hover-color: #E0E0E0;
+        --sub-bg-color: #EDEDED;
+        --input-bg-color: #EDEDED;
+        --unit-bg-color: #DEDEDE;
+        --hover-color: #DEDEDE;
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
-        --invalid-color: #E0E0E0;
-        --spinner-color: #6B6B6B;
+        --invalid-color: #DEDEDE;
     }
 
     :root[data-theme="dark"] {
         color-scheme: dark;
-        --two-color: var(--base-color);
-        --two-color-r: var(--accent-color);
+        --two-color: var(--dark-accent-color);
+        --two-color-r: var(--light-accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
         --subject-text-color: #B8B8B8;
         --main-bg-color: #1A1A1A;
-        --sub-bg-color: #2E2E2E;
-        --input-bg-color: #2E2E2E;
-        --unit-bg-color: #3D3D3D;
-        --hover-color: #3D3D3D;
+        --sub-bg-color: #303030;
+        --input-bg-color: #303030;
+        --unit-bg-color: #404040;
+        --hover-color: #404040;
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
-        --invalid-color: #3D3D3D;
-        --spinner-color: #1A1A1A;
+        --invalid-color: #404040;
     }
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         color-scheme: dark;
-        --two-color: var(--base-color);
-        --two-color-r: var(--accent-color);
+        --two-color: var(--dark-accent-color);
+        --two-color-r: var(--light-accent-color);
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
         --subject-text-color: #B8B8B8;
         --main-bg-color: #1A1A1A;
-        --sub-bg-color: #2E2E2E;
-        --input-bg-color: #2E2E2E;
-        --unit-bg-color: #3D3D3D;
-        --hover-color: #3D3D3D;
+        --sub-bg-color: #303030;
+        --input-bg-color: #303030;
+        --unit-bg-color: #404040;
+        --hover-color: #404040;
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
-        --invalid-color: #3D3D3D;
-        --spinner-color: #1A1A1A;
+        --invalid-color: #404040;
     }
 
     :root[data-theme="light"] {
         color-scheme: light;
-        --two-color: var(--accent-color);
-        --two-color-r: var(--base-color);
+        --two-color: var(--light-accent-color);
+        --two-color-r: var(--dark-accent-color);
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
         --subject-text-color: #6B6B6B;
         --main-bg-color: #FFFFFF;
-        --sub-bg-color: #F0F0F0;
-        --input-bg-color: #F0F0F0;
-        --unit-bg-color: #E0E0E0;
-        --hover-color: #E0E0E0;
+        --sub-bg-color: #EDEDED;
+        --input-bg-color: #EDEDED;
+        --unit-bg-color: #DEDEDE;
+        --hover-color: #DEDEDE;
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
-        --invalid-color: #E0E0E0;
-        --spinner-color: #6B6B6B;
+        --invalid-color: #DEDEDE;
     }
 }
 
