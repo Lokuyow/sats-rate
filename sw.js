@@ -38,7 +38,7 @@ const urlsToCache = [
     './images/moon-regular.svg',
     './images/angle-down-solid.svg',
     './images/settings-solid.svg',
-    './images/bitcoin-icon.svg',
+    './images/currency-icons/bitcoin-icon.svg',
     './images/currency-icons/btc.png',
     './images/currency-icons/eth.png',
     './images/currency-icons/ltc.png',
@@ -54,7 +54,7 @@ const urlsToCache = [
     './images/currency-icons/gold-icon.png'
 ];
 
-const VERSION = '2.02';
+const VERSION = '2.03';
 let CACHE_NAME = 'osats-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
