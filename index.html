@@ -82,19 +82,15 @@
                 <div class="grid-container">
 
                     <div class="flex-copy">
-                        <div>コピー</div>
-                        <svg class="arrow" width="18px" height="18px">
-                            <use xlink:href="./images/angle-down-solid.svg#b"></use>
-                        </svg>
+                        <div class="text">コピー</div>
+                        <div class="angle-down-solid"></div>
                     </div>
 
                     <div class="date" id="last-updated"></div>
 
                     <div class="flex-paste">
-                        <div>ペースト</div>
-                        <svg class="arrow" width="18px" height="18px">
-                            <use xlink:href="./images/angle-down-solid.svg#b"></use>
-                        </svg>
+                        <div class="text">ペースト</div>
+                        <div class="angle-down-solid"></div>
                     </div>
 
                     <div class="currency-inputs-container"></div>
@@ -114,9 +110,7 @@
             <h2 class="subject">ライトニング</h2>
             <div class="pos">
                 <button disabled class="show-invoice-dialog normal-btn" id="show-invoice-dialog">
-                    <svg width="24px" height="24px">
-                        <use xlink:href="./images/bolt-solid.svg#a"></use>
-                    </svg>
+                    <div class="bolt-solid"></div>
                     インボイスを表示
                 </button>
                 <dialog id="update-lightning-address-dialog">
@@ -140,9 +134,7 @@
                     <output id="lightning-address-output"></output>
                     <button class="setting-btn normal-btn" id="show-lightning-address-dialog"
                         aria-label="受取ライトニングアドレスの設定">
-                        <svg width="28px" height="28px">
-                            <use xlink:href="./images/settings-solid.svg#a"></use>
-                        </svg>
+                        <div class="settings-solid"></div>
                     </button>
                 </p>
                 <dialog id="lightning-invoice-dialog">
@@ -165,37 +157,27 @@
 
         <div class="bgcolor">
             <h2 class="subject">共有</h2>
-            <div class="sns-share-container">
-                <div>
+            <div class="sns-share-container-1">
+                <div class="sns-share-container-2">
 
                     <a class="normal-btn" href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
-                        <svg width="32px" height="32px">
-                            <use xlink:href="./images/square-x-twitter.svg#a"></use>
-                        </svg>
+                        <div class="square-x-twitter"></div>
                     </a>
 
                     <a class="normal-btn" href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
-                        <svg width="32px" height="32px">
-                            <use xlink:href="./images/nostr-icon-purple-on-white.svg#a"></use>
-                        </svg>
+                        <div class="nostr-icon-purple-on-white"></div>
                     </a>
 
                     <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
-                        <svg width="32px" height="32px">
-                            <use xlink:href="./images/cloud-solid.svg#a"></use>
-                        </svg>
+                        <div class="cloud-solid"></div>
                     </a>
 
                     <button class="normal-btn" id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
-                        <svg width="30px" height="30px">
-                            <use xlink:href="./images/share-nodes-solid.svg#a"></use>
-                        </svg>
+                        <div class="share-nodes-solid"></div>
                     </button>
 
                     <button class="normal-btn" id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
-                        <svg width="29px" height="29px">
-                            <use xlink:href="./images/clipboard-solid.svg#a"></use>
-                        </svg>
+                        <div class="clipboard-solid"></div>
                     </button>
 
                 </div>
@@ -210,16 +192,12 @@
                     テーマ
                 </div>
                 <div class="theme-switch-container">
-                    <svg width="26px" height="26px">
-                        <use xlink:href="./images/sun-regular.svg#a"></use>
-                    </svg>
+                    <div class="sun-regular"></div>
                     <label class="theme-switch">
                         <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
                         <span class="slider round"></span>
                     </label>
-                    <svg width="30px" height="30px">
-                        <use xlink:href="./images/moon-regular.svg#a"></use>
-                    </svg>
+                    <div class="moon-regular"></div>
                 </div>
 
                 <div>
@@ -253,27 +231,21 @@
 
         <div class="bgcolor">
             <h2 class="subject">Zap（投げ銭）</h2>
-            <div class="zapBtn-flex">
+            <div class="zap-flex">
                 <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
                     data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
                     data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly"
                     data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://relayable.org,wss://nos.lol,wss://nostr.bitcoiner.social,wss://yabu.me,wss://nostr-relay.nokotaro.com,wss://relay.nostr.wirednet.jp">
                     Zap
-                    <svg width="24px" height="24px">
-                        <use xlink:href="./images/bolt-solid.svg#a"></use>
-                    </svg>
+                    <div class="bolt-solid"></div>
                 </button>
                 <a class="normal-btn"
                     href="https://new.nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received"
                     target="_blank">Zap一覧
-                    <svg width="24px" height="24px">
-                        <use xlink:href="./images/list-ol-solid.svg#a"></use>
-                    </svg>
+                    <div class="list-ol-solid"></div>
                 </a>
                 <a class="normal-btn" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
-                    <svg width="22px" height="22px">
-                        <use xlink:href="./images/magnifying-glass-solid.svg#a"></use>
-                    </svg>
+                    <div class="magnifying-glass-solid"></div>
                 </a>
             </div>
         </div>

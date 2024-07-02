@@ -32,14 +32,6 @@ button {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-svg {
-    fill: var(--svg-color);
-}
-
-svg#b {
-    fill: var(--invalid-color);
-}
-
 button>* {
     pointer-events: none;
 }
@@ -190,26 +182,21 @@ button>* {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: -10px;
+    margin-bottom: -8px;
 
-    & div {
+    & .text {
         font-size: 0.8rem;
         font-weight: bold;
         color: var(--invalid-color);
         margin-bottom: -2px;
     }
-}
 
-.flex-copy {
-    margin-left: 2px;
-}
-
-.flex-paste {
-    margin-right: 4px;
-}
-
-.arrow {
-    fill: var(--invalid-color);
+    & .angle-down-solid {
+        width: 18px;
+        height: 18px;
+        mask-image: url("./images/angle-down-solid.svg");
+        background-color: var(--invalid-color);
+    }
 }
 
 .date {
@@ -246,14 +233,15 @@ button>* {
     }
 }
 
-use.bitcoin-icon,
-svg#icon {
-    stroke: var(--input-bg-color);
-    fill: var(--input-bg-color);
+.currency-icon-span div {
+    margin-left: 1.5px;
 }
 
-.currency-icon-span svg {
-    margin-left: 1px;
+.bitcoin-icon {
+    width: 21px;
+    height: 21px;
+    mask-image: url('./images/currency-icons/bitcoin-icon.svg');
+    background-color: var(--input-bg-color);
 }
 
 .currency-icon-span {
@@ -421,36 +409,62 @@ svg#icon {
     animation: rotateAnimation 0.8s forwards;
 }
 
-.sns-share-container {
+.sns-share-container-1 {
     display: flex;
     justify-content: center;
     margin: 0 8px;
 
-    & div {
+    & .sns-share-container-2 {
         display: flex;
         justify-content: space-between;
         width: 100%;
         max-width: 480px;
 
-        & a,
-        & button {
-            display: flex;
-            align-items: center;
-        }
-
-        & button {
-            padding: 0;
-            margin: 0;
-        }
-
         & .normal-btn {
             display: flex;
+            align-items: center;
             justify-content: center;
             height: 54px;
             width: 100%;
             margin: 0 4px;
+            padding: 0;
         }
     }
+}
+
+.square-x-twitter {
+    width: 32px;
+    height: 32px;
+    mask-image: url("./images/square-x-twitter.svg");
+    background-color: var(--svg-color);
+}
+
+.nostr-icon-purple-on-white {
+    width: 32px;
+    height: 32px;
+    mask-image: url("./images/nostr-icon-purple-on-white.svg");
+    background-color: var(--svg-color);
+}
+
+.cloud-solid {
+    width: 32px;
+    height: 32px;
+    mask-image: url("./images/cloud-solid.svg");
+    background-color: var(--svg-color);
+}
+
+.share-nodes-solid {
+    width: 30px;
+    height: 30px;
+    mask-image: url("./images/share-nodes-solid.svg");
+    background-color: var(--svg-color);
+}
+
+.clipboard-solid {
+    width: 29px;
+    height: 29px;
+    mask-image: url("./images/clipboard-solid.svg");
+    background-color: var(--svg-color);
 }
 
 .grid-settings {
@@ -508,7 +522,7 @@ svg#icon {
     }
 }
 
-.zapBtn-flex {
+.zap-flex {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -531,16 +545,32 @@ svg#icon {
     }
 }
 
-#nostr-zap-target svg {
-    margin: 0 0 0 3px;
-}
-
 .nostr-zap-dialog {
     color-scheme: normal;
 }
 
-.zapBtn-flex a svg {
-    margin: 0 0 0 8px;
+#nostr-zap-target .bolt-solid {
+    width: 24px;
+    height: 24px;
+    mask-image: url("./images/bolt-solid.svg");
+    background-color: var(--svg-color);
+    margin-left: 3px;
+}
+
+.list-ol-solid {
+    width: 24px;
+    height: 24px;
+    mask-image: url("./images/list-ol-solid.svg");
+    background-color: var(--svg-color);
+    margin-left: 8px;
+}
+
+.magnifying-glass-solid {
+    width: 22px;
+    height: 22px;
+    mask-image: url("./images/magnifying-glass-solid.svg");
+    background-color: var(--svg-color);
+    margin-left: 6px;
 }
 
 .links {
@@ -637,6 +667,20 @@ svg#icon {
         justify-self: start;
         margin-left: 13px;
         margin-top: 1px;
+    }
+
+    .sun-regular {
+        width: 26px;
+        height: 26px;
+        mask-image: url("./images/sun-regular.svg");
+        background-color: var(--svg-color);
+    }
+
+    .moon-regular {
+        width: 30px;
+        height: 30px;
+        mask-image: url("./images/moon-regular.svg");
+        background-color: var(--svg-color);
     }
 }
 
@@ -918,10 +962,20 @@ svg#icon {
     width: 50px;
     height: 50px;
     margin-left: 6px;
+
+    .settings-solid {
+        width: 28px;
+        height: 28px;
+        mask-image: url("./images/settings-solid.svg");
+        background-color: var(--svg-color);
+    }
 }
 
-.pos svg {
-    color: var(--svg-color);
+.pos div.bolt-solid {
+    width: 24px;
+    height: 24px;
+    mask-image: url("./images/bolt-solid.svg");
+    background-color: var(--svg-color);
 }
 
 .pos .lightning-address {
@@ -974,7 +1028,7 @@ svg#icon {
     margin-top: -8px;
     margin-bottom: 12px;
 
-    & svg {
+    & div.bolt-solid {
         margin-right: 5px;
     }
 }
@@ -985,8 +1039,11 @@ svg#icon {
     border: 2px solid var(--input-bg-color);
     line-height: 50px;
 
-    & svg {
-        fill: var(--invalid-color);
+    & div.bolt-solid {
+        width: 24px;
+        height: 24px;
+        mask-image: url("./images/bolt-solid.svg");
+        background-color: var(--invalid-color);
     }
 }
 
