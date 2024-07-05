@@ -818,6 +818,51 @@ button>* {
     width: 100%;
 }
 
+.floating-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    height: 100%;
+    padding: 70px 0 90px 0;
+}
+
+.floating-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px 0 15px 35px;
+    border-radius: 6px 0 0 6px;
+}
+
+.floating-item {
+    display: flex;
+    font-family: 'NotoColorEmoji-Regular';
+    font-size: 1.5rem;
+    background-color: var(--input-bg-color);
+    height: 52px;
+    width: 52px;
+    padding: 10px;
+    border-radius: 6px 0 0 6px;
+    text-align: center;
+    cursor: grab;
+
+    &:active,
+    &:focus {
+        cursor: grabbing;
+    }
+
+    & img {
+        width: 32px;
+        height: 32px;
+    }
+}
+
 .saveSelectedCurrencies-container {
     display: flex;
     justify-content: center;

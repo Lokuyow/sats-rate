@@ -60,12 +60,19 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
 - `./lib/qr-code-styling@1.6.0-rc.1.js`
   - MIT License
   - Copyright (c) 2019 Denys Kozak.
-  - https://github.com/kozakdenys/qr-code-styling/blob/master/LICENSE 
+  - https://github.com/kozakdenys/qr-code-styling/blob/master/LICENSE
+- `./lib/sortable@1.15.2.js`
+  - MIT License
+  - Copyright (c) 2019 All contributors to Sortable
+  - https://github.com/SortableJS/Sortable/blob/master/LICENSE
 - その他の例外的な著作権宣言については個別にファイルを参照してください。
 
 ### ライセンスの例外
 以下のファイルはこのリポジトリのライセンスから除外され、特別なライセンスまたは著作権宣言が適用されます：
 
+- `./images/nostr-icon-purple-on-white.svg`
+  - CC0-1.0 License
+  - https://github.com/mbarulli/nostr-logo/blob/main/LICENSE
 - `./images/bitcoin-zukan.png`
   - © 2024 知っとこ！ビットコイン図鑑
   - https://bitcoin-zukan.com
