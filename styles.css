@@ -195,6 +195,9 @@ button>* {
         width: 18px;
         height: 18px;
         mask-image: url("./images/angle-down-solid.svg");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
         background-color: var(--invalid-color);
     }
 }
@@ -241,6 +244,9 @@ button>* {
     width: 21px;
     height: 21px;
     mask-image: url('./images/currency-icons/bitcoin-icon.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--input-bg-color);
 }
 
@@ -436,6 +442,9 @@ button>* {
     width: 32px;
     height: 32px;
     mask-image: url("./images/square-x-twitter.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -443,6 +452,9 @@ button>* {
     width: 32px;
     height: 32px;
     mask-image: url("./images/nostr-icon-purple-on-white.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -450,6 +462,9 @@ button>* {
     width: 32px;
     height: 32px;
     mask-image: url("./images/cloud-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -457,6 +472,9 @@ button>* {
     width: 30px;
     height: 30px;
     mask-image: url("./images/share-nodes-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -464,6 +482,9 @@ button>* {
     width: 29px;
     height: 29px;
     mask-image: url("./images/clipboard-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -553,6 +574,9 @@ button>* {
     width: 24px;
     height: 24px;
     mask-image: url("./images/bolt-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
     margin-left: 3px;
 }
@@ -561,6 +585,9 @@ button>* {
     width: 24px;
     height: 24px;
     mask-image: url("./images/list-ol-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
     margin-left: 8px;
 }
@@ -569,6 +596,9 @@ button>* {
     width: 22px;
     height: 22px;
     mask-image: url("./images/magnifying-glass-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
     margin-left: 6px;
 }
@@ -673,6 +703,9 @@ button>* {
         width: 26px;
         height: 26px;
         mask-image: url("./images/sun-regular.svg");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
         background-color: var(--svg-color);
     }
 
@@ -680,6 +713,9 @@ button>* {
         width: 30px;
         height: 30px;
         mask-image: url("./images/moon-regular.svg");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
         background-color: var(--svg-color);
     }
 }
@@ -1029,6 +1065,9 @@ button>* {
         width: 28px;
         height: 28px;
         mask-image: url("./images/settings-solid.svg");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
         background-color: var(--svg-color);
     }
 }
@@ -1037,6 +1076,9 @@ button>* {
     width: 24px;
     height: 24px;
     mask-image: url("./images/bolt-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
     background-color: var(--svg-color);
 }
 
@@ -1105,6 +1147,9 @@ button>* {
         width: 24px;
         height: 24px;
         mask-image: url("./images/bolt-solid.svg");
+        mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
         background-color: var(--invalid-color);
     }
 }
