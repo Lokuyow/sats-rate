@@ -833,11 +833,23 @@ button>* {
 .floating-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 3px;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 15px 0 15px 35px;
-    border-radius: 6px 0 0 6px;
+    background-color: var(--floating-background-color);
+    padding: 6px 0 15px 35px;
+    border-radius: 4px 0 0 6px;
+}
+
+.sort-solid {
+    width: 22px;
+    height: 22px;
+    mask-image: url("./images/sort-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    background-color: var(--main-bg-color);
+    margin-bottom: 1px;
 }
 
 .floating-item {
@@ -923,6 +935,8 @@ button>* {
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #DEDEDE;
+        --floating-background-color: rgba(0, 0, 0, 0.2);
+
     }
 
     :root[data-theme="dark"] {
@@ -941,6 +955,7 @@ button>* {
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #404040;
+        --floating-background-color: rgba(255, 255, 255, 0.2);
     }
 }
 
@@ -961,6 +976,7 @@ button>* {
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #404040;
+        --floating-background-color: rgba(255, 255, 255, 0.2);
     }
 
     :root[data-theme="light"] {
@@ -979,6 +995,7 @@ button>* {
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #DEDEDE;
+        --floating-background-color: rgba(0, 0, 0, 0.2);
     }
 }
 
