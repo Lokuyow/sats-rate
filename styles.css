@@ -187,7 +187,7 @@ button>* {
     & .text {
         font-size: 0.8rem;
         font-weight: bold;
-        color: var(--invalid-color);
+        color: var(--subject-text-color);
         margin-bottom: -2px;
     }
 
@@ -198,7 +198,7 @@ button>* {
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
-        background-color: var(--invalid-color);
+        background-color: var(--subject-text-color);
     }
 }
 
@@ -962,7 +962,7 @@ button>* {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
-        --subject-text-color: #6B6B6B;
+        --subject-text-color: #757575;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEDED;
         --input-bg-color: #EDEDED;
@@ -982,7 +982,7 @@ button>* {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
-        --subject-text-color: #B8B8B8;
+        --subject-text-color: #999999;
         --main-bg-color: #1A1A1A;
         --sub-bg-color: #303030;
         --input-bg-color: #303030;
@@ -1003,7 +1003,7 @@ button>* {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
-        --subject-text-color: #B8B8B8;
+        --subject-text-color: #999999;
         --main-bg-color: #1A1A1A;
         --sub-bg-color: #303030;
         --input-bg-color: #303030;
@@ -1022,7 +1022,7 @@ button>* {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
-        --subject-text-color: #6B6B6B;
+        --subject-text-color: #757575;
         --main-bg-color: #FFFFFF;
         --sub-bg-color: #EDEDED;
         --input-bg-color: #EDEDED;
