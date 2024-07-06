@@ -73,11 +73,11 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
 - `./images/nostr-icon-purple-on-white.svg`
   - CC0-1.0 License
   - https://github.com/mbarulli/nostr-logo/blob/main/LICENSE
-- `./images/bitcoin-zukan.png`
+- `./images/bitcoin-zukan.webp`
   - © 2024 知っとこ！ビットコイン図鑑
   - https://bitcoin-zukan.com
   - > Any use or reproducion of illustrations are prrohibited.
-- `./images/fulgur-favicon.ico`
+- `./images/fulgur-favicon.webp`
   - Copyright © フルグル合同会社 All Rights Reserved.
   - https://lostinbitcoin.jp/copyright
 - `./images/alby_icon_head_yellow_48x48.svg`
@@ -86,7 +86,7 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
 - `./images/btcmap-logo.svg`
   - Copyright © 2022-2024 BTC Map
   - https://btcmap.org/media
-- `./images/robosats-favicon.ico`
+- `./images/robosats-favicon.webp`
   - © 2023 RoboSats.
   - https://github.com/RoboSats/robosats/blob/main/LICENSE
 - `./images/mempool-favicon.ico`
