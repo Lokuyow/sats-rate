@@ -89,6 +89,6 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
 - `./images/robosats-favicon.webp`
   - © 2023 RoboSats.
   - https://github.com/RoboSats/robosats/blob/main/LICENSE
-- `./images/mempool-favicon.ico`
+- `./images/mempool-favicon.webp`
   - Copyright (c) 2019-2023 Mempool Space K.K.
   - https://mempool.space/trademark-policy

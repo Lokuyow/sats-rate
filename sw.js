@@ -32,7 +32,7 @@ const urlsToCache = [
     './images/alby_icon_head_yellow_48x48.svg',
     './images/btcmap-logo.svg',
     './images/robosats-favicon.webp',
-    './images/mempool-favicon.ico',
+    './images/mempool-favicon.webp',
     './images/bolt-solid.svg',
     './images/list-ol-solid.svg',
     './images/magnifying-glass-solid.svg',
