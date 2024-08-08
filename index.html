@@ -5,6 +5,8 @@
     <title>おいくらサッツ</title>
 
     <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="preload" href="./images/currency-icons/bitcoin-icon.svg" as="image" crossorigin="anonymous">
+    <link rel="preload" href="./lib/currencies.json" as="fetch" crossorigin="anonymous">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -340,9 +342,9 @@
         </div>
     </div>
 
-    <script async src="./lib/nostr-zap@0.21.0.js"></script>
-    <script async src="./lib/qr-code-styling@1.6.0-rc.1.js"></script>
-    <script type="module" src="./main.js"></script>
+    <script defer src="./lib/nostr-zap@0.21.0.js"></script>
+    <script defer src="./lib/qr-code-styling@1.6.0-rc.1.js"></script>
+    <script defer type="module" src="./main.js"></script>
 </body>
 
 </html>
