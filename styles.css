@@ -52,6 +52,7 @@ button>* {
     &:active {
         color: var(--main-text-color);
         background-color: var(--hover-color);
+        transition: background-color 0.3s ease-out;
     }
 }
 
