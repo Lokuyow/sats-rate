@@ -17,7 +17,7 @@ const urlsToCache = [
     './fonts/RoundedMplus1c-Bold.woff2',
     './fonts/NotoColorEmoji-Regular.woff2',
     './favicons/favicon.ico',
-    './images/icon.webp',
+    './images/icon.svg',
     './images/icon_x192.png',
     './images/icon_x512.png',
     './images/maskable_icon_x192.png',
