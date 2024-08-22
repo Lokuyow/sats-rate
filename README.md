@@ -65,6 +65,8 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
   - MIT License
   - Copyright (c) 2019 All contributors to Sortable
   - https://github.com/SortableJS/Sortable/blob/master/LICENSE
+- `./images/flags`
+  - https://github.com/googlefonts/noto-emoji/blob/main/third_party/region-flags/LICENSE
 - その他の例外的な著作権宣言については個別にファイルを参照してください。
 
 ### ライセンスの例外

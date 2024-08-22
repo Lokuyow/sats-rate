@@ -91,14 +91,6 @@ button>* {
     font-display: swap;
 }
 
-@font-face {
-    font-family: 'NotoColorEmoji-Regular';
-    src: url('./fonts/NotoColorEmoji-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
 .main {
     flex: 1 0 auto;
     display: flex;
@@ -837,15 +829,14 @@ button>* {
 .currency-selection-emojiLabel {
     display: flex;
     justify-content: flex-end;
-    font-family: 'NotoColorEmoji-Regular';
     border-bottom: solid 1px var(--sub-bg-color);
     height: 100%;
     width: 100%;
     padding-right: 14px;
 
     & img {
-        height: 19px;
-        width: auto;
+        height: auto;
+        width: 22px;
         margin: auto 0;
     }
 }
@@ -900,14 +891,13 @@ button>* {
 
 .floating-item {
     display: flex;
-    font-family: 'NotoColorEmoji-Regular';
     font-size: 1.5rem;
     background-color: var(--input-bg-color);
     height: 52px;
     width: 52px;
-    padding: 10px;
     border-radius: 6px 0 0 6px;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
     cursor: grab;
 
     &:active,
@@ -916,8 +906,10 @@ button>* {
     }
 
     & img {
+        text-align: center;
+        height: auto;
         width: 32px;
-        height: 32px;
+        margin: auto;
     }
 }
 
