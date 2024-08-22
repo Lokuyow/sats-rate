@@ -4,84 +4,84 @@
         "abbreviation": "sats",
         "name": "Satoshi",
         "japanese_name": "サトシ",
-        "emoji": "./images/currency-icons/btc-s.png"
+        "emoji": "./images/cryptocurrency-icons/btc-s.svg"
     },
     {
         "symbol": "₿",
         "abbreviation": "btc",
         "name": "Bitcoin",
         "japanese_name": "ビットコイン",
-        "emoji": "./images/currency-icons/btc.png"
+        "emoji": "./images/cryptocurrency-icons/btc.svg"
     },
     {
         "symbol": "Ξ",
         "abbreviation": "eth",
         "name": "Ethereum",
         "japanese_name": "イーサリアム",
-        "emoji": "./images/currency-icons/eth.png"
+        "emoji": "./images/cryptocurrency-icons/eth.svg"
     },
     {
         "symbol": "Ł",
         "abbreviation": "ltc",
         "name": "Litecoin",
         "japanese_name": "ライトコイン",
-        "emoji": "./images/currency-icons/ltc.png"
+        "emoji": "./images/cryptocurrency-icons/ltc.svg"
     },
     {
         "symbol": "BCH",
         "abbreviation": "bch",
         "name": "Bitcoin Cash",
         "japanese_name": "ビットコインキャッシュ",
-        "emoji": "./images/currency-icons/bch.png"
+        "emoji": "./images/cryptocurrency-icons/bch.svg"
     },
     {
         "symbol": "BNB",
         "abbreviation": "bnb",
         "name": "Binance Coin",
         "japanese_name": "バイナンスコイン",
-        "emoji": "./images/currency-icons/bnb.png"
+        "emoji": "./images/cryptocurrency-icons/bnb.svg"
     },
     {
         "symbol": "EOS",
         "abbreviation": "eos",
         "name": "EOS",
         "japanese_name": "イオス",
-        "emoji": "./images/currency-icons/eos.png"
+        "emoji": "./images/cryptocurrency-icons/eos.svg"
     },
     {
         "symbol": "XRP",
         "abbreviation": "xrp",
         "name": "Ripple",
         "japanese_name": "リップル",
-        "emoji": "./images/currency-icons/xrp.png"
+        "emoji": "./images/cryptocurrency-icons/xrp.svg"
     },
     {
         "symbol": "XLM",
         "abbreviation": "xlm",
         "name": "Stellar Lumens",
         "japanese_name": "ステラルーメン",
-        "emoji": "./images/currency-icons/xlm.png"
+        "emoji": "./images/cryptocurrency-icons/xlm.svg"
     },
     {
         "symbol": "LINK",
         "abbreviation": "link",
         "name": "Chainlink",
         "japanese_name": "チェーンリンク",
-        "emoji": "./images/currency-icons/link.png"
+        "emoji": "./images/cryptocurrency-icons/link.svg"
     },
     {
         "symbol": "DOT",
         "abbreviation": "dot",
         "name": "Polkadot",
         "japanese_name": "ポルカドット",
-        "emoji": "./images/currency-icons/dot.png"
+        "emoji": "./images/cryptocurrency-icons/dot.svg"
     },
     {
         "symbol": "YFI",
         "abbreviation": "yfi",
         "name": "Yearn.finance",
         "japanese_name": "ヤーンファイナンス",
-        "emoji": "./images/currency-icons/yfi.png"
+        "emoji": "./images/cryptocurrency-icons/yfi.svg"
     },
     {
         "symbol": "$",
@@ -417,13 +417,13 @@
         "abbreviation": "xag",
         "name": "Silver",
         "japanese_name": "銀",
-        "emoji": "./images/currency-icons/silver-icon.png"
+        "emoji": "./images/silver-icon.png"
     },
     {
         "symbol": "XAU",
         "abbreviation": "xau",
         "name": "Gold",
         "japanese_name": "金",
-        "emoji": "./images/currency-icons/gold-icon.png"
+        "emoji": "./images/gold-icon.png"
     }
 ]

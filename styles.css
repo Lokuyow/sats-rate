@@ -245,7 +245,7 @@ button>* {
 .bitcoin-icon {
     width: 21px;
     height: 21px;
-    mask-image: url('./images/currency-icons/bitcoin-icon.svg');
+    mask-image: url('./images/bitcoin-icon.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -836,7 +836,7 @@ button>* {
 
     & img {
         height: auto;
-        width: 22px;
+        width: 24px;
         margin: auto 0;
     }
 }
@@ -899,6 +899,7 @@ button>* {
     justify-content: center;
     align-items: center;
     cursor: grab;
+    padding: 10px;
 
     &:active,
     &:focus {
