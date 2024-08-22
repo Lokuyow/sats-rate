@@ -1,6 +1,6 @@
 const urlsToCache = [
     './index.html',
-    './currency-selection.html',
+    './currency-selection/index.html',
     './styles.css',
     './main.js',
     './lib/currencyManager.js',
@@ -103,7 +103,7 @@ const urlsToCache = [
     './images/gold-icon.png'
 ];
 
-const VERSION = '2.08';
+const VERSION = '2.09';
 let CACHE_NAME = 'osats-caches-' + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
