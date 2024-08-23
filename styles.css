@@ -879,14 +879,14 @@ button>* {
 }
 
 .sort-solid {
-    width: 22px;
-    height: 22px;
-    mask-image: url("./images/sort-solid.svg");
+    width: 26px;
+    height: 26px;
+    mask-image: url("./images/arrow-right-arrow-left-solid-_rotate-flip.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
-    background-color: var(--main-bg-color);
-    margin-bottom: 1px;
+    background-color: var(--svg-color);
+    margin: 4px 0;
 }
 
 .floating-item {

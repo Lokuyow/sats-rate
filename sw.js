@@ -39,7 +39,7 @@ const urlsToCache = [
     './images/moon-regular.svg',
     './images/angle-down-solid.svg',
     './images/settings-solid.svg',
-    './images/sort-solid.svg',
+    './images/arrow-right-arrow-left-solid-_rotate-flip.svg',
     './images/bitcoin-icon.svg',
     './images/cryptocurrency-icons/btc.svg',
     './images/cryptocurrency-icons/btc-s.svg',
