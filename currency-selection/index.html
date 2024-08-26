@@ -51,22 +51,39 @@
 </head>
 
 <body class="currency-selection" ontouchstart="">
+
+    <div class="checkBtn-container">
+        <button id="checkAllButton" class="dark-btn">check all</button>
+        <button id="uncheckAllButton" class="dark-btn">uncheck all</button>
+        <button id="defaultSelectionButton" class="dark-btn">default</button>
+    </div>
+
     <div class="main">
+
         <div class="bgcolor">
-
-            <div class="checkBtn-container">
-                <button id="checkAllButton" class=" normal-btn">check all</button>
-                <button id="uncheckAllButton" class=" normal-btn">uncheck all</button>
-            </div>
-
             <div id="currency-container"></div>
 
             <div class="floating-field">
-                <div class="floating-container">
-                    <div class="sort-solid"></div>
-                </div>
-            </div>
 
+                <div id="fix-container">
+                    <button id="scrollUpButton" class="scroll-button scroll-up normal-btn">
+                        <div class="caret-up-solid"></div>
+                    </button>
+
+                    <div id="trash-container">
+                        <div class="trash-icon">
+                            <div class="trash-drop-area"></div>
+                        </div>
+                    </div>
+
+                    <button id="scrollDownButton" class="scroll-button scroll-down normal-btn">
+                        <div class="caret-down-solid"></div>
+                    </button>
+                </div>
+
+                <div class="sort-container"></div>
+
+            </div>
         </div>
     </div>
 

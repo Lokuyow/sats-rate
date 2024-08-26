@@ -11,7 +11,7 @@
 }
 
 body {
-    background-color: var(--sub-bg-color);
+    background-color: var(--bg-color2);
     font-family: var(--main-font);
     color: var(--main-text-color);
     margin: 0;
@@ -34,6 +34,11 @@ button {
 
 button>* {
     pointer-events: none;
+}
+
+img {
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .normal-btn {
@@ -67,6 +72,31 @@ button>* {
     }
 }
 
+.dark-btn {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--main-text-color);
+    background-color: var(--unit-bg-color);
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--main-text-color);
+    }
+
+    &:active {
+        color: var(--main-text-color);
+        background-color: var(--hover-color2);
+    }
+}
+
+@media (hover: hover) {
+    .dark-btn:hover {
+        background-color: var(--hover-color2);
+    }
+}
+
 @font-face {
     font-family: 'RoundedMplus1c';
     src: url('./fonts/RoundedMplus1c-Regular.woff2') format('woff2');
@@ -92,15 +122,17 @@ button>* {
 }
 
 .main {
-    flex: 1 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .bgcolor {
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color1);
     width: 100%;
+}
+
+.top-page .bgcolor {
     max-width: 1000px;
     margin-bottom: 4px;
     padding-bottom: 40px;
@@ -295,7 +327,7 @@ button>* {
 }
 
 .last-input-field {
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color1);
     border: 2px solid var(--input-bg-color);
     border-right: 0;
 }
@@ -337,7 +369,6 @@ button>* {
 }
 
 .currency-units {
-    background-color: var(--unit-bg-color);
     font-size: 1.15rem;
     font-weight: 500;
     text-align: center;
@@ -350,12 +381,6 @@ button>* {
     height: 100%;
 
     &:active {
-        background-color: var(--hover-color2);
-    }
-}
-
-@media (hover: hover) {
-    .currency-units:hover {
         background-color: var(--hover-color2);
     }
 }
@@ -524,7 +549,7 @@ button>* {
             transform: translateY(-50%);
 
             & .spinner {
-                border: 7px solid var(--main-bg-color);
+                border: 7px solid var(--bg-color1);
                 border-top: 7px solid var(--subject-text-color);
                 border-radius: 50%;
                 width: 28px;
@@ -790,16 +815,18 @@ button>* {
     color: var(--main-text-color);
     font-size: 1rem;
     font-weight: 500;
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color1);
     border: 2px solid var(--input-bg-color);
     border-radius: 6px;
     padding: 12px 14px;
     white-space: nowrap;
 }
 
+/* 通貨選択ページ */
 .currency-selection .bgcolor {
     max-width: 800px;
-    padding-bottom: 80px;
+    padding-top: 66px;
+    padding-bottom: 72px;
 }
 
 #currency-container {
@@ -829,7 +856,7 @@ button>* {
 .currency-selection-emojiLabel {
     display: flex;
     justify-content: flex-end;
-    border-bottom: solid 1px var(--sub-bg-color);
+    border-bottom: solid 1px var(--bg-color2);
     height: 100%;
     width: 100%;
     padding-right: 14px;
@@ -843,14 +870,14 @@ button>* {
 
 .currency-selection-abbreviationLabel {
     justify-self: start;
-    border-bottom: solid 1px var(--sub-bg-color);
+    border-bottom: solid 1px var(--bg-color2);
     height: 100%;
     width: 100%;
 }
 
 .currency-selection-name {
     justify-self: start;
-    border-bottom: solid 1px var(--sub-bg-color);
+    border-bottom: solid 1px var(--bg-color2);
     height: 100%;
     width: 100%;
 }
@@ -861,56 +888,162 @@ button>* {
     justify-content: center;
     position: fixed;
     top: 50%;
-    right: 0;
     transform: translateY(-50%);
     height: 100dvh;
-    padding: 70px 0 90px 0;
+    padding: 120px 0 172px 0;
+
+    .sort-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        overflow-y: auto;
+
+        .sort-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-radius: 6px 0 0 6px;
+            cursor: grab;
+            height: 52px;
+            width: 64px;
+            padding: 10px 0;
+
+            .drag-indicator {
+                width: 28px;
+                height: 28px;
+                mask-image: url("./images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
+                mask-repeat: no-repeat;
+                mask-size: contain;
+                mask-position: center;
+                background-color: var(--svg-color2);
+            }
+
+            .sort-icon {
+                display: flex;
+                font-size: 1.5rem;
+                justify-content: center;
+                align-items: center;
+                margin-right: 4px;
+
+                &:active,
+                &:focus {
+                    cursor: grabbing;
+                }
+
+                & img {
+                    text-align: center;
+                    height: auto;
+                    width: 32px;
+                    margin: auto;
+                }
+            }
+        }
+    }
 }
 
-.floating-container {
+#fix-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    overflow-y: auto;
-    background-color: var(--floating-background-color);
-    padding: 6px 0 15px 35px;
-    border-radius: 4px 0 0 6px;
-}
+    justify-content: flex-end;
 
-.sort-solid {
-    width: 26px;
-    height: 26px;
-    mask-image: url("./images/arrow-right-arrow-left-solid-_rotate-flip.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-    margin: 4px 0;
-}
+    #trash-container {
+        position: fixed;
+        bottom: 62px;
+        height: 52px;
+        width: 64px;
+        padding: 0;
+        z-index: 1000;
+        background-color: var(--alpha-color);
+        border-radius: 6px 0 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-.floating-item {
-    display: flex;
-    font-size: 1.5rem;
-    background-color: var(--input-bg-color);
-    height: 52px;
-    width: 52px;
-    border-radius: 6px 0 0 6px;
-    justify-content: center;
-    align-items: center;
-    cursor: grab;
-    padding: 10px;
-
-    &:active,
-    &:focus {
-        cursor: grabbing;
+        & .trash-icon {
+            width: 30px;
+            height: 30px;
+            mask-image: url("./images/trash-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+        }
     }
 
-    & img {
-        text-align: center;
-        height: auto;
-        width: 32px;
-        margin: auto;
+    .scroll-button {
+        position: fixed;
+        height: 52px;
+        width: 64px;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        z-index: 1000;
+        display: none;
+        border-radius: 6px 0 0 6px;
+    }
+
+    .scroll-up {
+        top: 65px;
+        right: 0;
+
+        & .caret-up-solid {
+            width: 52px;
+            height: 52px;
+            mask-image: url("./images/caret-up-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+            margin: auto;
+        }
+    }
+
+    .scroll-down {
+        bottom: 117px;
+        right: 0;
+
+        & .caret-down-solid {
+            width: 52px;
+            height: 52px;
+            mask-image: url("./images/caret-down-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+            margin: auto;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .scroll-button {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .floating-field {
+        padding: 68px 0 120px 0;
+    }
+}
+
+.checkBtn-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bg-color2);
+    padding: 8px 0;
+    z-index: 9999;
+
+    & button {
+        font-size: 1rem;
+        font-weight: 500;
+        height: 46px;
+        width: 100%;
+        max-width: 110px;
+        margin: 0 3px;
     }
 }
 
@@ -920,8 +1053,9 @@ button>* {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: var(--sub-bg-color);
-    padding: 10px 0;
+    background-color: var(--bg-color2);
+    padding: 8px 0;
+    z-index: 9999;
 }
 
 #saveSelectedCurrenciesBtn {
@@ -939,23 +1073,6 @@ button>* {
     padding: 0;
 }
 
-.checkBtn-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    margin-bottom: 12px;
-
-    & button {
-        font-size: 1rem;
-        font-weight: 500;
-        height: 46px;
-        width: 100%;
-        max-width: 162px;
-        margin: 0 3px;
-    }
-}
-
-
 /* ダークモード設定 */
 @media (prefers-color-scheme: light) {
     :root {
@@ -965,16 +1082,17 @@ button>* {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
+        --svg-color2: #8F8F8F;
         --subject-text-color: #757575;
-        --main-bg-color: #FFFFFF;
-        --sub-bg-color: #EDEDED;
+        --bg-color1: #FFFFFF;
+        --bg-color2: #EDEDED;
         --input-bg-color: #EDEDED;
         --unit-bg-color: #DEDEDE;
         --hover-color: #DEDEDE;
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #DEDEDE;
-        --floating-background-color: rgba(0, 0, 0, 0.2);
+        --alpha-color: rgba(0, 0, 0, 0.1);
 
     }
 
@@ -985,16 +1103,17 @@ button>* {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
+        --svg-color2: #808080;
         --subject-text-color: #999999;
-        --main-bg-color: #1A1A1A;
-        --sub-bg-color: #303030;
+        --bg-color1: #1A1A1A;
+        --bg-color2: #303030;
         --input-bg-color: #303030;
         --unit-bg-color: #404040;
         --hover-color: #404040;
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #404040;
-        --floating-background-color: rgba(255, 255, 255, 0.2);
+        --alpha-color: rgba(255, 255, 255, 0.1);
     }
 }
 
@@ -1006,16 +1125,17 @@ button>* {
         --input-text-color: #FFFFFF;
         --main-text-color: #E6E6E6;
         --svg-color: #F0F0F0;
+        --svg-color2: #808080;
         --subject-text-color: #999999;
-        --main-bg-color: #1A1A1A;
-        --sub-bg-color: #303030;
+        --bg-color1: #1A1A1A;
+        --bg-color2: #303030;
         --input-bg-color: #303030;
         --unit-bg-color: #404040;
         --hover-color: #404040;
         --hover-color2: #4D4D4D;
         --hover-color3: #242424;
         --invalid-color: #404040;
-        --floating-background-color: rgba(255, 255, 255, 0.2);
+        --alpha-color: rgba(255, 255, 255, 0.1);
     }
 
     :root[data-theme="light"] {
@@ -1025,16 +1145,17 @@ button>* {
         --input-text-color: #000000;
         --main-text-color: #3D3D3D;
         --svg-color: #525252;
+        --svg-color2: #8F8F8F;
         --subject-text-color: #757575;
-        --main-bg-color: #FFFFFF;
-        --sub-bg-color: #EDEDED;
+        --bg-color1: #FFFFFF;
+        --bg-color2: #EDEDED;
         --input-bg-color: #EDEDED;
         --unit-bg-color: #DEDEDE;
         --hover-color: #DEDEDE;
         --hover-color2: #D1D1D1;
         --hover-color3: #F7F7F7;
         --invalid-color: #DEDEDE;
-        --floating-background-color: rgba(0, 0, 0, 0.2);
+        --alpha-color: rgba(0, 0, 0, 0.1);
     }
 }
 
@@ -1119,7 +1240,7 @@ button>* {
 
 .pos dialog {
     color: var(--main-text-color);
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color1);
     border-radius: 1em;
     border: 1px solid #333333;
     padding: 0;
@@ -1142,7 +1263,7 @@ button>* {
 
 .pos button:disabled {
     color: var(--invalid-color);
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color1);
     border: 2px solid var(--input-bg-color);
     line-height: 50px;
 
