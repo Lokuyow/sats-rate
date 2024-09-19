@@ -65,6 +65,10 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
   - MIT License
   - Copyright (c) 2019 All contributors to Sortable
   - https://github.com/SortableJS/Sortable/blob/master/LICENSE
+- `./lib/vanilla-i18n.min.js`
+  - MIT License
+  - Copyright (c) 2020 Shivam Kumar Jha
+  - https://github.com/thealphadollar/vanilla-i18n/blob/master/LICENSE
 - `./images/cryptocurrency-icons`
   - https://github.com/spothq/cryptocurrency-icons/blob/master/LICENSE.md
 - `./images/flags`

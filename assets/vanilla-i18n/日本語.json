@@ -1,0 +1,48 @@
+{
+    "title": "おいくらサッツ",
+    "copy": "コピー",
+    "paste": "ペースト",
+    "lightning": {
+        "subject": "ライトニング",
+        "invoice": "インボイスを表示",
+        "address": "受取用ライトニングアドレス",
+        "submit": "設定する",
+        "clear": "削除",
+        "close": "閉じる"
+    },
+    "share": "共有",
+    "settings": {
+        "subject": "設定",
+        "theme": "テーマ",
+        "value": {
+            "subject": "現在の入力値",
+            "default": "デフォルトに設定"
+        },
+        "currency": {
+            "subject": "通貨",
+            "sort": "並び替え、変更"
+        },
+        "update": "更新をチェック"
+    },
+    "zap": {
+        "subject": "Zap（投げ銭）",
+        "list": "Zap一覧",
+        "what": "Zapとは"
+    },
+    "recommend": {
+        "subject": "おすすめサイト",
+        "zukan": "ビットコイン図鑑",
+        "lost": "ロストイン・ビットコイン"
+    },
+    "footer": {
+        "oikura": "おいくらサッツとは",
+        "description": "サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間の相互換算ができるツールです。",
+        "unit": "Sats,Sat,Satoshi (単位)",
+        "formula": "1億 sats = 1 BTC",
+        "created": "サイト制作：",
+        "contribution": "貢献：",
+        "source": "ソースコード：",
+        "data": "データ提供："
+    },
+    "lokuyow": "ロクヨウ"
+}

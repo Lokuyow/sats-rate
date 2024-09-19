@@ -1,0 +1,48 @@
+{
+    "title": "OikuraSats",
+    "copy": "Copy",
+    "paste": "Paste",
+    "lightning": {
+        "subject": "Lightning",
+        "invoice": "Show Invoice",
+        "address": "Lightning Address for Receiving",
+        "submit": "Set",
+        "clear": "Delete",
+        "close": "Close"
+    },
+    "share": "Share",
+    "settings": {
+        "subject": "Settings",
+        "theme": "Theme",
+        "value": {
+            "subject": "Current Input Value",
+            "default": "Set as Default"
+        },
+        "currency": {
+            "subject": "Currency",
+            "sort": "Sort and Rearrange"
+        },
+        "update": "Check for Updates"
+    },
+    "zap": {
+        "subject": "Zap (Tipping)",
+        "list": "Zap List",
+        "what": "Zap?"
+    },
+    "recommend": {
+        "subject": "Recommended Sites",
+        "zukan": "Bitcoin-zukan.com",
+        "lost": "Lost in Bitcoin"
+    },
+    "footer": {
+        "oikura": "What is OikuraSats?",
+        "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows for mutual conversion between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (bitcoin, BTC), Japanese Yen (JPY), and US Dollars (USD).",
+        "unit": "Sats, Sat, Satoshi (Units)",
+        "formula": "100 million sats = 1 BTC",
+        "created": "Created by: ",
+        "contribution": "Contributions: ",
+        "source": "Source Code: ",
+        "data": "Data provided by: "
+    },
+    "lokuyow": "Lokuyow"
+}

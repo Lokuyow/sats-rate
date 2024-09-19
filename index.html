@@ -61,6 +61,24 @@
 
         setTheme(getInitialTheme());
     </script>
+
+    <script src="/lib/vanilla-i18n.min.js"></script>
+    <script>
+        const languages = [
+            "日本語",
+            "English"
+        ];
+        new vanilla_i18n(
+            languages,
+            opts = {
+                path: "/assets/vanilla-i18n",
+                debug: false,
+                i18n_attr_name: "vanilla-i18n",
+                toggler_id: "vanilla-i18n-toggler",
+                default_language: languages[1],
+            }
+        ).run();
+    </script>
 </head>
 
 <body class="top-page" ontouchstart="">
@@ -69,7 +87,9 @@
 
             <div class="title-flex">
                 <a class="title-link" href="https://osats.money/" aria-label="おいくらサッツ">
-                    <h1 class="title">おいくらサッツ</h1>
+                    <h1 class="title">
+                        <i18n vanilla-i18n="title">おいくらサッツ</i18n>
+                    </h1>
                     <img class="icon" src="./images/icon.svg" alt="icon" width="68px" height="68px" />
                 </a>
             </div>
@@ -78,14 +98,18 @@
                 <div class="grid-container">
 
                     <div class="flex-copy">
-                        <div class="text">コピー</div>
+                        <div class="text">
+                            <i18n vanilla-i18n="copy">コピー</i18n>
+                        </div>
                         <div class="angle-down-solid"></div>
                     </div>
 
                     <div class="date" id="last-updated"></div>
 
                     <div class="flex-paste">
-                        <div class="text">ペースト</div>
+                        <div class="text">
+                            <i18n vanilla-i18n="paste">ペースト</i18n>
+                        </div>
                         <div class="angle-down-solid"></div>
                     </div>
 
@@ -103,25 +127,34 @@
         </div>
 
         <div class="bgcolor pos-wrapper">
-            <h2 class="subject">ライトニング</h2>
+            <h2 class="subject">
+                <i18n vanilla-i18n="lightning.subject">ライトニング</i18n>
+            </h2>
             <div class="pos">
                 <button disabled class="show-invoice-dialog normal-btn" id="show-invoice-dialog">
                     <div class="bolt-solid"></div>
-                    インボイスを表示
+                    <i18n vanilla-i18n="lightning.invoice">インボイスを表示</i18n>
                 </button>
                 <dialog id="update-lightning-address-dialog">
                     <form id="lightning-address-form">
-                        <label class="lightning-address-label" id="lightning-address">受取用ライトニングアドレス
+                        <label class="lightning-address-label" id="lightning-address">
+                            <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
                             <input type="text" name="lightning-address" id="lightning-address-input"
                                 class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$"
                                 maxlength="200" minlength="4" required title="ライトニングアドレスの形式で入力してください" />
                             <div>
                                 <button class="normal-btn" id="lightning-address-submit-button" type="submit"
-                                    formmethod="dialog">設定する</button>
+                                    formmethod="dialog">
+                                    <i18n vanilla-i18n="lightning.submit">設定する</i18n>
+                                </button>
                                 <button class="normal-btn" id="lightning-address-clear-button" value="clear"
-                                    formmethod="dialog">削除</button>
+                                    formmethod="dialog">
+                                    <i18n vanilla-i18n="lightning.clear">削除</i18n>
+                                </button>
                                 <button class="normal-btn" id="lightning-address-close-button" value="cancel"
-                                    formmethod="dialog">閉じる</button>
+                                    formmethod="dialog">
+                                    <i18n vanilla-i18n="lightning.close">閉じる</i18n>
+                                </button>
                             </div>
                         </label>
                     </form>
@@ -145,14 +178,18 @@
                             <div id="base-unit" class="unit-text"></div>
                         </div>
                         <button class="lightning-invoice-close-button normal-btn" id="lightning-invoice-close-button"
-                            value="cancel" formmethod="dialog">閉じる</button>
+                            value="cancel" formmethod="dialog">
+                            <i18n vanilla-i18n="lightning.close">閉じる</i18n>
+                        </button>
                     </div>
                 </dialog>
             </div>
         </div>
 
         <div class="bgcolor">
-            <h2 class="subject">共有</h2>
+            <h2 class="subject">
+                <i18n vanilla-i18n="share">共有</i18n>
+            </h2>
             <div class="sns-share-container-1">
                 <div class="sns-share-container-2">
 
@@ -181,11 +218,13 @@
         </div>
 
         <div class="bgcolor">
-            <h2 class="subject">設定</h2>
+            <h2 class="subject">
+                <i18n vanilla-i18n="settings.subject">設定</i18n>
+            </h2>
             <div class="grid-settings">
 
                 <div>
-                    テーマ
+                    <i18n vanilla-i18n="settings.theme">テーマ</i18n>
                 </div>
                 <div class="theme-switch-container">
                     <div class="sun-regular"></div>
@@ -196,26 +235,32 @@
                     <div class="moon-regular"></div>
                 </div>
 
-                <div>
-                    通貨
-                </div>
-                <a class="settings-btn normal-btn" href="./currency-selection/">
-                    並び替え、変更する
-                </a>
+                <div>Language</div>
+                <select id="vanilla-i18n-toggler">
+                    <option>日本語</option>
+                    <option>English</option>
+                </select>
 
                 <div class="theme-DefaultValue">
-                    現在の入力値
+                    <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
                 </div>
                 <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
-                    デフォルトに設定する
+                    <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
                 </button>
+
+                <div>
+                    <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
+                </div>
+                <a class="settings-btn normal-btn" href="./currency-selection/">
+                    <i18n vanilla-i18n="settings.currency.sort">並び替え、変更</i18n>
+                </a>
 
                 <div class="theme-ver">
                     Version&nbsp;<span id="siteVersion"></span>
                 </div>
                 <button class="settings-btn normal-btn" id="checkForUpdateBtn">
                     <span id="buttonText">
-                        更新をチェックする
+                        <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
                         <div class="spinner-wrapper">
                             <div class="spinner"></div>
                         </div>
@@ -226,7 +271,9 @@
         </div>
 
         <div class="bgcolor">
-            <h2 class="subject">Zap（投げ銭）</h2>
+            <h2 class="subject">
+                <i18n vanilla-i18n="zap.subject">Zap（投げ銭）</i18n>
+            </h2>
             <div class="zap-flex">
                 <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
                     data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
@@ -237,24 +284,28 @@
                 </button>
                 <a class="normal-btn"
                     href="https://nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received"
-                    target="_blank">Zap一覧
+                    target="_blank">
+                    <i18n vanilla-i18n="zap.list">Zap一覧</i18n>
                     <div class="list-ol-solid"></div>
                 </a>
-                <a class="normal-btn" href="https://scrapbox.io/nostr/Zap" target="_blank">Zapとは
+                <a class="normal-btn" href="https://scrapbox.io/nostr/Zap" target="_blank">
+                    <i18n vanilla-i18n="zap.what">Zapとは</i18n>
                     <div class="magnifying-glass-solid"></div>
                 </a>
             </div>
         </div>
 
         <div class="bgcolor">
-            <h2 class="subject">おすすめサイト</h2>
+            <h2 class="subject">
+                <i18n vanilla-i18n="recommend.subject">おすすめサイト</i18n>
+            </h2>
             <div class="links">
                 <a class="links-container normal-btn" href="https://bitcoin-zukan.com/" target="_blank">
                     <div class="link-icon">
                         <img src="./images/bitcoin-zukan.webp" alt="icon" width="32px" height="32px">
                     </div>
                     <div class="link-text">
-                        ビットコイン図鑑
+                        <i18n vanilla-i18n="recommend.zukan">ビットコイン図鑑</i18n>
                     </div>
                 </a>
 
@@ -263,7 +314,7 @@
                         <img src="./images/fulgur-favicon.webp" alt="icon" width="32px" height="32px">
                     </div>
                     <div class="link-text">
-                        ロストイン・ビットコイン
+                        <i18n vanilla-i18n="recommend.lost">ロストイン・ビットコイン</i18n>
                     </div>
                 </a>
 
@@ -312,26 +363,35 @@
     <div class="footer-container">
 
         <div class="site-description-container">
-            <h3>おいくらサッツ とは</h3>
+            <h3>
+                <i18n vanilla-i18n="footer.oikura">おいくらサッツ とは</i18n>
+            </h3>
             <p>
-                サッツ（Sats, Sat,
-                Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨間<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
+                <i18n vanilla-i18n="footer.description">
+                    サッツ（Sats, Sat,
+                    Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨間<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。
+                </i18n>
             </p>
             <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
-                Sats,Sat,Satoshi (単位)
+                <i18n vanilla-i18n="footer.unit">Sats,Sat,Satoshi (単位)</i18n>
             </a>
             <p>
-                1億 sats = 1 BTC<br>
+                <i18n vanilla-i18n="footer.formula">1億 sats = 1 BTC</i18n><br>
                 1 sat = 0.00000001 BTC
             </p>
         </div>
 
         <div class="reference">
             <p>
-                サイト制作：<a href="https://lokuyow.github.io/" target="_blank">ロクヨウ</a><br>
-                貢献：<a href="https://ocknamo.com/" target="_blank">ocknamo</a><br>
-                ソースコード：<a href="https://github.com/Lokuyow/sats-rate/" target="_blank">GitHub</a><br>
-                データ提供：<a href="https://www.coingecko.com/" target="_blank">CoinGecko</a><br>
+                <i18n vanilla-i18n="footer.created">サイト制作：</i18n><a href="https://lokuyow.github.io/" target="_blank">
+                    <i18n vanilla-i18n="lokuyow">ロクヨウ</i18n>
+                </a><br>
+                <i18n vanilla-i18n="footer.contribution">貢献：</i18n><a href="https://ocknamo.com/"
+                    target="_blank">ocknamo</a><br>
+                <i18n vanilla-i18n="footer.source">ソースコード：</i18n><a href="https://github.com/Lokuyow/sats-rate/"
+                    target="_blank">GitHub</a><br>
+                <i18n vanilla-i18n="footer.data">データ提供：</i18n><a href="https://www.coingecko.com/"
+                    target="_blank">CoinGecko</a><br>
             </p>
         </div>
     </div>
