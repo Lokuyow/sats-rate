@@ -36,7 +36,7 @@
     },
     "footer": {
         "oikura": "What is OikuraSats?",
-        "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows for mutual conversion between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (bitcoin, BTC), Japanese Yen (JPY), and US Dollars (USD).",
+        "description": "'Oikura' means 'how much' in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
         "unit": "Sats, Sat, Satoshi (Units)",
         "formula": "100 million sats = 1 BTC",
         "created": "Created by: ",

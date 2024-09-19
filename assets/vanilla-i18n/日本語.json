@@ -36,7 +36,7 @@
     },
     "footer": {
         "oikura": "おいくらサッツとは",
-        "description": "サッツ（Sats, Sat,Satoshi）、<wbr>ビットコイン（bitcoin, BTC）、<wbr>日本円（JPY）、<wbr>米ドル（USD）<wbr>など<wbr>複数通貨間<wbr>の<wbr>相互換算<wbr>が<wbr>できる<wbr>ツール<wbr>です。",
+        "description": "サッツ（Sats, Sat,Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。",
         "unit": "Sats,Sat,Satoshi (単位)",
         "formula": "1億 sats = 1 BTC",
         "created": "サイト制作：",
