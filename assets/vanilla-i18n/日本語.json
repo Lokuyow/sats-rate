@@ -36,7 +36,7 @@
     },
     "footer": {
         "oikura": "おいくらサッツとは",
-        "description": "サッツ（Sats, Sat,Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。",
+        "description": "サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間の相互換算ができるツールです。",
         "unit": "Sats,Sat,Satoshi (単位)",
         "formula": "1億 sats = 1 BTC",
         "created": "サイト制作：",
@@ -44,5 +44,33 @@
         "source": "ソースコード：",
         "data": "データ提供："
     },
-    "lokuyow": "ロクヨウ"
+    "lokuyow": "ロクヨウ",
+    "showNotification": {
+        "setup": "設定完了",
+        "copy": "クリップボードにコピーしました",
+        "up": "最新です"
+    },
+    "updateUI": {
+        "textContent": "更新があります"
+    },
+    "alerts": {
+        "online": "オンラインに復帰しました。最新データを取得します。",
+        "shareNotSupported": "お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。",
+        "fetchErrorWithData": "最新価格レートの取得に失敗しました。過去のデータを表示しています。",
+        "fetchErrorNoData": "価格レートの取得に失敗しました。時間をおいてリロードをして下さい。"
+    },
+    "lightningAddress": {
+        "errors": {
+            "invalidAddress": "支払い可能なライトニングアドレスではないようです",
+            "noAddressSet": "ライトニングアドレス未設定",
+            "invalidAmount": "数量が不正です。{min} sats～{max} satsの間である必要があります。",
+            "cannotFetchData": "アドレスデータを取得できません。",
+            "cannotGetInvoice": "インボイスを取得できません。"
+        }
+    },
+    "pos": {
+        "errors": {
+            "invoiceCreationFailed": "インボイスを作成できません。ライトニングアドレスが間違っていないか確認してください。"
+        }
+    }
 }

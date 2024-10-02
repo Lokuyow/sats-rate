@@ -36,7 +36,7 @@
     },
     "footer": {
         "oikura": "What is OikuraSats?",
-        "description": "'Oikura' means 'how much' in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
+        "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
         "unit": "Sats, Sat, Satoshi (Units)",
         "formula": "100 million sats = 1 BTC",
         "created": "Created by: ",
@@ -44,5 +44,33 @@
         "source": "Source Code: ",
         "data": "Data provided by: "
     },
-    "lokuyow": "Lokuyow"
+    "lokuyow": "Lokuyow",
+    "showNotification": {
+        "setup": "Setup complete",
+        "copy": "Copied to clipboard",
+        "up": "Up to date"
+    },
+    "updateUI": {
+        "textContent": "Updates available"
+    },
+    "alerts": {
+        "online": "You are back online. Fetching the latest data.",
+        "shareNotSupported": "Your browser does not support the Web Share API. Please try a different browser.",
+        "fetchErrorWithData": "Failed to fetch the latest currency rates. Displaying cached data.",
+        "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time."
+    },
+    "lightningAddress": {
+        "errors": {
+            "invalidAddress": "It seems the Lightning address is not payable.",
+            "noAddressSet": "No Lightning address set",
+            "invalidAmount": "Invalid amount. Make sure the amount is between {min} sats and {max} sats.",
+            "cannotFetchData": "Cannot fetch address data.",
+            "cannotGetInvoice": "Cannot get invoice."
+        }
+    },
+    "pos": {
+        "errors": {
+            "invoiceCreationFailed": "Cannot create invoice. Please check if the Lightning address is correct."
+        }
+    }
 }

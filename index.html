@@ -64,20 +64,18 @@
 
     <script src="/lib/vanilla-i18n.min.js"></script>
     <script>
-        const languages = [
-            "日本語",
-            "English"
-        ];
-        new vanilla_i18n(
+        const languages = ["日本語", "English"];
+        window.vanilla_i18n_instance = new vanilla_i18n(
             languages,
-            opts = {
+            {
                 path: "/assets/vanilla-i18n",
                 debug: false,
                 i18n_attr_name: "vanilla-i18n",
                 toggler_id: "vanilla-i18n-toggler",
-                default_language: languages[1],
+                default_language: languages[0],
             }
-        ).run();
+        );
+        window.vanilla_i18n_instance.run();
     </script>
 </head>
 

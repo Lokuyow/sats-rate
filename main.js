@@ -93,7 +93,10 @@ function setupInputFieldsEventListeners() {
 async function handleOnline() {
     await currencyManager.fetchCurrencyData(selectedCurrencies);
     checkAndUpdateElements();
-    alert('オンラインに復帰しました。最新データを取得します。');
+
+    // 翻訳されたメッセージを取得
+    const message = window.vanilla_i18n_instance.translate('alerts.online');
+    alert(message);
 }
 
 function initializeGlobalValues() {
@@ -190,7 +193,9 @@ function saveCurrentValuesAsDefault(event) {
 
     localStorage.setItem('baseCurrencyValueLS', JSON.stringify(currentValues));
 
-    showNotification('設定完了', event);
+    // 翻訳を使用
+    const message = window.vanilla_i18n_instance.translate('showNotification.setup');
+    showNotification(message, event);
 }
 
 function getInputValue(id) {
@@ -663,9 +668,11 @@ function copyToClipboardEvent(event) {
 // コピー
 function copyToClipboard(text, event, align = 'right') {
     navigator.clipboard.writeText(text).then(() => {
-        showNotification('クリップボードにコピーしました', event, align);  // 通知を表示
+        // 翻訳を使用
+        const message = window.vanilla_i18n_instance.translate('showNotification.copy');
+        showNotification(message, event, align);  // 通知を表示
     }).catch(err => {
-        console.error('クリップボードへのコピーに失敗しました', err);
+        console.error('Failed to copy to clipboard', err);
     });
 }
 
@@ -674,7 +681,7 @@ async function readFromClipboard() {
     try {
         return await navigator.clipboard.readText();
     } catch (error) {
-        console.error("クリップボードからの読み取りに失敗しました:", error);
+        console.error("Failed to read from clipboard:", error);
         return null;
     }
 }
@@ -702,12 +709,13 @@ function shareViaWebAPI(originalShareText, queryParams) {
 
     if (navigator.share) {
         navigator.share({
-            title: 'おいくらサッツ',
+            title: window.vanilla_i18n_instance.translate('title'), // タイトルも翻訳対応
             text: modifiedShareText,
             url: `https://osats.money/${queryParams}`
         });
     } else {
-        alert('お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。');
+        const message = window.vanilla_i18n_instance.translate('alerts.shareNotSupported');
+        alert(message);
     }
 }
 
@@ -736,7 +744,7 @@ navigator.serviceWorker.addEventListener('message', async (event) => {
     if (event.data && event.data.type === 'NEW_VERSION_INSTALLED') {
         newVersionAvailable = true;
         if (buttonText) {
-            buttonText.textContent = '更新があります';
+            buttonText.textContent = window.vanilla_i18n_instance.translate('updateUI.textContent');
         }
         if (spinnerWrapper) {
             spinnerWrapper.style.display = 'none';
@@ -745,8 +753,9 @@ navigator.serviceWorker.addEventListener('message', async (event) => {
         // 一定時間待機してからメッセージを確認
         await delay(300);
 
-        if (!newVersionAvailable) { // この間にNEW_VERSION_INSTALLEDが来ているか確認
-            showNotification('最新です', lastClickEvent);
+        if (!newVersionAvailable) {
+            const message = window.vanilla_i18n_instance.translate('showNotification.up');
+            showNotification(message, lastClickEvent);
             if (spinnerWrapper) {
                 spinnerWrapper.style.display = 'none';
             }
@@ -772,7 +781,19 @@ async function registerAndHandleServiceWorker() {
                     const updateUI = document.getElementById('buttonText');
                     if (updateUI) {
                         console.log("Updating UI from Service Worker installation");
-                        updateUI.textContent = '更新があります';
+
+                        // 翻訳テキストを取得
+                        let translatedText = '';
+                        if (window.vanilla_i18n_instance && window.vanilla_i18n_instance._translationData) {
+                            translatedText = window.vanilla_i18n_instance.translate('updateUI.textContent');
+                        } else {
+                            // 翻訳データがまだロードされていない場合
+                            await window.vanilla_i18n_instance.run();
+                            translatedText = window.vanilla_i18n_instance.translate('updateUI.textContent');
+                        }
+
+                        // テキストを更新
+                        updateUI.textContent = translatedText || '更新があります'; // デフォルトのテキストを設定
                     }
                 }
             });
