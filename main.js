@@ -278,7 +278,7 @@ function calculateValues(inputField) {
 
 //　ロケールから桁区切りと小数点の文字を取得
 function getLocaleSeparators(locale) {
-    const formattedNumber = new Intl.NumberFormat(locale).format(1000.1);
+    const formattedNumber = new Intl.NumberFormat(locale, { numberingSystem: 'latn' }).format(1000.1);
     return {
         groupSeparator: formattedNumber[1], // 桁区切り文字
         decimalSeparator: formattedNumber[5] // 小数点の区切り文字
@@ -319,7 +319,7 @@ function addCommasToInput(inputElement) {
     if (originalValue.endsWith('.') || (originalValue.includes('.') && originalCaretPos > originalValue.indexOf('.'))) {
         const parts = originalValue.split('.');
         const integerPart = parts[0];
-        formattedValue = new Intl.NumberFormat(selectedLocale).format(parseFloat(integerPart));
+        formattedValue = new Intl.NumberFormat(selectedLocale, { numberingSystem: 'latn' }).format(parseFloat(integerPart));
 
         if (parts[1] !== undefined) {
             formattedValue += separators.decimalSeparator + parts[1];
@@ -390,7 +390,10 @@ export function formatCurrency(num, id, selectedLocale, shouldRound = true, sign
     let roundedNum = shouldRound ? Number(num.toPrecision(significantDigits)) : num;
 
     // 通貨ごとのフォーマットオプションを取得
-    const formatOptions = customOptions[id];
+    const formatOptions = {
+        ...customOptions[id],
+        numberingSystem: 'latn',
+    };
     const maximumFractionDigits = formatOptions.maximumFractionDigits;
     const numFractionDigits = (roundedNum.toString().split('.')[1] || '').length;
 
@@ -417,7 +420,10 @@ function calculateSignificantDigits(inputDigits) {
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
     const userLocale = navigator.language || navigator.userLanguage;
-    const formatter = new Intl.DateTimeFormat(userLocale, dateTimeFormatOptions);
+    const formatter = new Intl.DateTimeFormat(userLocale, {
+        ...dateTimeFormatOptions,
+        numberingSystem: 'latn', // numberingSystemを追加
+    });
     const formattedDate = formatter.format(updatedAt);
 
     document.getElementById('last-updated').textContent = formattedDate;
