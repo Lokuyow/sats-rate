@@ -542,7 +542,9 @@ img {
 }
 
 .settings-btn {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 1rem;
     border: 0;
     height: 50px;
@@ -570,6 +572,17 @@ img {
             }
         }
     }
+}
+
+.arrow-up-right-from-square-solid {
+    width: 16px;
+    height: 16px;
+    mask-image: url("./images/arrow-up-right-from-square-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    background-color: var(--svg-color);
+    margin-left: 8px;
 }
 
 @keyframes spin {
@@ -618,28 +631,6 @@ img {
     mask-position: center;
     background-color: var(--svg-color);
     margin-left: 3px;
-}
-
-.list-ol-solid {
-    width: 20px;
-    height: 20px;
-    mask-image: url("./images/list-ol-solid.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-    margin-left: 6px;
-}
-
-.magnifying-glass-solid {
-    width: 18px;
-    height: 18px;
-    mask-image: url("./images/magnifying-glass-solid.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-    margin-left: 4px;
 }
 
 .links {
