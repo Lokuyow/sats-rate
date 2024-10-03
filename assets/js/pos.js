@@ -1,4 +1,4 @@
-import { formatCurrency } from '../main.js';
+import { formatCurrency } from '../../main.js';
 import { LightningAddress } from './lightning-address.js';
 
 /**

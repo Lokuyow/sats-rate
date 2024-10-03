@@ -14,7 +14,7 @@ export class CurrencyManager {
 
     async loadCurrencies() {
         try {
-            const response = await fetch('./lib/currencies.json');
+            const response = await fetch('./assets/data/currencies.json');
             const data = await response.json();
             this.currencies = data.map(item => item.abbreviation);
             this.currencySymbols = data.reduce((acc, item) => {

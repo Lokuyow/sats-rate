@@ -1,4 +1,4 @@
-import { currencyManager } from './lib/currencyManager.js';
+import { currencyManager } from './assets/js/currencyManager.js';
 
 const BASE_URL = "https://osats.money/";
 const dateTimeFormatOptions = {
@@ -881,7 +881,7 @@ async function displaySiteVersion() {
 }
 
 
-import { Pos } from './lib/pos.js';
+import { Pos } from './assets/js/pos.js';
 
 const pos = new Pos();
 pos.initialize();

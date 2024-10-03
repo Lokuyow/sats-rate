@@ -824,7 +824,7 @@ img {
 }
 
 /* 通貨選択ページ */
-.currency-selection .bgcolor {
+.currencies .bgcolor {
     max-width: 800px;
     padding-top: 66px;
     padding-bottom: 72px;
@@ -846,14 +846,14 @@ img {
     cursor: pointer;
 }
 
-.currency-selection-checkbox {
+.currencies-checkbox {
     height: 19px;
     width: 19px;
     margin: 0;
     margin-bottom: 1px;
 }
 
-.currency-selection-emojiLabel {
+.currencies-emojiLabel {
     display: flex;
     justify-content: center;
     border-bottom: solid 1px var(--bg-color2);
@@ -867,7 +867,7 @@ img {
     }
 }
 
-.currency-selection-abbreviationLabel {
+.currencies-abbreviationLabel {
     font-size: 1.1rem;
     justify-self: start;
     border-bottom: solid 1px var(--bg-color2);
@@ -875,7 +875,7 @@ img {
     width: 100%;
 }
 
-.currency-selection-name {
+.currencies-name {
     font-size: 1rem;
     justify-self: start;
     border-bottom: solid 1px var(--bg-color2);

@@ -17,7 +17,7 @@ async function initializeApp() {
 
 async function loadCurrencies() {
     try {
-        const response = await fetch('/lib/currencies.json');
+        const response = await fetch('/assets/data/currencies.json');
         const data = await response.json();
         return data.reduce((acc, item) => {
             acc.currencies.push(item.abbreviation);
@@ -48,7 +48,7 @@ function createRowLabel(currency, currencyData) {
     rowLabel.className = 'currency-row';
 
     const checkbox = document.createElement('input');
-    checkbox.className = 'currency-selection-checkbox';
+    checkbox.className = 'currencies-checkbox';
     checkbox.type = 'checkbox';
     checkbox.value = currency;
     checkbox.name = 'currency';
@@ -63,7 +63,7 @@ function createRowLabel(currency, currencyData) {
 
 function createEmojiLabel(emoji) {
     const emojiLabel = document.createElement('span');
-    emojiLabel.className = 'currency-selection-emojiLabel';
+    emojiLabel.className = 'currencies-emojiLabel';
     if (emoji.startsWith('/')) {
         const img = document.createElement('img');
         img.src = emoji;
@@ -76,14 +76,14 @@ function createEmojiLabel(emoji) {
 
 function createAbbreviationLabel(currency) {
     const abbreviationLabel = document.createElement('span');
-    abbreviationLabel.className = 'currency-selection-abbreviationLabel';
+    abbreviationLabel.className = 'currencies-abbreviationLabel';
     abbreviationLabel.appendChild(document.createTextNode(currency === 'sats' ? currency : currency.toUpperCase()));
     return abbreviationLabel;
 }
 
 function createNameLabel(name) {
     const nameLabel = document.createElement('span');
-    nameLabel.className = 'currency-selection-name';
+    nameLabel.className = 'currencies-name';
     nameLabel.appendChild(document.createTextNode(name));
     return nameLabel;
 }

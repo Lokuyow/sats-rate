@@ -4,7 +4,7 @@
 
 - 「SNSに計算結果を共有」からクエリ付きのURLをコピーできます。
 
-- [利用できる通貨一覧 [abbreviation:]](./lib/currencies.json)
+- [利用できる通貨一覧 [abbreviation:]](./assets/data/currencies.json)
 
 ### デフォルト入力値のクエリ
 通貨名と数値を付けることで任意の通貨とその入力値がセットされた状態でサイトにアクセスできます。
