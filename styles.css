@@ -99,7 +99,7 @@ img {
 
 @font-face {
     font-family: 'RoundedMplus1c';
-    src: url('./fonts/RoundedMplus1c-Regular.woff2') format('woff2');
+    src: url('./assets/fonts/RoundedMplus1c-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -107,7 +107,7 @@ img {
 
 @font-face {
     font-family: 'RoundedMplus1c';
-    src: url('./fonts/RoundedMplus1c-Medium.woff2') format('woff2');
+    src: url('./assets/fonts/RoundedMplus1c-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -115,7 +115,7 @@ img {
 
 @font-face {
     font-family: 'RoundedMplus1c';
-    src: url('./fonts/RoundedMplus1c-Bold.woff2') format('woff2');
+    src: url('./assets/fonts/RoundedMplus1c-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -228,7 +228,7 @@ img {
     & .angle-down-solid {
         width: 18px;
         height: 18px;
-        mask-image: url("./images/angle-down-solid.svg");
+        mask-image: url("./assets/images/angle-down-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -277,7 +277,7 @@ img {
 .bitcoin-icon {
     width: 21px;
     height: 21px;
-    mask-image: url('./images/bitcoin-icon.svg');
+    mask-image: url('./assets/images/bitcoin-icon.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -468,7 +468,7 @@ img {
 .square-x-twitter {
     width: 32px;
     height: 32px;
-    mask-image: url("./images/square-x-twitter.svg");
+    mask-image: url("./assets/images/square-x-twitter.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -478,7 +478,7 @@ img {
 .nostr-icon-purple-on-white {
     width: 32px;
     height: 32px;
-    mask-image: url("./images/nostr-icon-purple-on-white.svg");
+    mask-image: url("./assets/images/nostr-icon-purple-on-white.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -488,7 +488,7 @@ img {
 .cloud-solid {
     width: 32px;
     height: 32px;
-    mask-image: url("./images/cloud-solid.svg");
+    mask-image: url("./assets/images/cloud-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -498,7 +498,7 @@ img {
 .share-nodes-solid {
     width: 30px;
     height: 30px;
-    mask-image: url("./images/share-nodes-solid.svg");
+    mask-image: url("./assets/images/share-nodes-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -508,7 +508,7 @@ img {
 .clipboard-solid {
     width: 29px;
     height: 29px;
-    mask-image: url("./images/clipboard-solid.svg");
+    mask-image: url("./assets/images/clipboard-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -577,7 +577,7 @@ img {
 .arrow-up-right-from-square-solid {
     width: 16px;
     height: 16px;
-    mask-image: url("./images/arrow-up-right-from-square-solid.svg");
+    mask-image: url("./assets/images/arrow-up-right-from-square-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -625,7 +625,7 @@ img {
 #nostr-zap-target .bolt-solid {
     width: 20px;
     height: 20px;
-    mask-image: url("./images/bolt-solid.svg");
+    mask-image: url("./assets/images/bolt-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -730,7 +730,7 @@ img {
     .sun-regular {
         width: 26px;
         height: 26px;
-        mask-image: url("./images/sun-regular.svg");
+        mask-image: url("./assets/images/sun-regular.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -740,7 +740,7 @@ img {
     .moon-regular {
         width: 30px;
         height: 30px;
-        mask-image: url("./images/moon-regular.svg");
+        mask-image: url("./assets/images/moon-regular.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -913,7 +913,7 @@ img {
             .drag-indicator {
                 width: 28px;
                 height: 28px;
-                mask-image: url("./images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
+                mask-image: url("./assets/images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
                 mask-repeat: no-repeat;
                 mask-size: contain;
                 mask-position: center;
@@ -961,7 +961,7 @@ img {
         & .trash-icon {
             width: 34px;
             height: 34px;
-            mask-image: url("./images/trash-solid.svg");
+            mask-image: url("./assets/images/trash-solid.svg");
             mask-repeat: no-repeat;
             mask-size: contain;
             mask-position: center;
@@ -988,7 +988,7 @@ img {
         & .caret-up-solid {
             width: 52px;
             height: 52px;
-            mask-image: url("./images/caret-up-solid.svg");
+            mask-image: url("./assets/images/caret-up-solid.svg");
             mask-repeat: no-repeat;
             mask-size: contain;
             mask-position: center;
@@ -1004,7 +1004,7 @@ img {
         & .caret-down-solid {
             width: 52px;
             height: 52px;
-            mask-image: url("./images/caret-down-solid.svg");
+            mask-image: url("./assets/images/caret-down-solid.svg");
             mask-repeat: no-repeat;
             mask-size: contain;
             mask-position: center;
@@ -1188,7 +1188,7 @@ img {
     .settings-solid {
         width: 28px;
         height: 28px;
-        mask-image: url("./images/settings-solid.svg");
+        mask-image: url("./assets/images/settings-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -1199,7 +1199,7 @@ img {
 .pos div.bolt-solid {
     width: 24px;
     height: 24px;
-    mask-image: url("./images/bolt-solid.svg");
+    mask-image: url("./assets/images/bolt-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -1270,7 +1270,7 @@ img {
     & div.bolt-solid {
         width: 24px;
         height: 24px;
-        mask-image: url("./images/bolt-solid.svg");
+        mask-image: url("./assets/images/bolt-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;

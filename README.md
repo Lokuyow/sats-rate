@@ -69,34 +69,34 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
   - MIT License
   - Copyright (c) 2020 Shivam Kumar Jha
   - https://github.com/thealphadollar/vanilla-i18n/blob/master/LICENSE
-- `./images/cryptocurrency-icons`
+- `./assets/images/cryptocurrency-icons`
   - https://github.com/spothq/cryptocurrency-icons/blob/master/LICENSE.md
-- `./images/flags`
+- `./assets/images/flags`
   - https://github.com/googlefonts/noto-emoji/blob/main/third_party/region-flags/LICENSE
 - その他の例外的な著作権宣言については個別にファイルを参照してください。
 
 ### ライセンスの例外
 以下のファイルはこのリポジトリのライセンスから除外され、特別なライセンスまたは著作権宣言が適用されます：
 
-- `./images/nostr-icon-purple-on-white.svg`
+- `./assets/images/nostr-icon-purple-on-white.svg`
   - CC0-1.0 License
   - https://github.com/mbarulli/nostr-logo/blob/main/LICENSE
-- `./images/bitcoin-zukan.webp`
+- `./assets/images/bitcoin-zukan.webp`
   - © 2024 知っとこ！ビットコイン図鑑
   - https://bitcoin-zukan.com
   - > Any use or reproducion of illustrations are prrohibited.
-- `./images/fulgur-favicon.webp`
+- `./assets/images/fulgur-favicon.webp`
   - Copyright © フルグル合同会社 All Rights Reserved.
   - https://lostinbitcoin.jp/copyright
-- `./images/alby_icon_head_yellow_48x48.svg`
+- `./assets/images/alby_icon_head_yellow_48x48.svg`
   - Copyright (c) Alby
   - https://github.com/getAlby/media
-- `./images/btcmap-logo.svg`
+- `./assets/images/btcmap-logo.svg`
   - Copyright © 2022-2024 BTC Map
   - https://btcmap.org/media
-- `./images/robosats-favicon.webp`
+- `./assets/images/robosats-favicon.webp`
   - © 2023 RoboSats.
   - https://github.com/RoboSats/robosats/blob/main/LICENSE
-- `./images/mempool-favicon.webp`
+- `./assets/images/mempool-favicon.webp`
   - Copyright (c) 2019-2023 Mempool Space K.K.
   - https://mempool.space/trademark-policy
