@@ -1,152 +1,3 @@
-:root {
-    --main-font: RoundedMplus1c, -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
-    --light-accent-color: #FCA73F;
-    --dark-accent-color: #D14765;
-    --sub-color: #FAD102;
-}
-
-* {
-    font-family: inherit;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: var(--bg-color2);
-    font-family: var(--main-font);
-    color: var(--main-text-color);
-    margin: 0;
-}
-
-a,
-a:visited {
-    color: var(--main-text-color);
-}
-
-a:hover {
-    color: var(--two-color);
-}
-
-a,
-span,
-button {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-button>* {
-    pointer-events: none;
-}
-
-img {
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.normal-btn {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--main-text-color);
-    background-color: var(--input-bg-color);
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-
-    &:hover {
-        color: var(--main-text-color);
-    }
-
-    &:active {
-        color: var(--main-text-color);
-        background-color: var(--hover-color);
-    }
-}
-
-@media (hover: hover) {
-    .normal-btn:hover {
-        background-color: var(--hover-color);
-    }
-}
-
-@media (hover: none) {
-    .normal-btn:hover {
-        background-color: var(--input-bg-color);
-    }
-}
-
-.dark-btn {
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--main-text-color);
-    background-color: var(--unit-bg-color);
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-
-    &:hover {
-        color: var(--main-text-color);
-    }
-
-    &:active {
-        color: var(--main-text-color);
-        background-color: var(--hover-color2);
-    }
-}
-
-@media (hover: hover) {
-    .dark-btn:hover {
-        background-color: var(--hover-color2);
-    }
-}
-
-@font-face {
-    font-family: 'RoundedMplus1c';
-    src: url('./assets/fonts/RoundedMplus1c-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'RoundedMplus1c';
-    src: url('./assets/fonts/RoundedMplus1c-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'RoundedMplus1c';
-    src: url('./assets/fonts/RoundedMplus1c-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-.main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.bgcolor {
-    background-color: var(--bg-color1);
-    width: 100%;
-}
-
-.top-page .bgcolor {
-    max-width: 1000px;
-    margin-bottom: 4px;
-    padding-bottom: 40px;
-}
-
-.subject {
-    color: var(--subject-text-color);
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 24px;
-    margin-bottom: 34px;
-}
-
 .title-flex {
     display: flex;
     align-items: center;
@@ -228,7 +79,7 @@ img {
     & .angle-down-solid {
         width: 18px;
         height: 18px;
-        mask-image: url("./assets/images/angle-down-solid.svg");
+        mask-image: url("/assets/images/angle-down-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -277,7 +128,7 @@ img {
 .bitcoin-icon {
     width: 21px;
     height: 21px;
-    mask-image: url('./assets/images/bitcoin-icon.svg');
+    mask-image: url('/assets/images/bitcoin-icon.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -468,7 +319,7 @@ img {
 .square-x-twitter {
     width: 32px;
     height: 32px;
-    mask-image: url("./assets/images/square-x-twitter.svg");
+    mask-image: url("/assets/images/square-x-twitter.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -478,7 +329,7 @@ img {
 .nostr-icon-purple-on-white {
     width: 32px;
     height: 32px;
-    mask-image: url("./assets/images/nostr-icon-purple-on-white.svg");
+    mask-image: url("/assets/images/nostr-icon-purple-on-white.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -488,7 +339,7 @@ img {
 .cloud-solid {
     width: 32px;
     height: 32px;
-    mask-image: url("./assets/images/cloud-solid.svg");
+    mask-image: url("/assets/images/cloud-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -498,7 +349,7 @@ img {
 .share-nodes-solid {
     width: 30px;
     height: 30px;
-    mask-image: url("./assets/images/share-nodes-solid.svg");
+    mask-image: url("/assets/images/share-nodes-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -508,7 +359,7 @@ img {
 .clipboard-solid {
     width: 29px;
     height: 29px;
-    mask-image: url("./assets/images/clipboard-solid.svg");
+    mask-image: url("/assets/images/clipboard-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -577,7 +428,7 @@ img {
 .arrow-up-right-from-square-solid {
     width: 16px;
     height: 16px;
-    mask-image: url("./assets/images/arrow-up-right-from-square-solid.svg");
+    mask-image: url("/assets/images/arrow-up-right-from-square-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -625,7 +476,7 @@ img {
 #nostr-zap-target .bolt-solid {
     width: 20px;
     height: 20px;
-    mask-image: url("./assets/images/bolt-solid.svg");
+    mask-image: url("/assets/images/bolt-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -730,7 +581,7 @@ img {
     .sun-regular {
         width: 26px;
         height: 26px;
-        mask-image: url("./assets/images/sun-regular.svg");
+        mask-image: url("/assets/images/sun-regular.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -740,7 +591,7 @@ img {
     .moon-regular {
         width: 30px;
         height: 30px;
-        mask-image: url("./assets/images/moon-regular.svg");
+        mask-image: url("/assets/images/moon-regular.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -809,357 +660,6 @@ img {
     transform: translateX(-44px);
 }
 
-/* ポップアップ通知 */
-#notification {
-    position: absolute;
-    visibility: hidden;
-    color: var(--main-text-color);
-    font-size: 1rem;
-    font-weight: 500;
-    background-color: var(--bg-color1);
-    border: 2px solid var(--input-bg-color);
-    border-radius: 6px;
-    padding: 12px 14px;
-    white-space: nowrap;
-}
-
-/* 通貨選択ページ */
-.currencies .bgcolor {
-    max-width: 800px;
-    padding-top: 66px;
-    padding-bottom: 72px;
-}
-
-#currency-container {
-    display: grid;
-    grid-template-columns: auto minmax(24px, 56px) minmax(40px, 48px) 230px;
-    grid-auto-rows: 46px;
-    line-height: 46px;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-    margin: 0 8px;
-}
-
-.currency-row {
-    display: contents;
-    cursor: pointer;
-}
-
-.currencies-checkbox {
-    height: 19px;
-    width: 19px;
-    margin: 0;
-    margin-bottom: 1px;
-}
-
-.currencies-emojiLabel {
-    display: flex;
-    justify-content: center;
-    border-bottom: solid 1px var(--bg-color2);
-    height: 100%;
-    width: 100%;
-
-    & img {
-        height: auto;
-        width: 26px;
-        margin: auto 0;
-    }
-}
-
-.currencies-abbreviationLabel {
-    font-size: 1.1rem;
-    justify-self: start;
-    border-bottom: solid 1px var(--bg-color2);
-    height: 100%;
-    width: 100%;
-}
-
-.currencies-name {
-    font-size: 1rem;
-    justify-self: start;
-    border-bottom: solid 1px var(--bg-color2);
-    height: 100%;
-    width: 100%;
-}
-
-.floating-field {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 70px;
-    height: 100dvh;
-    padding: 126px 0 184px 0;
-
-    .sort-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        overflow-y: auto;
-
-        .sort-item {
-            display: flex;
-            align-items: center;
-            border-radius: 6px 0 0 6px;
-            cursor: grab;
-            height: 58px;
-            width: 100%;
-            padding: 11px 0;
-
-            .drag-indicator {
-                width: 28px;
-                height: 28px;
-                mask-image: url("./assets/images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
-                mask-repeat: no-repeat;
-                mask-size: contain;
-                mask-position: center;
-                background-color: var(--svg-color2);
-            }
-
-            .sort-icon {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                &:active,
-                &:focus {
-                    cursor: grabbing;
-                }
-
-                & img {
-                    text-align: center;
-                    height: auto;
-                    width: 36px;
-                    margin: auto;
-                }
-            }
-        }
-    }
-}
-
-#fix-container {
-    display: flex;
-    justify-content: flex-end;
-
-    #trash-container {
-        position: fixed;
-        bottom: 62px;
-        height: 58px;
-        width: 100%;
-        padding: 0;
-        z-index: 1000;
-        background-color: var(--alpha-color);
-        border-radius: 6px 0 0 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        & .trash-icon {
-            width: 34px;
-            height: 34px;
-            mask-image: url("./assets/images/trash-solid.svg");
-            mask-repeat: no-repeat;
-            mask-size: contain;
-            mask-position: center;
-            background-color: var(--svg-color);
-        }
-    }
-
-    .scroll-button {
-        position: fixed;
-        height: 58px;
-        width: 100%;
-        padding: 0;
-        border: none;
-        cursor: pointer;
-        z-index: 1000;
-        display: none;
-        border-radius: 6px 0 0 6px;
-    }
-
-    .scroll-up {
-        top: 65px;
-        right: 0;
-
-        & .caret-up-solid {
-            width: 52px;
-            height: 52px;
-            mask-image: url("./assets/images/caret-up-solid.svg");
-            mask-repeat: no-repeat;
-            mask-size: contain;
-            mask-position: center;
-            background-color: var(--svg-color);
-            margin: auto;
-        }
-    }
-
-    .scroll-down {
-        bottom: 123px;
-        right: 0;
-
-        & .caret-down-solid {
-            width: 52px;
-            height: 52px;
-            mask-image: url("./assets/images/caret-down-solid.svg");
-            mask-repeat: no-repeat;
-            mask-size: contain;
-            mask-position: center;
-            background-color: var(--svg-color);
-            margin: auto;
-        }
-    }
-}
-
-@media (max-width: 767px) {
-    .scroll-button {
-        display: block;
-    }
-}
-
-@media (min-width: 768px) {
-    .floating-field {
-        padding: 65px 0 123px 0;
-    }
-}
-
-.checkBtn-container {
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: var(--bg-color2);
-    padding: 8px 0;
-    z-index: 9999;
-
-    & button {
-        font-size: 1.1rem;
-        font-weight: 500;
-        height: 46px;
-        width: 100%;
-        max-width: 120px;
-        margin: 0 3px;
-        padding: 0;
-    }
-}
-
-.saveSelectedCurrencies-container {
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: var(--bg-color2);
-    padding: 8px 0;
-    z-index: 9999;
-}
-
-#saveSelectedCurrenciesBtn {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #fff;
-    cursor: pointer;
-    background-color: var(--two-color);
-    border: none;
-    border-radius: 6px;
-    height: 46px;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 10px;
-    padding: 0;
-}
-
-/* ダークモード設定 */
-@media (prefers-color-scheme: light) {
-    :root {
-        color-scheme: light;
-        --two-color: var(--light-accent-color);
-        --two-color-r: var(--dark-accent-color);
-        --input-text-color: #000000;
-        --main-text-color: #3D3D3D;
-        --svg-color: #525252;
-        --svg-color2: #8F8F8F;
-        --subject-text-color: #757575;
-        --bg-color1: #FFFFFF;
-        --bg-color2: #EDEDED;
-        --input-bg-color: #EDEDED;
-        --unit-bg-color: #DEDEDE;
-        --hover-color: #DEDEDE;
-        --hover-color2: #D1D1D1;
-        --hover-color3: #F7F7F7;
-        --invalid-color: #DEDEDE;
-        --alpha-color: rgba(0, 0, 0, 0.1);
-
-    }
-
-    :root[data-theme="dark"] {
-        color-scheme: dark;
-        --two-color: var(--dark-accent-color);
-        --two-color-r: var(--light-accent-color);
-        --input-text-color: #FFFFFF;
-        --main-text-color: #E6E6E6;
-        --svg-color: #F0F0F0;
-        --svg-color2: #808080;
-        --subject-text-color: #999999;
-        --bg-color1: #1A1A1A;
-        --bg-color2: #303030;
-        --input-bg-color: #303030;
-        --unit-bg-color: #404040;
-        --hover-color: #404040;
-        --hover-color2: #4D4D4D;
-        --hover-color3: #242424;
-        --invalid-color: #404040;
-        --alpha-color: rgba(255, 255, 255, 0.1);
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --two-color: var(--dark-accent-color);
-        --two-color-r: var(--light-accent-color);
-        --input-text-color: #FFFFFF;
-        --main-text-color: #E6E6E6;
-        --svg-color: #F0F0F0;
-        --svg-color2: #808080;
-        --subject-text-color: #999999;
-        --bg-color1: #1A1A1A;
-        --bg-color2: #303030;
-        --input-bg-color: #303030;
-        --unit-bg-color: #404040;
-        --hover-color: #404040;
-        --hover-color2: #4D4D4D;
-        --hover-color3: #242424;
-        --invalid-color: #404040;
-        --alpha-color: rgba(255, 255, 255, 0.1);
-    }
-
-    :root[data-theme="light"] {
-        color-scheme: light;
-        --two-color: var(--light-accent-color);
-        --two-color-r: var(--dark-accent-color);
-        --input-text-color: #000000;
-        --main-text-color: #3D3D3D;
-        --svg-color: #525252;
-        --svg-color2: #8F8F8F;
-        --subject-text-color: #757575;
-        --bg-color1: #FFFFFF;
-        --bg-color2: #EDEDED;
-        --input-bg-color: #EDEDED;
-        --unit-bg-color: #DEDEDE;
-        --hover-color: #DEDEDE;
-        --hover-color2: #D1D1D1;
-        --hover-color3: #F7F7F7;
-        --invalid-color: #DEDEDE;
-        --alpha-color: rgba(0, 0, 0, 0.1);
-    }
-}
-
-
 /* POS機能設定 */
 .pos {
     display: flex;
@@ -1188,7 +688,7 @@ img {
     .settings-solid {
         width: 28px;
         height: 28px;
-        mask-image: url("./assets/images/settings-solid.svg");
+        mask-image: url("/assets/images/settings-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -1199,7 +699,7 @@ img {
 .pos div.bolt-solid {
     width: 24px;
     height: 24px;
-    mask-image: url("./assets/images/bolt-solid.svg");
+    mask-image: url("/assets/images/bolt-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -1270,7 +770,7 @@ img {
     & div.bolt-solid {
         width: 24px;
         height: 24px;
-        mask-image: url("./assets/images/bolt-solid.svg");
+        mask-image: url("/assets/images/bolt-solid.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;

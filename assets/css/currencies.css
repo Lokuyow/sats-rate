@@ -1,0 +1,248 @@
+.currencies .bgcolor {
+    max-width: 800px;
+    padding-top: 66px;
+    padding-bottom: 72px;
+}
+
+#currency-container {
+    display: grid;
+    grid-template-columns: auto minmax(24px, 56px) minmax(40px, 48px) 230px;
+    grid-auto-rows: 46px;
+    line-height: 46px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    margin: 0 8px;
+}
+
+.currency-row {
+    display: contents;
+    cursor: pointer;
+}
+
+.currencies-checkbox {
+    height: 19px;
+    width: 19px;
+    margin: 0;
+    margin-bottom: 1px;
+}
+
+.currencies-emojiLabel {
+    display: flex;
+    justify-content: center;
+    border-bottom: solid 1px var(--bg-color2);
+    height: 100%;
+    width: 100%;
+
+    & img {
+        height: auto;
+        width: 26px;
+        margin: auto 0;
+    }
+}
+
+.currencies-abbreviationLabel {
+    font-size: 1.1rem;
+    justify-self: start;
+    border-bottom: solid 1px var(--bg-color2);
+    height: 100%;
+    width: 100%;
+}
+
+.currencies-name {
+    font-size: 1rem;
+    justify-self: start;
+    border-bottom: solid 1px var(--bg-color2);
+    height: 100%;
+    width: 100%;
+}
+
+.floating-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70px;
+    height: 100dvh;
+    padding: 126px 0 184px 0;
+
+    .sort-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        overflow-y: auto;
+
+        .sort-item {
+            display: flex;
+            align-items: center;
+            border-radius: 6px 0 0 6px;
+            cursor: grab;
+            height: 58px;
+            width: 100%;
+            padding: 11px 0;
+
+            .drag-indicator {
+                width: 28px;
+                height: 28px;
+                mask-image: url("/assets/images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
+                mask-repeat: no-repeat;
+                mask-size: contain;
+                mask-position: center;
+                background-color: var(--svg-color2);
+            }
+
+            .sort-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                &:active,
+                &:focus {
+                    cursor: grabbing;
+                }
+
+                & img {
+                    text-align: center;
+                    height: auto;
+                    width: 36px;
+                    margin: auto;
+                }
+            }
+        }
+    }
+}
+
+#fix-container {
+    display: flex;
+    justify-content: flex-end;
+
+    #trash-container {
+        position: fixed;
+        bottom: 62px;
+        height: 58px;
+        width: 100%;
+        padding: 0;
+        z-index: 1000;
+        background-color: var(--alpha-color);
+        border-radius: 6px 0 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & .trash-icon {
+            width: 34px;
+            height: 34px;
+            mask-image: url("/assets/images/trash-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+        }
+    }
+
+    .scroll-button {
+        position: fixed;
+        height: 58px;
+        width: 100%;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        z-index: 1000;
+        display: none;
+        border-radius: 6px 0 0 6px;
+    }
+
+    .scroll-up {
+        top: 65px;
+        right: 0;
+
+        & .caret-up-solid {
+            width: 52px;
+            height: 52px;
+            mask-image: url("/assets/images/caret-up-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+            margin: auto;
+        }
+    }
+
+    .scroll-down {
+        bottom: 123px;
+        right: 0;
+
+        & .caret-down-solid {
+            width: 52px;
+            height: 52px;
+            mask-image: url("/assets/images/caret-down-solid.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            background-color: var(--svg-color);
+            margin: auto;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .scroll-button {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .floating-field {
+        padding: 65px 0 123px 0;
+    }
+}
+
+.checkBtn-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bg-color2);
+    padding: 8px 0;
+    z-index: 9999;
+
+    & button {
+        font-size: 1.1rem;
+        font-weight: 500;
+        height: 46px;
+        width: 100%;
+        max-width: 120px;
+        margin: 0 3px;
+        padding: 0;
+    }
+}
+
+.saveSelectedCurrencies-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bg-color2);
+    padding: 8px 0;
+    z-index: 9999;
+}
+
+#saveSelectedCurrenciesBtn {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    background-color: var(--two-color);
+    border: none;
+    border-radius: 6px;
+    height: 46px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 10px;
+    padding: 0;
+}

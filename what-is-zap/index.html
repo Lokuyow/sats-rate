@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>おいくらサッツ - Zapとは</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/what-is-zap.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。">
+    <meta property="og:site_name" content="おいくらサッツ">
+    <meta property="og:title" content="おいくらサッツ">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://osats.money/">
+    <meta property="og:image" content="https://osats.money/assets/images/ogp.png">
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール">
+    <meta property="og:locale" content="ja_JP">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@Lokuyow">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N6MG239RG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-0N6MG239RG');
+    </script>
+
+    <link rel="icon" href="/assets/favicons/favicon.ico" sizes="48x48">
+    <link rel="icon" href="/assets/images/icon.svg" sizes="any" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#B3475F" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="おいくらサッツ">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <script>
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const getInitialTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            return prefersDarkScheme.matches ? 'dark' : 'light';
+        };
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+        };
+
+        setTheme(getInitialTheme());
+    </script>
+
+    <script src="/lib/vanilla-i18n.min.js"></script>
+    <script>
+        const languages = ["日本語", "English"];
+        window.vanilla_i18n_instance = new vanilla_i18n(
+            languages,
+            {
+                path: "/assets/vanilla-i18n",
+                debug: false,
+                i18n_attr_name: "vanilla-i18n",
+                toggler_id: null,
+                default_language: languages[0],
+            }
+        );
+        window.vanilla_i18n_instance.run();
+    </script>
+</head>
+
+<body>
+
+    <section>
+        <h1 vanilla-i18n="about.zapWhat.title">Zapとは？</h1>
+        <p vanilla-i18n="about.zapWhat.description">
+            Zap（ザップ）はビットコインを使った投げ銭です。クリエイターは簡単にビットコインを受け取ることができ、ユーザーは低コストでクリエイターを応援することができます。</p>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.whyZap.title">なぜZapなのか</h2>
+        <p vanilla-i18n="about.whyZap.description1">従来の送金システムには手数料が高く、送金に時間がかかる問題がありました。特に国際送金はコストと時間が増大し、不便でした。</p>
+        <p vanilla-i18n="about.whyZap.description2">ビットコインのライトニングネットワークは送金をほぼ瞬時に行い、手数料も低く抑えます。これにより簡単に価値を交換できます。</p>
+        <p vanilla-i18n="about.whyZap.description3">
+            また、ライトニングネットワークとNostr（ノスター）を利用したZapは、クリエイターとユーザーは仲介者なしで直接支援を行うことができます。この仕組みにより、従来のプラットフォームに依存しない自由な交流が可能になります。
+        </p>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.typesOfZap.title">Zapの種類</h2>
+        <h3 vanilla-i18n="about.typesOfZap.anonymousZap.title">匿名Zap</h3>
+        <p vanilla-i18n="about.typesOfZap.anonymousZap.description">送金者を公開せず送る方法です。ライトニングウォレットがあればNostrアカウントがなくても利用できます。
+        </p>
+
+        <h3 vanilla-i18n="about.typesOfZap.identifiedZap.title">記名Zap</h3>
+        <p vanilla-i18n="about.typesOfZap.identifiedZap.description">送金者を公開して送る方法です。ライトニングウォレット、Nostrアカウント、Nostr
+            Extensionが必要です。</p>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.howToZap.title">Zapの手順</h2>
+        <h3 vanilla-i18n="about.howToZap.step1.title">1. ライトニングウォレットを作成</h3>
+        <p vanilla-i18n="about.howToZap.step1.description">「Wallet of Satoshi（WoS）」はZap対応のシンプルなウォレットアプリです。<a
+                href="https://www.walletofsatoshi.com/" target="_blank">公式サイト</a>からダウンロードしてください。</p>
+        <p vanilla-i18n="about.howToZap.step1.description2">
+            ウォレットにsatsを入れれば匿名Zapが可能です。サイトのZapボタンを押して試してみてください。記名Zapを利用する場合は次に進んでください。</p>
+
+        <h3 vanilla-i18n="about.howToZap.step2.title">2. Nostrのアカウントを作成</h3>
+        <p vanilla-i18n="about.howToZap.step2.description">Nostrのアカウントを作成します。<a href="https://nostter.app"
+                target="_blank">nostter.app</a>にアクセスして、アカウントを作成し、プロフィールを設定してください。</p>
+
+        <h3 vanilla-i18n="about.howToZap.step3.title">3. Nostr Extension（Nostr ログイン拡張機能）</h3>
+        <p vanilla-i18n="about.howToZap.step3.description">Nostr用のブラウザ拡張機能を導入します。PC、iOS、Androidで導入方法が異なります。詳しい手順は<a
+                href="https://welcome.nostr-jp.org/tutorial/nip-07.html"
+                target="_blank">こちらのチュートリアル（日本語）</a>をご覧ください。秘密鍵（プライベートキー）はnostterで作成したものを使用します。nostterの「設定」ページからコピーしてください。
+        </p>
+
+        <h3 vanilla-i18n="about.howToZap.step4.title">4. Zapする</h3>
+        <p vanilla-i18n="about.howToZap.step4.description">Zapボタンを押すとNostr
+            Extensionから通知ウィンドウが出るので許可してください。次に送金用のQRコードが表示されるのでWoSから送金すればZap成功です。Zap一覧に自分が載るので確認してみましょう。</p>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.glossary.title">用語集</h2>
+        <h3 vanilla-i18n="about.glossary.bitcoin.title">ビットコイン</h3>
+        <p vanilla-i18n="about.glossary.bitcoin.description">ビットコインは、中央機関を必要としないデジタル通貨です。価値の保存手段としても利用されています。</p>
+
+        <h3 vanilla-i18n="about.glossary.lightningNetwork.title">ライトニングネットワーク</h3>
+        <p vanilla-i18n="about.glossary.lightningNetwork.description">
+            ライトニングネットワークはビットコインの取引を高速化し、手数料を低減する技術です。これにより小額の支払いが簡単になります。また匿名性も保たれます。</p>
+
+        <h3 vanilla-i18n="about.glossary.zap.title">Zap（Nostr Lightning Zaps）</h3>
+        <p vanilla-i18n="about.glossary.zap.description">
+            ZapはNostr上でライトニングネットワークを使って、ビットコインを送る機能です。Nostrのアカウントと紐づけることで、送金元や送金先、金額、コメントを第三者に公開することが可能です。クリエイターへの支援を簡単に行うことができます。
+        </p>
+
+        <h3 vanilla-i18n="about.glossary.nostr.title">Nostr</h3>
+        <p vanilla-i18n="about.glossary.nostr.description">
+            Nostrは、中央サーバーを持たない分散型のソーシャルネットワークプロトコルです。ユーザーは公開鍵と秘密鍵で自分のアイデンティティを管理し、メッセージを投稿します。このプロトコルは検閲に強く、自由に参加できるネットワークを提供します。また、シンプルで拡張性が高く、開発者は簡単に独自のクライアントやサービスを作成できます。
+        </p>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.note.title">注意</h2>
+        <ul>
+            <li vanilla-i18n="about.note.list1">Wallet of
+                Satoshi（WoS）をインストールしたらメニューからメールアドレスを登録してください。登録しなかった場合、端末が故障した際にウォレットのビットコインにアクセスできなくなります。</li>
+            <li vanilla-i18n="about.note.list2">
+                Nostrの秘密鍵は他人に漏らさないようにしてください。アカウントが乗っ取られる可能性があります。その場合は新しい秘密鍵を作成し、アカウントを変更してください。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 vanilla-i18n="about.referenceLinks.title">参考リンク</h2>
+        <ul>
+            <li vanilla-i18n="about.referenceLinks.link1"><a href="https://scrapbox.io/nostr/Zap" target="_blank">Zap
+                    (日本語, Scrapbox, Cosense)</a></li>
+            <li vanilla-i18n="about.referenceLinks.link2"><a href="https://spotlight.soy/detail?article_id=ucd7cbrql"
+                    target="_blank">【Nostr】Webサイトにビットコインの投げ銭ボタンを設置しよう【Zap】 (日本語, Spotlight)</a></li>
+            <li vanilla-i18n="about.referenceLinks.link3"><a
+                    href="https://github.com/nostr-protocol/nips/blob/master/57.md" target="_blank">NIP-57
+                    (nostr-protocol / nips, GitHub)</a></li>
+            <li vanilla-i18n="about.referenceLinks.link4"><a href="https://github.com/SamSamskies/nostr-zap"
+                    target="_blank">nostr-zap (library, GitHub)</a></li>
+        </ul>
+    </section>
+
+</body>
+
+</html>

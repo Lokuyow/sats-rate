@@ -72,5 +72,79 @@
         "errors": {
             "invoiceCreationFailed": "インボイスを作成できません。ライトニングアドレスが間違っていないか確認してください。"
         }
+    },
+    "about": {
+        "zapWhat": {
+            "title": "Zapとは？",
+            "description": "Zap（ザップ）はビットコインを使った投げ銭です。クリエイターは簡単にビットコインを受け取ることができ、ユーザーは低コストでクリエイターを応援することができます。"
+        },
+        "whyZap": {
+            "title": "なぜZapなのか",
+            "description1": "従来の送金システムには手数料が高く、送金に時間がかかる問題がありました。特に国際送金はコストと時間が増大し、不便でした。",
+            "description2": "ビットコインのライトニングネットワークは送金をほぼ瞬時に行い、手数料も低く抑えます。これにより簡単に価値を交換できます。",
+            "description3": "また、ライトニングネットワークとNostr（ノスター）を利用したZapは、クリエイターとユーザーは仲介者なしで直接支援を行うことができます。この仕組みにより、従来のプラットフォームに依存しない自由な交流が可能になります。"
+        },
+        "typesOfZap": {
+            "title": "Zapの種類",
+            "anonymousZap": {
+                "title": "匿名Zap",
+                "description": "送金者を公開せず送る方法です。ライトニングウォレットがあればNostrアカウントがなくても利用できます。"
+            },
+            "identifiedZap": {
+                "title": "記名Zap",
+                "description": "送金者を公開して送る方法です。ライトニングウォレット、Nostrアカウント、Nostr Extensionが必要です。"
+            }
+        },
+        "howToZap": {
+            "title": "Zapの手順",
+            "step1": {
+                "title": "1. ライトニングウォレットを作成",
+                "description": "「Wallet of Satoshi（WoS）」はZap対応のシンプルなウォレットアプリです。<a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">公式サイト</a>からダウンロードしてください。",
+                "description2": "ウォレットにsatsを入れれば匿名Zapが可能です。サイトのZapボタンを押して試してみてください。記名Zapを利用する場合は次に進んでください。"
+            },
+            "step2": {
+                "title": "2. Nostrのアカウントを作成",
+                "description": "Nostrのアカウントを作成します。<a href=\"https://nostter.app\" target=\"_blank\">nostter.app</a>にアクセスして、アカウントを作成し、プロフィールを設定してください。"
+            },
+            "step3": {
+                "title": "3. Nostr Extension（Nostr ログイン拡張機能）",
+                "description": "Nostr用のブラウザ拡張機能を導入します。PC、iOS、Androidで導入方法が異なります。詳しい手順は<a href=\"https://welcome.nostr-jp.org/tutorial/nip-07.html\" target=\"_blank\">こちらのチュートリアル（日本語）</a>をご覧ください。秘密鍵（プライベートキー）はnostterで作成したものを使用します。nostterの「設定」ページからコピーしてください。"
+            },
+            "step4": {
+                "title": "4. Zapする",
+                "description": "Zapボタンを押すとNostr Extensionから通知ウィンドウが出るので許可してください。次に送金用のQRコードが表示されるのでWoSから送金すればZap成功です。Zap一覧に自分が載るので確認してみましょう。"
+            }
+        },
+        "glossary": {
+            "title": "用語集",
+            "bitcoin": {
+                "title": "ビットコイン",
+                "description": "ビットコインは、中央機関を必要としないデジタル通貨です。価値の保存手段としても利用されています。"
+            },
+            "lightningNetwork": {
+                "title": "ライトニングネットワーク",
+                "description": "ライトニングネットワークはビットコインの取引を高速化し、手数料を低減する技術です。これにより小額の支払いが簡単になります。また匿名性も保たれます。"
+            },
+            "zap": {
+                "title": "Zap（Nostr Lightning Zaps）",
+                "description": "ZapはNostr上でライトニングネットワークを使って、ビットコインを送る機能です。Nostrのアカウントと紐づけることで、送金元や送金先、金額、コメントを第三者に公開することが可能です。クリエイターへの支援を簡単に行うことができます。"
+            },
+            "nostr": {
+                "title": "Nostr",
+                "description": "Nostrは、中央サーバーを持たない分散型のソーシャルネットワークプロトコルです。ユーザーは公開鍵と秘密鍵で自分のアイデンティティを管理し、メッセージを投稿します。このプロトコルは検閲に強く、自由に参加できるネットワークを提供します。また、シンプルで拡張性が高く、開発者は簡単に独自のクライアントやサービスを作成できます。"
+            }
+        },
+        "note": {
+            "title": "注意",
+            "list1": "Wallet of Satoshi（WoS）をインストールしたらメニューからメールアドレスを登録してください。登録しなかった場合、端末が故障した際にウォレットのビットコインにアクセスできなくなります。",
+            "list2": "Nostrの秘密鍵は他人に漏らさないようにしてください。アカウントが乗っ取られる可能性があります。その場合は新しい秘密鍵を作成し、アカウントを変更してください。"
+        },
+        "referenceLinks": {
+            "title": "参考リンク",
+            "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\">Zap (日本語, Scrapbox, Cosense)</a>",
+            "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">【Nostr】Webサイトにビットコインの投げ銭ボタンを設置しよう【Zap】 (日本語, Spotlight)</a>",
+            "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
+            "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
+        }
     }
 }
