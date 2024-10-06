@@ -302,7 +302,7 @@ document.getElementById('scrollDownButton').addEventListener('click', function (
 });
 
 function updatePosition() {
-    const parentElement = document.querySelector('.bgcolor');
+    const parentElement = document.querySelector('.currencies-main');
     const parentRect = parentElement.getBoundingClientRect();
     const parentRightEdge = parentRect.right;
 

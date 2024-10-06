@@ -1,4 +1,6 @@
-.currencies .bgcolor {
+.currencies-main {
+    background-color: var(--bg-color1);
+    width: 100%;
     max-width: 800px;
     padding-top: 66px;
     padding-bottom: 72px;

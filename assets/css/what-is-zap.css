@@ -6,6 +6,8 @@ body {
 }
 
 section {
+    width: auto;
+    max-width: none;
     margin: 20px;
     padding: 20px;
     background-color: var(--bg-color1);
@@ -17,6 +19,10 @@ h1 {
     color: var(--main-text-color);
     margin: 0 0 25px 0;
     padding: 0;
+    text-align: center;
+}
+
+.h1-text {
     text-align: center;
 }
 
