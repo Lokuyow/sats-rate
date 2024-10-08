@@ -53,7 +53,7 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
 
 以下のファイルについては個別の著作権宣言が適用されます：
 
-- `./lib/nostr-zap@0.21.0.js`
+- `./lib/nostr-zap@1.1.0.js`
   - MIT License
   - Copyright (c) 2023 Sam Samskies.
   - https://github.com/SamSamskies/nostr-zap/blob/main/LICENSE
