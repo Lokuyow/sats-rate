@@ -1,429 +1,429 @@
 [
-    {
-        "symbol": "₿",
-        "abbreviation": "sats",
-        "name": "Satoshi",
-        "japanese_name": "サトシ",
-        "emoji": "/assets/images/cryptocurrency-icons/btc-s.svg"
-    },
-    {
-        "symbol": "₿",
-        "abbreviation": "btc",
-        "name": "Bitcoin",
-        "japanese_name": "ビットコイン",
-        "emoji": "/assets/images/cryptocurrency-icons/btc.svg"
-    },
-    {
-        "symbol": "Ξ",
-        "abbreviation": "eth",
-        "name": "Ethereum",
-        "japanese_name": "イーサリアム",
-        "emoji": "/assets/images/cryptocurrency-icons/eth.svg"
-    },
-    {
-        "symbol": "Ł",
-        "abbreviation": "ltc",
-        "name": "Litecoin",
-        "japanese_name": "ライトコイン",
-        "emoji": "/assets/images/cryptocurrency-icons/ltc.svg"
-    },
-    {
-        "symbol": "BCH",
-        "abbreviation": "bch",
-        "name": "Bitcoin Cash",
-        "japanese_name": "ビットコインキャッシュ",
-        "emoji": "/assets/images/cryptocurrency-icons/bch.svg"
-    },
-    {
-        "symbol": "BNB",
-        "abbreviation": "bnb",
-        "name": "Binance Coin",
-        "japanese_name": "バイナンスコイン",
-        "emoji": "/assets/images/cryptocurrency-icons/bnb.svg"
-    },
-    {
-        "symbol": "EOS",
-        "abbreviation": "eos",
-        "name": "EOS",
-        "japanese_name": "イオス",
-        "emoji": "/assets/images/cryptocurrency-icons/eos.svg"
-    },
-    {
-        "symbol": "XRP",
-        "abbreviation": "xrp",
-        "name": "Ripple",
-        "japanese_name": "リップル",
-        "emoji": "/assets/images/cryptocurrency-icons/xrp.svg"
-    },
-    {
-        "symbol": "XLM",
-        "abbreviation": "xlm",
-        "name": "Stellar Lumens",
-        "japanese_name": "ステラルーメン",
-        "emoji": "/assets/images/cryptocurrency-icons/xlm.svg"
-    },
-    {
-        "symbol": "LINK",
-        "abbreviation": "link",
-        "name": "Chainlink",
-        "japanese_name": "チェーンリンク",
-        "emoji": "/assets/images/cryptocurrency-icons/link.svg"
-    },
-    {
-        "symbol": "DOT",
-        "abbreviation": "dot",
-        "name": "Polkadot",
-        "japanese_name": "ポルカドット",
-        "emoji": "/assets/images/cryptocurrency-icons/dot.svg"
-    },
-    {
-        "symbol": "YFI",
-        "abbreviation": "yfi",
-        "name": "Yearn.finance",
-        "japanese_name": "ヤーンファイナンス",
-        "emoji": "/assets/images/cryptocurrency-icons/yfi.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "usd",
-        "name": "United States Dollar",
-        "japanese_name": "アメリカドル",
-        "emoji": "/assets/images/flags/emoji_u1f1fa_1f1f8.svg"
-    },
-    {
-        "symbol": "د.إ",
-        "abbreviation": "aed",
-        "name": "United Arab Emirates Dirham",
-        "japanese_name": "アラブ首長国連邦ディルハム",
-        "emoji": "/assets/images/flags/emoji_u1f1e6_1f1ea.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "ars",
-        "name": "Argentine Peso",
-        "japanese_name": "アルゼンチンペソ",
-        "emoji": "/assets/images/flags/emoji_u1f1e6_1f1f7.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "aud",
-        "name": "Australian Dollar",
-        "japanese_name": "オーストラリアドル",
-        "emoji": "/assets/images/flags/emoji_u1f1e6_1f1fa.svg"
-    },
-    {
-        "symbol": "৳",
-        "abbreviation": "bdt",
-        "name": "Bangladeshi Taka",
-        "japanese_name": "バングラデシュタカ",
-        "emoji": "/assets/images/flags/emoji_u1f1e7_1f1e9.svg"
-    },
-    {
-        "symbol": ".د.ب",
-        "abbreviation": "bhd",
-        "name": "Bahraini Dinar",
-        "japanese_name": "バーレーンディナール",
-        "emoji": "/assets/images/flags/emoji_u1f1e7_1f1ed.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "bmd",
-        "name": "Bermudian Dollar",
-        "japanese_name": "バミューダドル",
-        "emoji": "/assets/images/flags/emoji_u1f1e7_1f1f2.svg"
-    },
-    {
-        "symbol": "R$",
-        "abbreviation": "brl",
-        "name": "Brazilian Real",
-        "japanese_name": "ブラジルレアル",
-        "emoji": "/assets/images/flags/emoji_u1f1e7_1f1f7.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "cad",
-        "name": "Canadian Dollar",
-        "japanese_name": "カナダドル",
-        "emoji": "/assets/images/flags/emoji_u1f1e8_1f1e6.svg"
-    },
-    {
-        "symbol": "CHF",
-        "abbreviation": "chf",
-        "name": "Swiss Franc",
-        "japanese_name": "スイスフラン",
-        "emoji": "/assets/images/flags/emoji_u1f1e8_1f1ed.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "clp",
-        "name": "Chilean Peso",
-        "japanese_name": "チリペソ",
-        "emoji": "/assets/images/flags/emoji_u1f1e8_1f1f1.svg"
-    },
-    {
-        "symbol": "¥",
-        "abbreviation": "cny",
-        "name": "Chinese Yuan",
-        "japanese_name": "中国人民元",
-        "emoji": "/assets/images/flags/emoji_u1f1e8_1f1f3.svg"
-    },
-    {
-        "symbol": "Kč",
-        "abbreviation": "czk",
-        "name": "Czech Koruna",
-        "japanese_name": "チェココルナ",
-        "emoji": "/assets/images/flags/emoji_u1f1e8_1f1ff.svg"
-    },
-    {
-        "symbol": "kr",
-        "abbreviation": "dkk",
-        "name": "Danish Krone",
-        "japanese_name": "デンマーククローネ",
-        "emoji": "/assets/images/flags/emoji_u1f1e9_1f1f0.svg"
-    },
-    {
-        "symbol": "€",
-        "abbreviation": "eur",
-        "name": "Euro",
-        "japanese_name": "ユーロ",
-        "emoji": "/assets/images/flags/emoji_u1f1ea_1f1fa.svg"
-    },
-    {
-        "symbol": "£",
-        "abbreviation": "gbp",
-        "name": "British Pound Sterling",
-        "japanese_name": "英ポンド",
-        "emoji": "/assets/images/flags/emoji_u1f1ec_1f1e7.svg"
-    },
-    {
-        "symbol": "₾",
-        "abbreviation": "gel",
-        "name": "Georgian Lari",
-        "japanese_name": "ジョージアラリ",
-        "emoji": "/assets/images/flags/emoji_u1f1ec_1f1ea.svg"
-    },
-    {
-        "symbol": "HK$",
-        "abbreviation": "hkd",
-        "name": "Hong Kong Dollar",
-        "japanese_name": "香港ドル",
-        "emoji": "/assets/images/flags/emoji_u1f1ed_1f1f0.svg"
-    },
-    {
-        "symbol": "Ft",
-        "abbreviation": "huf",
-        "name": "Hungarian Forint",
-        "japanese_name": "ハンガリーフォリント",
-        "emoji": "/assets/images/flags/emoji_u1f1ed_1f1fa.svg"
-    },
-    {
-        "symbol": "Rp",
-        "abbreviation": "idr",
-        "name": "Indonesian Rupiah",
-        "japanese_name": "インドネシアルピア",
-        "emoji": "/assets/images/flags/emoji_u1f1ee_1f1e9.svg"
-    },
-    {
-        "symbol": "₪",
-        "abbreviation": "ils",
-        "name": "Israeli New Shekel",
-        "japanese_name": "イスラエル新シェケル",
-        "emoji": "/assets/images/flags/emoji_u1f1ee_1f1f1.svg"
-    },
-    {
-        "symbol": "₹",
-        "abbreviation": "inr",
-        "name": "Indian Rupee",
-        "japanese_name": "インドルピー",
-        "emoji": "/assets/images/flags/emoji_u1f1ee_1f1f3.svg"
-    },
-    {
-        "symbol": "¥",
-        "abbreviation": "jpy",
-        "name": "Japanese Yen",
-        "japanese_name": "日本円",
-        "emoji": "/assets/images/flags/emoji_u1f1ef_1f1f5.svg"
-    },
-    {
-        "symbol": "₩",
-        "abbreviation": "krw",
-        "name": "South Korean Won",
-        "japanese_name": "韓国ウォン",
-        "emoji": "/assets/images/flags/emoji_u1f1f0_1f1f7.svg"
-    },
-    {
-        "symbol": "د.ك",
-        "abbreviation": "kwd",
-        "name": "Kuwaiti Dinar",
-        "japanese_name": "クウェートディナール",
-        "emoji": "/assets/images/flags/emoji_u1f1f0_1f1fc.svg"
-    },
-    {
-        "symbol": "Rs",
-        "abbreviation": "lkr",
-        "name": "Sri Lankan Rupee",
-        "japanese_name": "スリランカルピー",
-        "emoji": "/assets/images/flags/emoji_u1f1f1_1f1f0.svg"
-    },
-    {
-        "symbol": "K",
-        "abbreviation": "mmk",
-        "name": "Myanmar Kyat",
-        "japanese_name": "ミャンマーキャット",
-        "emoji": "/assets/images/flags/emoji_u1f1f2_1f1f2.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "mxn",
-        "name": "Mexican Peso",
-        "japanese_name": "メキシコペソ",
-        "emoji": "/assets/images/flags/emoji_u1f1f2_1f1fd.svg"
-    },
-    {
-        "symbol": "RM",
-        "abbreviation": "myr",
-        "name": "Malaysian Ringgit",
-        "japanese_name": "マレーシアリンギット",
-        "emoji": "/assets/images/flags/emoji_u1f1f2_1f1fe.svg"
-    },
-    {
-        "symbol": "₦",
-        "abbreviation": "ngn",
-        "name": "Nigerian Naira",
-        "japanese_name": "ナイジェリアナイラ",
-        "emoji": "/assets/images/flags/emoji_u1f1f3_1f1ec.svg"
-    },
-    {
-        "symbol": "kr",
-        "abbreviation": "nok",
-        "name": "Norwegian Krone",
-        "japanese_name": "ノルウェークローネ",
-        "emoji": "/assets/images/flags/emoji_u1f1f3_1f1f4.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "nzd",
-        "name": "New Zealand Dollar",
-        "japanese_name": "ニュージーランドドル",
-        "emoji": "/assets/images/flags/emoji_u1f1f3_1f1ff.svg"
-    },
-    {
-        "symbol": "₱",
-        "abbreviation": "php",
-        "name": "Philippine Peso",
-        "japanese_name": "フィリピンペソ",
-        "emoji": "/assets/images/flags/emoji_u1f1f5_1f1ed.svg"
-    },
-    {
-        "symbol": "₨",
-        "abbreviation": "pkr",
-        "name": "Pakistani Rupee",
-        "japanese_name": "パキスタンルピー",
-        "emoji": "/assets/images/flags/emoji_u1f1f5_1f1f0.svg"
-    },
-    {
-        "symbol": "zł",
-        "abbreviation": "pln",
-        "name": "Polish Złoty",
-        "japanese_name": "ポーランドズロチ",
-        "emoji": "/assets/images/flags/emoji_u1f1f5_1f1f1.svg"
-    },
-    {
-        "symbol": "₽",
-        "abbreviation": "rub",
-        "name": "Russian Ruble",
-        "japanese_name": "ロシアルーブル",
-        "emoji": "/assets/images/flags/emoji_u1f1f7_1f1fa.svg"
-    },
-    {
-        "symbol": "ر.س",
-        "abbreviation": "sar",
-        "name": "Saudi Riyal",
-        "japanese_name": "サウジアラビアリヤル",
-        "emoji": "/assets/images/flags/emoji_u1f1f8_1f1e6.svg"
-    },
-    {
-        "symbol": "kr",
-        "abbreviation": "sek",
-        "name": "Swedish Krona",
-        "japanese_name": "スウェーデンクローナ",
-        "emoji": "/assets/images/flags/emoji_u1f1f8_1f1ea.svg"
-    },
-    {
-        "symbol": "$",
-        "abbreviation": "sgd",
-        "name": "Singapore Dollar",
-        "japanese_name": "シンガポールドル",
-        "emoji": "/assets/images/flags/emoji_u1f1f8_1f1ec.svg"
-    },
-    {
-        "symbol": "฿",
-        "abbreviation": "thb",
-        "name": "Thai Baht",
-        "japanese_name": "タイバーツ",
-        "emoji": "/assets/images/flags/emoji_u1f1f9_1f1ed.svg"
-    },
-    {
-        "symbol": "₺",
-        "abbreviation": "try",
-        "name": "Turkish Lira",
-        "japanese_name": "トルコリラ",
-        "emoji": "/assets/images/flags/emoji_u1f1f9_1f1f7.svg"
-    },
-    {
-        "symbol": "NT$",
-        "abbreviation": "twd",
-        "name": "New Taiwan Dollar",
-        "japanese_name": "台湾ドル",
-        "emoji": "/assets/images/flags/emoji_u1f1f9_1f1fc.svg"
-    },
-    {
-        "symbol": "₴",
-        "abbreviation": "uah",
-        "name": "Ukrainian Hryvnia",
-        "japanese_name": "ウクライナグリブナ",
-        "emoji": "/assets/images/flags/emoji_u1f1fa_1f1e6.svg"
-    },
-    {
-        "symbol": "Bs",
-        "abbreviation": "vef",
-        "name": "Venezuelan Bolívar (pre-2018)",
-        "japanese_name": "ベネズエラボリバル（旧）",
-        "emoji": "/assets/images/flags/emoji_u1f1fb_1f1ea.svg"
-    },
-    {
-        "symbol": "₫",
-        "abbreviation": "vnd",
-        "name": "Vietnamese Đồng",
-        "japanese_name": "ベトナムドン",
-        "emoji": "/assets/images/flags/emoji_u1f1fb_1f1f3.svg"
-    },
-    {
-        "symbol": "R",
-        "abbreviation": "zar",
-        "name": "South African Rand",
-        "japanese_name": "南アフリカランド",
-        "emoji": "/assets/images/flags/emoji_u1f1ff_1f1e6.svg"
-    },    
-    {
-        "symbol": "SDR",
-        "abbreviation": "xdr",
-        "name": "Special Drawing Rights",
-        "japanese_name": "特別引出権",
-        "emoji": "🏦"
-    },
-    {
-        "symbol": "XAG",
-        "abbreviation": "xag",
-        "name": "Silver",
-        "japanese_name": "銀",
-        "emoji": "/assets/images/silver-icon.png"
-    },
-    {
-        "symbol": "XAU",
-        "abbreviation": "xau",
-        "name": "Gold",
-        "japanese_name": "金",
-        "emoji": "/assets/images/gold-icon.png"
-    }
+  {
+    "symbol": "₿",
+    "abbreviation": "sats",
+    "name": "Satoshi",
+    "japanese_name": "サトシ",
+    "emoji": "/assets/images/cryptocurrency-icons/btc-s.svg"
+  },
+  {
+    "symbol": "₿",
+    "abbreviation": "btc",
+    "name": "Bitcoin",
+    "japanese_name": "ビットコイン",
+    "emoji": "/assets/images/cryptocurrency-icons/btc.svg"
+  },
+  {
+    "symbol": "Ξ",
+    "abbreviation": "eth",
+    "name": "Ethereum",
+    "japanese_name": "イーサリアム",
+    "emoji": "/assets/images/cryptocurrency-icons/eth.svg"
+  },
+  {
+    "symbol": "Ł",
+    "abbreviation": "ltc",
+    "name": "Litecoin",
+    "japanese_name": "ライトコイン",
+    "emoji": "/assets/images/cryptocurrency-icons/ltc.svg"
+  },
+  {
+    "symbol": "BCH",
+    "abbreviation": "bch",
+    "name": "Bitcoin Cash",
+    "japanese_name": "ビットコインキャッシュ",
+    "emoji": "/assets/images/cryptocurrency-icons/bch.svg"
+  },
+  {
+    "symbol": "BNB",
+    "abbreviation": "bnb",
+    "name": "Binance Coin",
+    "japanese_name": "バイナンスコイン",
+    "emoji": "/assets/images/cryptocurrency-icons/bnb.svg"
+  },
+  {
+    "symbol": "EOS",
+    "abbreviation": "eos",
+    "name": "EOS",
+    "japanese_name": "イオス",
+    "emoji": "/assets/images/cryptocurrency-icons/eos.svg"
+  },
+  {
+    "symbol": "XRP",
+    "abbreviation": "xrp",
+    "name": "Ripple",
+    "japanese_name": "リップル",
+    "emoji": "/assets/images/cryptocurrency-icons/xrp.svg"
+  },
+  {
+    "symbol": "XLM",
+    "abbreviation": "xlm",
+    "name": "Stellar Lumens",
+    "japanese_name": "ステラルーメン",
+    "emoji": "/assets/images/cryptocurrency-icons/xlm.svg"
+  },
+  {
+    "symbol": "LINK",
+    "abbreviation": "link",
+    "name": "Chainlink",
+    "japanese_name": "チェーンリンク",
+    "emoji": "/assets/images/cryptocurrency-icons/link.svg"
+  },
+  {
+    "symbol": "DOT",
+    "abbreviation": "dot",
+    "name": "Polkadot",
+    "japanese_name": "ポルカドット",
+    "emoji": "/assets/images/cryptocurrency-icons/dot.svg"
+  },
+  {
+    "symbol": "YFI",
+    "abbreviation": "yfi",
+    "name": "Yearn.finance",
+    "japanese_name": "ヤーンファイナンス",
+    "emoji": "/assets/images/cryptocurrency-icons/yfi.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "usd",
+    "name": "United States Dollar",
+    "japanese_name": "アメリカドル",
+    "emoji": "/assets/images/flags/emoji_u1f1fa_1f1f8.svg"
+  },
+  {
+    "symbol": "د.إ",
+    "abbreviation": "aed",
+    "name": "United Arab Emirates Dirham",
+    "japanese_name": "アラブ首長国連邦ディルハム",
+    "emoji": "/assets/images/flags/emoji_u1f1e6_1f1ea.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "ars",
+    "name": "Argentine Peso",
+    "japanese_name": "アルゼンチンペソ",
+    "emoji": "/assets/images/flags/emoji_u1f1e6_1f1f7.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "aud",
+    "name": "Australian Dollar",
+    "japanese_name": "オーストラリアドル",
+    "emoji": "/assets/images/flags/emoji_u1f1e6_1f1fa.svg"
+  },
+  {
+    "symbol": "৳",
+    "abbreviation": "bdt",
+    "name": "Bangladeshi Taka",
+    "japanese_name": "バングラデシュタカ",
+    "emoji": "/assets/images/flags/emoji_u1f1e7_1f1e9.svg"
+  },
+  {
+    "symbol": ".د.ب",
+    "abbreviation": "bhd",
+    "name": "Bahraini Dinar",
+    "japanese_name": "バーレーンディナール",
+    "emoji": "/assets/images/flags/emoji_u1f1e7_1f1ed.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "bmd",
+    "name": "Bermudian Dollar",
+    "japanese_name": "バミューダドル",
+    "emoji": "/assets/images/flags/emoji_u1f1e7_1f1f2.svg"
+  },
+  {
+    "symbol": "R$",
+    "abbreviation": "brl",
+    "name": "Brazilian Real",
+    "japanese_name": "ブラジルレアル",
+    "emoji": "/assets/images/flags/emoji_u1f1e7_1f1f7.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "cad",
+    "name": "Canadian Dollar",
+    "japanese_name": "カナダドル",
+    "emoji": "/assets/images/flags/emoji_u1f1e8_1f1e6.svg"
+  },
+  {
+    "symbol": "CHF",
+    "abbreviation": "chf",
+    "name": "Swiss Franc",
+    "japanese_name": "スイスフラン",
+    "emoji": "/assets/images/flags/emoji_u1f1e8_1f1ed.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "clp",
+    "name": "Chilean Peso",
+    "japanese_name": "チリペソ",
+    "emoji": "/assets/images/flags/emoji_u1f1e8_1f1f1.svg"
+  },
+  {
+    "symbol": "¥",
+    "abbreviation": "cny",
+    "name": "Chinese Yuan",
+    "japanese_name": "中国人民元",
+    "emoji": "/assets/images/flags/emoji_u1f1e8_1f1f3.svg"
+  },
+  {
+    "symbol": "Kč",
+    "abbreviation": "czk",
+    "name": "Czech Koruna",
+    "japanese_name": "チェココルナ",
+    "emoji": "/assets/images/flags/emoji_u1f1e8_1f1ff.svg"
+  },
+  {
+    "symbol": "kr",
+    "abbreviation": "dkk",
+    "name": "Danish Krone",
+    "japanese_name": "デンマーククローネ",
+    "emoji": "/assets/images/flags/emoji_u1f1e9_1f1f0.svg"
+  },
+  {
+    "symbol": "€",
+    "abbreviation": "eur",
+    "name": "Euro",
+    "japanese_name": "ユーロ",
+    "emoji": "/assets/images/flags/emoji_u1f1ea_1f1fa.svg"
+  },
+  {
+    "symbol": "£",
+    "abbreviation": "gbp",
+    "name": "British Pound Sterling",
+    "japanese_name": "英ポンド",
+    "emoji": "/assets/images/flags/emoji_u1f1ec_1f1e7.svg"
+  },
+  {
+    "symbol": "₾",
+    "abbreviation": "gel",
+    "name": "Georgian Lari",
+    "japanese_name": "ジョージアラリ",
+    "emoji": "/assets/images/flags/emoji_u1f1ec_1f1ea.svg"
+  },
+  {
+    "symbol": "HK$",
+    "abbreviation": "hkd",
+    "name": "Hong Kong Dollar",
+    "japanese_name": "香港ドル",
+    "emoji": "/assets/images/flags/emoji_u1f1ed_1f1f0.svg"
+  },
+  {
+    "symbol": "Ft",
+    "abbreviation": "huf",
+    "name": "Hungarian Forint",
+    "japanese_name": "ハンガリーフォリント",
+    "emoji": "/assets/images/flags/emoji_u1f1ed_1f1fa.svg"
+  },
+  {
+    "symbol": "Rp",
+    "abbreviation": "idr",
+    "name": "Indonesian Rupiah",
+    "japanese_name": "インドネシアルピア",
+    "emoji": "/assets/images/flags/emoji_u1f1ee_1f1e9.svg"
+  },
+  {
+    "symbol": "₪",
+    "abbreviation": "ils",
+    "name": "Israeli New Shekel",
+    "japanese_name": "イスラエル新シェケル",
+    "emoji": "/assets/images/flags/emoji_u1f1ee_1f1f1.svg"
+  },
+  {
+    "symbol": "₹",
+    "abbreviation": "inr",
+    "name": "Indian Rupee",
+    "japanese_name": "インドルピー",
+    "emoji": "/assets/images/flags/emoji_u1f1ee_1f1f3.svg"
+  },
+  {
+    "symbol": "¥",
+    "abbreviation": "jpy",
+    "name": "Japanese Yen",
+    "japanese_name": "日本円",
+    "emoji": "/assets/images/flags/emoji_u1f1ef_1f1f5.svg"
+  },
+  {
+    "symbol": "₩",
+    "abbreviation": "krw",
+    "name": "South Korean Won",
+    "japanese_name": "韓国ウォン",
+    "emoji": "/assets/images/flags/emoji_u1f1f0_1f1f7.svg"
+  },
+  {
+    "symbol": "د.ك",
+    "abbreviation": "kwd",
+    "name": "Kuwaiti Dinar",
+    "japanese_name": "クウェートディナール",
+    "emoji": "/assets/images/flags/emoji_u1f1f0_1f1fc.svg"
+  },
+  {
+    "symbol": "Rs",
+    "abbreviation": "lkr",
+    "name": "Sri Lankan Rupee",
+    "japanese_name": "スリランカルピー",
+    "emoji": "/assets/images/flags/emoji_u1f1f1_1f1f0.svg"
+  },
+  {
+    "symbol": "K",
+    "abbreviation": "mmk",
+    "name": "Myanmar Kyat",
+    "japanese_name": "ミャンマーキャット",
+    "emoji": "/assets/images/flags/emoji_u1f1f2_1f1f2.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "mxn",
+    "name": "Mexican Peso",
+    "japanese_name": "メキシコペソ",
+    "emoji": "/assets/images/flags/emoji_u1f1f2_1f1fd.svg"
+  },
+  {
+    "symbol": "RM",
+    "abbreviation": "myr",
+    "name": "Malaysian Ringgit",
+    "japanese_name": "マレーシアリンギット",
+    "emoji": "/assets/images/flags/emoji_u1f1f2_1f1fe.svg"
+  },
+  {
+    "symbol": "₦",
+    "abbreviation": "ngn",
+    "name": "Nigerian Naira",
+    "japanese_name": "ナイジェリアナイラ",
+    "emoji": "/assets/images/flags/emoji_u1f1f3_1f1ec.svg"
+  },
+  {
+    "symbol": "kr",
+    "abbreviation": "nok",
+    "name": "Norwegian Krone",
+    "japanese_name": "ノルウェークローネ",
+    "emoji": "/assets/images/flags/emoji_u1f1f3_1f1f4.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "nzd",
+    "name": "New Zealand Dollar",
+    "japanese_name": "ニュージーランドドル",
+    "emoji": "/assets/images/flags/emoji_u1f1f3_1f1ff.svg"
+  },
+  {
+    "symbol": "₱",
+    "abbreviation": "php",
+    "name": "Philippine Peso",
+    "japanese_name": "フィリピンペソ",
+    "emoji": "/assets/images/flags/emoji_u1f1f5_1f1ed.svg"
+  },
+  {
+    "symbol": "₨",
+    "abbreviation": "pkr",
+    "name": "Pakistani Rupee",
+    "japanese_name": "パキスタンルピー",
+    "emoji": "/assets/images/flags/emoji_u1f1f5_1f1f0.svg"
+  },
+  {
+    "symbol": "zł",
+    "abbreviation": "pln",
+    "name": "Polish Złoty",
+    "japanese_name": "ポーランドズロチ",
+    "emoji": "/assets/images/flags/emoji_u1f1f5_1f1f1.svg"
+  },
+  {
+    "symbol": "₽",
+    "abbreviation": "rub",
+    "name": "Russian Ruble",
+    "japanese_name": "ロシアルーブル",
+    "emoji": "/assets/images/flags/emoji_u1f1f7_1f1fa.svg"
+  },
+  {
+    "symbol": "ر.س",
+    "abbreviation": "sar",
+    "name": "Saudi Riyal",
+    "japanese_name": "サウジアラビアリヤル",
+    "emoji": "/assets/images/flags/emoji_u1f1f8_1f1e6.svg"
+  },
+  {
+    "symbol": "kr",
+    "abbreviation": "sek",
+    "name": "Swedish Krona",
+    "japanese_name": "スウェーデンクローナ",
+    "emoji": "/assets/images/flags/emoji_u1f1f8_1f1ea.svg"
+  },
+  {
+    "symbol": "$",
+    "abbreviation": "sgd",
+    "name": "Singapore Dollar",
+    "japanese_name": "シンガポールドル",
+    "emoji": "/assets/images/flags/emoji_u1f1f8_1f1ec.svg"
+  },
+  {
+    "symbol": "฿",
+    "abbreviation": "thb",
+    "name": "Thai Baht",
+    "japanese_name": "タイバーツ",
+    "emoji": "/assets/images/flags/emoji_u1f1f9_1f1ed.svg"
+  },
+  {
+    "symbol": "₺",
+    "abbreviation": "try",
+    "name": "Turkish Lira",
+    "japanese_name": "トルコリラ",
+    "emoji": "/assets/images/flags/emoji_u1f1f9_1f1f7.svg"
+  },
+  {
+    "symbol": "NT$",
+    "abbreviation": "twd",
+    "name": "New Taiwan Dollar",
+    "japanese_name": "台湾ドル",
+    "emoji": "/assets/images/flags/emoji_u1f1f9_1f1fc.svg"
+  },
+  {
+    "symbol": "₴",
+    "abbreviation": "uah",
+    "name": "Ukrainian Hryvnia",
+    "japanese_name": "ウクライナグリブナ",
+    "emoji": "/assets/images/flags/emoji_u1f1fa_1f1e6.svg"
+  },
+  {
+    "symbol": "Bs",
+    "abbreviation": "vef",
+    "name": "Venezuelan Bolívar (pre-2018)",
+    "japanese_name": "ベネズエラボリバル（旧）",
+    "emoji": "/assets/images/flags/emoji_u1f1fb_1f1ea.svg"
+  },
+  {
+    "symbol": "₫",
+    "abbreviation": "vnd",
+    "name": "Vietnamese Đồng",
+    "japanese_name": "ベトナムドン",
+    "emoji": "/assets/images/flags/emoji_u1f1fb_1f1f3.svg"
+  },
+  {
+    "symbol": "R",
+    "abbreviation": "zar",
+    "name": "South African Rand",
+    "japanese_name": "南アフリカランド",
+    "emoji": "/assets/images/flags/emoji_u1f1ff_1f1e6.svg"
+  },
+  {
+    "symbol": "SDR",
+    "abbreviation": "xdr",
+    "name": "Special Drawing Rights",
+    "japanese_name": "特別引出権",
+    "emoji": "🏦"
+  },
+  {
+    "symbol": "XAG",
+    "abbreviation": "xag",
+    "name": "Silver",
+    "japanese_name": "銀",
+    "emoji": "/assets/images/silver-icon.png"
+  },
+  {
+    "symbol": "XAU",
+    "abbreviation": "xau",
+    "name": "Gold",
+    "japanese_name": "金",
+    "emoji": "/assets/images/gold-icon.png"
+  }
 ]

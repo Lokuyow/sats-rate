@@ -1,111 +1,103 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
+  <head>
     <title>おいくらサッツ - 通貨</title>
 
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/currencies.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/currencies.css" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。">
-    <meta property="og:site_name" content="おいくらサッツ">
-    <meta property="og:title" content="おいくらサッツ">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://osats.money/">
-    <meta property="og:image" content="https://osats.money/assets/images/ogp.png">
-    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール">
-    <meta property="og:locale" content="ja_JP">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。" />
+    <meta property="og:site_name" content="おいくらサッツ" />
+    <meta property="og:title" content="おいくらサッツ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://osats.money/" />
+    <meta property="og:image" content="https://osats.money/assets/images/ogp.png" />
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール" />
+    <meta property="og:locale" content="ja_JP" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@Lokuyow">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lokuyow" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N6MG239RG"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-0N6MG239RG');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0N6MG239RG");
     </script>
 
-    <link rel="icon" href="/assets/favicons/favicon.ico" sizes="48x48">
-    <link rel="icon" href="/assets/images/icon.svg" sizes="any" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/assets/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/assets/favicons/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/assets/images/icon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/favicons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#B3475F" />
 
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="おいくらサッツ">
+    <meta name="apple-mobile-web-app-title" content="おいくらサッツ" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
     <script>
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-        const getInitialTheme = () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) return savedTheme;
-            return prefersDarkScheme.matches ? 'dark' : 'light';
-        };
+      const getInitialTheme = () => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) return savedTheme;
+        return prefersDarkScheme.matches ? "dark" : "light";
+      };
 
-        const setTheme = (theme) => {
-            document.documentElement.setAttribute('data-theme', theme);
-        };
+      const setTheme = (theme) => {
+        document.documentElement.setAttribute("data-theme", theme);
+      };
 
-        setTheme(getInitialTheme());
+      setTheme(getInitialTheme());
     </script>
-</head>
+  </head>
 
-<body ontouchstart="">
-
+  <body ontouchstart="">
     <div class="checkBtn-container">
-        <button id="checkAllButton" class="dark-btn">check all</button>
-        <button id="uncheckAllButton" class="dark-btn">uncheck all</button>
-        <button id="defaultSelectionButton" class="dark-btn">default</button>
+      <button id="checkAllButton" class="dark-btn">check all</button>
+      <button id="uncheckAllButton" class="dark-btn">uncheck all</button>
+      <button id="defaultSelectionButton" class="dark-btn">default</button>
     </div>
 
     <main>
+      <div class="currencies-main">
+        <div id="currency-container"></div>
 
-        <div class="currencies-main">
-            <div id="currency-container"></div>
+        <div class="floating-field">
+          <div id="fix-container">
+            <button id="scrollUpButton" class="scroll-button scroll-up normal-btn">
+              <div class="caret-up-solid"></div>
+            </button>
 
-            <div class="floating-field">
-
-                <div id="fix-container">
-                    <button id="scrollUpButton" class="scroll-button scroll-up normal-btn">
-                        <div class="caret-up-solid"></div>
-                    </button>
-
-                    <div id="trash-container">
-                        <div class="trash-icon">
-                            <div class="trash-drop-area"></div>
-                        </div>
-                    </div>
-
-                    <button id="scrollDownButton" class="scroll-button scroll-down normal-btn">
-                        <div class="caret-down-solid"></div>
-                    </button>
-                </div>
-
-                <div class="sort-container"></div>
-
+            <div id="trash-container">
+              <div class="trash-icon">
+                <div class="trash-drop-area"></div>
+              </div>
             </div>
-        </div>
 
+            <button id="scrollDownButton" class="scroll-button scroll-down normal-btn">
+              <div class="caret-down-solid"></div>
+            </button>
+          </div>
+
+          <div class="sort-container"></div>
+        </div>
+      </div>
     </main>
 
     <div class="saveSelectedCurrencies-container">
-        <button id="saveSelectedCurrenciesBtn">
-            Save
-        </button>
+      <button id="saveSelectedCurrenciesBtn">Save</button>
     </div>
 
     <script defer type="module" src="../assets/js/currencies.js"></script>
     <script defer src="../lib/sortable@1.15.2.js"></script>
-</body>
-
+  </body>
 </html>

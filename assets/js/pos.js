@@ -1,47 +1,47 @@
-import { formatCurrency } from '../../main.js';
-import { LightningAddress } from './lightning-address.js';
+import { formatCurrency } from "../../main.js";
+import { LightningAddress } from "./lightning-address.js";
 
 /**
  * POS機能
  * ライトニングアドレスを保管して入力された金額のインボイスのQRコードの表示を行う。
  */
 export class Pos {
-  localStorageKey = 'POS:LnAddress';
+  localStorageKey = "POS:LnAddress";
   #getQrCodeConfig(data) {
     return {
       width: 340,
       height: 340,
-      type: 'svg',
+      type: "svg",
       data,
-      image: './assets/images/icon.svg',
+      image: "./assets/images/icon.svg",
       margin: 2,
       dotsOptions: {
-        color: '#4D4D4D',
-        type: 'rounded'
+        color: "#4D4D4D",
+        type: "rounded",
       },
       backgroundOptions: {
-        color: '#e9ebee',
+        color: "#e9ebee",
       },
       imageOptions: {
-        crossOrigin: 'anonymous',
-        margin: 2
-      }
-    }
-  };
+        crossOrigin: "anonymous",
+        margin: 2,
+      },
+    };
+  }
 
   // LightningAddressクラスのインスタンス
   #lnAddress;
 
-  #qrWrapper = window.document.getElementById('lightning-pos-qr-box');
-  #messageArea = window.document.getElementById('pos-message');
-  #posPayButton = window.document.getElementById('show-invoice-dialog');
+  #qrWrapper = window.document.getElementById("lightning-pos-qr-box");
+  #messageArea = window.document.getElementById("pos-message");
+  #posPayButton = window.document.getElementById("show-invoice-dialog");
 
   // 連打による連続的なリクエストを制限するためのフラグ
   #isRequesting = false;
 
   initialize() {
     // ローカルストレージからアドレスを取得
-    this.#lnAddress = new LightningAddress(window.localStorage.getItem(this.localStorageKey) ?? '');
+    this.#lnAddress = new LightningAddress(window.localStorage.getItem(this.localStorageKey) ?? "");
 
     this.#updatePosPayButton();
   }
@@ -49,10 +49,10 @@ export class Pos {
   setLnAddress(form) {
     const formData = new FormData(form);
 
-    this.#lnAddress = new LightningAddress(formData.get('lightning-address') ?? '');
+    this.#lnAddress = new LightningAddress(formData.get("lightning-address") ?? "");
 
     if (!this.#lnAddress.hasValidAddress) {
-      console.warn(`Pos: invalid address: ${formData.get('lightning-address')}`);
+      console.warn(`Pos: invalid address: ${formData.get("lightning-address")}`);
 
       return;
     }
@@ -85,9 +85,9 @@ export class Pos {
 
   calculateSatsValue() {
     // satsの値を直接取得できるか確認
-    const satsInput = window.document.getElementById('sats');
+    const satsInput = window.document.getElementById("sats");
     if (satsInput) {
-      const satsAmount = parseInt(satsInput.value.replaceAll(',', ''), 10);
+      const satsAmount = parseInt(satsInput.value.replaceAll(",", ""), 10);
       return satsAmount;
     }
 
@@ -102,9 +102,9 @@ export class Pos {
 
     let satsAmount;
 
-    if (currency === 'sats') {
+    if (currency === "sats") {
       satsAmount = Math.round(value);
-    } else if (currency === 'btc') {
+    } else if (currency === "btc") {
       satsAmount = Math.round(value * 1e8);
     } else {
       const rate = this.getCurrencyRate(currency);
@@ -150,11 +150,11 @@ export class Pos {
       let message;
 
       // 翻訳されたメッセージを取得
-      const translatedMessage = window.vanilla_i18n_instance.translate('pos.errors.invoiceCreationFailed');
+      const translatedMessage = window.vanilla_i18n_instance.translate("pos.errors.invoiceCreationFailed");
 
       if (error.message) {
         message = error.message;
-      } else if (typeof error === 'object') {
+      } else if (typeof error === "object") {
         message = JSON.stringify(error);
       } else {
         message = `Error: ${translatedMessage}`;
@@ -167,58 +167,57 @@ export class Pos {
   }
 
   clearLnAddress() {
-    this.#lnAddress = new LightningAddress('');
-    this.#updatePosPayButton()
-    window.localStorage.removeItem('POS:LnAddress');
+    this.#lnAddress = new LightningAddress("");
+    this.#updatePosPayButton();
+    window.localStorage.removeItem("POS:LnAddress");
     this.#clearQrCode();
   }
 
   #showCurrentAmounts(satsAmount) {
-    const satsInput = window.document.getElementById('sats');
+    const satsInput = window.document.getElementById("sats");
     let satsFormatAmount;
 
     if (satsInput) {
       satsFormatAmount = satsInput.value;
     } else {
-      satsFormatAmount = formatCurrency(satsAmount, 'sats');
+      satsFormatAmount = formatCurrency(satsAmount, "sats");
     }
 
     const baseCurrency = this.getBaseCurrency();
-    let baseCurrencyValue = '';
+    let baseCurrencyValue = "";
 
     // 'sats'の場合はbaseCurrencyとbaseCurrencyValueを空欄にする
-    if (baseCurrency !== 'sats') {
-      baseCurrencyValue = window.document.getElementById(baseCurrency)?.value || '';
-      window.document.getElementById('base-unit').innerText = baseCurrency.toUpperCase();
+    if (baseCurrency !== "sats") {
+      baseCurrencyValue = window.document.getElementById(baseCurrency)?.value || "";
+      window.document.getElementById("base-unit").innerText = baseCurrency.toUpperCase();
     } else {
-      window.document.getElementById('base-unit').innerText = '';
+      window.document.getElementById("base-unit").innerText = "";
     }
 
-    window.document.getElementById('current-sats').innerText = satsFormatAmount;
-    window.document.getElementById('current-base').innerText = baseCurrencyValue;
+    window.document.getElementById("current-sats").innerText = satsFormatAmount;
+    window.document.getElementById("current-base").innerText = baseCurrencyValue;
   }
 
-
   #clearQrCode() {
-    this.#qrWrapper.innerHTML = '';
+    this.#qrWrapper.innerHTML = "";
   }
 
   #showQrCode(data) {
-    const qrCode = new QRCodeStyling(this.#getQrCodeConfig(data))
+    const qrCode = new QRCodeStyling(this.#getQrCodeConfig(data));
     qrCode.append(this.#qrWrapper);
   }
 
   // エラーメッセージなどを表示する
   #setMessage(message) {
-    this.#messageArea.innerHTML = '';
-    const p = window.document.createElement('p')
+    this.#messageArea.innerHTML = "";
+    const p = window.document.createElement("p");
     p.innerText = message;
 
-    this.#messageArea.appendChild(p)
+    this.#messageArea.appendChild(p);
   }
 
   clearMessage() {
-    this.#messageArea.innerHTML = '';
+    this.#messageArea.innerHTML = "";
   }
 
   // 請求書を表示のボタンの状態を切り替える
@@ -226,4 +225,3 @@ export class Pos {
     this.#posPayButton.disabled = !this.#lnAddress || !this.#lnAddress.hasValidAddress();
   }
 }
-

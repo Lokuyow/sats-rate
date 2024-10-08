@@ -1,150 +1,150 @@
 {
-    "title": "OikuraSats",
-    "copy": "Copy",
-    "paste": "Paste",
-    "lightning": {
-        "subject": "Lightning",
-        "invoice": "Show Invoice",
-        "address": "Lightning Address for Receiving",
-        "submit": "Set",
-        "clear": "Delete",
-        "close": "Close"
+  "title": "OikuraSats",
+  "copy": "Copy",
+  "paste": "Paste",
+  "lightning": {
+    "subject": "Lightning",
+    "invoice": "Show Invoice",
+    "address": "Lightning Address for Receiving",
+    "submit": "Set",
+    "clear": "Delete",
+    "close": "Close"
+  },
+  "share": "Share",
+  "settings": {
+    "subject": "Settings",
+    "theme": "Theme",
+    "value": {
+      "subject": "Current Input Value",
+      "default": "Set as Default"
     },
-    "share": "Share",
-    "settings": {
-        "subject": "Settings",
-        "theme": "Theme",
-        "value": {
-            "subject": "Current Input Value",
-            "default": "Set as Default"
-        },
-        "currency": {
-            "subject": "Currency",
-            "sort": "Change"
-        },
-        "update": "Check for Updates"
+    "currency": {
+      "subject": "Currency",
+      "sort": "Change"
     },
-    "zap": {
-        "subject": "Zap (Tipping)",
-        "list": "Zap List",
-        "what": "Zap?"
-    },
-    "recommend": {
-        "subject": "Recommended Sites",
-        "zukan": "Bitcoin-zukan.com",
-        "lost": "Lost in Bitcoin"
-    },
-    "footer": {
-        "oikura": "What is OikuraSats?",
-        "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
-        "unit": "Sats, Sat, Satoshi (Units)",
-        "formula": "100 million sats = 1 BTC",
-        "created": "Created by: ",
-        "contribution": "Contributions: ",
-        "source": "Source Code: ",
-        "data": "Data provided by: "
-    },
-    "lokuyow": "Lokuyow",
-    "showNotification": {
-        "setup": "Setup complete",
-        "copy": "Copied to clipboard",
-        "up": "Up to date"
-    },
-    "updateUI": {
-        "textContent": "Updates available"
-    },
-    "alerts": {
-        "online": "You are back online. Fetching the latest data.",
-        "shareNotSupported": "Your browser does not support the Web Share API. Please try a different browser.",
-        "fetchErrorWithData": "Failed to fetch the latest currency rates. Displaying cached data.",
-        "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time."
-    },
-    "lightningAddress": {
-        "errors": {
-            "invalidAddress": "It seems the Lightning address is not payable.",
-            "noAddressSet": "No Lightning address set",
-            "invalidAmount": "Invalid amount. Make sure the amount is between {min} sats and {max} sats.",
-            "cannotFetchData": "Cannot fetch address data.",
-            "cannotGetInvoice": "Cannot get invoice."
-        }
-    },
-    "pos": {
-        "errors": {
-            "invoiceCreationFailed": "Cannot create invoice. Please check if the Lightning address is correct."
-        }
-    },
-    "about": {
-        "zapWhat": {
-            "title": "What is Zap?",
-            "description": "Zap is a tipping mechanism using Bitcoin. Creators can easily receive Bitcoin, and users can support creators at a low cost."
-        },
-        "whyZap": {
-            "title": "Why Zap?",
-            "description1": "Traditional remittance systems have high fees and take a long time to process transactions. Especially for international transfers, costs and time increase, making them inconvenient.",
-            "description2": "The Lightning Network for Bitcoin enables almost instantaneous transactions with low fees. This allows for easy exchange of value.",
-            "description3": "Additionally, Zap utilizing the Lightning Network and Nostr allows creators and users to support each other directly without intermediaries. This mechanism enables free interactions without relying on traditional platforms."
-        },
-        "typesOfZap": {
-            "title": "Types of Zap",
-            "anonymousZap": {
-                "title": "Anonymous Zap",
-                "description": "This method allows sending without revealing the sender. It can be used without a Nostr account as long as you have a Lightning wallet."
-            },
-            "identifiedZap": {
-                "title": "Identified Zap",
-                "description": "This method involves revealing the sender. It requires a Lightning wallet, a Nostr account, and a Nostr Extension."
-            }
-        },
-        "howToZap": {
-            "title": "How to Zap",
-            "step1": {
-                "title": "1. Create a Lightning Wallet",
-                "description": "\"Wallet of Satoshi (WoS)\" is a simple wallet app compatible with Zap. Please download it from the <a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">official website</a>.",
-                "description2": "Once you add sats to your wallet, you can perform Anonymous Zap. Try it by pressing the Zap button on the site. If you want to use Identified Zap, proceed to the next step."
-            },
-            "step2": {
-                "title": "2. Create a Nostr Account",
-                "description": "Create a Nostr account by visiting <a href=\"https://nostter.app\" target=\"_blank\">nostter.app</a>. Set up your profile after creating the account."
-            },
-            "step3": {
-                "title": "3. Install Nostr Extension (Nostr Login Extension)",
-                "description": "Install a browser extension for Nostr. The installation method differs for PC, iOS, and Android. Please refer to this <a href=\"https://welcome.nostr-jp.org/tutorial/nip-07.html\" target=\"_blank\">tutorial(Japanese)</a> for detailed steps. Use the private key created in nostter. Copy it from the \"Settings\" page of nostter."
-            },
-            "step4": {
-                "title": "4. Perform Zap",
-                "description": "When you press the Zap button, a notification window from the Nostr Extension will appear. Please allow it. Next, a QR code for payment will be displayed. Sending sats from WoS will complete the Zap. Check the Zap list to confirm your Zap has been recorded."
-            }
-        },
-        "glossary": {
-            "title": "Glossary",
-            "bitcoin": {
-                "title": "Bitcoin",
-                "description": "Bitcoin is a digital currency that does not require a central authority. It is also used as a store of value."
-            },
-            "lightningNetwork": {
-                "title": "Lightning Network",
-                "description": "The Lightning Network is a technology that speeds up Bitcoin transactions and reduces fees. This makes small payments easier and maintains anonymity."
-            },
-            "zap": {
-                "title": "Zap (Nostr Lightning Zaps)",
-                "description": "Zap is a feature on Nostr that uses the Lightning Network to send Bitcoin. By linking it to a Nostr account, you can publicly display the sender, recipient, amount, and comments without a third party. This makes supporting creators easy."
-            },
-            "nostr": {
-                "title": "Nostr",
-                "description": "Nostr is a decentralized social network protocol without central servers. Users manage their identities with public and private keys and post messages. This protocol is resistant to censorship and provides a free-to-join network. It is also simple and highly extensible, allowing developers to easily create their own clients and services."
-            }
-        },
-        "note": {
-            "title": "Note",
-            "list1": "After installing Wallet of Satoshi (WoS), register your email address from the menu. If you do not register, you will not be able to access your wallet's Bitcoin if your device fails.",
-            "list2": "Do not share your Nostr private key with others. Your account may be compromised. If that happens, create a new private key and change your account."
-        },
-        "referenceLinks": {
-            "title": "Reference Links",
-            "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\">Zap (Japanese, Scrapbox, Cosense)</a>",
-            "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">【Nostr】How to Install a Bitcoin Tipping Button on Your Website [Zap] (Japanese, Spotlight)</a>",
-            "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
-            "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
-        }
+    "update": "Check for Updates"
+  },
+  "zap": {
+    "subject": "Zap (Tipping)",
+    "list": "Zap List",
+    "what": "Zap?"
+  },
+  "recommend": {
+    "subject": "Recommended Sites",
+    "zukan": "Bitcoin-zukan.com",
+    "lost": "Lost in Bitcoin"
+  },
+  "footer": {
+    "oikura": "What is OikuraSats?",
+    "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
+    "unit": "Sats, Sat, Satoshi (Units)",
+    "formula": "100 million sats = 1 BTC",
+    "created": "Created by: ",
+    "contribution": "Contributions: ",
+    "source": "Source Code: ",
+    "data": "Data provided by: "
+  },
+  "lokuyow": "Lokuyow",
+  "showNotification": {
+    "setup": "Setup complete",
+    "copy": "Copied to clipboard",
+    "up": "Up to date"
+  },
+  "updateUI": {
+    "textContent": "Updates available"
+  },
+  "alerts": {
+    "online": "You are back online. Fetching the latest data.",
+    "shareNotSupported": "Your browser does not support the Web Share API. Please try a different browser.",
+    "fetchErrorWithData": "Failed to fetch the latest currency rates. Displaying cached data.",
+    "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time."
+  },
+  "lightningAddress": {
+    "errors": {
+      "invalidAddress": "It seems the Lightning address is not payable.",
+      "noAddressSet": "No Lightning address set",
+      "invalidAmount": "Invalid amount. Make sure the amount is between {min} sats and {max} sats.",
+      "cannotFetchData": "Cannot fetch address data.",
+      "cannotGetInvoice": "Cannot get invoice."
     }
+  },
+  "pos": {
+    "errors": {
+      "invoiceCreationFailed": "Cannot create invoice. Please check if the Lightning address is correct."
+    }
+  },
+  "about": {
+    "zapWhat": {
+      "title": "What is Zap?",
+      "description": "Zap is a tipping mechanism using Bitcoin. Creators can easily receive Bitcoin, and users can support creators at a low cost."
+    },
+    "whyZap": {
+      "title": "Why Zap?",
+      "description1": "Traditional remittance systems have high fees and take a long time to process transactions. Especially for international transfers, costs and time increase, making them inconvenient.",
+      "description2": "The Lightning Network for Bitcoin enables almost instantaneous transactions with low fees. This allows for easy exchange of value.",
+      "description3": "Additionally, Zap utilizing the Lightning Network and Nostr allows creators and users to support each other directly without intermediaries. This mechanism enables free interactions without relying on traditional platforms."
+    },
+    "typesOfZap": {
+      "title": "Types of Zap",
+      "anonymousZap": {
+        "title": "Anonymous Zap",
+        "description": "This method allows sending without revealing the sender. It can be used without a Nostr account as long as you have a Lightning wallet."
+      },
+      "identifiedZap": {
+        "title": "Identified Zap",
+        "description": "This method involves revealing the sender. It requires a Lightning wallet, a Nostr account, and a Nostr Extension."
+      }
+    },
+    "howToZap": {
+      "title": "How to Zap",
+      "step1": {
+        "title": "1. Create a Lightning Wallet",
+        "description": "\"Wallet of Satoshi (WoS)\" is a simple wallet app compatible with Zap. Please download it from the <a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">official website</a>.",
+        "description2": "Once you add sats to your wallet, you can perform Anonymous Zap. Try it by pressing the Zap button on the site. If you want to use Identified Zap, proceed to the next step."
+      },
+      "step2": {
+        "title": "2. Create a Nostr Account",
+        "description": "Create a Nostr account by visiting <a href=\"https://nostter.app\" target=\"_blank\">nostter.app</a>. Set up your profile after creating the account."
+      },
+      "step3": {
+        "title": "3. Install Nostr Extension (Nostr Login Extension)",
+        "description": "Install a browser extension for Nostr. The installation method differs for PC, iOS, and Android. Please refer to this <a href=\"https://welcome.nostr-jp.org/tutorial/nip-07.html\" target=\"_blank\">tutorial(Japanese)</a> for detailed steps. Use the private key created in nostter. Copy it from the \"Settings\" page of nostter."
+      },
+      "step4": {
+        "title": "4. Perform Zap",
+        "description": "When you press the Zap button, a notification window from the Nostr Extension will appear. Please allow it. Next, a QR code for payment will be displayed. Sending sats from WoS will complete the Zap. Check the Zap list to confirm your Zap has been recorded."
+      }
+    },
+    "glossary": {
+      "title": "Glossary",
+      "bitcoin": {
+        "title": "Bitcoin",
+        "description": "Bitcoin is a digital currency that does not require a central authority. It is also used as a store of value."
+      },
+      "lightningNetwork": {
+        "title": "Lightning Network",
+        "description": "The Lightning Network is a technology that speeds up Bitcoin transactions and reduces fees. This makes small payments easier and maintains anonymity."
+      },
+      "zap": {
+        "title": "Zap (Nostr Lightning Zaps)",
+        "description": "Zap is a feature on Nostr that uses the Lightning Network to send Bitcoin. By linking it to a Nostr account, you can publicly display the sender, recipient, amount, and comments without a third party. This makes supporting creators easy."
+      },
+      "nostr": {
+        "title": "Nostr",
+        "description": "Nostr is a decentralized social network protocol without central servers. Users manage their identities with public and private keys and post messages. This protocol is resistant to censorship and provides a free-to-join network. It is also simple and highly extensible, allowing developers to easily create their own clients and services."
+      }
+    },
+    "note": {
+      "title": "Note",
+      "list1": "After installing Wallet of Satoshi (WoS), register your email address from the menu. If you do not register, you will not be able to access your wallet's Bitcoin if your device fails.",
+      "list2": "Do not share your Nostr private key with others. Your account may be compromised. If that happens, create a new private key and change your account."
+    },
+    "referenceLinks": {
+      "title": "Reference Links",
+      "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\">Zap (Japanese, Scrapbox, Cosense)</a>",
+      "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">【Nostr】How to Install a Bitcoin Tipping Button on Your Website [Zap] (Japanese, Spotlight)</a>",
+      "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
+      "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
+    }
+  }
 }

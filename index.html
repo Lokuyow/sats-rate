@@ -1,404 +1,363 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
     <title>おいくらサッツ</title>
 
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。">
-    <meta property="og:site_name" content="おいくらサッツ">
-    <meta property="og:title" content="おいくらサッツ">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://osats.money/">
-    <meta property="og:image" content="https://osats.money/assets/images/ogp.png">
-    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール">
-    <meta property="og:locale" content="ja_JP">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。" />
+    <meta property="og:site_name" content="おいくらサッツ" />
+    <meta property="og:title" content="おいくらサッツ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://osats.money/" />
+    <meta property="og:image" content="https://osats.money/assets/images/ogp.png" />
+    <meta property="og:description" content="ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール" />
+    <meta property="og:locale" content="ja_JP" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@Lokuyow">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lokuyow" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N6MG239RG"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-0N6MG239RG');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0N6MG239RG");
     </script>
 
-    <link rel="icon" href="./assets/favicons/favicon.ico" sizes="48x48">
-    <link rel="icon" href="./assets/images/icon.svg" sizes="any" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./assets/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./assets/favicons/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="./assets/images/icon.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/favicons/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="theme-color" content="#B3475F" />
 
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="おいくらサッツ">
+    <meta name="apple-mobile-web-app-title" content="おいくらサッツ" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
     <script>
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-        const getInitialTheme = () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) return savedTheme;
-            return prefersDarkScheme.matches ? 'dark' : 'light';
-        };
+      const getInitialTheme = () => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) return savedTheme;
+        return prefersDarkScheme.matches ? "dark" : "light";
+      };
 
-        const setTheme = (theme) => {
-            if (!document.documentElement.classList.contains('light-static') &&
-                !document.documentElement.classList.contains('dark-static')) {
-                document.documentElement.classList.add(theme + '-static');
-            }
-            document.documentElement.setAttribute('data-theme', theme);
-        };
+      const setTheme = (theme) => {
+        if (!document.documentElement.classList.contains("light-static") && !document.documentElement.classList.contains("dark-static")) {
+          document.documentElement.classList.add(theme + "-static");
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      };
 
-        setTheme(getInitialTheme());
+      setTheme(getInitialTheme());
     </script>
 
     <script src="/lib/vanilla-i18n.min.js"></script>
     <script>
-        const languages = ["日本語", "English"];
-        window.vanilla_i18n_instance = new vanilla_i18n(
-            languages,
-            {
-                path: "/assets/vanilla-i18n",
-                debug: false,
-                i18n_attr_name: "vanilla-i18n",
-                toggler_id: "vanilla-i18n-toggler",
-                default_language: languages[0],
-            }
-        );
-        window.vanilla_i18n_instance.run();
+      const languages = ["日本語", "English"];
+      window.vanilla_i18n_instance = new vanilla_i18n(languages, {
+        path: "/assets/vanilla-i18n",
+        debug: false,
+        i18n_attr_name: "vanilla-i18n",
+        toggler_id: "vanilla-i18n-toggler",
+        default_language: languages[0],
+      });
+      window.vanilla_i18n_instance.run();
     </script>
-</head>
+  </head>
 
-<body ontouchstart="">
+  <body ontouchstart="">
     <main>
-        <section>
-            <div class="title">
-                <a href="https://osats.money/" aria-label="おいくらサッツ">
-                    <h1>
-                        <i18n vanilla-i18n="title">おいくらサッツ</i18n>
-                    </h1>
-                    <img class="icon" src="./assets/images/icon.svg" alt="icon" width="68px" height="68px" />
-                </a>
+      <section>
+        <div class="title">
+          <a href="https://osats.money/" aria-label="おいくらサッツ">
+            <h1>
+              <i18n vanilla-i18n="title">おいくらサッツ</i18n>
+            </h1>
+            <img class="icon" src="./assets/images/icon.svg" alt="icon" width="68px" height="68px" />
+          </a>
+        </div>
+
+        <div class="box-container">
+          <div class="grid-container">
+            <div class="flex-copy">
+              <div class="text">
+                <i18n vanilla-i18n="copy">コピー</i18n>
+              </div>
+              <div class="angle-down-solid"></div>
             </div>
 
-            <div class="box-container">
-                <div class="grid-container">
+            <div class="date" id="last-updated"></div>
 
-                    <div class="flex-copy">
-                        <div class="text">
-                            <i18n vanilla-i18n="copy">コピー</i18n>
-                        </div>
-                        <div class="angle-down-solid"></div>
-                    </div>
-
-                    <div class="date" id="last-updated"></div>
-
-                    <div class="flex-paste">
-                        <div class="text">
-                            <i18n vanilla-i18n="paste">ペースト</i18n>
-                        </div>
-                        <div class="angle-down-solid"></div>
-                    </div>
-
-                    <div class="currency-inputs-container"></div>
-
-                    <button id="update-prices" aria-label="価格の更新">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px"
-                            viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                            <path
-                                d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
-                        </svg>
-                    </button>
-                </div>
+            <div class="flex-paste">
+              <div class="text">
+                <i18n vanilla-i18n="paste">ペースト</i18n>
+              </div>
+              <div class="angle-down-solid"></div>
             </div>
-        </section>
 
-        <section class="pos-wrapper">
-            <h2 class="subject">
-                <i18n vanilla-i18n="lightning.subject">ライトニング</i18n>
-            </h2>
-            <div class="pos">
-                <button disabled class="show-invoice-dialog normal-btn" id="show-invoice-dialog">
-                    <div class="bolt-solid"></div>
-                    <i18n vanilla-i18n="lightning.invoice">インボイスを表示</i18n>
-                </button>
-                <dialog id="update-lightning-address-dialog">
-                    <form id="lightning-address-form">
-                        <label class="lightning-address-label" id="lightning-address">
-                            <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
-                            <input type="text" name="lightning-address" id="lightning-address-input"
-                                class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$"
-                                maxlength="200" minlength="4" required title="ライトニングアドレスの形式で入力してください" />
-                            <div>
-                                <button class="normal-btn" id="lightning-address-submit-button" type="submit"
-                                    formmethod="dialog">
-                                    <i18n vanilla-i18n="lightning.submit">設定する</i18n>
-                                </button>
-                                <button class="normal-btn" id="lightning-address-clear-button" value="clear"
-                                    formmethod="dialog">
-                                    <i18n vanilla-i18n="lightning.clear">削除</i18n>
-                                </button>
-                                <button class="normal-btn" id="lightning-address-close-button" value="cancel"
-                                    formmethod="dialog">
-                                    <i18n vanilla-i18n="lightning.close">閉じる</i18n>
-                                </button>
-                            </div>
-                        </label>
-                    </form>
-                </dialog>
-                <p class="lightning-address">
-                    <output id="lightning-address-output"></output>
-                    <button class="setting-btn normal-btn" id="show-lightning-address-dialog"
-                        aria-label="受取ライトニングアドレスの設定">
-                        <div class="settings-solid"></div>
-                    </button>
-                </p>
-                <dialog id="lightning-invoice-dialog">
-                    <div class="invoice-dialog">
-                        <div class="loader loader-position"></div>
-                        <div class="lightning-pos-qr-box" id="lightning-pos-qr-box"></div>
-                        <div class="error-message" id="pos-message"></div>
-                        <div class="amounts-grid">
-                            <div id="current-sats" class="amount-text"></div>
-                            <div class="unit-text">sats</div>
-                            <div id="current-base" class="base-amaunt amount-text"></div>
-                            <div id="base-unit" class="unit-text"></div>
-                        </div>
-                        <button class="lightning-invoice-close-button normal-btn" id="lightning-invoice-close-button"
-                            value="cancel" formmethod="dialog">
-                            <i18n vanilla-i18n="lightning.close">閉じる</i18n>
-                        </button>
-                    </div>
-                </dialog>
-            </div>
-        </section>
+            <div class="currency-inputs-container"></div>
 
-        <section>
-            <h2 class="subject">
-                <i18n vanilla-i18n="share">共有</i18n>
-            </h2>
-            <div class="sns-share-container-1">
-                <div class="sns-share-container-2">
+            <button id="update-prices" aria-label="価格の更新">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 512 512">
+                <!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                <path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
 
-                    <a class="normal-btn" href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
-                        <div class="square-x-twitter"></div>
-                    </a>
-
-                    <a class="normal-btn" href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
-                        <div class="nostr-icon-purple-on-white"></div>
-                    </a>
-
-                    <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
-                        <div class="cloud-solid"></div>
-                    </a>
-
-                    <button class="normal-btn" id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
-                        <div class="share-nodes-solid"></div>
-                    </button>
-
-                    <button class="normal-btn" id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
-                        <div class="clipboard-solid"></div>
-                    </button>
-
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="subject">
-                <i18n vanilla-i18n="settings.subject">設定</i18n>
-            </h2>
-            <div class="grid-settings">
-
+      <section class="pos-wrapper">
+        <h2 class="subject">
+          <i18n vanilla-i18n="lightning.subject">ライトニング</i18n>
+        </h2>
+        <div class="pos">
+          <button disabled class="show-invoice-dialog normal-btn" id="show-invoice-dialog">
+            <div class="bolt-solid"></div>
+            <i18n vanilla-i18n="lightning.invoice">インボイスを表示</i18n>
+          </button>
+          <dialog id="update-lightning-address-dialog">
+            <form id="lightning-address-form">
+              <label class="lightning-address-label" id="lightning-address">
+                <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
+                <input type="text" name="lightning-address" id="lightning-address-input" class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$" maxlength="200" minlength="4" required title="ライトニングアドレスの形式で入力してください" />
                 <div>
-                    <i18n vanilla-i18n="settings.theme">テーマ</i18n>
+                  <button class="normal-btn" id="lightning-address-submit-button" type="submit" formmethod="dialog">
+                    <i18n vanilla-i18n="lightning.submit">設定する</i18n>
+                  </button>
+                  <button class="normal-btn" id="lightning-address-clear-button" value="clear" formmethod="dialog">
+                    <i18n vanilla-i18n="lightning.clear">削除</i18n>
+                  </button>
+                  <button class="normal-btn" id="lightning-address-close-button" value="cancel" formmethod="dialog">
+                    <i18n vanilla-i18n="lightning.close">閉じる</i18n>
+                  </button>
                 </div>
-                <div class="theme-switch-container">
-                    <div class="sun-regular"></div>
-                    <label class="theme-switch">
-                        <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替">
-                        <span class="slider round"></span>
-                    </label>
-                    <div class="moon-regular"></div>
-                </div>
-
-                <div>Language</div>
-                <select id="vanilla-i18n-toggler">
-                    <option>日本語</option>
-                    <option>English</option>
-                </select>
-
-                <div class="theme-DefaultValue">
-                    <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
-                </div>
-                <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
-                    <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
-                </button>
-
-                <div>
-                    <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
-                </div>
-                <a class="settings-btn normal-btn" href="./currencies/">
-                    <i18n vanilla-i18n="settings.currency.sort">変更</i18n>
-                    <div class="arrow-up-right-from-square-solid"></div>
-                </a>
-
-                <div class="theme-ver">
-                    Version&nbsp;<span id="siteVersion"></span>
-                </div>
-                <button class="settings-btn normal-btn" id="checkForUpdateBtn">
-                    <span id="buttonText">
-                        <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
-                        <div class="spinner-wrapper">
-                            <div class="spinner"></div>
-                        </div>
-                    </span>
-                </button>
-
+              </label>
+            </form>
+          </dialog>
+          <p class="lightning-address">
+            <output id="lightning-address-output"></output>
+            <button class="setting-btn normal-btn" id="show-lightning-address-dialog" aria-label="受取ライトニングアドレスの設定">
+              <div class="settings-solid"></div>
+            </button>
+          </p>
+          <dialog id="lightning-invoice-dialog">
+            <div class="invoice-dialog">
+              <div class="loader loader-position"></div>
+              <div class="lightning-pos-qr-box" id="lightning-pos-qr-box"></div>
+              <div class="error-message" id="pos-message"></div>
+              <div class="amounts-grid">
+                <div id="current-sats" class="amount-text"></div>
+                <div class="unit-text">sats</div>
+                <div id="current-base" class="base-amaunt amount-text"></div>
+                <div id="base-unit" class="unit-text"></div>
+              </div>
+              <button class="lightning-invoice-close-button normal-btn" id="lightning-invoice-close-button" value="cancel" formmethod="dialog">
+                <i18n vanilla-i18n="lightning.close">閉じる</i18n>
+              </button>
             </div>
-        </section>
+          </dialog>
+        </div>
+      </section>
 
-        <section>
-            <h2 class="subject">
-                <i18n vanilla-i18n="zap.subject">Zap（投げ銭）</i18n>
-            </h2>
-            <div class="zap-flex">
-                <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン"
-                    data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3"
-                    data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly"
-                    data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://relay.exit.pub,wss://nostr.bitcoiner.social,wss://yabu.me,wss://relay.nostr.wirednet.jp">
-                    Zap
-                    <div class="bolt-solid"></div>
-                </button>
-                <a class="normal-btn"
-                    href="https://nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received"
-                    target="_blank">
-                    <i18n vanilla-i18n="zap.list">Zap一覧</i18n>
-                    <div class="arrow-up-right-from-square-solid"></div>
-                </a>
-                <a class="normal-btn" href="./what-is-zap/" target="_blank">
-                    <i18n vanilla-i18n="zap.what">Zapとは</i18n>
-                    <div class="arrow-up-right-from-square-solid"></div>
-                </a>
+      <section>
+        <h2 class="subject">
+          <i18n vanilla-i18n="share">共有</i18n>
+        </h2>
+        <div class="sns-share-container-1">
+          <div class="sns-share-container-2">
+            <a class="normal-btn" href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
+              <div class="square-x-twitter"></div>
+            </a>
+
+            <a class="normal-btn" href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
+              <div class="nostr-icon-purple-on-white"></div>
+            </a>
+
+            <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
+              <div class="cloud-solid"></div>
+            </a>
+
+            <button class="normal-btn" id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
+              <div class="share-nodes-solid"></div>
+            </button>
+
+            <button class="normal-btn" id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
+              <div class="clipboard-solid"></div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="subject">
+          <i18n vanilla-i18n="settings.subject">設定</i18n>
+        </h2>
+        <div class="grid-settings">
+          <div>
+            <i18n vanilla-i18n="settings.theme">テーマ</i18n>
+          </div>
+          <div class="theme-switch-container">
+            <div class="sun-regular"></div>
+            <label class="theme-switch">
+              <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替" />
+              <span class="slider round"></span>
+            </label>
+            <div class="moon-regular"></div>
+          </div>
+
+          <div>Language</div>
+          <select id="vanilla-i18n-toggler">
+            <option>日本語</option>
+            <option>English</option>
+          </select>
+
+          <div class="theme-DefaultValue">
+            <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
+          </div>
+          <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
+            <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
+          </button>
+
+          <div>
+            <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
+          </div>
+          <a class="settings-btn normal-btn" href="./currencies/">
+            <i18n vanilla-i18n="settings.currency.sort">変更</i18n>
+            <div class="arrow-up-right-from-square-solid"></div>
+          </a>
+
+          <div class="theme-ver">Version&nbsp;<span id="siteVersion"></span></div>
+          <button class="settings-btn normal-btn" id="checkForUpdateBtn">
+            <span id="buttonText">
+              <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
+              <div class="spinner-wrapper">
+                <div class="spinner"></div>
+              </div>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="subject">
+          <i18n vanilla-i18n="zap.subject">Zap（投げ銭）</i18n>
+        </h2>
+        <div class="zap-flex">
+          <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン" data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3" data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly" data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://relay.exit.pub,wss://nostr.bitcoiner.social,wss://yabu.me,wss://relay.nostr.wirednet.jp">
+            Zap
+            <div class="bolt-solid"></div>
+          </button>
+          <a class="normal-btn" href="https://nostr.band/note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly?overview=zaps-received" target="_blank">
+            <i18n vanilla-i18n="zap.list">Zap一覧</i18n>
+            <div class="arrow-up-right-from-square-solid"></div>
+          </a>
+          <a class="normal-btn" href="./what-is-zap/" target="_blank">
+            <i18n vanilla-i18n="zap.what">Zapとは</i18n>
+            <div class="arrow-up-right-from-square-solid"></div>
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="subject">
+          <i18n vanilla-i18n="recommend.subject">おすすめサイト</i18n>
+        </h2>
+        <div class="links">
+          <a class="links-container normal-btn" href="https://bitcoin-zukan.com/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/bitcoin-zukan.webp" alt="icon" width="32px" height="32px" />
             </div>
-        </section>
-
-        <section>
-            <h2 class="subject">
-                <i18n vanilla-i18n="recommend.subject">おすすめサイト</i18n>
-            </h2>
-            <div class="links">
-                <a class="links-container normal-btn" href="https://bitcoin-zukan.com/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/bitcoin-zukan.webp" alt="icon" width="32px" height="32px">
-                    </div>
-                    <div class="link-text">
-                        <i18n vanilla-i18n="recommend.zukan">ビットコイン図鑑</i18n>
-                    </div>
-                </a>
-
-                <a class="normal-btn" href="https://lostinbitcoin.jp/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/fulgur-favicon.webp" alt="icon" width="32px" height="32px">
-                    </div>
-                    <div class="link-text">
-                        <i18n vanilla-i18n="recommend.lost">ロストイン・ビットコイン</i18n>
-                    </div>
-                </a>
-
-                <a class="normal-btn" href="https://getalby.com/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/alby_icon_head_yellow_48x48.svg" alt="icon" width="32px"
-                            height="32px">
-                    </div>
-                    <div class="link-text">
-                        Alby
-                    </div>
-                </a>
-
-                <a class="normal-btn" href="https://btcmap.org/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/btcmap-logo.svg" alt="icon" width="32px" height="38px">
-                    </div>
-                    <div class="link-text">
-                        BTC Map
-                    </div>
-                </a>
-
-                <a class="normal-btn" href="https://learn.robosats.com/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/robosats-favicon.webp" alt="icon" width="32px" height="32px">
-                    </div>
-                    <div class="link-text">
-                        RoboSats
-                    </div>
-                </a>
-
-                <a class="normal-btn" href="https://mempool.space/" target="_blank">
-                    <div class="link-icon">
-                        <img src="./assets/images/mempool-favicon.webp" alt="icon" width="32px" height="32px">
-                    </div>
-                    <div class="link-text">
-                        mempool.space
-                    </div>
-                </a>
+            <div class="link-text">
+              <i18n vanilla-i18n="recommend.zukan">ビットコイン図鑑</i18n>
             </div>
-        </section>
+          </a>
 
-        <div id="notification"></div>
+          <a class="normal-btn" href="https://lostinbitcoin.jp/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/fulgur-favicon.webp" alt="icon" width="32px" height="32px" />
+            </div>
+            <div class="link-text">
+              <i18n vanilla-i18n="recommend.lost">ロストイン・ビットコイン</i18n>
+            </div>
+          </a>
 
+          <a class="normal-btn" href="https://getalby.com/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/alby_icon_head_yellow_48x48.svg" alt="icon" width="32px" height="32px" />
+            </div>
+            <div class="link-text">Alby</div>
+          </a>
+
+          <a class="normal-btn" href="https://btcmap.org/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/btcmap-logo.svg" alt="icon" width="32px" height="38px" />
+            </div>
+            <div class="link-text">BTC Map</div>
+          </a>
+
+          <a class="normal-btn" href="https://learn.robosats.com/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/robosats-favicon.webp" alt="icon" width="32px" height="32px" />
+            </div>
+            <div class="link-text">RoboSats</div>
+          </a>
+
+          <a class="normal-btn" href="https://mempool.space/" target="_blank">
+            <div class="link-icon">
+              <img src="./assets/images/mempool-favicon.webp" alt="icon" width="32px" height="32px" />
+            </div>
+            <div class="link-text">mempool.space</div>
+          </a>
+        </div>
+      </section>
+
+      <div id="notification"></div>
     </main>
 
     <div class="footer-container">
+      <div class="site-description-container">
+        <h3>
+          <i18n vanilla-i18n="footer.oikura">おいくらサッツ とは</i18n>
+        </h3>
+        <p>
+          <i18n vanilla-i18n="footer.description"> サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。 </i18n>
+        </p>
+        <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
+          <i18n vanilla-i18n="footer.unit">Sats,Sat,Satoshi (単位)</i18n>
+        </a>
+        <p>
+          <i18n vanilla-i18n="footer.formula">1億 sats = 1 BTC</i18n><br />
+          1 sat = 0.00000001 BTC
+        </p>
+      </div>
 
-        <div class="site-description-container">
-            <h3>
-                <i18n vanilla-i18n="footer.oikura">おいくらサッツ とは</i18n>
-            </h3>
-            <p>
-                <i18n vanilla-i18n="footer.description">
-                    サッツ（Sats, Sat,
-                    Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。
-                </i18n>
-            </p>
-            <a href="https://lostinbitcoin.jp/glossary/glossary-sa/#satoshi" target="_blank">
-                <i18n vanilla-i18n="footer.unit">Sats,Sat,Satoshi (単位)</i18n>
-            </a>
-            <p>
-                <i18n vanilla-i18n="footer.formula">1億 sats = 1 BTC</i18n><br>
-                1 sat = 0.00000001 BTC
-            </p>
-        </div>
-
-        <div class="reference">
-            <p>
-                <i18n vanilla-i18n="footer.created">サイト制作：</i18n><a href="https://lokuyow.github.io/" target="_blank">
-                    <i18n vanilla-i18n="lokuyow">ロクヨウ</i18n>
-                </a><br>
-                <i18n vanilla-i18n="footer.contribution">貢献：</i18n><a href="https://ocknamo.com/"
-                    target="_blank">ocknamo</a><br>
-                <i18n vanilla-i18n="footer.source">ソースコード：</i18n><a href="https://github.com/Lokuyow/sats-rate/"
-                    target="_blank">GitHub</a><br>
-                <i18n vanilla-i18n="footer.data">データ提供：</i18n><a href="https://www.coingecko.com/"
-                    target="_blank">CoinGecko</a><br>
-            </p>
-        </div>
+      <div class="reference">
+        <p>
+          <i18n vanilla-i18n="footer.created">サイト制作：</i18n
+          ><a href="https://lokuyow.github.io/" target="_blank">
+            <i18n vanilla-i18n="lokuyow">ロクヨウ</i18n> </a
+          ><br />
+          <i18n vanilla-i18n="footer.contribution">貢献：</i18n><a href="https://ocknamo.com/" target="_blank">ocknamo</a><br />
+          <i18n vanilla-i18n="footer.source">ソースコード：</i18n><a href="https://github.com/Lokuyow/sats-rate/" target="_blank">GitHub</a><br />
+          <i18n vanilla-i18n="footer.data">データ提供：</i18n><a href="https://www.coingecko.com/" target="_blank">CoinGecko</a><br />
+        </p>
+      </div>
     </div>
 
     <script src="/lib/nostr-zap@1.1.0.js"></script>
     <script src="/lib/qr-code-styling@1.6.0-rc.1.js"></script>
     <script type="module" src="/main.js"></script>
-</body>
-
+  </body>
 </html>
