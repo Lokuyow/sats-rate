@@ -80,7 +80,7 @@
     <main>
       <section>
         <div class="title">
-          <a href="https://osats.money/" aria-label="おいくらサッツ">
+          <a href="https://osats.money/" vanilla-i18n-aria-label="ariaLabels.home">
             <h1>
               <i18n vanilla-i18n="title">おいくらサッツ</i18n>
             </h1>
@@ -108,7 +108,7 @@
 
             <div class="currency-inputs-container"></div>
 
-            <button id="update-prices" aria-label="価格の更新">
+            <button id="update-prices" vanilla-i18n-aria-label="ariaLabels.updatePrices">
               <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 512 512">
                 <!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
@@ -131,7 +131,7 @@
             <form id="lightning-address-form">
               <label class="lightning-address-label" id="lightning-address">
                 <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
-                <input type="text" name="lightning-address" id="lightning-address-input" class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$" maxlength="200" minlength="4" required title="ライトニングアドレスの形式で入力してください" />
+                <input type="text" name="lightning-address" id="lightning-address-input" class="lightning-address-input" pattern="^[a-z0-9._%+\-]+@[a-z0-9\.\-]+\.[a-z]{2,3}$" maxlength="200" minlength="4" required vanilla-i18n-title="lightning.title" title="ライトニングアドレスの形式で入力してください" />
                 <div>
                   <button class="normal-btn" id="lightning-address-submit-button" type="submit" formmethod="dialog">
                     <i18n vanilla-i18n="lightning.submit">設定する</i18n>
@@ -148,7 +148,7 @@
           </dialog>
           <p class="lightning-address">
             <output id="lightning-address-output"></output>
-            <button class="setting-btn normal-btn" id="show-lightning-address-dialog" aria-label="受取ライトニングアドレスの設定">
+            <button class="setting-btn normal-btn" id="show-lightning-address-dialog" vanilla-i18n-aria-label="ariaLabels.setLightningAddress">
               <div class="settings-solid"></div>
             </button>
           </p>
@@ -177,23 +177,23 @@
         </h2>
         <div class="sns-share-container-1">
           <div class="sns-share-container-2">
-            <a class="normal-btn" href="#" id="share-twitter" target="_blank" aria-label="計算結果をXで共有">
+            <a class="normal-btn" href="#" id="share-twitter" target="_blank" vanilla-i18n-aria-label="ariaLabels.shareTwitter">
               <div class="square-x-twitter"></div>
             </a>
 
-            <a class="normal-btn" href="#" id="share-nostter" target="_blank" aria-label="計算結果をnostterで共有">
+            <a class="normal-btn" href="#" id="share-nostter" target="_blank" vanilla-i18n-aria-label="ariaLabels.shareNostter">
               <div class="nostr-icon-purple-on-white"></div>
             </a>
 
-            <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" aria-label="計算結果をBlueskyで共有">
+            <a class="normal-btn" href="#" id="share-mass-driver" target="_blank" vanilla-i18n-aria-label="ariaLabels.shareBluesky">
               <div class="cloud-solid"></div>
             </a>
 
-            <button class="normal-btn" id="share-via-webapi" aria-label="計算結果をWebAPIで共有">
+            <button class="normal-btn" id="share-via-webapi" vanilla-i18n-aria-label="ariaLabels.shareWebAPI">
               <div class="share-nodes-solid"></div>
             </button>
 
-            <button class="normal-btn" id="copy-to-clipboard" aria-label="計算結果をクリップボードにコピー">
+            <button class="normal-btn" id="copy-to-clipboard" vanilla-i18n-aria-label="ariaLabels.copyToClipboard">
               <div class="clipboard-solid"></div>
             </button>
           </div>
@@ -211,7 +211,7 @@
           <div class="theme-switch-container">
             <div class="sun-regular"></div>
             <label class="theme-switch">
-              <input type="checkbox" id="themeToggle" aria-label="ダークモード・ライトモード切替" />
+              <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
               <span class="slider round"></span>
             </label>
             <div class="moon-regular"></div>
@@ -255,7 +255,7 @@
           <i18n vanilla-i18n="zap.subject">Zap（投げ銭）</i18n>
         </h2>
         <div class="zap-flex">
-          <button class="normal-btn" id="nostr-zap-target" aria-label="Zap(ビットコインの投げ銭)ボタン" data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3" data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly" data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://relay.exit.pub,wss://nostr.bitcoiner.social,wss://yabu.me,wss://relay.nostr.wirednet.jp">
+          <button class="normal-btn" id="nostr-zap-target" vanilla-i18n-aria-label="ariaLabels.zapButton" data-npub="npub1a3pvwe2p3v7mnjz6hle63r628wl9w567aw7u23fzqs062v5vqcqqu3sgh3" data-note-id="note1pqk7a5j2lc2rduz4k4468xgsccg5sru8uja7uvxr6eh9zwz0xtlqh5y9ly" data-relays="wss://nostr.mutinywallet.com,wss://relay.nostr.band,wss://nos.lol,wss://relay.exit.pub,wss://nostr.bitcoiner.social,wss://yabu.me,wss://relay.nostr.wirednet.jp">
             Zap
             <div class="bolt-solid"></div>
           </button>
@@ -345,10 +345,7 @@
 
       <div class="reference">
         <p>
-          <i18n vanilla-i18n="footer.created">サイト制作：</i18n
-          ><a href="https://lokuyow.github.io/" target="_blank">
-            <i18n vanilla-i18n="lokuyow">ロクヨウ</i18n> </a
-          ><br />
+          <i18n vanilla-i18n="footer.created">サイト制作：</i18n><a href="https://lokuyow.github.io/" target="_blank"> <i18n vanilla-i18n="lokuyow">ロクヨウ</i18n> </a><br />
           <i18n vanilla-i18n="footer.contribution">貢献：</i18n><a href="https://ocknamo.com/" target="_blank">ocknamo</a><br />
           <i18n vanilla-i18n="footer.source">ソースコード：</i18n><a href="https://github.com/Lokuyow/sats-rate/" target="_blank">GitHub</a><br />
           <i18n vanilla-i18n="footer.data">データ提供：</i18n><a href="https://www.coingecko.com/" target="_blank">CoinGecko</a><br />

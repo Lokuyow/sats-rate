@@ -718,7 +718,7 @@
   height: 60px;
 
   &:focus {
-    outline: 2px solid var(--main-text-color);
+    outline: 2px solid var(--svg-color2);
   }
 }
 
@@ -731,11 +731,15 @@
 .pos dialog {
   color: var(--main-text-color);
   background-color: var(--bg-color1);
-  border-radius: 1em;
-  border: 1px solid #333333;
+  border-radius: 8px;
+  border: none;
   padding: 0;
   width: 100%;
   max-width: 400px;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
 }
 
 .pos .show-invoice-dialog {

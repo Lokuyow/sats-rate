@@ -8,7 +8,8 @@
     "address": "受取用ライトニングアドレス",
     "submit": "設定する",
     "clear": "削除",
-    "close": "閉じる"
+    "close": "閉じる",
+    "title": "ライトニングアドレスの形式で入力してください"
   },
   "share": "共有",
   "settings": {
@@ -146,5 +147,16 @@
       "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
       "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
     }
+  },
+  "ariaLabels": {
+    "home": "おいくらサッツ",
+    "updatePrices": "価格の更新",
+    "setLightningAddress": "受取ライトニングアドレスの設定",
+    "shareTwitter": "計算結果をXで共有",
+    "shareNostter": "計算結果をnostterで共有",
+    "shareBluesky": "計算結果をBlueskyで共有",
+    "shareWebAPI": "計算結果をWebAPIで共有",
+    "copyToClipboard": "計算結果をクリップボードにコピー",
+    "zapButton": "Zap(ビットコインの投げ銭)ボタン"
   }
 }
