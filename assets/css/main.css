@@ -663,7 +663,7 @@
   border: 0;
   height: 50px;
   line-height: 50px;
-  padding: 0 1em;
+  padding: 0 30px;
 }
 
 .pos .setting-btn {
@@ -811,7 +811,7 @@
   grid-template-columns: 1fr auto;
   grid-auto-rows: auto;
   align-items: baseline;
-  margin: 20px 0 28px 0;
+  margin: 10px 0 10px 0;
   overflow-wrap: break-word;
 
   & .amount-text {
