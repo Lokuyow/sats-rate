@@ -27,7 +27,7 @@
   "zap": {
     "subject": "Zap (Tipping)",
     "list": "Zap List",
-    "what": "Zap?"
+    "what": "Zaps?"
   },
   "recommend": {
     "subject": "Recommended Sites",
@@ -75,17 +75,17 @@
   },
   "about": {
     "zapWhat": {
-      "title": "What is Zap?",
-      "description": "Zap is a tipping mechanism using Bitcoin. Creators can easily receive Bitcoin, and users can support creators at a low cost."
+      "title": "What are Zaps?",
+      "description": "Zaps are a tipping method using Bitcoin. Creators can easily receive Bitcoin, and users can support them at a low cost."
     },
     "whyZap": {
       "title": "Why Zap?",
       "description1": "Traditional remittance systems have high fees and take a long time to process transactions. Especially for international transfers, costs and time increase, making them inconvenient.",
       "description2": "The Lightning Network for Bitcoin enables almost instantaneous transactions with low fees. This allows for easy exchange of value.",
-      "description3": "Additionally, Zap utilizing the Lightning Network and Nostr allows creators and users to support each other directly without intermediaries. This mechanism enables free interactions without relying on traditional platforms."
+      "description3": "Moreover, Zap utilizing the Lightning Network and Nostr allows creators and users to support each other directly without intermediaries. This mechanism enables free interaction without relying on traditional platforms."
     },
     "typesOfZap": {
-      "title": "Types of Zap",
+      "title": "Types of Zaps",
       "anonymousZap": {
         "title": "Anonymous Zap",
         "description": "This method allows sending without revealing the sender. It can be used without a Nostr account as long as you have a Lightning wallet."
@@ -99,7 +99,7 @@
       "title": "How to Zap",
       "step1": {
         "title": "1. Create a Lightning Wallet",
-        "description": "\"Wallet of Satoshi (WoS)\" is a simple wallet app compatible with Zap. Please download it from the <a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">official website</a>.",
+        "description": "\"Wallet of Satoshi (WoS)\" is a simple wallet app compatible with Zaps. Please download it from the <a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">official website</a>.",
         "description2": "Once you add sats to your wallet, you can perform Anonymous Zap. Try it by pressing the Zap button on the site. If you want to use Identified Zap, proceed to the next step."
       },
       "step2": {
@@ -142,7 +142,7 @@
     "referenceLinks": {
       "title": "Reference Links",
       "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\">Zap (Japanese, Scrapbox, Cosense)</a>",
-      "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">【Nostr】How to Install a Bitcoin Tipping Button on Your Website [Zap] (Japanese, Spotlight)</a>",
+      "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">[Nostr] How to Install a Bitcoin Tipping Button on Your Website [Zap] (Japanese, Spotlight)</a>",
       "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
       "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
     }
