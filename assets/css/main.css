@@ -12,28 +12,24 @@
     text-decoration: none;
     color: var(--main-text-color);
     border-radius: 6px;
-    padding: 0 26px;
-
-    &:hover {
-      background-color: var(--input-bg-color);
-      color: var(--main-text-color);
-    }
+    padding: 8px 22px;
 
     & h1 {
       font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
       font-size: 2.1rem;
       font-weight: 500;
       text-decoration: none;
-      margin: 22px 0;
+      margin: 0;
     }
 
-    .icon {
-      transform: translate(6px, -3px);
+    & img {
+      transform: translate(4px, -3px);
+      padding-left: 2px;
+    }
 
-      & img {
-        width: 70px;
-        height: auto;
-      }
+    &:hover {
+      background-color: var(--input-bg-color);
+      color: var(--main-text-color);
     }
   }
 }
@@ -891,12 +887,26 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (min-width: 601px) {
   section {
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
-  h1 {
-    font-size: 28px;
+  .title {
+    margin: 10px 0 32px 0;
+
+    & a {
+      padding: 10px 26px;
+
+      & h1 {
+        font-size: 2.6rem;
+      }
+
+      & img {
+        padding-left: 4px;
+        width: 86px;
+        height: auto;
+      }
+    }
   }
 }
