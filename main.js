@@ -904,10 +904,21 @@ lnDialogCloseButton.addEventListener("click", (event) => {
   lnDialog.close();
 });
 
-// フォームをクリア
+// フォームをクリアして設定
 lnDialogClearButton.addEventListener("click", (event) => {
   event.preventDefault(); // フォームを送信しない
   pos.clearLnAddress();
+  lnDialog.close();
+});
+
+// ライトニングアドレスのダイアログの外側をクリックして閉じる
+lnDialog.addEventListener("click", (event) => {
+  const rect = lnDialog.getBoundingClientRect();
+  const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
+
+  if (!isInDialog) {
+    lnDialog.close();
+  }
 });
 
 // アドレスを設定する
@@ -940,6 +951,17 @@ invoiceDialogCloseButton.addEventListener("click", (event) => {
   event.preventDefault(); // フォームを送信しない
   invoiceDialog.close();
   pos.clearMessage();
+});
+
+// インボイスのダイアログの外側をクリックして閉じる
+invoiceDialog.addEventListener("click", (event) => {
+  const rect = invoiceDialog.getBoundingClientRect();
+  const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
+
+  if (!isInDialog) {
+    invoiceDialog.close();
+    pos.clearMessage();
+  }
 });
 
 // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
