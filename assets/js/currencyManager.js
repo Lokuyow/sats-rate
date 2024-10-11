@@ -80,7 +80,6 @@ export class CurrencyManager {
     if (storedData) {
       this.updateCurrencyRates(storedData);
 
-      // 翻訳されたメッセージを取得
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
       alert(message);
       console.log(this.currencyRates);
@@ -109,47 +108,44 @@ export class CurrencyManager {
   createCurrencyInputField(currency) {
     const currencySymbol = this.currencySymbols[currency];
 
-    // コピーボタン
-    const copyButton = document.createElement("button");
-    copyButton.className = "currency-icons normal-btn";
-    copyButton.id = `copy-${currency}`;
-    copyButton.dataset.currency = currency;
+    // 左側のボタン（ペースト）
+    const leftButton = document.createElement("button");
+    leftButton.className = "currency-icons normal-btn";
+    leftButton.id = `paste-${currency}`;
+    leftButton.dataset.currency = currency;
     const currencyDisplay = currency === "sats" ? "sats" : currency.toUpperCase();
-    copyButton.setAttribute("aria-label", `${currencyDisplay}の数値をコピー`);
+    leftButton.setAttribute("aria-label", `Paste the value of ${currencyDisplay}`);
 
     // 通貨シンボルを表示するための span 要素
     const symbolSpan = document.createElement("span");
     symbolSpan.className = "currency-icon-span";
 
     if (currency === "btc" || currency === "sats") {
-      // div要素を作成してBitcoinアイコンのクラスを追加
       const bitcoinIconDiv = document.createElement("div");
       bitcoinIconDiv.className = "bitcoin-icon";
-
-      symbolSpan.appendChild(bitcoinIconDiv); // span内にdivを追加
+      symbolSpan.appendChild(bitcoinIconDiv);
     } else {
-      // 通貨シンボルを直接spanに設定
       symbolSpan.textContent = currencySymbol;
     }
 
-    copyButton.appendChild(symbolSpan); // ボタンにspanを追加
+    leftButton.appendChild(symbolSpan);
 
-    // 通貨シンボルの長さに応じてスタイルを調整
+    // スタイル調整
     switch (currencySymbol.length) {
       case 2:
-        copyButton.style.fontWeight = "500";
-        copyButton.style.fontSize = "1.2rem";
-        copyButton.style.letterSpacing = "-1px";
+        leftButton.style.fontWeight = "500";
+        leftButton.style.fontSize = "1.2rem";
+        leftButton.style.letterSpacing = "-1px";
         break;
       case 3:
-        copyButton.style.fontWeight = "700";
-        copyButton.style.fontSize = "0.9rem";
-        copyButton.style.letterSpacing = "-1px";
+        leftButton.style.fontWeight = "700";
+        leftButton.style.fontSize = "0.9rem";
+        leftButton.style.letterSpacing = "-1px";
         break;
       case 4:
-        copyButton.style.fontWeight = "700";
-        copyButton.style.fontSize = "0.82rem";
-        copyButton.style.letterSpacing = "-1px";
+        leftButton.style.fontWeight = "700";
+        leftButton.style.fontSize = "0.82rem";
+        leftButton.style.letterSpacing = "-1px";
       default:
         break;
     }
@@ -166,23 +162,23 @@ export class CurrencyManager {
     }
     input.type = "text";
     input.id = currency;
-    input.setAttribute("aria-label", `${currencyDisplay}の金額`);
+    input.setAttribute("aria-label", `Amount of ${currencyDisplay}`);
     input.setAttribute("oninput", `window.satsRate.calculateValues('${currency}')`);
     input.inputMode = "decimal";
 
-    // ペーストボタン
-    const pasteButton = document.createElement("button");
-    pasteButton.className = "currency-units dark-btn";
-    pasteButton.id = `paste-${currency}`;
-    pasteButton.dataset.currency = currency;
-    pasteButton.setAttribute("aria-label", `${currencyDisplay}の数値をペースト`);
-    pasteButton.textContent = currencyDisplay;
+    // 右側のボタン（コピー）
+    const rightButton = document.createElement("button");
+    rightButton.className = "currency-units dark-btn";
+    rightButton.id = `copy-${currency}`;
+    rightButton.dataset.currency = currency;
+    rightButton.setAttribute("aria-label", `Copy the value of ${currencyDisplay}`);
+    rightButton.textContent = currencyDisplay;
 
     // 要素をフラグメントに追加
     const fragment = document.createDocumentFragment();
-    fragment.appendChild(copyButton);
+    fragment.appendChild(leftButton);
     fragment.appendChild(input);
-    fragment.appendChild(pasteButton);
+    fragment.appendChild(rightButton);
 
     return fragment;
   }

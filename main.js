@@ -673,7 +673,7 @@ function copyToClipboard(text, event, align = "right") {
     .then(() => {
       // 翻訳を使用
       const message = window.vanilla_i18n_instance.translate("showNotification.copy");
-      showNotification(message, event, align); // 通知を表示
+      showNotification(message, event); // 通知を表示
     })
     .catch((err) => {
       console.error("Failed to copy to clipboard", err);
