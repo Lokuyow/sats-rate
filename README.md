@@ -1,6 +1,6 @@
 # おいくらサッツ
 
-サッツ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）など複数通貨間で相互換算ができるツールです。
+サッツ、サトシ（Sats, Sat, Satoshi）、ビットコイン（bitcoin, BTC）、日本円（JPY）、米ドル（USD）などの複数通貨間で相互換算ができるツールです。
 
 ## URL クエリパラメータ
 
