@@ -41,7 +41,8 @@ img {
   user-select: none;
 }
 
-.normal-btn {
+.normal-btn,
+.dark-btn {
   cursor: pointer;
   font-weight: 500;
   color: var(--main-text-color);
@@ -50,49 +51,15 @@ img {
   border-radius: 6px;
   text-decoration: none;
 
-  &:hover {
-    color: var(--main-text-color);
-  }
-
   &:active {
-    color: var(--main-text-color);
     background-color: var(--hover-color);
-  }
-}
-
-@media (hover: hover) {
-  .normal-btn:hover {
-    background-color: var(--hover-color);
-  }
-}
-
-@media (hover: none) {
-  .normal-btn:hover {
-    background-color: var(--input-bg-color);
   }
 }
 
 .dark-btn {
-  cursor: pointer;
-  font-weight: 500;
-  color: var(--main-text-color);
   background-color: var(--unit-bg-color);
-  border: none;
-  border-radius: 6px;
-  text-decoration: none;
-
-  &:hover {
-    color: var(--main-text-color);
-  }
 
   &:active {
-    color: var(--main-text-color);
-    background-color: var(--hover-color2);
-  }
-}
-
-@media (hover: hover) {
-  .dark-btn:hover {
     background-color: var(--hover-color2);
   }
 }
@@ -240,5 +207,15 @@ section {
     --hover-color3: #f7f7f7;
     --invalid-color: #dedede;
     --alpha-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (min-width: 601px) {
+  .normal-btn:hover {
+    background-color: var(--hover-color);
+  }
+
+  .dark-btn:hover {
+    background-color: var(--hover-color2);
   }
 }
