@@ -1,8 +1,8 @@
 :root {
   --main-font: RoundedMplus1c, -apple-system, BlinkMacSystemFont, Helvetica Neue, Segoe UI, Hiragino Kaku Gothic ProN, Hiragino Sans, ヒラギノ角ゴ ProN W3, Arial, Meiryo, sans-serif;
-  --light-accent-color: #fca73f;
-  --dark-accent-color: #d14765;
-  --sub-color: #fad102;
+  --light-accent-color: #faa946;
+  --dark-accent-color: #cc526c;
+  --sub-color: #fcde47;
 }
 
 * {
