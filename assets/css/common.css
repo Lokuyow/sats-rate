@@ -51,6 +51,10 @@ img {
   border-radius: 6px;
   text-decoration: none;
 
+  &:hover {
+    color: var(--main-text-color);
+  }
+
   &:active {
     background-color: var(--hover-color);
   }
