@@ -439,6 +439,7 @@
   padding: 0 8px;
 
   & #nostr-zap-target,
+  & button,
   & a {
     display: flex;
     align-items: center;
@@ -466,6 +467,17 @@
   mask-position: center;
   background-color: var(--svg-color);
   margin-left: 3px;
+}
+
+.list-ol-solid {
+  width: 20px;
+  height: 20px;
+  mask-image: url("/assets/images/list-ol-solid.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+  background-color: var(--svg-color);
+  margin-left: 8px;
 }
 
 .links {

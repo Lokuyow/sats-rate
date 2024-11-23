@@ -51,6 +51,7 @@ const urlsToCache = [
   "/assets/images/caret-up-solid.svg",
   "/assets/images/caret-down-solid.svg",
   "/assets/images/trash-solid.svg",
+  "/assets/images/list-ol-solid.svg",
   "/assets/images/arrow-up-right-from-square-solid.svg",
   "/assets/images/cryptocurrency-icons/btc.svg",
   "/assets/images/cryptocurrency-icons/btc-s.svg",
