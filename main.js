@@ -21,8 +21,8 @@ let customOptions = {
   btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
 };
 
-// 自動更新モードフラグ（初期値はローカルストレージから取得）
-let autoUpdateEnabled = JSON.parse(localStorage.getItem("autoUpdateEnabledLS")) ?? true;
+// 自動更新モードフラグ（初期値はローカルストレージから取得、未設定の場合はtrue）
+let autoUpdateEnabled = localStorage.getItem("autoUpdateEnabledLS") === null ? true : JSON.parse(localStorage.getItem("autoUpdateEnabledLS"));
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initializeApp();

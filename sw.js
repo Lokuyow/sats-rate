@@ -41,8 +41,6 @@ const urlsToCache = [
   "/assets/images/robosats-favicon.webp",
   "/assets/images/mempool-favicon.webp",
   "/assets/images/bolt-solid.svg",
-  "/assets/images/sun-regular.svg",
-  "/assets/images/moon-regular.svg",
   "/assets/images/angle-down-solid.svg",
   "/assets/images/settings-solid.svg",
   "/assets/images/bitcoin-icon.svg",

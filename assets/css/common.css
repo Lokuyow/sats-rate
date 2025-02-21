@@ -32,7 +32,7 @@ button {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-button > * {
+button>* {
   pointer-events: none;
 }
 
@@ -148,6 +148,7 @@ section {
     --hover-color2: #d1d1d1;
     --hover-color3: #f7f7f7;
     --invalid-color: #dedede;
+    --dark-mode-toggle: #ededed;
     --alpha-color: rgba(0, 0, 0, 0.1);
   }
 
@@ -168,6 +169,7 @@ section {
     --hover-color2: #4d4d4d;
     --hover-color3: #242424;
     --invalid-color: #404040;
+    --dark-mode-toggle: #f0f0f0;
     --alpha-color: rgba(255, 255, 255, 0.1);
   }
 }
@@ -190,6 +192,7 @@ section {
     --hover-color2: #4d4d4d;
     --hover-color3: #242424;
     --invalid-color: #404040;
+    --dark-mode-toggle: #f0f0f0;
     --alpha-color: rgba(255, 255, 255, 0.1);
   }
 
@@ -210,6 +213,7 @@ section {
     --hover-color2: #d1d1d1;
     --hover-color3: #f7f7f7;
     --invalid-color: #dedede;
+    --dark-mode-toggle: #ededed;
     --alpha-color: rgba(0, 0, 0, 0.1);
   }
 }

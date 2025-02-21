@@ -14,7 +14,8 @@
   "share": "Share",
   "settings": {
     "subject": "Settings",
-    "theme": "Theme",
+    "theme": "Dark Mode",
+    "autoUpdate": "Auto Price Update",
     "value": {
       "subject": "Current Input Value",
       "default": "Set as Default"

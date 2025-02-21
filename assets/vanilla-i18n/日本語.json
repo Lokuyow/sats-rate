@@ -14,7 +14,8 @@
   "share": "共有",
   "settings": {
     "subject": "設定",
-    "theme": "テーマ",
+    "theme": "ダークモード",
+    "autoUpdate": "自動価格更新",
     "value": {
       "subject": "現在の入力値",
       "default": "デフォルトに設定"

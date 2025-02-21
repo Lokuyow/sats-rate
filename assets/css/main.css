@@ -389,13 +389,11 @@
   justify-content: center;
   align-items: center;
 
-  /* #auto-update-toggle のデザインをトグルスイッチと同じに変更 */
   #auto-update-toggle {
     -webkit-appearance: none;
     appearance: none;
     width: 80px;
     height: 36px;
-    /* border: 2px solid var(--svg-color); */
     border-radius: 18px;
     background-color: var(--input-bg-color);
     position: relative;
@@ -618,42 +616,9 @@
 
 /* ダークモード切り替えボタン */
 .theme-switch-container {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  justify-items: center;
-  align-items: center;
+  display: flex;
+  justify-content: center;
   margin-bottom: 2px;
-
-  &> :nth-child(1) {
-    justify-self: end;
-    margin-right: 14px;
-  }
-
-  &> :nth-child(3) {
-    justify-self: start;
-    margin-left: 13px;
-    margin-top: 1px;
-  }
-
-  .sun-regular {
-    width: 26px;
-    height: 26px;
-    mask-image: url("/assets/images/sun-regular.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-  }
-
-  .moon-regular {
-    width: 30px;
-    height: 30px;
-    mask-image: url("/assets/images/moon-regular.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-  }
 }
 
 .theme-switch {
@@ -678,7 +643,7 @@
   bottom: 0;
   cursor: pointer;
   transition: 0.8s;
-  background-color: var(--svg-color);
+  background-color: var(--dark-mode-toggle);
 }
 
 .slider.round {
