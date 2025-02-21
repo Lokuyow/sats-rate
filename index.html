@@ -154,7 +154,7 @@
             <label class="lightning-address-label" id="lightning-address">
               <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
               <input type="text" name="lightning-address" id="lightning-address-input" class="lightning-address-input"
-                pattern="^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$" maxlength="200"
+                pattern="^[A-Za-z0-9][A-Za-z0-9_\.\-]*@[A-Za-z0-9_\.\-]+\.[A-Za-z0-9]+$" maxlength="200"
                 minlength="4" required vanilla-i18n-title="lightning.title" title="ライトニングアドレスの形式で入力してください" />
               <div>
                 <button class="normal-btn" id="lightning-address-submit-button" type="submit" formmethod="dialog">

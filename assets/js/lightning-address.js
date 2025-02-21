@@ -1,5 +1,5 @@
-// ライトニングアドレスの正規表現（メールの正規表現を流用）
-const addressRegExp = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+// ライトニングアドレスの正規表現
+const addressRegExp = /^[A-Za-z0-9][A-Za-z0-9_\.\-]*@[A-Za-z0-9_\.\-]+\.[A-Za-z0-9]+$/;
 
 export class LightningAddress {
   addressView = window.document.getElementById("lightning-address-output");
