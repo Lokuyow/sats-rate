@@ -21,7 +21,12 @@ let customOptions = {
   btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
 };
 
-document.addEventListener("DOMContentLoaded", initializeApp);
+// 自動更新モードフラグ（初期値はON）
+let autoFetchEnabled = true;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await initializeApp();
+});
 
 async function initializeApp() {
   // CurrencyManagerのインスタンスを作成
@@ -62,6 +67,15 @@ function setupEventListeners() {
   });
   document.getElementById("checkForUpdateBtn").addEventListener("click", checkForUpdates);
   window.addEventListener("online", handleOnline);
+
+  // 自動更新トグルの設定を追加
+  const autoFetchToggle = document.getElementById("auto-fetch-toggle");
+  if (autoFetchToggle) {
+    autoFetchToggle.checked = autoFetchEnabled;
+    autoFetchToggle.addEventListener("change", (event) => {
+      autoFetchEnabled = event.target.checked;
+    });
+  }
 }
 
 function setupInputFieldEventListeners(element) {
@@ -487,14 +501,20 @@ async function updateElementsBasedOnTimestamp() {
   }
 }
 
-// レート更新ボタンと取得日時表示の見た目
+// 変更後のupdateElementClass関数
 function updateElementClass(element, isOutdated) {
   if (isOutdated) {
     element.classList.add("outdated");
     element.classList.remove("recent");
+    // 自動更新が有効かつ更新中でなければ、直ちに自動クリック
+    if (element.id === "update-prices" && autoFetchEnabled && !element.classList.contains("updating")) {
+      element.classList.add("updating");
+      element.click();
+    }
   } else {
     element.classList.remove("outdated");
     element.classList.add("recent");
+    element.classList.remove("updating");
   }
   element.style.visibility = "visible";
 }

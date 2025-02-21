@@ -154,8 +154,8 @@
             <label class="lightning-address-label" id="lightning-address">
               <i18n vanilla-i18n="lightning.address">受取用ライトニングアドレス</i18n>
               <input type="text" name="lightning-address" id="lightning-address-input" class="lightning-address-input"
-                pattern="^[A-Za-z0-9][A-Za-z0-9_\.\-]*@[A-Za-z0-9_\.\-]+\.[A-Za-z0-9]+$" maxlength="200"
-                minlength="4" required vanilla-i18n-title="lightning.title" title="ライトニングアドレスの形式で入力してください" />
+                pattern="^[A-Za-z0-9][A-Za-z0-9_\.\-]*@[A-Za-z0-9_\.\-]+\.[A-Za-z0-9]+$" maxlength="200" minlength="4"
+                required vanilla-i18n-title="lightning.title" title="ライトニングアドレスの形式で入力してください" />
               <div>
                 <button class="normal-btn" id="lightning-address-submit-button" type="submit" formmethod="dialog">
                   <i18n vanilla-i18n="lightning.submit">設定する</i18n>
@@ -234,6 +234,14 @@
         <i18n vanilla-i18n="settings.subject">設定</i18n>
       </h2>
       <div class="grid-settings">
+
+        <div>
+          <i18n vanilla-i18n="settings.autoFetch">価格の自動取得</i18n>
+        </div>
+        <div class="auto-fetch-toggle-container">
+          <input type="checkbox" id="auto-fetch-toggle" />
+        </div>
+
         <div>
           <i18n vanilla-i18n="settings.theme">テーマ</i18n>
         </div>

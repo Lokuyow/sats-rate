@@ -384,6 +384,18 @@
   text-align: right;
 }
 
+.auto-fetch-toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  #auto-fetch-toggle {
+    height: 36px;
+    width: 36px;
+    margin: 7px;
+  }
+}
+
 #vanilla-i18n-toggler {
   font-size: 1rem;
   font-weight: 500;
