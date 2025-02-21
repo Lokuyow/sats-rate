@@ -384,13 +384,13 @@
   text-align: right;
 }
 
-.auto-fetch-toggle-container {
+.auto-update-toggle-container {
   display: flex;
   justify-content: center;
   align-items: center;
 
-  /* #auto-fetch-toggle のデザインをトグルスイッチと同じに変更 */
-  #auto-fetch-toggle {
+  /* #auto-update-toggle のデザインをトグルスイッチと同じに変更 */
+  #auto-update-toggle {
     -webkit-appearance: none;
     appearance: none;
     width: 80px;
@@ -405,7 +405,7 @@
   }
 }
 
-#auto-fetch-toggle::before {
+#auto-update-toggle::before {
   content: "";
   position: absolute;
   height: 28px;
@@ -417,11 +417,11 @@
   transition: 0.4s;
 }
 
-#auto-fetch-toggle:checked {
+#auto-update-toggle:checked {
   background-color: var(--svg-color);
 }
 
-#auto-fetch-toggle:checked::before {
+#auto-update-toggle:checked::before {
   transform: translateX(44px);
 }
 

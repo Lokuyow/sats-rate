@@ -22,7 +22,7 @@ let customOptions = {
 };
 
 // 自動更新モードフラグ（初期値はローカルストレージから取得）
-let autoFetchEnabled = JSON.parse(localStorage.getItem("autoFetchEnabledLS")) ?? true;
+let autoUpdateEnabled = JSON.parse(localStorage.getItem("autoUpdateEnabledLS")) ?? true;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initializeApp();
@@ -69,12 +69,12 @@ function setupEventListeners() {
   window.addEventListener("online", handleOnline);
 
   // 自動更新トグルの設定を追加
-  const autoFetchToggle = document.getElementById("auto-fetch-toggle");
-  if (autoFetchToggle) {
-    autoFetchToggle.checked = autoFetchEnabled;
-    autoFetchToggle.addEventListener("change", (event) => {
-      autoFetchEnabled = event.target.checked;
-      localStorage.setItem("autoFetchEnabledLS", JSON.stringify(autoFetchEnabled));
+  const autoUpdateToggle = document.getElementById("auto-update-toggle");
+  if (autoUpdateToggle) {
+    autoUpdateToggle.checked = autoUpdateEnabled;
+    autoUpdateToggle.addEventListener("change", (event) => {
+      autoUpdateEnabled = event.target.checked;
+      localStorage.setItem("autoUpdateEnabledLS", JSON.stringify(autoUpdateEnabled));
     });
   }
 }
@@ -508,7 +508,7 @@ function updateElementClass(element, isOutdated) {
     element.classList.add("outdated");
     element.classList.remove("recent");
     // 自動更新が有効かつ更新中でなければ、直ちに自動クリック
-    if (element.id === "update-prices" && autoFetchEnabled && !element.classList.contains("updating")) {
+    if (element.id === "update-prices" && autoUpdateEnabled && !element.classList.contains("updating")) {
       element.classList.add("updating");
       element.click();
     }
