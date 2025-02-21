@@ -21,8 +21,8 @@ let customOptions = {
   btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
 };
 
-// 自動更新モードフラグ（初期値はON）
-let autoFetchEnabled = true;
+// 自動更新モードフラグ（初期値はローカルストレージから取得）
+let autoFetchEnabled = JSON.parse(localStorage.getItem("autoFetchEnabledLS")) ?? true;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initializeApp();
@@ -74,6 +74,7 @@ function setupEventListeners() {
     autoFetchToggle.checked = autoFetchEnabled;
     autoFetchToggle.addEventListener("change", (event) => {
       autoFetchEnabled = event.target.checked;
+      localStorage.setItem("autoFetchEnabledLS", JSON.stringify(autoFetchEnabled));
     });
   }
 }

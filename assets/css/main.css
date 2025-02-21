@@ -389,11 +389,40 @@
   justify-content: center;
   align-items: center;
 
+  /* #auto-fetch-toggle のデザインをトグルスイッチと同じに変更 */
   #auto-fetch-toggle {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
     height: 36px;
-    width: 36px;
-    margin: 7px;
+    /* border: 2px solid var(--svg-color); */
+    border-radius: 18px;
+    background-color: var(--input-bg-color);
+    position: relative;
+    cursor: pointer;
+    transition: 0.4s;
+    margin: 0;
   }
+}
+
+#auto-fetch-toggle::before {
+  content: "";
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  bottom: 4px;
+  left: 4px;
+  background-color: var(--bg-color1);
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+#auto-fetch-toggle:checked {
+  background-color: var(--svg-color);
+}
+
+#auto-fetch-toggle:checked::before {
+  transform: translateX(44px);
 }
 
 #vanilla-i18n-toggler {
@@ -666,7 +695,7 @@
   height: 28px;
   width: 28px;
   bottom: 4px;
-  background-color: var(--input-bg-color);
+  background-color: var(--bg-color1);
   transition: 0.4s;
 }
 
