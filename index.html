@@ -233,58 +233,61 @@
       <h2 class="subject">
         <i18n vanilla-i18n="settings.subject">設定</i18n>
       </h2>
-      <div class="grid-settings">
+      <details>
+        <summary></summary>
+        <div class="grid-settings">
 
-        <div>
-          <i18n vanilla-i18n="settings.autoUpdate">価格自動更新</i18n>
-        </div>
-        <div class="auto-update-toggle-container">
-          <input type="checkbox" id="auto-update-toggle" />
-        </div>
+          <div>
+            <i18n vanilla-i18n="settings.autoUpdate">自動価格更新</i18n>
+          </div>
+          <div class="auto-update-toggle-container">
+            <input type="checkbox" id="auto-update-toggle" />
+          </div>
 
-        <div>
-          <i18n vanilla-i18n="settings.theme">ダークモード</i18n>
-        </div>
-        <div class="theme-switch-container">
-          <div class="sun-regular"></div>
-          <label class="theme-switch">
-            <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
-            <span class="slider round"></span>
-          </label>
-          <div class="moon-regular"></div>
-        </div>
+          <div>
+            <i18n vanilla-i18n="settings.theme">ダークモード</i18n>
+          </div>
+          <div class="theme-switch-container">
+            <div class="sun-regular"></div>
+            <label class="theme-switch">
+              <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
+              <span class="slider round"></span>
+            </label>
+            <div class="moon-regular"></div>
+          </div>
 
-        <div>Language</div>
-        <select id="vanilla-i18n-toggler">
-          <option>日本語</option>
-          <option>English</option>
-        </select>
+          <div>Language</div>
+          <select id="vanilla-i18n-toggler">
+            <option>日本語</option>
+            <option>English</option>
+          </select>
 
-        <div class="theme-DefaultValue">
-          <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
+          <div class="theme-DefaultValue">
+            <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
+          </div>
+          <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
+            <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
+          </button>
+
+          <div>
+            <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
+          </div>
+          <a class="settings-btn normal-btn" href="./currencies/">
+            <i18n vanilla-i18n="settings.currency.sort">変更</i18n>
+            <div class="arrow-up-right-from-square-solid"></div>
+          </a>
+
+          <div class="theme-ver">Version&nbsp;<span id="siteVersion"></span></div>
+          <button class="settings-btn normal-btn" id="checkForUpdateBtn">
+            <span id="buttonText">
+              <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
+              <div class="spinner-wrapper">
+                <div class="spinner"></div>
+              </div>
+            </span>
+          </button>
         </div>
-        <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
-          <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
-        </button>
-
-        <div>
-          <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
-        </div>
-        <a class="settings-btn normal-btn" href="./currencies/">
-          <i18n vanilla-i18n="settings.currency.sort">変更</i18n>
-          <div class="arrow-up-right-from-square-solid"></div>
-        </a>
-
-        <div class="theme-ver">Version&nbsp;<span id="siteVersion"></span></div>
-        <button class="settings-btn normal-btn" id="checkForUpdateBtn">
-          <span id="buttonText">
-            <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
-            <div class="spinner-wrapper">
-              <div class="spinner"></div>
-            </div>
-          </span>
-        </button>
-      </div>
+      </details>
     </section>
 
     <section>
