@@ -108,7 +108,26 @@
             <div class="angle-down-solid"></div>
           </div>
 
-          <div class="currency-inputs-container"></div>
+          <div class="currency-inputs-container">
+            <script>
+              const urlParams = new URLSearchParams(window.location.search);
+              let queryCount = 0;
+              const currenciesParam = urlParams.get("currencies");
+              if (currenciesParam) {
+                const queryCurrencies = currenciesParam.split(",").map(s => s.trim()).filter(Boolean);
+                queryCount = queryCurrencies.length;
+              }
+              if (!queryCount) {
+                const storedCurrencies = JSON.parse(localStorage.getItem("selectedCurrenciesLS"));
+                queryCount = (storedCurrencies && storedCurrencies.length) ? storedCurrencies.length : 5;
+              }
+              let skeletonHTML = '';
+              for (let i = 0; i < queryCount; i++) {
+                skeletonHTML += `<div class="skeleton-currency-input"></div>`;
+              }
+              document.querySelector('.currency-inputs-container').innerHTML = skeletonHTML;
+            </script>
+          </div>
 
           <button id="update-prices" vanilla-i18n-aria-label="ariaLabels.updatePrices">
             <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 512 512">

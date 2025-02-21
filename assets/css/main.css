@@ -41,11 +41,11 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: 56px auto 56px;
+  grid-template-columns: 56px 1fr 56px;
   grid-template-rows: 32px 1fr 44px;
   row-gap: 4px;
   align-items: center;
-  width: auto;
+  width: 100%;
   max-width: 32rem;
   margin: 0 12px;
 }
@@ -53,8 +53,7 @@
 .currency-inputs-container {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 56px auto 56px;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 56px 1fr 56px;
   row-gap: 4px;
   align-items: center;
   max-width: 32rem;
@@ -98,6 +97,27 @@
 
 .date.recent {
   color: var(--main-text-color);
+}
+
+.skeleton-currency-input {
+  grid-column: 1 / 4;
+  height: 66px;
+  width: 100%;
+  min-width: 140px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--input-bg-color) 25%, var(--bg-color1) 50%, var(--input-bg-color) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s linear infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .currency-icons {
@@ -360,7 +380,7 @@
   margin: 0 12px;
 }
 
-.grid-settings > *:nth-child(2n + 1) {
+.grid-settings>*:nth-child(2n + 1) {
   text-align: right;
 }
 
@@ -563,12 +583,12 @@
   align-items: center;
   margin-bottom: 2px;
 
-  & > :nth-child(1) {
+  &> :nth-child(1) {
     justify-self: end;
     margin-right: 14px;
   }
 
-  & > :nth-child(3) {
+  &> :nth-child(3) {
     justify-self: start;
     margin-left: 13px;
     margin-top: 1px;
@@ -643,7 +663,7 @@
   left: 4px;
 }
 
-.light-static .theme-switch input:checked + .slider:before {
+.light-static .theme-switch input:checked+.slider:before {
   transform: translateX(44px);
 }
 
@@ -652,7 +672,7 @@
   right: 4px;
 }
 
-.dark-static .theme-switch input:checked + .slider:before {
+.dark-static .theme-switch input:checked+.slider:before {
   transform: translateX(-44px);
 }
 
@@ -707,7 +727,7 @@
   align-items: center;
   margin: 0;
 
-  & #lightning-address-output{
+  & #lightning-address-output {
     font-size: 1.1rem;
     font-weight: 500;
   }
