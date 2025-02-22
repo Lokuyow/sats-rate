@@ -108,10 +108,6 @@ function setupInputFieldsEventListeners() {
 async function handleOnline() {
   await currencyManager.fetchCurrencyData(selectedCurrencies);
   checkAndUpdateElements();
-
-  // 翻訳されたメッセージを取得
-  const message = window.vanilla_i18n_instance.translate("alerts.online");
-  alert(message);
 }
 
 function initializeGlobalValues() {
@@ -453,11 +449,35 @@ export function checkAndUpdateElements() {
 
   updateElementClass(updatePricesElement, diffTime >= 610);
   updateElementClass(lastUpdatedElement, diffTime >= 610);
+
+  // 既存のタイマーをクリア
+  if (updateTimer) {
+    clearTimeout(updateTimer);
+  }
+
+  // 610秒経過していない場合、残り時間をタイマーにセット
+  if (diffTime < 610) {
+    const remainingTime = (610 - diffTime) * 1000 + 1000; // ミリ秒に変換して1秒追加
+    updateTimer = setTimeout(() => {
+      checkAndUpdateElements();
+    }, remainingTime);
+  }
 }
 
-function handleVisibilityChange() {
-  if (document.hidden) return;
+// タイマーのIDを保持するための変数を追加
+let updateTimer = null;
 
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // 画面が非表示になったらタイマーをクリア
+    if (updateTimer) {
+      clearTimeout(updateTimer);
+      updateTimer = null;
+    }
+    return;
+  }
+
+  // 画面が表示された時の処理
   checkAndUpdateElements();
 }
 
