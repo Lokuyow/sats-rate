@@ -656,7 +656,7 @@ function generateShareLinks(queryParams, shareText) {
   return {
     twitter: `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
     nostter: `https://nostter.app/post?content=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
-    massDriver: `https://mdrv.shino3.net/?intent=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
+    massDriver: `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
   };
 }
 
