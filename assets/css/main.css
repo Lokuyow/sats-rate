@@ -323,7 +323,7 @@
 .square-x-twitter {
   width: 32px;
   height: 32px;
-  mask-image: url("../images/square-x-twitter.svg");
+  mask-image: url("../images/x-twitter-brands.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -343,7 +343,7 @@
 .cloud-solid {
   width: 32px;
   height: 32px;
-  mask-image: url("../images/cloud-solid.svg");
+  mask-image: url("../images/bluesky-brands.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
