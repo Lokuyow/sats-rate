@@ -370,6 +370,51 @@
   background-color: var(--svg-color);
 }
 
+details {
+  width: 100%;
+  position: relative;
+  margin-top: 60px;
+  padding: 0 12px;
+}
+
+details summary {
+  position: absolute;
+  list-style: none;
+  cursor: pointer;
+  height: 48px;
+  width: 48px;
+  top: -52px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details:not([open]) summary::after,
+details[open] summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  mask-image: url("/assets/images/angle-down-solid.svg");
+  mask-repeat: no-repeat;
+  mask-size: 38px;
+  mask-position: center;
+  background-color: var(--svg-color);
+}
+
+details:not([open]) summary::after {
+  transform: translate(-50%, -50%);
+}
+
+details[open] summary::after {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
 .grid-settings {
   display: grid;
   grid-template-columns: auto minmax(100px, 300px);
@@ -377,7 +422,6 @@
   justify-content: center;
   align-items: center;
   gap: 6px 14px;
-  margin: 0 12px;
 }
 
 .grid-settings>*:nth-child(2n + 1) {
@@ -920,60 +964,6 @@
   87.5% {
     box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px, 19px 0 0 0px, 38px 0 0 5px, 57px 0 0 0px, 19px 19px 0 5px, 38px 19px 0 0px, 57px 19px 0 0px;
   }
-}
-
-/* 設定セクションの折りたたみスタイル */
-/* section.settings {
-  padding: 0;
-} */
-
-details {
-  width: 100%;
-  position: relative;
-  margin-top: 60px; /* padding-topをmargin-topに変更 */
-}
-
-details > div {
-  width: 100%;
-  margin-top: 24px; /* コンテンツ部分を下げる */
-}
-
-details summary {
-  position: absolute;
-  list-style: none;
-  cursor: pointer;
-  height: 48px;
-  width: 48px;
-  top: -52px; /* 上に移動 */
-  left: 50%;
-  transform: translateX(-50%); /* 水平方向の中央配置のみに */
-}
-
-details summary::-webkit-details-marker {
-  display: none;
-}
-
-details:not([open]) summary::after,
-details[open] summary::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 48px;
-  height: 48px;
-  mask-image: url("/assets/images/angle-down-solid.svg");
-  mask-repeat: no-repeat;
-  mask-size: 38px;
-  mask-position: center;
-  background-color: var(--svg-color);
-}
-
-details:not([open]) summary::after {
-  transform: translate(-50%, -50%);
-}
-
-details[open] summary::after {
-  transform: translate(-50%, -50%) rotate(180deg);
 }
 
 @media screen and (min-width: 1001px) {
