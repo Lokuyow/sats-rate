@@ -70,7 +70,7 @@ img {
 
 @font-face {
   font-family: "RoundedMplus1c";
-  src: url("/assets/fonts/RoundedMplus1c-Regular.woff2") format("woff2");
+  src: url("../fonts/RoundedMplus1c-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -78,7 +78,7 @@ img {
 
 @font-face {
   font-family: "RoundedMplus1c";
-  src: url("/assets/fonts/RoundedMplus1c-Medium.woff2") format("woff2");
+  src: url("../fonts/RoundedMplus1c-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -86,7 +86,7 @@ img {
 
 @font-face {
   font-family: "RoundedMplus1c";
-  src: url("/assets/fonts/RoundedMplus1c-Bold.woff2") format("woff2");
+  src: url("../fonts/RoundedMplus1c-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;

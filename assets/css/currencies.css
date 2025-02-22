@@ -89,7 +89,7 @@
       .drag-indicator {
         width: 28px;
         height: 28px;
-        mask-image: url("/assets/images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
+        mask-image: url("../images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
         mask-repeat: no-repeat;
         mask-size: contain;
         mask-position: center;
@@ -137,7 +137,7 @@
     & .trash-icon {
       width: 34px;
       height: 34px;
-      mask-image: url("/assets/images/trash-solid.svg");
+      mask-image: url("../images/trash-solid.svg");
       mask-repeat: no-repeat;
       mask-size: contain;
       mask-position: center;
@@ -164,7 +164,7 @@
     & .caret-up-solid {
       width: 52px;
       height: 52px;
-      mask-image: url("/assets/images/caret-up-solid.svg");
+      mask-image: url("../images/caret-up-solid.svg");
       mask-repeat: no-repeat;
       mask-size: contain;
       mask-position: center;
@@ -180,7 +180,7 @@
     & .caret-down-solid {
       width: 52px;
       height: 52px;
-      mask-image: url("/assets/images/caret-down-solid.svg");
+      mask-image: url("../images/caret-down-solid.svg");
       mask-repeat: no-repeat;
       mask-size: contain;
       mask-position: center;

@@ -77,7 +77,7 @@
   & .angle-down-solid {
     width: 18px;
     height: 18px;
-    mask-image: url("/assets/images/angle-down-solid.svg");
+    mask-image: url("../images/angle-down-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -143,7 +143,7 @@
 .bitcoin-icon {
   width: 21px;
   height: 21px;
-  mask-image: url("/assets/images/bitcoin-icon.svg");
+  mask-image: url("../images/bitcoin-icon.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -323,7 +323,7 @@
 .square-x-twitter {
   width: 32px;
   height: 32px;
-  mask-image: url("/assets/images/square-x-twitter.svg");
+  mask-image: url("../images/square-x-twitter.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -333,7 +333,7 @@
 .nostr-icon-purple-on-white {
   width: 32px;
   height: 32px;
-  mask-image: url("/assets/images/nostr-icon-purple-on-white.svg");
+  mask-image: url("../images/nostr-icon-purple-on-white.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -343,7 +343,7 @@
 .cloud-solid {
   width: 32px;
   height: 32px;
-  mask-image: url("/assets/images/cloud-solid.svg");
+  mask-image: url("../images/cloud-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -353,7 +353,7 @@
 .share-nodes-solid {
   width: 30px;
   height: 30px;
-  mask-image: url("/assets/images/share-nodes-solid.svg");
+  mask-image: url("../images/share-nodes-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -363,7 +363,7 @@
 .clipboard-solid {
   width: 29px;
   height: 29px;
-  mask-image: url("/assets/images/clipboard-solid.svg");
+  mask-image: url("../images/clipboard-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -400,7 +400,7 @@ details[open] summary::after {
   left: 50%;
   width: 48px;
   height: 48px;
-  mask-image: url("/assets/images/angle-down-solid.svg");
+  mask-image: url("../images/angle-down-solid.svg");
   mask-repeat: no-repeat;
   mask-size: 38px;
   mask-position: center;
@@ -515,7 +515,7 @@ details[open] summary::after {
 .arrow-up-right-from-square-solid {
   width: 16px;
   height: 16px;
-  mask-image: url("/assets/images/arrow-up-right-from-square-solid.svg");
+  mask-image: url("../images/arrow-up-right-from-square-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -564,7 +564,7 @@ details[open] summary::after {
 #nostr-zap-target .bolt-solid {
   width: 20px;
   height: 20px;
-  mask-image: url("/assets/images/bolt-solid.svg");
+  mask-image: url("../images/bolt-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -575,7 +575,7 @@ details[open] summary::after {
 .list-ol-solid {
   width: 20px;
   height: 20px;
-  mask-image: url("/assets/images/list-ol-solid.svg");
+  mask-image: url("../images/list-ol-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -754,7 +754,7 @@ details[open] summary::after {
   .settings-solid {
     width: 28px;
     height: 28px;
-    mask-image: url("/assets/images/settings-solid.svg");
+    mask-image: url("../images/settings-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;
@@ -765,7 +765,7 @@ details[open] summary::after {
 .pos div.bolt-solid {
   width: 24px;
   height: 24px;
-  mask-image: url("/assets/images/bolt-solid.svg");
+  mask-image: url("../images/bolt-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
@@ -845,7 +845,7 @@ details[open] summary::after {
   & div.bolt-solid {
     width: 24px;
     height: 24px;
-    mask-image: url("/assets/images/bolt-solid.svg");
+    mask-image: url("../images/bolt-solid.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
     mask-position: center;

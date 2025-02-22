@@ -17,7 +17,7 @@ async function initializeApp() {
 
 async function loadCurrencies() {
   try {
-    const response = await fetch("/assets/data/currencies.json");
+    const response = await fetch("../assets/data/currencies.json");
     const data = await response.json();
     return data.reduce(
       (acc, item) => {
