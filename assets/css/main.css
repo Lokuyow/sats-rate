@@ -432,6 +432,7 @@ details[open] summary::after {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2px;
 
   #auto-update-toggle {
     -webkit-appearance: none;
@@ -662,7 +663,6 @@ details[open] summary::after {
 .theme-switch-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 2px;
 }
 
 .theme-switch {

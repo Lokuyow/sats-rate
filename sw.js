@@ -34,6 +34,7 @@ const urlsToCache = [
   "/assets/images/bluesky-brands.svg",
   "/assets/images/share-nodes-solid.svg",
   "/assets/images/clipboard-solid.svg",
+  "/assets/images/money_kasoutsuuka_b.webp",
   "/assets/images/bitcoin-zukan.webp",
   "/assets/images/fulgur-favicon.webp",
   "/assets/images/alby_icon_head_yellow_48x48.svg",

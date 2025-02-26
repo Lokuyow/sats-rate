@@ -32,6 +32,7 @@
     "what": "Zaps?"
   },
   "recommend": {
+    "dca": "btc-dca-simulator",
     "subject": "Recommended Sites",
     "zukan": "Bitcoin-zukan.com",
     "lost": "Lost in Bitcoin"
