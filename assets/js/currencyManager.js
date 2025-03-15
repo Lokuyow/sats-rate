@@ -81,7 +81,7 @@ export class CurrencyManager {
       this.updateCurrencyRates(storedData);
 
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
-      alert(message);
+      console.log(message);
       console.log(this.currencyRates);
     } else {
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorNoData");
