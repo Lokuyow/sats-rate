@@ -373,7 +373,7 @@
 details {
   width: 100%;
   position: relative;
-  margin-top: 60px;
+  margin-top: 70px;
   padding: 0 12px;
 }
 
@@ -381,8 +381,8 @@ details summary {
   position: absolute;
   list-style: none;
   cursor: pointer;
-  height: 48px;
-  width: 48px;
+  height: 54px;
+  width: 100px;
   top: -52px;
   left: 50%;
   transform: translateX(-50%);
@@ -398,8 +398,8 @@ details[open] summary::after {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   mask-image: url("../images/angle-down-solid.svg");
   mask-repeat: no-repeat;
   mask-size: 38px;
@@ -408,11 +408,11 @@ details[open] summary::after {
 }
 
 details:not([open]) summary::after {
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -44%);
 }
 
 details[open] summary::after {
-  transform: translate(-50%, -50%) rotate(180deg);
+  transform: translate(-50%, -56%) rotate(180deg);
 }
 
 .grid-settings {
@@ -421,7 +421,8 @@ details[open] summary::after {
   grid-auto-rows: auto;
   justify-content: center;
   align-items: center;
-  gap: 6px 14px;
+  gap: 4px 14px;
+  padding-top: 32px;
 }
 
 .grid-settings>*:nth-child(2n + 1) {
@@ -437,35 +438,35 @@ details[open] summary::after {
   #auto-update-toggle {
     -webkit-appearance: none;
     appearance: none;
-    width: 80px;
-    height: 36px;
-    border-radius: 18px;
+    width: 100px;
+    height: 44px;
+    border-radius: 22px;
     background-color: var(--input-bg-color);
     position: relative;
     cursor: pointer;
     transition: 0.4s;
     margin: 0;
   }
-}
 
-#auto-update-toggle::before {
-  content: "";
-  position: absolute;
-  height: 28px;
-  width: 28px;
-  bottom: 4px;
-  left: 4px;
-  background-color: var(--bg-color1);
-  border-radius: 50%;
-  transition: 0.4s;
-}
+  #auto-update-toggle::before {
+    content: "";
+    position: absolute;
+    height: 38px;
+    width: 38px;
+    bottom: 3px;
+    left: 5px;
+    background-color: var(--bg-color1);
+    border-radius: 50%;
+    transition: 0.4s;
+  }
 
-#auto-update-toggle:checked {
-  background-color: var(--svg-color);
-}
+  #auto-update-toggle:checked {
+    background-color: var(--svg-color);
+  }
 
-#auto-update-toggle:checked::before {
-  transform: translateX(44px);
+  #auto-update-toggle:checked::before {
+    transform: translateX(52px);
+  }
 }
 
 #vanilla-i18n-toggler {
@@ -477,7 +478,7 @@ details[open] summary::after {
   border-width: 2px;
   background-color: var(--bg-color1);
   text-align: center;
-  height: 50px;
+  height: 54px;
 }
 
 .settings-btn {
@@ -486,7 +487,7 @@ details[open] summary::after {
   align-items: center;
   font-size: 1rem;
   border: 0;
-  height: 50px;
+  height: 54px;
   line-height: 50px;
   min-width: 160px;
   padding: 0;
@@ -669,8 +670,8 @@ details[open] summary::after {
   position: relative;
   display: inline-block;
   justify-self: center;
-  width: 80px;
-  height: 36px;
+  width: 100px;
+  height: 44px;
 }
 
 .theme-switch input {
@@ -691,7 +692,7 @@ details[open] summary::after {
 }
 
 .slider.round {
-  border-radius: 18px;
+  border-radius: 22px;
 }
 
 .slider.round:before {
@@ -701,29 +702,30 @@ details[open] summary::after {
 .theme-switch .slider:before {
   position: absolute;
   content: "";
-  height: 28px;
-  width: 28px;
-  bottom: 4px;
+  height: 38px;
+  width: 38px;
+  bottom: 3px;
+  /* right: 5px; */
   background-color: var(--bg-color1);
   transition: 0.4s;
 }
 
 /* ライトモード固定スタイル */
 .light-static .theme-switch .slider:before {
-  left: 4px;
+  left: 5px;
 }
 
 .light-static .theme-switch input:checked+.slider:before {
-  transform: translateX(44px);
+  transform: translateX(52px);
 }
 
 /* ダークモード固定スタイル */
 .dark-static .theme-switch .slider:before {
-  right: 4px;
+  right: 5px;
 }
 
 .dark-static .theme-switch input:checked+.slider:before {
-  transform: translateX(-44px);
+  transform: translateX(-52px);
 }
 
 /* POS機能設定 */
