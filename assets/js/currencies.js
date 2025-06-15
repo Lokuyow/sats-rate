@@ -13,6 +13,7 @@ async function initializeApp() {
   addSaveButtonListener();
   addCheckboxChangeListeners();
   checkScrollButtonVisibility();
+  addDragOverEffects();
 }
 
 async function loadCurrencies() {
@@ -161,7 +162,7 @@ function initializeSortable() {
     },
   });
 
-  new Sortable(fixContainer.querySelector(".trash-drop-area"), {
+  new Sortable(fixContainer.querySelector("#trash-container"), {
     group: "shared",
     animation: 150,
     sort: false,
@@ -320,3 +321,23 @@ window.addEventListener("load", function () {
 });
 
 document.addEventListener("DOMContentLoaded", initializeApp);
+
+function addDragOverEffects() {
+  const trashContainer = document.querySelector("#trash-container");
+
+  // ドラッグオーバー時
+  trashContainer.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    trashContainer.classList.add('drag-over');
+  });
+
+  // ドラッグリーブ時
+  trashContainer.addEventListener('dragleave', (e) => {
+    trashContainer.classList.remove('drag-over');
+  });
+
+  // ドロップ時
+  trashContainer.addEventListener('drop', (e) => {
+    trashContainer.classList.remove('drag-over');
+  });
+}

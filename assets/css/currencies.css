@@ -121,13 +121,16 @@
   display: flex;
   justify-content: flex-end;
 
+  #trash-container.drag-over {
+    background-color: var(--svg-color2) !important;
+  }
+
   #trash-container {
     position: fixed;
     bottom: 62px;
     height: 58px;
     width: 100%;
     padding: 0;
-    z-index: 1000;
     background-color: var(--alpha-color);
     border-radius: 6px 0 0 0;
     display: flex;
