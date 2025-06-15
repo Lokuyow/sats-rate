@@ -255,13 +255,16 @@ function checkScrollButtonVisibility() {
     if (isScrollable) {
       scrollUpButton.style.display = "block";
       scrollDownButton.style.display = "block";
+      sortContainer.classList.remove("no-scroll-button");
     } else {
       scrollUpButton.style.display = "none";
       scrollDownButton.style.display = "none";
+      sortContainer.classList.add("no-scroll-button");
     }
   } else {
     scrollUpButton.style.display = "none";
     scrollDownButton.style.display = "none";
+    sortContainer.classList.add("no-scroll-button");
   }
 }
 

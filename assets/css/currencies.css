@@ -87,6 +87,11 @@
     /* 可視部分をpadding内に制限 */
     clip-path: inset(126px 0 184px 0);
 
+    &.no-scroll-button {
+      padding: 68px 0 126px 0;
+      clip-path: inset(68px 0 126px 0);
+    }
+
     .sort-item {
       display: flex;
       align-items: center;
@@ -220,6 +225,13 @@
       padding: 65px 0 123px 0;
       /* 可視部分をpadding内に制限 */
       clip-path: inset(65px 0 123px 0);
+
+      &.no-scroll-button {
+        height: calc(100% + 130px); /* 65px + 65px = 130px (下部パディングを58px減らす) */
+        margin: -65px 0 -65px 0;
+        padding: 65px 0 65px 0;
+        clip-path: inset(65px 0 65px 0);
+      }
     }
   }
 }
