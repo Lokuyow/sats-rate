@@ -68,7 +68,7 @@
   transform: translateY(-50%);
   width: 82px;
   height: 100dvh;
-  padding: 126px 0 184px 0;
+  padding: 132px 0 196px 0;
   overflow: hidden; /* はみ出した部分を隠す */
 
   .sort-container {
@@ -80,16 +80,16 @@
     overflow-y: auto;
     /* 親要素のpaddingエリアまで拡張してドロップ可能にする */
     min-height: 100%;
-    height: calc(100% + 310px); /* 126px + 184px = 310px */
-    margin: -126px 0 -184px 0;
-    padding: 126px 0 184px 0;
+    height: calc(100% + 328px); /* 126px + 184px = 310px */
+    margin: -132px 0 -196px 0;
+    padding: 132px 0 196px 0;
     box-sizing: border-box;
     /* 可視部分をpadding内に制限 */
-    clip-path: inset(126px 0 184px 0);
+    clip-path: inset(132px 0 196px 0);
 
     &.no-scroll-button {
-      padding: 68px 0 126px 0;
-      clip-path: inset(68px 0 126px 0);
+      padding: 62px 0 132px 0;
+      clip-path: inset(62px 0 132px 0);
     }
 
     .sort-item {
@@ -144,7 +144,7 @@
   #trash-container {
     position: fixed;
     bottom: 62px;
-    height: 58px;
+    height: 64px;
     width: 100%;
     padding: 0;
     background-color: var(--alpha-color);
@@ -166,7 +166,7 @@
 
   .scroll-button {
     position: fixed;
-    height: 58px;
+    height: 64px;
     width: 100%;
     padding: 0;
     border: none;
@@ -193,7 +193,7 @@
   }
 
   .scroll-down {
-    bottom: 123px;
+    bottom: 129px;
     right: 0;
 
     & .caret-down-solid {
