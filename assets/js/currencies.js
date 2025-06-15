@@ -151,11 +151,49 @@ function selectDefaultCurrencies() {
 function initializeSortable() {
   const sortContainer = document.querySelector(".sort-container");
   const fixContainer = document.querySelector("#fix-container");
+  const trashContainer = document.querySelector("#trash-container");
 
   new Sortable(sortContainer, {
     group: "shared",
     animation: 150,
+    forceFallback: true, // ゴースト要素の表示を維持するためにフォールバックを強制
+    fallbackOnBody: true, // ゴースト要素をbody直下に配置
+    onMove: (evt) => {
+      // ドラッグ中のアイテムがtrash-container上にある場合のみ
+      if (evt.to === trashContainer) {
+        trashContainer.classList.add('drag-over');
+        
+        // trash-container上でのみsort-iconを非表示にする
+        const draggedItem = evt.dragged;
+        if (draggedItem) {
+          const sortIcon = draggedItem.querySelector('.sort-icon');
+          if (sortIcon) {
+            sortIcon.style.visibility = 'hidden';
+          }
+        }
+      } else {
+        trashContainer.classList.remove('drag-over');
+        
+        // trash-container以外では通常の半透明表示に戻す
+        const draggedItem = evt.dragged;
+        if (draggedItem) {
+          const sortIcon = draggedItem.querySelector('.sort-icon');
+          if (sortIcon) {
+            sortIcon.style.visibility = 'visible';
+          }
+        }
+      }
+    },
     onEnd: (evt) => {
+      // ドラッグ終了時にすべての状態をリセット
+      trashContainer.classList.remove('drag-over');
+      
+      // すべてのsort-iconの表示状態をリセット
+      const allSortIcons = document.querySelectorAll('.sort-icon');
+      allSortIcons.forEach(icon => {
+        icon.style.visibility = '';
+      });
+      
       if (evt.to !== fixContainer) {
         currentOrder = Array.from(sortContainer.querySelectorAll(".sort-item")).map((el) => el.querySelector(".sort-icon").dataset.currency);
       }
@@ -166,6 +204,8 @@ function initializeSortable() {
     group: "shared",
     animation: 150,
     sort: false,
+    forceFallback: true, // こちらにも念のため追加
+    fallbackOnBody: true, // こちらにも念のため追加
     onAdd: (evt) => {
       const item = evt.item;
       const currency = item.querySelector(".sort-icon").dataset.currency;
@@ -327,51 +367,20 @@ document.addEventListener("DOMContentLoaded", initializeApp);
 
 function addDragOverEffects() {
   const trashContainer = document.querySelector("#trash-container");
-  const sortContainer = document.querySelector(".sort-container");
 
-  // ドラッグオーバー時
+  // デスクトップ用のドラッグオーバー効果（マウスドラッグ対応）
   trashContainer.addEventListener('dragover', (e) => {
     e.preventDefault();
     trashContainer.classList.add('drag-over');
-    
-    // ドラッグ中のアイテムを非表示にする
-    const draggedItem = document.querySelector('.sortable-drag');
-    if (draggedItem) {
-      const sortIcon = draggedItem.querySelector('.sort-icon');
-      if (sortIcon) {
-        sortIcon.style.visibility = 'hidden';
-      }
-    }
   });
 
-  // ドラッグリーブ時
   trashContainer.addEventListener('dragleave', (e) => {
-    // trash-container内部の要素への移動でない場合のみ処理
     if (!trashContainer.contains(e.relatedTarget)) {
       trashContainer.classList.remove('drag-over');
-      
-      // ドラッグ中のアイテムを再表示
-      const draggedItem = document.querySelector('.sortable-drag');
-      if (draggedItem) {
-        const sortIcon = draggedItem.querySelector('.sort-icon');
-        if (sortIcon) {
-          sortIcon.style.visibility = 'visible';
-        }
-      }
     }
   });
 
-  // ドロップ時
   trashContainer.addEventListener('drop', (e) => {
     trashContainer.classList.remove('drag-over');
-    
-    // ドラッグ中のアイテムを再表示（削除される前に）
-    const draggedItem = document.querySelector('.sortable-drag');
-    if (draggedItem) {
-      const sortIcon = draggedItem.querySelector('.sort-icon');
-      if (sortIcon) {
-        sortIcon.style.visibility = 'visible';
-      }
-    }
   });
 }

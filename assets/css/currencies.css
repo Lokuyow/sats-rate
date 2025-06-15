@@ -154,9 +154,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* ドラッグオーバー時のアイテム制御 */
     overflow: hidden;
     z-index: 1001;
+    transition: background-color 0.2s ease;
+
+    /* デスクトップでのホバー効果 */
+    &:hover {
+      background-color: var(--svg-color2);
+    }
 
     & .trash-icon {
       width: 34px;
@@ -166,19 +171,16 @@
       mask-size: contain;
       mask-position: center;
       background-color: var(--svg-color);
-      /* ドラッグ中のアイテムより前面に表示 */
       position: relative;
       z-index: 1002;
     }
 
-    /* ドラッグ中のsort-itemを非表示にする */
     & .sort-item {
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
     }
 
-    /* ドラッグ中のsort-iconを非表示にする */
     & .sort-icon {
       display: none !important;
     }
@@ -292,10 +294,37 @@
   }
 }
 
-/* Sortableライブラリのドラッグ中要素の制御 */
-.sortable-drag {
-  /* trash-container上では内容を隠す */
+/* Sortableライブラリのフォールバック要素のスタイル調整 */
+.sortable-fallback {
+  /* 元のsort-itemのスタイルを維持 */
   .sort-icon {
-    opacity: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & img {
+      text-align: center;
+      height: auto;
+      width: 36px !important; /* フォールバック時にサイズが変わらないよう!importantを使用 */
+      margin: auto;
+    }
   }
+
+  .drag-indicator {
+    width: 30px;
+    height: 30px;
+    mask-image: url("../images/drag_indicator_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    background-color: var(--svg-color2);
+  }
+
+  /* フォールバック要素全体のサイズを維持 */
+  height: 64px;
+  width: 82px; /* floating-fieldの幅と同じ */
+  display: flex;
+  align-items: center;
+  border-radius: 6px 0 0 6px;
+  padding: 11px 0;
 }
