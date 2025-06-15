@@ -110,6 +110,40 @@
   animation: skeleton-loading 1.5s linear infinite;
 }
 
+.page-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: auto;
+  padding: 0;
+  background-color: var(--bg-color2);
+  max-width: 1000px;
+  height: 40px;
+}
+
+.language-toggle-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-toggle-button:hover {
+  background-color: var(--hover-color);
+}
+
+.language-icon {
+  width: 40px;
+  height: 40px;
+  mask-image: url("../images/language-solid.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+  background-color: var(--svg-color);
+}
+
 @keyframes skeleton-loading {
   0% {
     background-position: 200% 0;
@@ -467,18 +501,6 @@ details[open] summary::after {
   #auto-update-toggle:checked::before {
     transform: translateX(52px);
   }
-}
-
-#vanilla-i18n-toggler {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--svg-color);
-  border-radius: 6px;
-  border-color: var(--input-bg-color);
-  border-width: 2px;
-  background-color: var(--bg-color1);
-  text-align: center;
-  height: 54px;
 }
 
 .settings-btn {

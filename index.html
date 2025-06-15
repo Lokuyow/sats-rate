@@ -71,7 +71,7 @@
       path: "./assets/vanilla-i18n",
       debug: false,
       i18n_attr_name: "vanilla-i18n",
-      toggler_id: "vanilla-i18n-toggler",
+      toggler_id: "vanilla-i18n-button",
       default_language: languages[0],
     });
     window.vanilla_i18n_instance.run();
@@ -79,6 +79,11 @@
 </head>
 
 <body ontouchstart="">
+  <header class="page-header">
+    <button id="vanilla-i18n-button" class="language-toggle-button" aria-label="Change language" vanilla-i18n-aria-label="ariaLabels.changeLanguage">
+      <div class="language-icon"></div>
+    </button>
+  </header>
   <main>
     <section>
       <div class="title">
@@ -253,12 +258,6 @@
           <div class="auto-update-toggle-container">
             <input type="checkbox" id="auto-update-toggle" />
           </div>
-
-          <div>Language</div>
-          <select id="vanilla-i18n-toggler">
-            <option>日本語</option>
-            <option>English</option>
-          </select>
 
           <div class="theme-DefaultValue">
             <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
