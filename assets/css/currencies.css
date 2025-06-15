@@ -69,7 +69,8 @@
   width: 82px;
   height: 100dvh;
   padding: 132px 0 196px 0;
-  overflow: hidden; /* はみ出した部分を隠す */
+  overflow: hidden;
+  /* はみ出した部分を隠す */
 
   .sort-container {
     display: flex;
@@ -80,7 +81,8 @@
     overflow-y: auto;
     /* 親要素のpaddingエリアまで拡張してドロップ可能にする */
     min-height: 100%;
-    height: calc(100% + 328px); /* 126px + 184px = 310px */
+    height: calc(100% + 328px);
+    /* 126px + 184px = 310px */
     margin: -132px 0 -196px 0;
     padding: 132px 0 196px 0;
     box-sizing: border-box;
@@ -212,27 +214,6 @@
 @media (max-width: 767px) {
   .scroll-button {
     display: block;
-  }
-}
-
-@media (min-width: 768px) {
-  .floating-field {
-    padding: 65px 0 123px 0;
-
-    .sort-container {
-      height: calc(100% + 188px); /* 65px + 123px = 188px */
-      margin: -65px 0 -123px 0;
-      padding: 65px 0 123px 0;
-      /* 可視部分をpadding内に制限 */
-      clip-path: inset(65px 0 123px 0);
-
-      &.no-scroll-button {
-        height: calc(100% + 130px); /* 65px + 65px = 130px (下部パディングを58px減らす) */
-        margin: -65px 0 -65px 0;
-        padding: 65px 0 65px 0;
-        clip-path: inset(65px 0 65px 0);
-      }
-    }
   }
 }
 
