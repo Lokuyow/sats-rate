@@ -154,6 +154,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* ドラッグオーバー時のアイテム制御 */
+    overflow: hidden;
+    z-index: 1001;
 
     & .trash-icon {
       width: 34px;
@@ -163,6 +166,21 @@
       mask-size: contain;
       mask-position: center;
       background-color: var(--svg-color);
+      /* ドラッグ中のアイテムより前面に表示 */
+      position: relative;
+      z-index: 1002;
+    }
+
+    /* ドラッグ中のsort-itemを非表示にする */
+    & .sort-item {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* ドラッグ中のsort-iconを非表示にする */
+    & .sort-icon {
+      display: none !important;
     }
   }
 
@@ -262,4 +280,22 @@
   max-width: 800px;
   margin: 0 10px;
   padding: 0;
+}
+
+/* ドラッグ中のsort-itemがtrash-container上にある時の制御 */
+.sort-item.sortable-chosen {
+  /* trash-container上では透明にする */
+  &[style*="transform"] {
+    .sort-icon {
+      transition: opacity 0.1s ease;
+    }
+  }
+}
+
+/* Sortableライブラリのドラッグ中要素の制御 */
+.sortable-drag {
+  /* trash-container上では内容を隠す */
+  .sort-icon {
+    opacity: 0 !important;
+  }
 }

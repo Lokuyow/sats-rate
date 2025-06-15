@@ -327,20 +327,51 @@ document.addEventListener("DOMContentLoaded", initializeApp);
 
 function addDragOverEffects() {
   const trashContainer = document.querySelector("#trash-container");
+  const sortContainer = document.querySelector(".sort-container");
 
   // ドラッグオーバー時
   trashContainer.addEventListener('dragover', (e) => {
     e.preventDefault();
     trashContainer.classList.add('drag-over');
+    
+    // ドラッグ中のアイテムを非表示にする
+    const draggedItem = document.querySelector('.sortable-drag');
+    if (draggedItem) {
+      const sortIcon = draggedItem.querySelector('.sort-icon');
+      if (sortIcon) {
+        sortIcon.style.visibility = 'hidden';
+      }
+    }
   });
 
   // ドラッグリーブ時
   trashContainer.addEventListener('dragleave', (e) => {
-    trashContainer.classList.remove('drag-over');
+    // trash-container内部の要素への移動でない場合のみ処理
+    if (!trashContainer.contains(e.relatedTarget)) {
+      trashContainer.classList.remove('drag-over');
+      
+      // ドラッグ中のアイテムを再表示
+      const draggedItem = document.querySelector('.sortable-drag');
+      if (draggedItem) {
+        const sortIcon = draggedItem.querySelector('.sort-icon');
+        if (sortIcon) {
+          sortIcon.style.visibility = 'visible';
+        }
+      }
+    }
   });
 
   // ドロップ時
   trashContainer.addEventListener('drop', (e) => {
     trashContainer.classList.remove('drag-over');
+    
+    // ドラッグ中のアイテムを再表示（削除される前に）
+    const draggedItem = document.querySelector('.sortable-drag');
+    if (draggedItem) {
+      const sortIcon = draggedItem.querySelector('.sort-icon');
+      if (sortIcon) {
+        sortIcon.style.visibility = 'visible';
+      }
+    }
   });
 }
