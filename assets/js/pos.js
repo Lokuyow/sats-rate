@@ -23,6 +23,7 @@ export class Pos {
         color: "#ffffff",
       },
       imageOptions: {
+        imageSize: 0.3,
         crossOrigin: "anonymous",
         margin: 6,
       },
