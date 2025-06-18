@@ -4,10 +4,14 @@
   justify-content: space-between;
   align-items: center;
   margin: auto;
-  padding-top: 10px;
+  padding: 0;
   background-color: var(--bg-color2);
-  max-width: 1000px;
-  height: 50px;
+  max-width: 800px;
+  height: 40px;
+
+  @media (min-width: 601px) {
+    height: 48px;
+  }
 }
 
 .title {
@@ -23,30 +27,35 @@
     text-decoration: none;
     color: var(--main-text-color);
     border-radius: 6px;
-    padding: 0 8px;
+    height: 40px;
+    padding: 0 6px;
+
+    @media (min-width: 601px) {
+      height: 48px;
+    }
 
     & h1 {
       font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 500;
       text-decoration: none;
       margin: 0;
     }
 
     & img {
-      width: 34px;
+      width: 30px;
       height: auto;
       margin-left: 3px;
-      padding-bottom: 2px;
+      padding-bottom: 1px;
     }
 
     @media (min-width: 601px) {
       & h1 {
-        font-size: 1.7rem;
+        font-size: 1.6rem;
       }
 
       & img {
-        width: 38px;
+        width: 36px;
         height: auto;
         margin-left: 6px;
       }
@@ -65,9 +74,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 40px;
   margin: 0;
-  padding: 0 10px;
+  padding: 0 8px;
   height: 100%;
+
+  @media (min-width: 601px) {
+    height: 48px;
+  }
 }
 
 .language-icon {
@@ -86,13 +100,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 10px;
+  height: 40px;
+  padding: 0 8px;
   height: 100%;
+
+  @media (min-width: 601px) {
+    height: 48px;
+  }
 }
 
 .menu-icon {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   mask-image: url("../images/ellipsis-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
@@ -105,7 +124,7 @@
   position: fixed;
   top: 40px;
   /* ヘッダーの高さに合わせる */
-  right: max(0px, calc(((100vw - 1000px) / 2) - 10px));
+  right: max(0px, calc(((100vw - 800px) / 2) - 10px));
   margin-left: 4px;
   background-color: var(--bg-color1);
   border: 1px solid var(--unit-bg-color);
@@ -115,6 +134,10 @@
   display: none;
   /* 初期非表示 */
   min-width: 300px;
+
+  @media (min-width: 601px) {
+    top: 48px;
+  }
 }
 
 .floating-menu.open {
@@ -192,16 +215,16 @@
 section {
   background-color: var(--bg-color1);
   width: 100%;
-  max-width: 1000px;
-  margin-bottom: 8px;
-  padding-top: 25px;
-  padding-bottom: 40px;
-}
+  max-width: 800px;
+  margin-bottom: 4px;
+  padding: 32px 0;
 
-@media screen and (min-width: 1001px) {
-  section {
+  @media (min-width: 601px) {
+    margin-bottom: 6px;
+  }
+
+  @media (min-width: 1001px) {
     border-radius: 8px;
-    padding-top: 30px;
   }
 }
 
@@ -635,7 +658,7 @@ section {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  max-width: 480px;
+  max-width: 496px;
   margin: auto;
   padding: 0 8px;
 
@@ -715,7 +738,7 @@ section {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  max-width: 1024px;
+  max-width: 824px;
   margin: auto;
   padding: 12px;
 }
