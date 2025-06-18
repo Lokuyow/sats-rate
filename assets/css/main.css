@@ -7,7 +7,7 @@
   padding: 0;
   background-color: var(--bg-color2);
   max-width: 800px;
-  height: 40px;
+  height: 44px;
 
   @media (min-width: 601px) {
     height: 48px;
@@ -27,7 +27,7 @@
     text-decoration: none;
     color: var(--main-text-color);
     border-radius: 6px;
-    height: 40px;
+    height: 44px;
     padding: 0 6px;
 
     @media (min-width: 601px) {
@@ -66,7 +66,11 @@
 .header-buttons {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 44px;
+
+  @media (min-width: 601px) {
+    height: 48px;
+  }
 }
 
 .language-toggle-button {
@@ -74,14 +78,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
   margin: 0;
   padding: 0 8px;
   height: 100%;
-
-  @media (min-width: 601px) {
-    height: 48px;
-  }
 }
 
 .language-icon {
@@ -100,13 +99,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
   padding: 0 8px;
   height: 100%;
-
-  @media (min-width: 601px) {
-    height: 48px;
-  }
 }
 
 .menu-icon {
