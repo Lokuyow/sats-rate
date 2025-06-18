@@ -78,23 +78,30 @@ function setupEventListeners() {
     });
   }
 
-  // --- ここから追加 ---
+  // --- ここから変更 ---
   const menuToggleButton = document.getElementById('menu-toggle-button');
   const floatingMenu = document.getElementById('floating-menu');
+  let menuTimer;
 
   if (menuToggleButton && floatingMenu) {
-    menuToggleButton.addEventListener('click', (event) => {
-      event.stopPropagation(); // ドキュメントへのクリックイベント伝播を停止
-      floatingMenu.classList.toggle('open');
-    });
+    const showMenu = () => {
+      clearTimeout(menuTimer);
+      floatingMenu.classList.add('open');
+    };
 
-    document.addEventListener('click', (event) => {
-      if (floatingMenu.classList.contains('open') && !floatingMenu.contains(event.target) && event.target !== menuToggleButton && !menuToggleButton.contains(event.target)) {
+    const hideMenu = () => {
+      menuTimer = setTimeout(() => {
         floatingMenu.classList.remove('open');
-      }
-    });
+      }, 300);
+    };
+
+    menuToggleButton.addEventListener('mouseenter', showMenu);
+    floatingMenu.addEventListener('mouseenter', showMenu);
+
+    menuToggleButton.addEventListener('mouseleave', hideMenu);
+    floatingMenu.addEventListener('mouseleave', hideMenu);
   }
-  // --- ここまで追加 ---
+  // --- ここまで変更 ---
 }
 
 function setupInputFieldEventListeners(element) {

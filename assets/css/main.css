@@ -179,11 +179,11 @@
   min-width: 300px;
 }
 
-/* マウスオーバーでメニューを表示 */
-.menu-toggle-button:hover+.floating-menu,
+/* JavaScriptで制御するため、以下のスタイルは不要になります */
+/* .menu-toggle-button:hover+.floating-menu,
 .floating-menu:hover {
   display: block;
-}
+} */
 
 .floating-menu.open {
   display: block;
