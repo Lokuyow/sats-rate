@@ -98,15 +98,6 @@ main {
   align-items: center;
 }
 
-.subject {
-  color: var(--subject-text-color);
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 24px;
-  margin-bottom: 34px;
-}
-
 /* ポップアップ通知 */
 #notification {
   z-index: 1000;

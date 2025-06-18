@@ -1,11 +1,62 @@
 .page-header {
   position: relative;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin: auto;
+  padding-top: 10px;
   background-color: var(--bg-color2);
   max-width: 1000px;
+  height: 50px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+
+  & a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--main-text-color);
+    border-radius: 6px;
+    padding: 0 8px;
+
+    & h1 {
+      font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin: 0;
+    }
+
+    & img {
+      width: 34px;
+      height: auto;
+      margin-left: 3px;
+      padding-bottom: 2px;
+    }
+
+    @media (min-width: 601px) {
+      & h1 {
+        font-size: 1.7rem;
+      }
+
+      & img {
+        width: 38px;
+        height: auto;
+        margin-left: 6px;
+      }
+    }
+  }
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
   height: 40px;
 }
 
@@ -138,78 +189,29 @@
   border-width: 6px;
 }
 
-.title {
-  background-color: var(--bg-color1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0 10px 0;
-  padding: 0;
-
-  & a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--main-text-color);
-    border-radius: 6px;
-    padding: 8px 22px;
-
-    & h1 {
-      font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
-      font-size: 2.1rem;
-      font-weight: 500;
-      text-decoration: none;
-      margin: 0;
-    }
-
-    & img {
-      transform: translate(4px, -3px);
-      padding-left: 2px;
-    }
-
-    &:hover {
-      background-color: var(--input-bg-color);
-      color: var(--main-text-color);
-    }
-  }
-}
-
 section {
   background-color: var(--bg-color1);
   width: 100%;
   max-width: 1000px;
   margin-bottom: 8px;
+  padding-top: 25px;
   padding-bottom: 40px;
 }
 
 @media screen and (min-width: 1001px) {
   section {
     border-radius: 8px;
+    padding-top: 30px;
   }
 }
 
-@media (min-width: 601px) {
-  .title {
-    margin: 24px 0 16px 0;
-
-    & a {
-      padding: 10px 26px;
-
-      & h1 {
-        font-size: 2.6rem;
-      }
-
-      & img {
-        padding-left: 4px;
-        width: 70px;
-        height: auto;
-      }
-    }
-  }
-
-  section {
-    margin-bottom: 8px;
-  }
+.subject {
+  color: var(--subject-text-color);
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 34px;
 }
 
 .box-container {

@@ -80,16 +80,27 @@
 
 <body ontouchstart="">
 
-
   <header class="page-header">
-    <button id="vanilla-i18n-button" class="language-toggle-button normal-btn" aria-label="Change language"
-      vanilla-i18n-aria-label="ariaLabels.changeLanguage">
-      <div class="language-icon"></div>
-    </button>
-    <button id="menu-toggle-button" class="menu-toggle-button normal-btn" aria-label="Open menu"
-      vanilla-i18n-aria-label="ariaLabels.openMenu">
-      <div class="menu-icon"></div>
-    </button>
+
+    <div class="title">
+      <a href="https://osats.money/" vanilla-i18n-aria-label="ariaLabels.home" class="normal-btn">
+        <h1>
+          <i18n vanilla-i18n="title">おいくらサッツ</i18n>
+        </h1>
+        <img src="./assets/images/icon.svg" alt="icon" width="70px" height="70px" />
+      </a>
+    </div>
+
+    <div class="header-buttons">
+      <button id="vanilla-i18n-button" class="language-toggle-button normal-btn" aria-label="Change language"
+        vanilla-i18n-aria-label="ariaLabels.changeLanguage">
+        <div class="language-icon"></div>
+      </button>
+      <button id="menu-toggle-button" class="menu-toggle-button normal-btn" aria-label="Open menu"
+        vanilla-i18n-aria-label="ariaLabels.openMenu">
+        <div class="menu-icon"></div>
+      </button>
+    </div>
 
     <aside id="floating-menu" class="floating-menu">
       <ul>
@@ -139,15 +150,6 @@
 
   <main>
     <section>
-      <div class="title">
-        <a href="https://osats.money/" vanilla-i18n-aria-label="ariaLabels.home">
-          <h1>
-            <i18n vanilla-i18n="title">おいくらサッツ</i18n>
-          </h1>
-          <img src="./assets/images/icon.svg" alt="icon" width="70px" height="70px" />
-        </a>
-      </div>
-
       <div class="box-container">
         <div class="grid-container">
           <div class="flex-paste">
