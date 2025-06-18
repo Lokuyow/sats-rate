@@ -98,14 +98,6 @@ main {
   align-items: center;
 }
 
-section {
-  background-color: var(--bg-color1);
-  width: 100%;
-  max-width: 1000px;
-  margin-bottom: 4px;
-  padding-bottom: 40px;
-}
-
 .subject {
   color: var(--subject-text-color);
   font-size: 1.2rem;
