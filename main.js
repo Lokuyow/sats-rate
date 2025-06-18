@@ -78,30 +78,52 @@ function setupEventListeners() {
     });
   }
 
-  // --- ここから変更 ---
-  const menuToggleButton = document.getElementById('menu-toggle-button');
-  const floatingMenu = document.getElementById('floating-menu');
-  let menuTimer;
+  const menuToggleButton = document.getElementById("menu-toggle-button");
+  const floatingMenu = document.getElementById("floating-menu");
 
   if (menuToggleButton && floatingMenu) {
-    const showMenu = () => {
-      clearTimeout(menuTimer);
-      floatingMenu.classList.add('open');
-    };
+    // タッチデバイスかどうかを判定
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-    const hideMenu = () => {
-      menuTimer = setTimeout(() => {
-        floatingMenu.classList.remove('open');
-      }, 300);
-    };
+    if (isTouchDevice) {
+      // タッチデバイスの場合：クリックでトグル
+      menuToggleButton.addEventListener("click", (event) => {
+        event.stopPropagation(); // documentへの伝播を防ぐ
+        floatingMenu.classList.toggle("open");
+      });
 
-    menuToggleButton.addEventListener('mouseenter', showMenu);
-    floatingMenu.addEventListener('mouseenter', showMenu);
+      // ドキュメントのどこかをクリックしたらメニューを閉じる
+      document.addEventListener("click", () => {
+        if (floatingMenu.classList.contains("open")) {
+          floatingMenu.classList.remove("open");
+        }
+      });
 
-    menuToggleButton.addEventListener('mouseleave', hideMenu);
-    floatingMenu.addEventListener('mouseleave', hideMenu);
+      // メニュー自身へのクリックは、ドキュメントへの伝播を止める
+      floatingMenu.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+    } else {
+      // PCの場合：ホバーで表示
+      let menuTimer;
+      const showMenu = () => {
+        clearTimeout(menuTimer);
+        floatingMenu.classList.add("open");
+      };
+
+      const hideMenu = () => {
+        menuTimer = setTimeout(() => {
+          floatingMenu.classList.remove("open");
+        }, 300);
+      };
+
+      menuToggleButton.addEventListener("mouseenter", showMenu);
+      floatingMenu.addEventListener("mouseenter", showMenu);
+
+      menuToggleButton.addEventListener("mouseleave", hideMenu);
+      floatingMenu.addEventListener("mouseleave", hideMenu);
+    }
   }
-  // --- ここまで変更 ---
 }
 
 function setupInputFieldEventListeners(element) {
