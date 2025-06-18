@@ -1,115 +1,3 @@
-.title {
-  background-color: var(--bg-color1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0 16px 0;
-  padding: 0;
-
-  & a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--main-text-color);
-    border-radius: 6px;
-    padding: 8px 22px;
-
-    & h1 {
-      font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
-      font-size: 2.1rem;
-      font-weight: 500;
-      text-decoration: none;
-      margin: 0;
-    }
-
-    & img {
-      transform: translate(4px, -3px);
-      padding-left: 2px;
-    }
-
-    &:hover {
-      background-color: var(--input-bg-color);
-      color: var(--main-text-color);
-    }
-  }
-}
-
-.box-container {
-  display: flex;
-  justify-content: center;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 56px 1fr 56px;
-  grid-template-rows: 32px 1fr 44px;
-  row-gap: 4px;
-  align-items: center;
-  width: 100%;
-  max-width: 32rem;
-  margin: 0 12px;
-}
-
-.currency-inputs-container {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 56px 1fr 56px;
-  row-gap: 4px;
-  align-items: center;
-  max-width: 32rem;
-  margin: 0;
-}
-
-.flex-copy,
-.flex-paste {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: -8px;
-
-  & .text {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: var(--subject-text-color);
-    margin-bottom: -2px;
-  }
-
-  & .angle-down-solid {
-    width: 18px;
-    height: 18px;
-    mask-image: url("../images/angle-down-solid.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--subject-text-color);
-  }
-}
-
-.date {
-  text-align: center;
-  font-size: 1.3rem;
-  margin-bottom: -4px;
-}
-
-.date.outdated {
-  color: var(--invalid-color);
-}
-
-.date.recent {
-  color: var(--main-text-color);
-}
-
-.skeleton-currency-input {
-  grid-column: 1 / 4;
-  height: 66px;
-  width: 100%;
-  min-width: 140px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--input-bg-color) 25%, var(--bg-color1) 50%, var(--input-bg-color) 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s linear infinite;
-}
-
 .page-header {
   position: relative;
   display: flex;
@@ -257,6 +145,117 @@
   border-width: 6px;
 }
 
+.title {
+  background-color: var(--bg-color1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 16px 0;
+  padding: 0;
+
+  & a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--main-text-color);
+    border-radius: 6px;
+    padding: 8px 22px;
+
+    & h1 {
+      font-family: "RoundedMplus1c", "Roboto", Arial, "Noto Sans", sans-serif;
+      font-size: 2.1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin: 0;
+    }
+
+    & img {
+      transform: translate(4px, -3px);
+      padding-left: 2px;
+    }
+
+    &:hover {
+      background-color: var(--input-bg-color);
+      color: var(--main-text-color);
+    }
+  }
+}
+
+.box-container {
+  display: flex;
+  justify-content: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  grid-template-rows: 32px 1fr 44px;
+  row-gap: 4px;
+  align-items: center;
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 12px;
+}
+
+.currency-inputs-container {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  row-gap: 4px;
+  align-items: center;
+  max-width: 32rem;
+  margin: 0;
+}
+
+.flex-copy,
+.flex-paste {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -8px;
+
+  & .text {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--subject-text-color);
+    margin-bottom: -2px;
+  }
+
+  & .angle-down-solid {
+    width: 18px;
+    height: 18px;
+    mask-image: url("../images/angle-down-solid.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    background-color: var(--subject-text-color);
+  }
+}
+
+.date {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: -4px;
+}
+
+.date.outdated {
+  color: var(--invalid-color);
+}
+
+.date.recent {
+  color: var(--main-text-color);
+}
+
+.skeleton-currency-input {
+  grid-column: 1 / 4;
+  height: 66px;
+  width: 100%;
+  min-width: 140px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--input-bg-color) 25%, var(--bg-color1) 50%, var(--input-bg-color) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s linear infinite;
+}
 
 @keyframes skeleton-loading {
   0% {
