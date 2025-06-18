@@ -1010,30 +1010,6 @@ const invoiceDialogCloseButton = document.getElementById("lightning-invoice-clos
 showInvoiceButton.addEventListener("click", () => {
   invoiceDialog.showModal();
   pos.showInvoice();
-
-  // ダイアログを閉じる
-  invoiceDialogCloseButton.addEventListener("click", (event) => {
-    event.preventDefault(); // フォームを送信しない
-    invoiceDialog.close();
-    pos.clearMessage();
-  });
-
-  // インボイスのダイアログの外側をクリックして閉じる
-  invoiceDialog.addEventListener("click", (event) => {
-    const rect = invoiceDialog.getBoundingClientRect();
-    const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
-
-    if (!isInDialog) {
-      invoiceDialog.close();
-      pos.clearMessage();
-    }
-  });
-
-  // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
-  window.satsRate = {
-    calculateValues,
-  };
-  pos.showInvoice();
 });
 
 // ダイアログを閉じる
@@ -1046,7 +1022,11 @@ invoiceDialogCloseButton.addEventListener("click", (event) => {
 // インボイスのダイアログの外側をクリックして閉じる
 invoiceDialog.addEventListener("click", (event) => {
   const rect = invoiceDialog.getBoundingClientRect();
-  const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
+  const isInDialog =
+    rect.top <= event.clientY &&
+    event.clientY <= rect.bottom &&
+    rect.left <= event.clientX &&
+    event.clientX <= rect.right;
 
   if (!isInDialog) {
     invoiceDialog.close();
