@@ -79,6 +79,8 @@
 </head>
 
 <body ontouchstart="">
+
+
   <header class="page-header">
     <button id="vanilla-i18n-button" class="language-toggle-button normal-btn" aria-label="Change language"
       vanilla-i18n-aria-label="ariaLabels.changeLanguage">
@@ -88,50 +90,53 @@
       vanilla-i18n-aria-label="ariaLabels.openMenu">
       <div class="menu-icon"></div>
     </button>
+
+    <aside id="floating-menu" class="floating-menu">
+      <ul>
+        <li>
+          <span vanilla-i18n="settings.theme">ダークモード</span>
+          <div class="theme-switch-container">
+            <label class="theme-switch">
+              <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </li>
+        <li>
+          <span vanilla-i18n="settings.autoUpdate">自動価格更新</span>
+          <div class="auto-update-toggle-container">
+            <input type="checkbox" id="auto-update-toggle" vanilla-i18n-aria-label="ariaLabels.autoUpdateToggle" />
+          </div>
+        </li>
+        <li>
+          <span vanilla-i18n="settings.value.subject">現在の入力値</span>
+          <button class="normal-btn menu-item-btn" id="saveDefaultValuesButton" vanilla-i18n="settings.value.default"
+            vanilla-i18n-aria-label="ariaLabels.saveDefaultValues">デフォルトに設定</button>
+        </li>
+        <li>
+          <span vanilla-i18n="settings.currency.subject">通貨</span>
+          <a class="normal-btn menu-item-btn" href="./currencies/">
+            <i18n vanilla-i18n="settings.currency.sort" vanilla-i18n-aria-label="ariaLabels.changeCurrencies">変更</i18n>
+            <div class="arrow-up-right-from-square-solid"></div>
+          </a>
+        </li>
+        <li>
+          <span>Version&nbsp;<span id="siteVersion"></span></span>
+          <button class="normal-btn menu-item-btn" id="checkForUpdateBtn"
+            vanilla-i18n-aria-label="ariaLabels.checkForUpdate">
+            <span id="buttonText">
+              <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
+              <div class="spinner-wrapper">
+                <div class="spinner"></div>
+              </div>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </aside>
   </header>
-  <aside id="floating-menu" class="floating-menu">
-    <ul>
-      <li>
-        <span vanilla-i18n="settings.theme">ダークモード</span>
-        <div class="theme-switch-container">
-          <label class="theme-switch">
-            <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
-            <span class="slider round"></span>
-          </label>
-        </div>
-      </li>
-      <li>
-        <span vanilla-i18n="settings.autoUpdate">自動価格更新</span>
-        <div class="auto-update-toggle-container">
-          <input type="checkbox" id="auto-update-toggle" vanilla-i18n-aria-label="ariaLabels.autoUpdateToggle" />
-        </div>
-      </li>
-      <li>
-        <span vanilla-i18n="settings.value.subject">現在の入力値</span>
-        <button class="normal-btn menu-item-btn" id="saveDefaultValuesButton" vanilla-i18n="settings.value.default"
-          vanilla-i18n-aria-label="ariaLabels.saveDefaultValues">デフォルトに設定</button>
-      </li>
-      <li>
-        <span vanilla-i18n="settings.currency.subject">通貨</span>
-        <a class="normal-btn menu-item-btn" href="./currencies/">
-          <i18n vanilla-i18n="settings.currency.sort" vanilla-i18n-aria-label="ariaLabels.changeCurrencies">変更</i18n>
-          <div class="arrow-up-right-from-square-solid"></div>
-        </a>
-      </li>
-      <li>
-        <span>Version&nbsp;<span id="siteVersion"></span></span>
-        <button class="normal-btn menu-item-btn" id="checkForUpdateBtn"
-          vanilla-i18n-aria-label="ariaLabels.checkForUpdate">
-          <span id="buttonText">
-            <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
-            <div class="spinner-wrapper">
-              <div class="spinner"></div>
-            </div>
-          </span>
-        </button>
-      </li>
-    </ul>
-  </aside>
+
+
   <main>
     <section>
       <div class="title">
@@ -373,7 +378,8 @@
     <div id="notification"></div>
   </main>
 
-  <div class="footer-container">
+
+  <footer class="footer-container">
     <div class="site-description-container">
       <h3>
         <i18n vanilla-i18n="footer.oikura">おいくらサッツ とは</i18n>
@@ -404,7 +410,8 @@
           target="_blank">CoinGecko</a><br />
       </p>
     </div>
-  </div>
+  </footer>
+
 
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap@1"></script>
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap-view@1"></script>
