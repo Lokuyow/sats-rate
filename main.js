@@ -77,6 +77,24 @@ function setupEventListeners() {
       localStorage.setItem("autoUpdateEnabledLS", JSON.stringify(autoUpdateEnabled));
     });
   }
+
+  // --- ここから追加 ---
+  const menuToggleButton = document.getElementById('menu-toggle-button');
+  const floatingMenu = document.getElementById('floating-menu');
+
+  if (menuToggleButton && floatingMenu) {
+    menuToggleButton.addEventListener('click', (event) => {
+      event.stopPropagation(); // ドキュメントへのクリックイベント伝播を停止
+      floatingMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (floatingMenu.classList.contains('open') && !floatingMenu.contains(event.target) && event.target !== menuToggleButton && !menuToggleButton.contains(event.target)) {
+        floatingMenu.classList.remove('open');
+      }
+    });
+  }
+  // --- ここまで追加 ---
 }
 
 function setupInputFieldEventListeners(element) {
@@ -984,6 +1002,30 @@ const invoiceDialogCloseButton = document.getElementById("lightning-invoice-clos
 // ダイアログを開く
 showInvoiceButton.addEventListener("click", () => {
   invoiceDialog.showModal();
+  pos.showInvoice();
+
+  // ダイアログを閉じる
+  invoiceDialogCloseButton.addEventListener("click", (event) => {
+    event.preventDefault(); // フォームを送信しない
+    invoiceDialog.close();
+    pos.clearMessage();
+  });
+
+  // インボイスのダイアログの外側をクリックして閉じる
+  invoiceDialog.addEventListener("click", (event) => {
+    const rect = invoiceDialog.getBoundingClientRect();
+    const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
+
+    if (!isInDialog) {
+      invoiceDialog.close();
+      pos.clearMessage();
+    }
+  });
+
+  // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
+  window.satsRate = {
+    calculateValues,
+  };
   pos.showInvoice();
 });
 

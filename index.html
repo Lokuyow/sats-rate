@@ -80,10 +80,58 @@
 
 <body ontouchstart="">
   <header class="page-header">
-    <button id="vanilla-i18n-button" class="language-toggle-button" aria-label="Change language" vanilla-i18n-aria-label="ariaLabels.changeLanguage">
+    <button id="vanilla-i18n-button" class="language-toggle-button normal-btn" aria-label="Change language"
+      vanilla-i18n-aria-label="ariaLabels.changeLanguage">
       <div class="language-icon"></div>
     </button>
+    <button id="menu-toggle-button" class="menu-toggle-button normal-btn" aria-label="Open menu"
+      vanilla-i18n-aria-label="ariaLabels.openMenu">
+      <div class="menu-icon"></div>
+    </button>
   </header>
+  <aside id="floating-menu" class="floating-menu">
+    <ul>
+      <li>
+        <span vanilla-i18n="settings.theme">ダークモード</span>
+        <div class="theme-switch-container">
+          <label class="theme-switch">
+            <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </li>
+      <li>
+        <span vanilla-i18n="settings.autoUpdate">自動価格更新</span>
+        <div class="auto-update-toggle-container">
+          <input type="checkbox" id="auto-update-toggle" vanilla-i18n-aria-label="ariaLabels.autoUpdateToggle" />
+        </div>
+      </li>
+      <li>
+        <span vanilla-i18n="settings.value.subject">現在の入力値</span>
+        <button class="normal-btn menu-item-btn" id="saveDefaultValuesButton" vanilla-i18n="settings.value.default"
+          vanilla-i18n-aria-label="ariaLabels.saveDefaultValues">デフォルトに設定</button>
+      </li>
+      <li>
+        <span vanilla-i18n="settings.currency.subject">通貨</span>
+        <a class="normal-btn menu-item-btn" href="./currencies/">
+          <i18n vanilla-i18n="settings.currency.sort" vanilla-i18n-aria-label="ariaLabels.changeCurrencies">変更</i18n>
+          <div class="arrow-up-right-from-square-solid"></div>
+        </a>
+      </li>
+      <li>
+        <span>Version&nbsp;<span id="siteVersion"></span></span>
+        <button class="normal-btn menu-item-btn" id="checkForUpdateBtn"
+          vanilla-i18n-aria-label="ariaLabels.checkForUpdate">
+          <span id="buttonText">
+            <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
+            <div class="spinner-wrapper">
+              <div class="spinner"></div>
+            </div>
+          </span>
+        </button>
+      </li>
+    </ul>
+  </aside>
   <main>
     <section>
       <div class="title">
@@ -232,59 +280,6 @@
           </button>
         </div>
       </div>
-    </section>
-
-    <section>
-      <h2 class="subject">
-        <i18n vanilla-i18n="settings.subject">設定</i18n>
-      </h2>
-      <details>
-        <summary class="normal-btn"></summary>
-        <div class="grid-settings">
-
-          <div>
-            <i18n vanilla-i18n="settings.theme">ダークモード</i18n>
-          </div>
-          <div class="theme-switch-container">
-            <label class="theme-switch">
-              <input type="checkbox" id="themeToggle" vanilla-i18n-aria-label="ariaLabels.themeToggle" />
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div>
-            <i18n vanilla-i18n="settings.autoUpdate">自動価格更新</i18n>
-          </div>
-          <div class="auto-update-toggle-container">
-            <input type="checkbox" id="auto-update-toggle" />
-          </div>
-
-          <div class="theme-DefaultValue">
-            <i18n vanilla-i18n="settings.value.subject">現在の入力値</i18n>
-          </div>
-          <button class="settings-btn normal-btn" id="saveDefaultValuesButton">
-            <i18n vanilla-i18n="settings.value.default">デフォルトに設定</i18n>
-          </button>
-
-          <div>
-            <i18n vanilla-i18n="settings.currency.subject">通貨</i18n>
-          </div>
-          <a class="settings-btn normal-btn" href="./currencies/">
-            <i18n vanilla-i18n="settings.currency.sort">変更</i18n>
-            <div class="arrow-up-right-from-square-solid"></div>
-          </a>
-
-          <div class="theme-ver">Version&nbsp;<span id="siteVersion"></span></div>
-          <button class="settings-btn normal-btn" id="checkForUpdateBtn">
-            <span id="buttonText">
-              <i18n vanilla-i18n="settings.update">更新をチェック</i18n>
-              <div class="spinner-wrapper">
-                <div class="spinner"></div>
-              </div>
-            </span>
-          </button>
-        </div>
-      </details>
     </section>
 
     <section>

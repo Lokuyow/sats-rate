@@ -111,38 +111,152 @@
 }
 
 .page-header {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin: auto;
-  padding: 0;
+  padding: 0 8px;
   background-color: var(--bg-color2);
   max-width: 1000px;
-  height: 40px;
+  height: 38px;
 }
 
 .language-toggle-button {
   background-color: transparent;
-  border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.language-toggle-button:hover {
-  background-color: var(--hover-color);
+  margin: 0;
+  padding: 0 8px;
+  height: 100%;
 }
 
 .language-icon {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   mask-image: url("../images/language-solid.svg");
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
   background-color: var(--svg-color);
 }
+
+/* メニューボタンのスタイル */
+.menu-toggle-button {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  height: 100%;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  mask-image: url("../images/ellipsis-solid.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+  background-color: var(--svg-color);
+}
+
+/* フローティングメニューのスタイル */
+.floating-menu {
+  position: fixed;
+  top: 38px;
+  /* ヘッダーの高さに合わせる */
+  right: max(8px, calc((100vw - 1000px) / 2));
+  margin-left: 4px;
+  background-color: var(--bg-color1);
+  border: 1px solid var(--unit-bg-color);
+  border-radius: 6px;
+  box-shadow: 0 2px 10px var(--alpha-color);
+  z-index: 1000;
+  display: none;
+  /* 初期非表示 */
+  min-width: 300px;
+}
+
+/* マウスオーバーでメニューを表示 */
+.menu-toggle-button:hover+.floating-menu,
+.floating-menu:hover {
+  display: block;
+}
+
+.floating-menu.open {
+  display: block;
+  /* 表示状態 */
+}
+
+.floating-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+}
+
+.floating-menu li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 18px;
+  color: var(--main-text-color);
+  /* テキストの色を継承 */
+}
+
+.floating-menu li>span:first-child,
+.floating-menu li>div:first-child {
+  /* ラベル部分のスタイル */
+  text-align: left;
+  font-size: 1rem;
+}
+
+
+.floating-menu li .theme-switch-container,
+.floating-menu li .auto-update-toggle-container {
+  justify-self: end;
+}
+
+.floating-menu li .normal-btn.menu-item-btn {
+  /* メニュー内のボタン共通スタイル */
+  padding: 0;
+  font-size: 0.9rem;
+  min-width: 160px;
+  height: 54px;
+  justify-self: end;
+  display: flex;
+  /* アイコンとテキストを中央揃えするため */
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-menu li a.normal-btn.menu-item-btn {
+  /* メニュー内のリンクボタンスタイル */
+  text-decoration: none;
+}
+
+
+.floating-menu li .arrow-up-right-from-square-solid {
+  width: 14px;
+  /* アイコンサイズ調整 */
+  height: 14px;
+  margin-left: 6px;
+}
+
+.floating-menu li #checkForUpdateBtn .spinner-wrapper {
+  right: -30px;
+  /* スピナー位置調整 */
+}
+
+.floating-menu li #checkForUpdateBtn .spinner-wrapper .spinner {
+  width: 24px;
+  /* スピナーサイズ調整 */
+  height: 24px;
+  border-width: 6px;
+}
+
 
 @keyframes skeleton-loading {
   0% {
@@ -404,70 +518,10 @@
   background-color: var(--svg-color);
 }
 
-details {
-  width: 100%;
-  position: relative;
-  margin-top: 70px;
-  padding: 0 12px;
-}
-
-details summary {
-  position: absolute;
-  list-style: none;
-  cursor: pointer;
-  height: 54px;
-  width: 100px;
-  top: -52px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-details summary::-webkit-details-marker {
-  display: none;
-}
-
-details:not([open]) summary::after,
-details[open] summary::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 38px;
-  height: 38px;
-  mask-image: url("../images/angle-down-solid.svg");
-  mask-repeat: no-repeat;
-  mask-size: 38px;
-  mask-position: center;
-  background-color: var(--svg-color);
-}
-
-details:not([open]) summary::after {
-  transform: translate(-50%, -44%);
-}
-
-details[open] summary::after {
-  transform: translate(-50%, -56%) rotate(180deg);
-}
-
-.grid-settings {
-  display: grid;
-  grid-template-columns: auto minmax(100px, 300px);
-  grid-auto-rows: auto;
-  justify-content: center;
-  align-items: center;
-  gap: 4px 14px;
-  padding-top: 32px;
-}
-
-.grid-settings>*:nth-child(2n + 1) {
-  text-align: right;
-}
-
 .auto-update-toggle-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2px;
 
   #auto-update-toggle {
     -webkit-appearance: none;
@@ -503,35 +557,23 @@ details[open] summary::after {
   }
 }
 
-.settings-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1rem;
-  border: 0;
-  height: 54px;
-  line-height: 50px;
-  min-width: 160px;
-  padding: 0;
+#buttonText {
+  position: relative;
 
-  & #buttonText {
-    position: relative;
+  & .spinner-wrapper {
+    display: none;
+    position: absolute;
+    right: -36px;
+    top: 50%;
+    transform: translateY(-50%);
 
-    & .spinner-wrapper {
-      display: none;
-      position: absolute;
-      right: -36px;
-      top: 50%;
-      transform: translateY(-50%);
-
-      & .spinner {
-        border: 7px solid var(--bg-color1);
-        border-top: 7px solid var(--subject-text-color);
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        animation: spin 1s linear infinite;
-      }
+    & .spinner {
+      border: 7px solid var(--bg-color1);
+      border-top: 7px solid var(--subject-text-color);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
     }
   }
 }

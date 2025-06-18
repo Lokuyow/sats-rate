@@ -117,6 +117,7 @@ section {
 
 /* ポップアップ通知 */
 #notification {
+  z-index: 1000;
   position: absolute;
   visibility: hidden;
   color: var(--main-text-color);
