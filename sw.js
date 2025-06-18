@@ -17,7 +17,6 @@ const urlsToCache = [
   "/assets/data/currencies.json",
   "/assets/vanilla-i18n/日本語.json",
   "/assets/vanilla-i18n/English.json",
-  "/lib/qr-code-styling@1.6.0-rc.1.js",
   "/lib/sortable@1.15.2.js",
   "/lib/vanilla-i18n.min.js",
   "/assets/fonts/RoundedMplus1c-Regular.woff2",

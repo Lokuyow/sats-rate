@@ -9,22 +9,22 @@ export class Pos {
   localStorageKey = "POS:LnAddress";
   #getQrCodeConfig(data) {
     return {
-      width: 340,
-      height: 340,
+      width: 360,
+      height: 360,
       type: "svg",
       data,
       image: "./assets/images/icon.svg",
-      margin: 2,
+      margin: 6,
       dotsOptions: {
-        color: "#4D4D4D",
+        color: "#000000",
         type: "rounded",
       },
       backgroundOptions: {
-        color: "#e9ebee",
+        color: "#ffffff",
       },
       imageOptions: {
         crossOrigin: "anonymous",
-        margin: 2,
+        margin: 6,
       },
     };
   }

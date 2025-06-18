@@ -938,12 +938,12 @@
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  padding: 1.2em;
+  padding: 24px 0;
 }
 
 .pos .lightning-pos-qr-box {
-  width: 340px;
-  height: 340px;
+  width: 360px;
+  height: 360px;
 }
 
 .pos .error-message {
