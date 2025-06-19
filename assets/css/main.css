@@ -4,13 +4,17 @@
   justify-content: space-between;
   align-items: center;
   margin: auto;
-  padding: 0;
+  padding: 0 6px;
   background-color: var(--bg-color2);
   max-width: 800px;
-  height: 44px;
+  height: 48px;
 
   @media (min-width: 601px) {
-    height: 48px;
+    height: 56px;
+  }
+
+  @media (min-width: 801px) {
+    padding: 0;
   }
 }
 
@@ -27,11 +31,11 @@
     text-decoration: none;
     color: var(--main-text-color);
     border-radius: 6px;
-    height: 44px;
-    padding: 0 6px;
+    height: 48px;
+    padding: 0 8px;
 
     @media (min-width: 601px) {
-      height: 48px;
+      height: 56px;
     }
 
     & h1 {
@@ -46,7 +50,6 @@
       width: 30px;
       height: auto;
       margin-left: 3px;
-      padding-bottom: 1px;
     }
 
     @media (min-width: 601px) {
@@ -55,9 +58,8 @@
       }
 
       & img {
-        width: 36px;
-        height: auto;
-        margin-left: 6px;
+        width: 34px;
+        margin-left: 4px;
       }
     }
   }
@@ -66,10 +68,10 @@
 .header-buttons {
   display: flex;
   align-items: center;
-  height: 44px;
+  height: 48px;
 
   @media (min-width: 601px) {
-    height: 48px;
+    height: 56px;
   }
 }
 
@@ -79,8 +81,9 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0 8px;
+  padding: 0 4px;
   height: 100%;
+  width: 48px;
 }
 
 .language-icon {
@@ -99,8 +102,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 8px;
+  padding: 0 4px;
   height: 100%;
+  width: 48px;
 }
 
 .menu-icon {
@@ -116,7 +120,7 @@
 /* フローティングメニューのスタイル */
 .floating-menu {
   position: fixed;
-  top: 40px;
+  top: 48px;
   /* ヘッダーの高さに合わせる */
   right: max(0px, calc(((100vw - 800px) / 2) - 10px));
   margin-left: 4px;
@@ -130,7 +134,7 @@
   min-width: 300px;
 
   @media (min-width: 601px) {
-    top: 48px;
+    top: 56px;
   }
 }
 
@@ -150,7 +154,7 @@
   grid-template-columns: 1fr auto;
   gap: 12px;
   align-items: center;
-  padding: 8px 18px;
+  padding: 4px 18px;
   color: var(--main-text-color);
   /* テキストの色を継承 */
 }
@@ -217,7 +221,7 @@ section {
     margin-bottom: 6px;
   }
 
-  @media (min-width: 1001px) {
+  @media (min-width: 801px) {
     border-radius: 8px;
   }
 }
@@ -285,7 +289,6 @@ section {
 .date {
   text-align: center;
   font-size: 1.3rem;
-  margin-bottom: -4px;
 }
 
 .date.outdated {
