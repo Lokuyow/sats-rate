@@ -494,7 +494,7 @@ section {
 }
 
 .rotated {
-  animation: rotateAnimation 0.8s forwards;
+  animation: rotateAnimation 0.8s linear infinite;
 }
 
 .sns-share-container-1 {

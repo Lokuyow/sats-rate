@@ -541,31 +541,52 @@ async function updateElementsBasedOnTimestamp() {
     if (svg && !svg.classList.contains("rotated")) {
       svg.classList.add("rotated");
     }
+    
+    // 更新中の状態を設定
+    updatePricesElement.classList.add("updating");
 
     // アニメーション開始時刻を記録
     const animationStartTime = Date.now();
-
-    // データを取得し計算
-    await currencyManager.fetchCurrencyData(selectedCurrencies);
-    const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
-    if (lastUpdatedField) {
-      calculateValues(lastUpdatedField);
+    
+    try {
+      // データを取得
+      await currencyManager.fetchCurrencyData(selectedCurrencies);
+      const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+      
+      // 計算処理
+      if (lastUpdatedField) {
+        calculateValues(lastUpdatedField);
+      }
+      
+      // 最低アニメーション持続時間を保証
+      const animationDuration = Date.now() - animationStartTime;
+      if (animationDuration < 800) {
+        await new Promise((resolve) => setTimeout(resolve, 800 - animationDuration));
+      }
+      
+      // 要素のクラスを更新
+      updateElementClass(updatePricesElement, updatedDiffTime >= 610);
+      updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
+    } catch (error) {
+      console.error("データの更新中にエラーが発生しました:", error);
+      
+      // エラー時も最低アニメーション時間を保証
+      const animationDuration = Date.now() - animationStartTime;
+      if (animationDuration < 800) {
+        await new Promise((resolve) => setTimeout(resolve, 800 - animationDuration));
+      }
+      
+      // エラー状態の表示
+      updatePricesElement.classList.add("outdated");
+      updatePricesElement.classList.remove("recent");
+    } finally {
+      // アニメーションを終了
+      if (svg) {
+        svg.classList.remove("rotated");
+      }
+      // 更新中の状態を解除
+      updatePricesElement.classList.remove("updating");
     }
-
-    // 最低アニメーション持続時間を保証
-    const animationDuration = Date.now() - animationStartTime;
-    if (animationDuration < 800) {
-      await new Promise((resolve) => setTimeout(resolve, 800 - animationDuration));
-    }
-
-    // アニメーションを終了
-    if (svg) {
-      svg.classList.remove("rotated");
-    }
-
-    // 要素のクラスを更新
-    updateElementClass(updatePricesElement, updatedDiffTime >= 610);
-    updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
   }
 }
 
