@@ -445,16 +445,25 @@ section {
   cursor: pointer;
   background: none;
   border-radius: 6px;
-  font-size: 0;
   width: auto;
   height: 100%;
   grid-column: 1 / -1;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#update-prices div {
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin-right: 6px;
 }
 
 #update-prices.outdated {
   background-color: var(--two-color);
   border: 0;
+  color: #ffffff;
 
   & svg {
     fill: #ffffff;
@@ -463,6 +472,7 @@ section {
 
 #update-prices.recent {
   border: 2px solid var(--input-bg-color);
+  color: var(--invalid-color);
 
   & svg {
     fill: var(--invalid-color);
@@ -474,9 +484,9 @@ section {
 }
 
 #update-prices svg {
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
 }
 
 #update-prices:active {
