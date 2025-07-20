@@ -1093,3 +1093,9 @@ section {
     box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px, 19px 0 0 0px, 38px 0 0 5px, 57px 0 0 0px, 19px 19px 0 5px, 38px 19px 0 0px, 57px 19px 0 0px;
   }
 }
+
+.ptr--text,
+.ptr--icon {
+  color: var(--main-text-color) !important;
+  font-size: 1.2rem !important;
+}
