@@ -75,6 +75,10 @@ https://osats.money/?{デフォルト入力値のクエリ}&{小数点記号の�
   - MIT License
   - Copyright (c) 2020 Shivam Kumar Jha
   - https://github.com/thealphadollar/vanilla-i18n/blob/master/LICENSE
+- `./lib/pulltorefresh.umd.min.js`
+  - MIT License
+  - Copyright (c) 2016 Box Factura
+  - https://github.com/BoxFactura/pulltorefresh.js/blob/master/LICENSE.txt
 - `./assets/images/cryptocurrency-icons`
   - https://github.com/spothq/cryptocurrency-icons/blob/master/LICENSE.md
 - `./assets/images/flags`

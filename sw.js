@@ -19,6 +19,7 @@ const urlsToCache = [
   "/assets/vanilla-i18n/English.json",
   "/lib/sortable@1.15.2.js",
   "/lib/vanilla-i18n.min.js",
+  "/lib/pulltorefresh.umd.min.js",
   "/assets/fonts/RoundedMplus1c-Regular.woff2",
   "/assets/fonts/RoundedMplus1c-Medium.woff2",
   "/assets/fonts/RoundedMplus1c-Bold.woff2",
