@@ -1,0 +1,7 @@
+name = "sats-rate-ogp"
+main = "worker.js"
+compatibility_date = "2023-10-01"
+
+[[routes]]
+pattern = "osats.money/*"
+zone_name = "osats.money"
