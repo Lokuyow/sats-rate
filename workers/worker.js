@@ -94,7 +94,11 @@ function buildOgTextFromParams(params) {
         const maxFrac = Math.min(fracLength, 8);
         const num = Number(normalized);
         if (Number.isNaN(num)) return s;
-        return new Intl.NumberFormat('en-US', { minimumFractionDigits: fracLength, maximumFractionDigits: maxFrac, useGrouping: true }).format(num);
+
+        // d=c の場合は桁区切りをピリオド、小数点をカンマにする
+        const decimalFormat = params.get('d');
+        const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
+        return new Intl.NumberFormat(locale, { minimumFractionDigits: fracLength, maximumFractionDigits: maxFrac, useGrouping: true }).format(num);
     }
 
     // タイトル: "777 SATS | おいくらサッツ" 形式（数値をフォーマット）
@@ -175,7 +179,11 @@ function handleOgImage(url) {
         const maxFrac = Math.min(fracLength, 8);
         const num = Number(normalized);
         if (Number.isNaN(num)) return s;
-        return new Intl.NumberFormat('en-US', { minimumFractionDigits: fracLength, maximumFractionDigits: maxFrac, useGrouping: true }).format(num);
+
+        // d=c の場合は桁区切りをピリオド、小数点をカンマにする
+        const decimalFormat = params.get('d');
+        const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
+        return new Intl.NumberFormat(locale, { minimumFractionDigits: fracLength, maximumFractionDigits: maxFrac, useGrouping: true }).format(num);
     }
 
     function formatCurrencyCode(code) { return code === 'sats' ? 'sats' : code.toUpperCase(); }
@@ -208,7 +216,7 @@ function handleOgImage(url) {
     const fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
     // SVG生成
-    const mainTitle = baseKey ? `${baseValue} ${baseKey.toUpperCase()} =` : 'おいくらサッツ';
+    const mainTitle = baseKey ? `${formatNumberForDisplay(baseValue)} ${baseKey.toUpperCase()} =` : 'おいくらサッツ';
 
     // 出力通貨の数に応じてフォントサイズと位置を調整
     const count = outputLines.length;
