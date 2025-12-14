@@ -707,22 +707,6 @@ function getValuesFromElements() {
   return values;
 }
 
-// 共有テキスト生成
-function generateCopyText(values) {
-  const baseCurrencyKey = lastUpdatedField; // 基本通貨キーをlastUpdatedFieldから取得
-  const baseCurrencyText = `${getCurrencyText(baseCurrencyKey, values[baseCurrencyKey])} =`; // 基本通貨のテキストを生成し、最後に " =" を追加
-
-  // baseCurrency以外の通貨キーを取得
-  const otherCurrencyKeys = selectedCurrencies.filter((key) => key !== baseCurrencyKey);
-  // それぞれの通貨についてテキストを生成し、改行で結合
-  const otherCurrencyTexts = otherCurrencyKeys.map((key) => getCurrencyText(key, values[key])).join("\n");
-
-  const lastUpdatedText = updateLastUpdated(lastUpdatedTimestamp); // 最終更新日時のテキストを生成
-
-  // すべてのテキストを結合して返す
-  return [baseCurrencyText, otherCurrencyTexts, "", lastUpdatedText, "Powered by CoinGecko,"].join("\n");
-}
-
 // コピー用テキストの作成
 function getCurrencyText(key, value) {
   const symbol = currencyManager.currencySymbols[key] || ""; // 通貨記号を取得
@@ -773,9 +757,8 @@ function copySingleCurrencyToClipboardEvent(event) {
 // クリップボードにコピー　全体
 function copyToClipboardEvent(event) {
   const values = getValuesFromElements();
-  const baseText = generateCopyText(values);
   const queryParams = generateQueryStringFromValues(values);
-  const textToCopy = `${baseText} ${BASE_URL}${queryParams}`;
+  const textToCopy = `${BASE_URL}${queryParams}`;
   copyToClipboard(textToCopy, event, "right");
 }
 
@@ -816,18 +799,13 @@ async function pasteFromClipboardToInput(currency) {
 // Web Share API
 function shareViaWebAPIEvent() {
   const values = getValuesFromElements();
-  const shareText = generateCopyText(values);
   const queryParams = generateQueryStringFromValues(values);
-  shareViaWebAPI(shareText, queryParams);
+  shareViaWebAPI(queryParams);
 }
 
-function shareViaWebAPI(originalShareText, queryParams) {
-  const modifiedShareText = originalShareText.replace(/https:\/\/osats\.money\/.*$/, "");
-
+function shareViaWebAPI(queryParams) {
   if (navigator.share) {
     navigator.share({
-      title: window.vanilla_i18n_instance.translate("title"), // タイトルも翻訳対応
-      text: modifiedShareText,
       url: `https://osats.money/${queryParams}`,
     });
   } else {
