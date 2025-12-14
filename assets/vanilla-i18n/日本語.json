@@ -12,6 +12,10 @@
     "title": "ライトニングアドレスの形式で入力してください"
   },
   "share": "計算結果を共有",
+  "shareSite": {
+    "subject": "サイトを共有",
+    "text": "おいくらサッツ"
+  },
   "settings": {
     "subject": "設定",
     "theme": "ダークモード",

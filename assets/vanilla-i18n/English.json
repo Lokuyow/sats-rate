@@ -12,6 +12,10 @@
     "title": "Please enter in the format of a Lightning address"
   },
   "share": "Share calculation results",
+  "shareSite": {
+    "subject": "Share this site",
+    "text": "OikuraSats"
+  },
   "settings": {
     "subject": "Settings",
     "theme": "Dark Mode",

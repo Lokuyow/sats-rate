@@ -61,6 +61,8 @@ function setupEventListeners() {
   setupInputFieldsEventListeners();
   setupEventListenersForCurrencyButtons();
   document.getElementById("share-via-webapi").addEventListener("click", shareViaWebAPIEvent);
+  document.getElementById("share-site-via-webapi").addEventListener("click", shareSiteViaWebAPIEvent);
+  document.getElementById("copy-site-to-clipboard").addEventListener("click", copySiteToClipboardEvent);
   document.getElementById("update-prices").addEventListener("click", updateElementsBasedOnTimestamp);
   document.getElementById("saveDefaultValuesButton").addEventListener("click", (event) => {
     saveCurrentValuesAsDefault(event);
@@ -801,6 +803,27 @@ function shareViaWebAPIEvent() {
   const values = getValuesFromElements();
   const queryParams = generateQueryStringFromValues(values);
   shareViaWebAPI(queryParams);
+}
+
+// サイトを共有 (Web Share API)
+function shareSiteViaWebAPIEvent() {
+  const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
+  const siteUrl = "https://osats.money/";
+  
+  if (navigator.share) {
+    navigator.share({ title: siteText, url: siteUrl })
+      .catch((error) => console.log("Sharing failed", error));
+  } else {
+    alert(window.vanilla_i18n_instance.translate("alerts.shareNotSupported"));
+  }
+}
+
+// サイトURLをクリップボードにコピー（名称＋URLの2行）
+function copySiteToClipboardEvent(event) {
+  const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
+  const siteUrl = "https://osats.money/";
+  const textToCopy = `${siteText}\n${siteUrl}`;
+  copyToClipboard(textToCopy, event, "right");
 }
 
 function shareViaWebAPI(queryParams) {
