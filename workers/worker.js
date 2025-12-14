@@ -223,15 +223,15 @@ function handleOgImage(url) {
     let fontSize, startY, lineSpacing;
 
     if (count === 1) {
-        fontSize = 110;
+        fontSize = 100;
         startY = 350;
         lineSpacing = 0;
     } else if (count === 2) {
-        fontSize = 90;
+        fontSize = 85;
         startY = 300;
         lineSpacing = 130;
     } else if (count === 3) {
-        fontSize = 70;
+        fontSize = 65;
         startY = 270;
         lineSpacing = 105;
     } else { // 4個
@@ -249,8 +249,8 @@ function handleOgImage(url) {
   <!-- 背景色を #F5F7F6 に変更 -->
   <rect width="100%" height="100%" fill="#F5F7F6" />
 
-  <!-- メインタイトル -->
-  <text x="600" y="140" font-family='${fontFamily}' font-weight="bold" font-size="130" text-anchor="middle" fill="#1a1a1a">${escapeHtml(mainTitle)}</text>
+  <!-- 出力通貨-->
+  <text x="600" y="140" font-family='${fontFamily}' font-weight="bold" font-size="115" text-anchor="middle" fill="#1a1a1a">${escapeHtml(mainTitle)}</text>
   
   <!-- 区切り線 -->
   <line x1="200" y1="170" x2="1000" y2="170" stroke="#ddd" stroke-width="2" />
