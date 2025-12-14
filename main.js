@@ -164,12 +164,19 @@ function initializeGlobalValues() {
 
   if (urlParams.toString()) {
     // URLクエリパラメータを優先して読み込む
-    querySelectedCurrencies = urlParams.get("currencies") ? urlParams.get("currencies").split(",") : [];
     const decimalFormat = urlParams.get("d") || "p";
     const locale = decimalFormat === "c" ? "de-DE" : "en-US";
 
+    // currencies パラメータから通貨リストを取得（ハイフンまたはカンマ区切り、互換性のため）
+    const currenciesParam = urlParams.get("currencies");
+    if (currenciesParam) {
+      // ハイフンまたはカンマで分割
+      const separator = currenciesParam.includes('-') ? '-' : ',';
+      querySelectedCurrencies = currenciesParam.split(separator).map(s => s.trim()).filter(Boolean);
+    }
+
     urlParams.forEach((value, key) => {
-      if (key !== "d" && key !== "currencies") {
+      if (key !== "d" && key !== "currencies" && key !== "ts") {
         queryBaseCurrencyValue[key] = parseInput(value, locale);
       }
     });
@@ -541,41 +548,41 @@ async function updateElementsBasedOnTimestamp() {
     if (svg && !svg.classList.contains("rotated")) {
       svg.classList.add("rotated");
     }
-    
+
     // 更新中の状態を設定
     updatePricesElement.classList.add("updating");
 
     // アニメーション開始時刻を記録
     const animationStartTime = Date.now();
-    
+
     try {
       // データを取得
       await currencyManager.fetchCurrencyData(selectedCurrencies);
       const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
-      
+
       // 計算処理
       if (lastUpdatedField) {
         calculateValues(lastUpdatedField);
       }
-      
+
       // 最低アニメーション持続時間を保証
       const animationDuration = Date.now() - animationStartTime;
       if (animationDuration < 800) {
         await new Promise((resolve) => setTimeout(resolve, 800 - animationDuration));
       }
-      
+
       // 要素のクラスを更新
       updateElementClass(updatePricesElement, updatedDiffTime >= 610);
       updateElementClass(lastUpdatedElement, updatedDiffTime >= 610);
     } catch (error) {
       console.error("データの更新中にエラーが発生しました:", error);
-      
+
       // エラー時も最低アニメーション時間を保証
       const animationDuration = Date.now() - animationStartTime;
       if (animationDuration < 800) {
         await new Promise((resolve) => setTimeout(resolve, 800 - animationDuration));
       }
-      
+
       // エラー状態の表示
       updatePricesElement.classList.add("outdated");
       updatePricesElement.classList.remove("recent");
@@ -652,20 +659,41 @@ function showNotification(message, event, align = "right") {
   }, 1000);
 }
 
-function getQueryString(field, value) {
-  const separators = getLocaleSeparators(selectedLocale);
-  const formattedValue = value.replace(".", separators.decimalSeparator); // 小数点をロケールに合わせて置換
-  const decimalFormat = separators.decimalSeparator === "." ? "p" : "c"; // 小数点のフォーマットを設定
-
-  const currencies = selectedCurrencies.join(","); // すべての選択された通貨をカンマ区切りでリスト化
-
-  // フォーマットされた値、通貨リスト、小数点フォーマット情報を含むクエリ文字列を生成
-  return `?${field}=${formattedValue}&currencies=${currencies}&d=${decimalFormat}`;
-}
 
 function generateQueryStringFromValues(values) {
   if (!lastUpdatedField || !selectedCurrencies.length) return "";
-  return getQueryString(lastUpdatedField, values[lastUpdatedField]);
+
+  const baseKey = lastUpdatedField;
+  const separators = getLocaleSeparators(selectedLocale);
+  const decimalFormat = separators.decimalSeparator === "," ? "c" : "p";
+
+  // 画面に表示されている値を取得し、URLに適した形式に変換
+  const baseDisplayValue = document.getElementById(baseKey).value;
+  const baseNormalized = parseInput(baseDisplayValue, selectedLocale); // 一旦ピリオドに正規化
+  const baseValue = baseNormalized.replace(".", separators.decimalSeparator); // ロケールに合わせて置換
+
+  // currencies パラメータ（全選択通貨、ハイフン区切り）
+  const currencies = selectedCurrencies.join('-');
+
+  // 各通貨のkey=valueペアを構築
+  const params = new URLSearchParams();
+  params.set(baseKey, baseValue);
+  params.set('currencies', currencies);
+
+  // 各通貨の値を追加（baseを除く、最大4つまで）
+  const outputCurrencies = selectedCurrencies.filter(key => key !== baseKey).slice(0, 4);
+  outputCurrencies.forEach(key => {
+    // 画面に表示されている値を取得し、URLに適した形式に変換
+    const displayValue = document.getElementById(key).value;
+    const normalized = parseInput(displayValue, selectedLocale); // 一旦ピリオドに正規化
+    const urlValue = normalized.replace(".", separators.decimalSeparator); // ロケールに合わせて置換
+    params.set(key, urlValue);
+  });
+
+  params.set('ts', Math.floor(Date.now() / 1000).toString());
+  params.set('d', decimalFormat);
+
+  return `?${params.toString()}`;
 }
 
 // インプットフィールドから桁区切りを取り除いた数値を取得
