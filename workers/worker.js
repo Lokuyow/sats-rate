@@ -239,13 +239,7 @@ function handleOgImage(url) {
     const hasTs = params.has('ts');
 
     if (!currencies || !hasTs) {
-        const svg = generateSimpleOgpSvg();
-        return new Response(svg, {
-            headers: {
-                "content-type": "image/svg+xml; charset=utf-8",
-                "cache-control": "public, max-age=3600"
-            }
-        });
+        return Response.redirect(`${url.origin}/assets/images/ogp.png`, 302);
     }
 
     const currencyList = parseCurrencyList(currencies);
