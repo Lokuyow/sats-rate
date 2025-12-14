@@ -530,36 +530,6 @@ section {
   }
 }
 
-.square-x-twitter {
-  width: 32px;
-  height: 32px;
-  mask-image: url("../images/x-twitter-brands.svg");
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
-  background-color: var(--svg-color);
-}
-
-.nostr-icon-purple-on-white {
-  width: 32px;
-  height: 32px;
-  mask-image: url("../images/nostr-icon-purple-on-white.svg");
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
-  background-color: var(--svg-color);
-}
-
-.cloud-solid {
-  width: 32px;
-  height: 32px;
-  mask-image: url("../images/bluesky-brands.svg");
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
-  background-color: var(--svg-color);
-}
-
 .share-nodes-solid {
   width: 30px;
   height: 30px;

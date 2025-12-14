@@ -338,7 +338,6 @@ function calculateValues(inputField) {
   });
 
   changeBackgroundColorFromId(inputField);
-  updateShareButton();
 }
 
 //　ロケールから桁区切りと小数点の文字を取得
@@ -731,29 +730,6 @@ function getCurrencyText(key, value) {
   // 通貨コードが "sats" の場合は大文字に変換しない
   const currencyCode = key === "sats" ? "sats" : key.toUpperCase();
   return `${symbol} ${formattedValue} ${currencyCode}`; // 通貨記号、フォーマットされた値、適切にフォーマットされた通貨コードを含むテキストを生成
-}
-
-// 共有ボタン
-function updateShareButton() {
-  const values = getValuesFromElements();
-
-  const shareText = generateCopyText(values);
-  const queryParams = generateQueryStringFromValues(values);
-
-  const links = generateShareLinks(queryParams, shareText);
-
-  document.getElementById("share-twitter").href = links.twitter;
-  document.getElementById("share-nostter").href = links.nostter;
-  document.getElementById("share-mass-driver").href = links.massDriver;
-}
-
-function generateShareLinks(queryParams, shareText) {
-  const shareUrl = `${BASE_URL}${queryParams}`;
-  return {
-    twitter: `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
-    nostter: `https://nostter.app/post?content=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
-    massDriver: `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}%20${encodeURIComponent(shareUrl)}`,
-  };
 }
 
 export function setupEventListenersForCurrencyButtons() {
