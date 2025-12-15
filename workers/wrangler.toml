@@ -1,6 +1,6 @@
 name = "sats-rate-ogp"
 main = "worker.js"
-compatibility_date = "2023-10-01"
+compatibility_date = "2025-12-15"
 
 [[routes]]
 pattern = "osats.money/*"
