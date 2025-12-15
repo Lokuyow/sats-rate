@@ -104,12 +104,12 @@ main {
   position: absolute;
   visibility: hidden;
   color: var(--main-text-color);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   background-color: var(--bg-color1);
   border: 2px solid var(--input-bg-color);
   border-radius: 6px;
-  padding: 12px 14px;
+  padding: 8px 10px;
   white-space: nowrap;
 }
 

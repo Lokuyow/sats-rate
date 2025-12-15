@@ -54,7 +54,7 @@
   "lokuyow": "ロクヨウ",
   "showNotification": {
     "setup": "設定完了",
-    "copy": "クリップボードにコピーしました",
+    "copy": "クリップボードに\nコピーしました",
     "up": "最新です"
   },
   "updateUI": {

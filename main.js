@@ -642,7 +642,7 @@ function changeBackgroundColorFromId(id) {
 // ポップアップ表示
 function showNotification(message, event, align = "right") {
   const notification = document.getElementById("notification");
-  notification.textContent = message;
+  notification.innerHTML = message.replace(/\n/g, '<br>');
 
   // Handle null event (fallback scenarios)
   if (event && event.pageX !== undefined && event.pageY !== undefined) {
