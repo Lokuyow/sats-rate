@@ -84,8 +84,13 @@ async function handleRequest(request) {
         return handleOgImage(url);
     }
 
+    // SNSボットのUser-Agentを検出
+    const userAgent = (request.headers.get("user-agent") || "").toLowerCase();
+    const isSocialBot = /twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|telegrambot|line-poker|applebot/i.test(userAgent);
+
     const accept = request.headers.get("accept") || "";
-    if (!accept.includes("text/html")) {
+    // SNSボットの場合、またはtext/htmlを要求している場合に書き換え処理を行う
+    if (!accept.includes("text/html") && !isSocialBot) {
         return fetch(request);
     }
 
@@ -96,12 +101,15 @@ async function handleRequest(request) {
     }
 
     const { title, description } = buildOgTextFromParams(url.searchParams);
-    const ogImageUrl = `${url.origin}/og-image${url.search}`;
+    const currentUrl = url.toString(); // クエリパラメータ付きの完全なURL
+    // TwitterはSVG画像をサポートしないため、静的PNG画像を使用
+    const ogImageUrl = `${url.origin}/assets/images/ogp.png`;
 
     const rewriter = new HTMLRewriter()
         .on('meta[property="og:title"]', new ReplaceMeta(title))
         .on('meta[property="og:description"]', new ReplaceMeta(description))
         .on('meta[property="og:image"]', new ReplaceMeta(ogImageUrl))
+        .on('meta[property="og:url"]', new ReplaceMeta(currentUrl))
         .on('meta[name="twitter:card"]', new ReplaceMeta("summary_large_image"))
         .on('meta[name="twitter:image"]', new ReplaceMeta(ogImageUrl))
         .on('title', new ReplaceTitle(title));
