@@ -809,7 +809,7 @@ function shareViaWebAPIEvent() {
 function shareSiteViaWebAPIEvent() {
   const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
   const siteUrl = "https://osats.money/";
-  
+
   if (navigator.share) {
     navigator.share({ title: siteText, url: siteUrl })
       .catch((error) => console.log("Sharing failed", error));
@@ -851,39 +851,50 @@ function setupThemeToggle() {
 // サービスワーカー
 let newVersionAvailable = false;
 
-// サービスワーカーからのメッセージリスナー
-navigator.serviceWorker.addEventListener("message", async (event) => {
-  const updateButton = document.getElementById("checkForUpdateBtn");
-  const buttonText = updateButton.querySelector("#buttonText");
-  const spinnerWrapper = buttonText.querySelector(".spinner-wrapper");
+// サービスワーカーからのメッセージリスナー（セキュアコンテキストのみ）
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", async (event) => {
+    const updateButton = document.getElementById("checkForUpdateBtn");
+    const buttonText = updateButton.querySelector("#buttonText");
+    const spinnerWrapper = buttonText.querySelector(".spinner-wrapper");
 
-  console.log("Message from Service Worker:", event.data);
+    console.log("Message from Service Worker:", event.data);
 
-  if (event.data && event.data.type === "NEW_VERSION_INSTALLED") {
-    newVersionAvailable = true;
-    if (buttonText) {
-      buttonText.textContent = window.vanilla_i18n_instance.translate("updateUI.textContent");
-    }
-    if (spinnerWrapper) {
-      spinnerWrapper.style.display = "none";
-    }
-  } else if (event.data && event.data.type === "NO_UPDATE_FOUND") {
-    // 一定時間待機してからメッセージを確認
-    await delay(300);
-
-    if (!newVersionAvailable) {
-      const message = window.vanilla_i18n_instance.translate("showNotification.up");
-      showNotification(message, lastClickEvent);
+    if (event.data && event.data.type === "NEW_VERSION_INSTALLED") {
+      newVersionAvailable = true;
+      if (buttonText) {
+        buttonText.textContent = window.vanilla_i18n_instance.translate("updateUI.textContent");
+      }
       if (spinnerWrapper) {
         spinnerWrapper.style.display = "none";
       }
+    } else if (event.data && event.data.type === "NO_UPDATE_FOUND") {
+      // 一定時間待機してからメッセージを確認
+      await delay(300);
+
+      if (!newVersionAvailable) {
+        const message = window.vanilla_i18n_instance.translate("showNotification.up");
+        showNotification(message, lastClickEvent);
+        if (spinnerWrapper) {
+          spinnerWrapper.style.display = "none";
+        }
+      }
     }
-  }
-});
+  });
+}
 
 async function registerAndHandleServiceWorker() {
   if (!("serviceWorker" in navigator)) {
     console.warn("Service Worker is not supported in this browser.");
+    return;
+  }
+
+  // Non-secure contexts (HTTP + private IP) cannot register Service Workers
+  if (!isSecureContext) {
+    console.warn(
+      "Service Worker registration skipped: Not in secure context (HTTP + private IP). " +
+      "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
+    );
     return;
   }
 
