@@ -535,7 +535,7 @@ section {
   display: flex;
   justify-content: center;
   margin: auto;
-  margin-top: 20px;
+  margin-top: 4px;
 }
 
 .sns-share-container-1.share-results {
@@ -546,16 +546,9 @@ section {
   margin-inline: 12px;
 }
 
-.sns-share-container-1.share-results .share-result-label {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--subject-text-color);
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
 .sns-share-container-1.share-results .sns-share-container-2 {
-  gap: 6px;
+  gap: 4px;
+  max-width: none;
 }
 
 .sns-share-container-1.share-results .sns-share-container-2 .normal-btn {
