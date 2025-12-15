@@ -1,6 +1,15 @@
-name = "sats-rate-ogp"
+name = "osats-ogp"
 main = "worker.js"
 compatibility_date = "2025-12-15"
+
+# R2バケット設定（OGP画像保存用）
+# 無料枠: 10GB/月ストレージ、Class A 1M/月、Class B 10M/月
+# TTL: 168時間（7日）で画像自動削除を想定
+# リージョン: APAC（アジア太平洋）
+# バケット作成コマンド: npx wrangler r2 bucket create osats-ogp-images --location apac
+[[r2_buckets]]
+binding = "OGP_IMAGES"
+bucket_name = "osats-ogp-images"
 
 [[routes]]
 pattern = "osats.money/*"

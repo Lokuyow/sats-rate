@@ -669,7 +669,7 @@ function showNotification(message, event, align = "right") {
 }
 
 
-function generateQueryStringFromValues(values) {
+function generateQueryStringFromValues(imgId = null) {
   if (!lastUpdatedField || !selectedCurrencies.length) return "";
 
   const baseKey = lastUpdatedField;
@@ -684,22 +684,16 @@ function generateQueryStringFromValues(values) {
   // currencies パラメータ（全選択通貨、ハイフン区切り）
   const currencies = selectedCurrencies.join('-');
 
-  // 各通貨のkey=valueペアを構築
+  // 各通貨のkey=valueペアを構築（入力値のみ）
   const params = new URLSearchParams();
   params.set(baseKey, baseValue);
   params.set('currencies', currencies);
 
-  // 各通貨の値を追加（baseを除く、最大4つまで）
-  const outputCurrencies = selectedCurrencies.filter(key => key !== baseKey).slice(0, 4);
-  outputCurrencies.forEach(key => {
-    // 画面に表示されている値を取得し、URLに適した形式に変換
-    const displayValue = document.getElementById(key).value;
-    const normalized = parseInput(displayValue, selectedLocale); // 一旦ピリオドに正規化
-    const urlValue = normalized.replace(".", separators.decimalSeparator); // ロケールに合わせて置換
-    params.set(key, urlValue);
-  });
+  // img_idがあれば追加
+  if (imgId) {
+    params.set('img_id', imgId);
+  }
 
-  params.set('ts', Math.floor(Date.now() / 1000).toString());
   params.set('d', decimalFormat);
 
   return `?${params.toString()}`;
@@ -764,12 +758,38 @@ function copySingleCurrencyToClipboardEvent(event) {
   copyToClipboard(sanitizedValue, event, "left");
 }
 
-// クリップボードにコピー　全体
-function copyToClipboardEvent(event) {
-  const values = getValuesFromElements();
-  const queryParams = generateQueryStringFromValues(values);
-  const textToCopy = `${BASE_URL}${queryParams}`;
-  copyToClipboard(textToCopy, event, "right");
+// クリップボードにコピー　全体（OGP画像生成付き）
+async function copyToClipboardEvent(event) {
+  // イベント伝播を防止
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  try {
+    console.log('[copyToClipboardEvent] Starting...');
+    // OGP画像を生成してR2にアップロード
+    const imgId = await generateAndUploadOgpImage();
+    console.log('[copyToClipboardEvent] Got img_id:', imgId);
+
+    const queryParams = generateQueryStringFromValues(imgId);
+    console.log('[copyToClipboardEvent] Generated query params:', queryParams);
+
+    const textToCopy = `${BASE_URL}${queryParams}`;
+    console.log('[copyToClipboardEvent] Text to copy:', textToCopy);
+
+    copyToClipboard(textToCopy, event, "right");
+    console.log('[copyToClipboardEvent] Completed successfully');
+    console.log('[copyToClipboardEvent] NOTE: Page refresh after this is likely due to Service Worker or Live Preview auto-reload');
+  } catch (error) {
+    console.error("[copyToClipboardEvent] Failed to generate OGP image:", error);
+    console.error("[copyToClipboardEvent] Error stack:", error.stack);
+    alert(`エラーが発生しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
+    // フォールバック: img_idなしでコピー
+    const queryParams = generateQueryStringFromValues(null);
+    const textToCopy = `${BASE_URL}${queryParams}`;
+    copyToClipboard(textToCopy, event, "right");
+  }
 }
 
 // コピー
@@ -834,11 +854,27 @@ async function pasteFromClipboardToInput(currency) {
   calculateValues(currency);
 }
 
-// Web Share API
-function shareViaWebAPIEvent(event) {
-  const values = getValuesFromElements();
-  const queryParams = generateQueryStringFromValues(values);
-  shareViaWebAPI(queryParams, event);
+// Web Share API（OGP画像生成付き）
+async function shareViaWebAPIEvent(event) {
+  // イベント伝播を防止
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  try {
+    // OGP画像を生成してR2にアップロード
+    const imgId = await generateAndUploadOgpImage();
+    const queryParams = generateQueryStringFromValues(imgId);
+    shareViaWebAPI(queryParams, event);
+  } catch (error) {
+    console.error("Failed to generate OGP image:", error);
+    console.error("Error stack:", error.stack);
+    alert(`エラーが発生しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
+    // フォールバック: img_idなしで共有
+    const queryParams = generateQueryStringFromValues(null);
+    shareViaWebAPI(queryParams, event);
+  }
 }
 
 // サイトを共有 (Web Share API)
@@ -923,6 +959,220 @@ function fallbackShareViaClipboard(url, event) {
     console.error("Fallback share failed:", err);
   } finally {
     document.body.removeChild(textarea);
+  }
+}
+
+// =====================================================
+// OGP画像生成（Canvas）
+// =====================================================
+
+const OGP_WIDTH = 1200;
+const OGP_HEIGHT = 630;
+const OGP_DEFAULT_TITLE = "おいくらサッツ";
+const OGP_FONT_FAMILY = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+const OGP_MAX_OUTPUT_CURRENCIES = 4;
+const JST_OFFSET = 9 * 60 * 60 * 1000;
+
+const OGP_FONT_CONFIGS = {
+  1: { fontSize: 100, startY: 350, lineSpacing: 0 },
+  2: { fontSize: 85, startY: 300, lineSpacing: 130 },
+  3: { fontSize: 65, startY: 270, lineSpacing: 105 },
+  4: { fontSize: 60, startY: 250, lineSpacing: 85 }
+};
+
+/**
+ * 通貨コードをフォーマット
+ */
+function formatCurrencyCodeForOgp(code) {
+  return code === 'sats' ? 'sats' : code.toUpperCase();
+}
+
+/**
+ * タイムスタンプをJSTフォーマット
+ */
+function formatTimestampForOgp(timestamp) {
+  const date = new Date(timestamp);
+  const jstDate = new Date(date.getTime() + JST_OFFSET);
+
+  const year = jstDate.getUTCFullYear();
+  const month = String(jstDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(jstDate.getUTCDate()).padStart(2, '0');
+  const hour = String(jstDate.getUTCHours()).padStart(2, '0');
+  const minute = String(jstDate.getUTCMinutes()).padStart(2, '0');
+
+  return `${year}/${month}/${day} ${hour}:${minute}`;
+}
+
+/**
+ * OGP画像用のCanvasを生成
+ */
+function generateOgpCanvas() {
+  const canvas = document.createElement('canvas');
+  canvas.width = OGP_WIDTH;
+  canvas.height = OGP_HEIGHT;
+  const ctx = canvas.getContext('2d');
+
+  // 背景
+  ctx.fillStyle = '#F5F7F6';
+  ctx.fillRect(0, 0, OGP_WIDTH, OGP_HEIGHT);
+
+  // 基準通貨の取得
+  const baseKey = lastUpdatedField;
+  if (!baseKey) {
+    return drawSimpleOgp(ctx, canvas);
+  }
+
+  const baseDisplayValue = document.getElementById(baseKey)?.value || '0';
+  const baseNormalized = parseInput(baseDisplayValue, selectedLocale);
+
+  // メインタイトル（入力値 通貨コード =）
+  const mainTitle = `${formatNumberForOgp(baseNormalized)} ${baseKey.toUpperCase()} =`;
+  ctx.font = `bold 115px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#1a1a1a';
+  ctx.textAlign = 'center';
+  ctx.fillText(mainTitle, OGP_WIDTH / 2, 140);
+
+  // 区切り線
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(200, 170);
+  ctx.lineTo(1000, 170);
+  ctx.stroke();
+
+  // 出力通貨の行を生成
+  const outputCurrencies = selectedCurrencies.filter(key => key !== baseKey).slice(0, OGP_MAX_OUTPUT_CURRENCIES);
+  const outputLines = outputCurrencies.map(key => {
+    const displayValue = document.getElementById(key)?.value || '0';
+    const normalized = parseInput(displayValue, selectedLocale);
+    return `${formatNumberForOgp(normalized)} ${formatCurrencyCodeForOgp(key)}`;
+  });
+
+  // フォント設定を取得
+  const config = OGP_FONT_CONFIGS[Math.min(outputLines.length, OGP_MAX_OUTPUT_CURRENCIES)] || OGP_FONT_CONFIGS[4];
+
+  // 出力行を描画
+  ctx.font = `${config.fontSize}px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#333';
+  outputLines.forEach((line, i) => {
+    ctx.fillText(line, OGP_WIDTH / 2, config.startY + (i * config.lineSpacing));
+  });
+
+  // フッター左: サイト名
+  ctx.font = `38px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#666';
+  ctx.textAlign = 'left';
+  ctx.fillText(OGP_DEFAULT_TITLE, 80, 570);
+
+  // フッター右: 日時
+  const dateText = formatTimestampForOgp(Date.now());
+  ctx.textAlign = 'right';
+  ctx.fillText(dateText, 1120, 570);
+
+  return canvas;
+}
+
+/**
+ * シンプルなOGP画像を描画（基準通貨がない場合）
+ */
+function drawSimpleOgp(ctx, canvas) {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, OGP_WIDTH, OGP_HEIGHT);
+
+  ctx.font = `bold 80px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#1a1a1a';
+  ctx.textAlign = 'center';
+  ctx.fillText(OGP_DEFAULT_TITLE, OGP_WIDTH / 2, 320);
+
+  ctx.font = `36px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#666';
+  ctx.fillText('ビットコイン通貨換算ツール', OGP_WIDTH / 2, 400);
+
+  ctx.font = `28px ${OGP_FONT_FAMILY}`;
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'left';
+  ctx.fillText('osats.money', 80, 570);
+
+  return canvas;
+}
+
+/**
+ * 数値をOGP用にフォーマット（桁区切りあり、最大8桁）
+ */
+function formatNumberForOgp(valueStr) {
+  const num = parseFloat(valueStr);
+  if (isNaN(num)) return valueStr;
+
+  const parts = valueStr.split('.');
+  const fracLength = parts[1] ? Math.min(parts[1].length, 8) : 0;
+
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: fracLength,
+    useGrouping: true
+  }).format(num);
+}
+
+/**
+ * OGP画像を生成してR2にアップロード
+ * @returns {Promise<string|null>} img_id または null
+ */
+async function generateAndUploadOgpImage() {
+  try {
+    // Canvas生成
+    const canvas = generateOgpCanvas();
+    const dataUrl = canvas.toDataURL('image/png');
+
+    // 現在のオリジンを取得（まずはこちらを試す）
+    const primaryApiUrl = `${window.location.origin}/api/save-ogp`;
+    // ローカル開発（wrangler dev デフォルトポート）用のフォールバック
+    const fallbackApiUrl =
+      (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+        ? `${window.location.protocol}//127.0.0.1:8787/api/save-ogp`
+        : null;
+
+    console.log('Uploading OGP image to:', primaryApiUrl);
+
+    // upload helper
+    const tryUpload = async (apiUrl) => {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dataUrl }),
+        });
+        console.log('Upload response status:', resp.status, 'from', apiUrl);
+        return resp;
+      } catch (err) {
+        console.error('Upload fetch error for', apiUrl, err);
+        return null;
+      }
+    };
+
+    // まずプライマリを試す
+    let response = await tryUpload(primaryApiUrl);
+
+    // プライマリが見つからない/失敗した場合、ローカルフォールバックを試す
+    if ((!response || !response.ok) && fallbackApiUrl) {
+      console.warn('Primary upload failed, trying fallback:', fallbackApiUrl);
+      response = await tryUpload(fallbackApiUrl);
+    }
+
+    if (!response || !response.ok) {
+      const errorText = response ? await response.text().catch(() => '') : '';
+      console.error('Upload error response:', errorText);
+      throw new Error(`Upload failed: ${response ? response.status : 'no-response'} - ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log('Upload successful, img_id:', result.img_id);
+    return result.img_id || null;
+  } catch (error) {
+    console.error('Failed to generate and upload OGP image:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    alert(`OGP画像のアップロードに失敗しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
+    return null;
   }
 }
 

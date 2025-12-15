@@ -1,42 +1,22 @@
+// =====================================================
+// Cloudflare Worker for sats-rate OGP
+// R2を使用した動的PNG OGP画像配信
+// =====================================================
+
 // 定数
-const EXCLUDE_KEYS = ['d', 'ts', 'currencies'];
-const MAX_DECIMAL_PLACES = 8;
 const DEFAULT_TITLE = "おいくらサッツ";
 const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール";
-const FALLBACK_DESCRIPTION = "複数通貨間換算ツール";
+const STATIC_OGP_PATH = "/assets/images/ogp.png";
 
+// TTL: 168時間（7日）
+const IMAGE_TTL_SECONDS = 168 * 60 * 60;
+
+// =====================================================
 // ユーティリティ関数
+// =====================================================
+
 function formatCurrencyCode(code) {
     return code === 'sats' ? 'sats' : code.toUpperCase();
-}
-
-function formatNumberForDisplay(valueStr, params) {
-    const s = String(valueStr).trim();
-    if (s === '') return s;
-
-    // 小数点の正規化
-    let normalized;
-    if (s.includes(',') && !s.includes('.')) {
-        normalized = s.replace(/,/g, '.');
-    } else {
-        normalized = s.replace(/,/g, '');
-    }
-
-    const parts = normalized.split('.');
-    const fracLength = parts[1] ? parts[1].length : 0;
-    const maxFrac = Math.min(fracLength, MAX_DECIMAL_PLACES);
-    const num = Number(normalized);
-
-    if (Number.isNaN(num)) return s;
-
-    const decimalFormat = params.get('d');
-    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
-
-    return new Intl.NumberFormat(locale, {
-        minimumFractionDigits: fracLength,
-        maximumFractionDigits: maxFrac,
-        useGrouping: true
-    }).format(num);
 }
 
 function parseCurrencyList(currencies) {
@@ -44,44 +24,49 @@ function parseCurrencyList(currencies) {
     return currencies.split(separator).map(s => s.trim()).filter(Boolean);
 }
 
-function findBaseCurrency(params) {
-    let prevNonControl = null;
+// UUIDv4生成
+function generateImageId() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
 
-    for (const [k, v] of params.entries()) {
-        if (k === 'currencies') {
-            if (prevNonControl) {
-                return {
-                    key: prevNonControl,
-                    value: params.get(prevNonControl)
-                };
-            }
-            break;
-        }
-        if (!EXCLUDE_KEYS.includes(k)) {
-            prevNonControl = k;
-        }
+// 旧式クエリ判定（カンマ区切りcurrencies）
+function isLegacyQuery(params) {
+    const currencies = params.get('currencies');
+    if (!currencies) return false;
+    return currencies.includes(',');
+}
+
+// =====================================================
+// メインハンドラー（ES Modules形式）
+// =====================================================
+
+export default {
+    async fetch(request, env, ctx) {
+        return handleRequest(request, env);
     }
+};
 
-    return { key: null, value: null };
-}
-
-function escapeHtml(s) {
-    return String(s)
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;");
-}
-
-// メインハンドラー
-addEventListener("fetch", (event) => {
-    event.respondWith(handleRequest(event.request));
-});
-
-async function handleRequest(request) {
+async function handleRequest(request, env) {
     const url = new URL(request.url);
 
+    // CORS対応のOPTIONSリクエスト
+    if (request.method === "OPTIONS") {
+        return handleCors();
+    }
+
+    // API: OGP画像保存
+    if (url.pathname === "/api/save-ogp" && request.method === "POST") {
+        return handleSaveOgp(request, env);
+    }
+
+    // OGP画像配信
     if (url.pathname === "/og-image") {
-        return handleOgImage(url);
+        return handleOgImage(url, env);
     }
 
     // SNSボットのUser-Agentを検出
@@ -96,14 +81,205 @@ async function handleRequest(request) {
 
     const originRes = await fetch(request);
 
+    // 動的OGPが不要な場合はそのまま返す
     if (!shouldUseDynamicOgp(url.searchParams)) {
         return originRes;
     }
 
-    const { title, description } = buildOgTextFromParams(url.searchParams);
-    const currentUrl = url.toString(); // クエリパラメータ付きの完全なURL
-    // TwitterはSVG画像をサポートしないため、静的PNG画像を使用
-    const ogImageUrl = `${url.origin}/assets/images/ogp.png`;
+    // 旧式クエリ（カンマ区切り）は静的PNGを使用
+    if (isLegacyQuery(url.searchParams)) {
+        return rewriteOgpMeta(originRes, url, null);
+    }
+
+    // 新形式: img_idがあればR2画像を参照
+    const imgId = url.searchParams.get('img_id');
+    return rewriteOgpMeta(originRes, url, imgId);
+}
+
+// =====================================================
+// CORS処理
+// =====================================================
+
+function handleCors() {
+    return new Response(null, {
+        status: 204,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+        }
+    });
+}
+
+function corsHeaders() {
+    return {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+    };
+}
+
+// =====================================================
+// OGP画像保存 API
+// =====================================================
+
+async function handleSaveOgp(request, env) {
+    try {
+        console.log('[handleSaveOgp] Starting...');
+        const body = await request.json();
+        const { dataUrl } = body;
+
+        console.log('[handleSaveOgp] dataUrl length:', dataUrl?.length);
+
+        if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) {
+            console.error('[handleSaveOgp] Invalid data URL');
+            return new Response(JSON.stringify({ error: 'Invalid data URL' }), {
+                status: 400,
+                headers: { "Content-Type": "application/json", ...corsHeaders() }
+            });
+        }
+
+        // Base64デコード
+        const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        console.log('[handleSaveOgp] Image bytes size:', bytes.length);
+
+        // 画像IDを生成
+        const imgId = generateImageId();
+        const key = `${imgId}.png`;
+        console.log('[handleSaveOgp] Generated key:', key);
+
+        // R2バインディングの確認
+        if (!env.OGP_IMAGES) {
+            console.error('[handleSaveOgp] R2 binding OGP_IMAGES not found!');
+            return new Response(JSON.stringify({ error: 'R2 binding not configured' }), {
+                status: 500,
+                headers: { "Content-Type": "application/json", ...corsHeaders() }
+            });
+        }
+
+        // R2に保存（TTLはカスタムメタデータで管理）
+        const expiresAt = Date.now() + (IMAGE_TTL_SECONDS * 1000);
+        console.log('[handleSaveOgp] Saving to R2...');
+        await env.OGP_IMAGES.put(key, bytes, {
+            httpMetadata: {
+                contentType: 'image/png',
+                cacheControl: 'public, max-age=604800' // 7日
+            },
+            customMetadata: {
+                expiresAt: expiresAt.toString(),
+                createdAt: Date.now().toString()
+            }
+        });
+        console.log('[handleSaveOgp] Successfully saved to R2:', key);
+
+        return new Response(JSON.stringify({ img_id: imgId }), {
+            status: 200,
+            headers: { "Content-Type": "application/json", ...corsHeaders() }
+        });
+    } catch (error) {
+        console.error('[handleSaveOgp] Error:', error);
+        console.error('[handleSaveOgp] Error stack:', error.stack);
+        return new Response(JSON.stringify({ error: 'Internal server error', message: error.message }), {
+            status: 500,
+            headers: { "Content-Type": "application/json", ...corsHeaders() }
+        });
+    }
+}
+
+// =====================================================
+// OGP画像配信
+// =====================================================
+
+async function handleOgImage(url, env) {
+    const imgId = url.searchParams.get('img_id');
+    console.log('[handleOgImage] Requested img_id:', imgId);
+
+    // img_idがない場合は静的PNGにリダイレクト
+    if (!imgId) {
+        console.log('[handleOgImage] No img_id, redirecting to static OGP');
+        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+    }
+
+    // img_idの形式チェック（UUID形式）
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(imgId)) {
+        console.log('[handleOgImage] Invalid UUID format, redirecting to static OGP');
+        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+    }
+
+    try {
+        const key = `${imgId}.png`;
+        console.log('[handleOgImage] Fetching from R2:', key);
+        const object = await env.OGP_IMAGES.get(key);
+
+        if (!object) {
+            console.log('[handleOgImage] Image not found in R2:', key);
+            // R2に画像がない場合は静的PNGにリダイレクト
+            return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+        }
+
+        console.log('[handleOgImage] Image found in R2, size:', object.size);
+
+        // TTLチェック（期限切れの場合も静的PNGにリダイレクト）
+        const expiresAt = object.customMetadata?.expiresAt;
+        if (expiresAt && Date.now() > parseInt(expiresAt)) {
+            console.log('[handleOgImage] Image expired, deleting and redirecting');
+            // 期限切れ画像を削除（非同期で実行）
+            env.OGP_IMAGES.delete(key).catch(() => { });
+            return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+        }
+
+        console.log('[handleOgImage] Serving image:', key);
+        return new Response(object.body, {
+            headers: {
+                "Content-Type": "image/png",
+                "Cache-Control": "public, max-age=604800", // 7日
+                "X-Image-Id": imgId
+            }
+        });
+    } catch (error) {
+        console.error('Get OGP image error:', error);
+        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+    }
+}
+
+// =====================================================
+// 動的OGP判定
+// =====================================================
+
+function shouldUseDynamicOgp(params) {
+    // img_idがあれば動的OGP
+    if (params.has('img_id')) return true;
+    // 旧式（tsパラメータ）も一応対応（静的PNGを返す）
+    if (params.has('ts')) return true;
+    return false;
+}
+
+// =====================================================
+// OGPメタタグ書き換え
+// =====================================================
+
+function rewriteOgpMeta(originRes, url, imgId) {
+    const params = url.searchParams;
+    const { title, description } = buildOgTextFromParams(params);
+    const currentUrl = url.toString();
+
+    // OGP画像URL決定
+    let ogImageUrl;
+    if (imgId) {
+        // R2のPNG画像を参照
+        ogImageUrl = `${url.origin}/og-image?img_id=${imgId}`;
+    } else {
+        // 静的PNG
+        ogImageUrl = `${url.origin}${STATIC_OGP_PATH}`;
+    }
 
     const rewriter = new HTMLRewriter()
         .on('meta[property="og:title"]', new ReplaceMeta(title))
@@ -117,9 +293,9 @@ async function handleRequest(request) {
     return rewriter.transform(originRes);
 }
 
-function shouldUseDynamicOgp(params) {
-    return params.has('ts');
-}
+// =====================================================
+// OGPテキスト生成
+// =====================================================
 
 function buildOgTextFromParams(params) {
     const currencies = params.get('currencies');
@@ -131,28 +307,64 @@ function buildOgTextFromParams(params) {
     const currencyList = parseCurrencyList(currencies);
     const { key: baseKey, value: baseValue } = findBaseCurrency(params);
 
-    if (!baseKey) {
-        return { title: DEFAULT_TITLE, description: FALLBACK_DESCRIPTION };
+    if (!baseKey || !baseValue) {
+        return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
     }
 
-    const title = `${formatNumberForDisplay(baseValue, params)} ${formatCurrencyCode(baseKey)} | ${DEFAULT_TITLE}`;
+    // タイトル: 入力値と通貨コード
+    const formattedValue = formatNumberWithLocale(baseValue, params);
+    const title = `${formattedValue} ${formatCurrencyCode(baseKey)} | ${DEFAULT_TITLE}`;
 
-    const outputParts = currencyList
-        .filter(key => key !== baseKey)
-        .map(key => {
-            const value = params.get(key);
-            return value ? `${formatNumberForDisplay(value, params)} ${formatCurrencyCode(key)}` : null;
-        })
-        .filter(Boolean);
-
-    const description = outputParts.length > 0
-        ? `${formatNumberForDisplay(baseValue, params)} ${baseKey.toUpperCase()} = ${outputParts.join(' = ')}`
-        : `${formatNumberForDisplay(baseValue, params)} ${baseKey.toUpperCase()}`;
+    // Description: 選択通貨の一覧
+    const description = `${formattedValue} ${formatCurrencyCode(baseKey)} を含む ${currencyList.length} 通貨間の換算結果`;
 
     return { title, description };
 }
 
+function findBaseCurrency(params) {
+    // URLの最初の通貨パラメータを基準通貨とする
+    for (const [key, value] of params.entries()) {
+        if (key === 'currencies' || key === 'img_id' || key === 'd') continue;
+        // 通貨コードと思われるキー（小文字2-4文字）
+        if (/^[a-z]{2,4}$/i.test(key) && value) {
+            return { key, value };
+        }
+    }
+    return { key: null, value: null };
+}
+
+function formatNumberWithLocale(valueStr, params) {
+    const s = String(valueStr).trim();
+    if (s === '') return s;
+
+    // 小数点の正規化
+    let normalized;
+    if (s.includes(',') && !s.includes('.')) {
+        normalized = s.replace(/,/g, '.');
+    } else {
+        normalized = s.replace(/,/g, '');
+    }
+
+    const num = Number(normalized);
+    if (Number.isNaN(num)) return s;
+
+    const decimalFormat = params.get('d');
+    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
+
+    const parts = normalized.split('.');
+    const fracLength = parts[1] ? Math.min(parts[1].length, 8) : 0;
+
+    return new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: fracLength,
+        useGrouping: true
+    }).format(num);
+}
+
+// =====================================================
 // HTMLRewriter クラス
+// =====================================================
+
 class ReplaceMeta {
     constructor(content) {
         this.content = content;
@@ -171,97 +383,10 @@ class ReplaceTitle {
     }
 }
 
-// OGP画像生成
-const MAX_OUTPUT_CURRENCIES = 4;
-const FONT_FAMILY = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-const JST_OFFSET = 9 * 60 * 60 * 1000;
-
-const FONT_CONFIGS = {
-    1: { fontSize: 100, startY: 350, lineSpacing: 0 },
-    2: { fontSize: 85, startY: 300, lineSpacing: 130 },
-    3: { fontSize: 65, startY: 270, lineSpacing: 105 },
-    4: { fontSize: 60, startY: 250, lineSpacing: 85 }
-};
-
-function formatTimestamp(ts) {
-    if (!ts) return '';
-
-    const date = new Date(parseInt(ts) * 1000);
-    const jstDate = new Date(date.getTime() + JST_OFFSET);
-
-    const year = jstDate.getUTCFullYear();
-    const month = String(jstDate.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(jstDate.getUTCDate()).padStart(2, '0');
-    const hour = String(jstDate.getUTCHours()).padStart(2, '0');
-    const minute = String(jstDate.getUTCMinutes()).padStart(2, '0');
-
-    return `${year}/${month}/${day} ${hour}:${minute}`;
-}
-
-function buildOutputLines(currencyList, baseKey, params) {
-    return currencyList
-        .filter(key => key !== baseKey)
-        .slice(0, MAX_OUTPUT_CURRENCIES)
-        .map(key => {
-            const value = params.get(key);
-            return value ? `${formatNumberForDisplay(value, params)} ${formatCurrencyCode(key)}` : null;
-        })
-        .filter(Boolean);
-}
-
-function generateDynamicOgpSvg(params, baseKey, baseValue, outputLines, dateText) {
-    const mainTitle = baseKey
-        ? `${formatNumberForDisplay(baseValue, params)} ${baseKey.toUpperCase()} =`
-        : DEFAULT_TITLE;
-
-    const config = FONT_CONFIGS[Math.min(outputLines.length, MAX_OUTPUT_CURRENCIES)] || FONT_CONFIGS[4];
-
-    const outputTextElements = outputLines.map((line, i) =>
-        `<text x="600" y="${config.startY + (i * config.lineSpacing)}" font-family='${FONT_FAMILY}' font-size="${config.fontSize}" text-anchor="middle" fill="#333">${escapeHtml(line)}</text>`
-    ).join('\n    ');
-
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <rect width="100%" height="100%" fill="#F5F7F6" />
-  <text x="600" y="140" font-family='${FONT_FAMILY}' font-weight="bold" font-size="115" text-anchor="middle" fill="#1a1a1a">${escapeHtml(mainTitle)}</text>
-  <line x1="200" y1="170" x2="1000" y2="170" stroke="#ddd" stroke-width="2" />
-  ${outputTextElements}
-  <text x="80" y="570" font-family='${FONT_FAMILY}' font-size="38" fill="#666">${DEFAULT_TITLE}</text>
-  <text x="1120" y="570" font-family='${FONT_FAMILY}' font-size="38" text-anchor="end" fill="#666">${escapeHtml(dateText)}</text>
-</svg>`;
-}
-
-function generateSimpleOgpSvg() {
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <rect width="100%" height="100%" fill="#ffffff" />
-  <text x="600" y="320" font-family='${FONT_FAMILY}' font-weight="bold" font-size="80" text-anchor="middle" fill="#1a1a1a">${DEFAULT_TITLE}</text>
-  <text x="600" y="400" font-family='${FONT_FAMILY}' font-size="36" text-anchor="middle" fill="#666">ビットコイン通貨換算ツール</text>
-  <text x="80" y="570" font-family='${FONT_FAMILY}' font-size="28" fill="#888">osats.money</text>
-</svg>`;
-}
-
-function handleOgImage(url) {
-    const params = url.searchParams;
-    const currencies = params.get('currencies');
-    const hasTs = params.has('ts');
-
-    if (!currencies || !hasTs) {
-        return Response.redirect(`${url.origin}/assets/images/ogp.png`, 302);
-    }
-
-    const currencyList = parseCurrencyList(currencies);
-    const { key: baseKey, value: baseValue } = findBaseCurrency(params);
-    const outputLines = buildOutputLines(currencyList, baseKey, params);
-    const dateText = formatTimestamp(params.get('ts'));
-
-    const svg = generateDynamicOgpSvg(params, baseKey, baseValue, outputLines, dateText);
-
-    return new Response(svg, {
-        headers: {
-            "content-type": "image/svg+xml; charset=utf-8",
-            "cache-control": "public, max-age=3600"
-        }
-    });
-}
+// =====================================================
+// TODO: 定期クリーンアップ（Cron Trigger）
+// 期限切れ画像の削除は別途Cron Triggerで実装予定
+// [[triggers]]
+// crons = ["0 0 * * *"]  # 毎日0時に実行
+// =====================================================
 

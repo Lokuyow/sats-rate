@@ -202,11 +202,13 @@
       <div class="sns-share-container-0 share-results">
         <div class="sns-share-container-1 share-results">
           <div class="sns-share-container-2">
-            <button class="normal-btn" id="share-via-webapi" vanilla-i18n-aria-label="ariaLabels.shareWebAPI">
+            <button type="button" class="normal-btn" id="share-via-webapi" disabled
+              vanilla-i18n-aria-label="ariaLabels.shareWebAPI">
               <div class="share-nodes-solid"></div>
             </button>
 
-            <button class="normal-btn" id="copy-to-clipboard" vanilla-i18n-aria-label="ariaLabels.copyToClipboard">
+            <button type="button" class="normal-btn" id="copy-to-clipboard" disabled
+              vanilla-i18n-aria-label="ariaLabels.copyToClipboard">
               <div class="clipboard-solid"></div>
             </button>
           </div>
@@ -416,12 +418,21 @@
 
   <script src="./lib/pulltorefresh.umd.min.js"></script>
   <script>
-    PullToRefresh.init({
-      mainElement: 'body',
-      onRefresh() {
-        window.location.reload();
-      }
-    });
+    // wrangler dev（localhost/127.0.0.1）ではボタン操作がPullToRefreshに誤検知されて
+    // 予期せずリロードされるケースがあるため、開発時は無効化する。
+    // 本番（osats.money）では従来通り有効。
+    const isWranglerDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    if (!isWranglerDev) {
+      PullToRefresh.init({
+        mainElement: 'body',
+        // 通貨入力エリアでの「引っ張って更新」だけを有効化（共有/コピーボタン等の操作で誤発火しないように）
+        triggerElement: '.currency-inputs-container',
+        onRefresh() {
+          window.location.reload();
+        }
+      });
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap@1"></script>
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap-view@1"></script>

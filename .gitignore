@@ -3,3 +3,4 @@ sats-rate.code-workspace
 node_modules/
 .github/
 AiLog/
+.wrangler/
