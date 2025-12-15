@@ -644,12 +644,20 @@ function showNotification(message, event, align = "right") {
   const notification = document.getElementById("notification");
   notification.textContent = message;
 
-  notification.style.left = event.pageX + "px";
-  notification.style.top = event.pageY + 20 + "px";
-
-  if (align === "left") {
-    notification.style.transform = "translateX(0)";
+  // Handle null event (fallback scenarios)
+  if (event && event.pageX !== undefined && event.pageY !== undefined) {
+    notification.style.left = event.pageX + "px";
+    notification.style.top = event.pageY + 20 + "px";
   } else {
+    // Center position as fallback
+    notification.style.left = "50%";
+    notification.style.top = "50px";
+    notification.style.transform = "translateX(-50%)";
+  }
+
+  if (event && align === "left") {
+    notification.style.transform = "translateX(0)";
+  } else if (event && align === "right") {
     notification.style.transform = "translateX(-100%)";
   }
 
@@ -766,6 +774,12 @@ function copyToClipboardEvent(event) {
 
 // コピー
 function copyToClipboard(text, event, align = "right") {
+  // Secure context check (HTTPS or localhost)
+  if (!isSecureContext) {
+    fallbackCopyToClipboard(text, event);
+    return;
+  }
+
   navigator.clipboard
     .writeText(text)
     .then(() => {
@@ -775,7 +789,29 @@ function copyToClipboard(text, event, align = "right") {
     })
     .catch((err) => {
       console.error("Failed to copy to clipboard", err);
+      fallbackCopyToClipboard(text, event);
     });
+}
+
+// Fallback copy method for non-secure contexts
+function fallbackCopyToClipboard(text, event) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "-9999px";
+  document.body.appendChild(textarea);
+
+  try {
+    textarea.select();
+    document.execCommand("copy");
+    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+    showNotification(message, event);
+  } catch (err) {
+    console.error("Fallback copy failed:", err);
+  } finally {
+    document.body.removeChild(textarea);
+  }
 }
 
 // クリップボードから読み取り
@@ -799,22 +835,48 @@ async function pasteFromClipboardToInput(currency) {
 }
 
 // Web Share API
-function shareViaWebAPIEvent() {
+function shareViaWebAPIEvent(event) {
   const values = getValuesFromElements();
   const queryParams = generateQueryStringFromValues(values);
-  shareViaWebAPI(queryParams);
+  shareViaWebAPI(queryParams, event);
 }
 
 // サイトを共有 (Web Share API)
-function shareSiteViaWebAPIEvent() {
+function shareSiteViaWebAPIEvent(event) {
   const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
   const siteUrl = "https://osats.money/";
 
-  if (navigator.share) {
-    navigator.share({ title: siteText, url: siteUrl })
-      .catch((error) => console.log("Sharing failed", error));
-  } else {
-    alert(window.vanilla_i18n_instance.translate("alerts.shareNotSupported"));
+  if (!isSecureContext || !navigator.share) {
+    fallbackShareSiteViaClipboard(siteText, siteUrl, event);
+    return;
+  }
+
+  navigator.share({ title: siteText, url: siteUrl })
+    .catch((error) => {
+      console.log("Sharing failed", error);
+      fallbackShareSiteViaClipboard(siteText, siteUrl, event);
+    });
+}
+
+// Fallback: copy site info to clipboard
+function fallbackShareSiteViaClipboard(siteText, siteUrl, event) {
+  const textToCopy = `${siteText}\n${siteUrl}`;
+  const textarea = document.createElement("textarea");
+  textarea.value = textToCopy;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "-9999px";
+  document.body.appendChild(textarea);
+
+  try {
+    textarea.select();
+    document.execCommand("copy");
+    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+    showNotification(message, event, "left");
+  } catch (err) {
+    console.error("Fallback share failed:", err);
+  } finally {
+    document.body.removeChild(textarea);
   }
 }
 
@@ -826,14 +888,41 @@ function copySiteToClipboardEvent(event) {
   copyToClipboard(textToCopy, event, "right");
 }
 
-function shareViaWebAPI(queryParams) {
-  if (navigator.share) {
-    navigator.share({
-      url: `https://osats.money/${queryParams}`,
+function shareViaWebAPI(queryParams, event) {
+  const shareUrl = `https://osats.money/${queryParams}`;
+
+  if (!isSecureContext || !navigator.share) {
+    fallbackShareViaClipboard(shareUrl, event);
+    return;
+  }
+
+  navigator.share({
+    url: shareUrl,
+  })
+    .catch((error) => {
+      console.error("Sharing failed", error);
+      fallbackShareViaClipboard(shareUrl, event);
     });
-  } else {
-    const message = window.vanilla_i18n_instance.translate("alerts.shareNotSupported");
-    alert(message);
+}
+
+// Fallback: copy URL to clipboard when Web Share API unavailable
+function fallbackShareViaClipboard(url, event) {
+  const textarea = document.createElement("textarea");
+  textarea.value = url;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "-9999px";
+  document.body.appendChild(textarea);
+
+  try {
+    textarea.select();
+    document.execCommand("copy");
+    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+    showNotification(message, event, "left");
+  } catch (err) {
+    console.error("Fallback share failed:", err);
+  } finally {
+    document.body.removeChild(textarea);
   }
 }
 
