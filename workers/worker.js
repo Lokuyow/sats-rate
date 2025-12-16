@@ -141,7 +141,8 @@ async function handleRequest(request, env) {
     }
 
     // OGP画像配信
-    if (pathname === "/og-image") {
+    // /og-image または /og-image/<uuid>.png を受け付ける
+    if (pathname.startsWith("/og-image")) {
         return handleOgImage(url, env, request);
     }
 
@@ -278,10 +279,14 @@ async function saveImageToR2(env, bytes, hash) {
 // OGP画像配信
 // -----------------------------------------------------
 async function handleOgImage(url, env, request) {
-    const imgId = url.searchParams.get('img_id');
+    // img_id はクエリパラメータまたはパス (/og-image/<uuid>.png) から取得可能
+    let imgId = url.searchParams.get('img_id');
+    if (!imgId) {
+        const m = url.pathname.match(/^\/og-image\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:\.png)?$/i);
+        if (m) imgId = m[1];
+    }
 
-    // img_idがない、または無効な形式の場合は静的OGPを直接返す
-    // 注: Twitterbotはリダイレクトを追跡しないため、直接画像を返す必要がある
+    // img_idがない、または無効な形式の場合は静的OGPを直接返す（Twitterbotはリダイレクトを追跡しないため）
     if (!imgId || !isValidUuid(imgId)) {
         return fetchStaticOgp(url.origin, request);
     }
@@ -347,8 +352,9 @@ function rewriteOgpMeta(originRes, url, imgId) {
     const params = url.searchParams;
     const { title, description } = buildOgTextFromParams(params);
     const currentUrl = url.toString();
+    // 可能なら拡張子付きのパス形式を使う（bots が拡張子のないURLを嫌うケースを回避）
     const ogImageUrl = imgId
-        ? `${url.origin}/og-image?img_id=${imgId}`
+        ? `${url.origin}/og-image/${imgId}.png`
         : `${url.origin}${STATIC_OGP_PATH}`;
 
     return new HTMLRewriter()
