@@ -712,13 +712,6 @@ function getValuesFromElements() {
 }
 
 // コピー用テキストの作成
-function getCurrencyText(key, value) {
-  const symbol = currencyManager.currencySymbols[key] || ""; // 通貨記号を取得
-  const formattedValue = formatCurrency(value, key, selectedLocale, false); // 通貨の値をフォーマット
-  // 通貨コードが "sats" の場合は大文字に変換しない
-  const currencyCode = key === "sats" ? "sats" : key.toUpperCase();
-  return `${symbol} ${formattedValue} ${currencyCode}`; // 通貨記号、フォーマットされた値、適切にフォーマットされた通貨コードを含むテキストを生成
-}
 
 export function setupEventListenersForCurrencyButtons() {
   selectedCurrencies.forEach((currency) => {
@@ -968,7 +961,6 @@ function fallbackShareViaClipboard(url, event) {
 
 const OGP_WIDTH = 1200;
 const OGP_HEIGHT = 630;
-const OGP_DEFAULT_TITLE = "おいくらサッツ";
 const OGP_FONT_FAMILY = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const OGP_MAX_OUTPUT_CURRENCIES = 4;
 const JST_OFFSET = 9 * 60 * 60 * 1000;
