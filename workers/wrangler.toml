@@ -10,6 +10,7 @@ compatibility_date = "2025-12-15"
 [[r2_buckets]]
 binding = "OGP_IMAGES"
 bucket_name = "osats-ogp-images"
+remote = true
 
 [[routes]]
 pattern = "osats.money/*"

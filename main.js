@@ -1121,45 +1121,68 @@ async function generateAndUploadOgpImage() {
   try {
     // Canvas生成
     const canvas = generateOgpCanvas();
-    const dataUrl = canvas.toDataURL('image/png');
+    const isLocalHost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    // Prefer production endpoint first for reliability, then fall back to local dev endpoints when running locally.
+    const apiCandidates = isLocalHost
+      ? [
+        'https://osats.money/api/save-ogp', // prefer production
+        `${window.location.protocol}//127.0.0.1:8787/api/save-ogp`,
+        `${window.location.protocol}//localhost:8787/api/save-ogp`,
+      ]
+      : [`${window.location.origin}/api/save-ogp`];
 
-    // 現在のオリジンを取得（まずはこちらを試す）
-    const primaryApiUrl = `${window.location.origin}/api/save-ogp`;
-    // ローカル開発（wrangler dev デフォルトポート）用のフォールバック
-    const fallbackApiUrl =
-      (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
-        ? `${window.location.protocol}//127.0.0.1:8787/api/save-ogp`
-        : null;
+    console.log('OGP upload candidates:', apiCandidates);
 
-    console.log('Uploading OGP image to:', primaryApiUrl);
+    // Generate a binary Blob and send as multipart/form-data (FormData)
+    const blob = await new Promise((resolve) => canvas.toBlob((b) => resolve(b), 'image/png'));
+    if (!blob) {
+      throw new Error('Failed to create OGP blob');
+    }
 
-    // upload helper
-    const tryUpload = async (apiUrl) => {
+    // upload helper with timeout using AbortController. Always sends FormData(blob).
+    const tryUpload = async (apiUrl, timeoutMs = 5000) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
       try {
+        const form = new FormData();
+        form.append('file', blob, 'ogp.png');
         const resp = await fetch(apiUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ dataUrl }),
+          body: form,
+          signal: controller.signal,
         });
+
+        clearTimeout(timeout);
         console.log('Upload response status:', resp.status, 'from', apiUrl);
         return resp;
       } catch (err) {
-        console.error('Upload fetch error for', apiUrl, err);
+        clearTimeout(timeout);
+        if (err.name === 'AbortError') {
+          console.error('Upload timed out for', apiUrl);
+        } else {
+          console.error('Upload fetch error for', apiUrl, err);
+        }
         return null;
       }
     };
 
-    // まずプライマリを試す
-    let response = await tryUpload(primaryApiUrl);
+    let response = null;
+    let successfulUrl = null;
+    for (const apiUrl of apiCandidates) {
+      response = await tryUpload(apiUrl);
+      if (response && response.ok) {
+        successfulUrl = apiUrl;
+        break;
+      }
+      console.warn('Upload failed or not ok, trying next candidate:', apiUrl);
+    }
 
-    // プライマリが見つからない/失敗した場合、ローカルフォールバックを試す
-    if ((!response || !response.ok) && fallbackApiUrl) {
-      console.warn('Primary upload failed, trying fallback:', fallbackApiUrl);
-      response = await tryUpload(fallbackApiUrl);
+    if (successfulUrl) {
+      console.log('OGP uploaded successfully to:', successfulUrl);
     }
 
     if (!response || !response.ok) {
-      const errorText = response ? await response.text().catch(() => '') : '';
+      const errorText = response ? await response.clone().text().catch(() => '') : '';
       console.error('Upload error response:', errorText);
       throw new Error(`Upload failed: ${response ? response.status : 'no-response'} - ${errorText}`);
     }
@@ -1171,7 +1194,7 @@ async function generateAndUploadOgpImage() {
     console.error('Failed to generate and upload OGP image:', error);
     console.error('Error stack:', error.stack);
     console.error('Error details:', JSON.stringify(error, null, 2));
-    alert(`OGP画像のアップロードに失敗しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
+    alert(`共有用画像のアップロードに失敗しました。`);
     return null;
   }
 }

@@ -10,6 +10,8 @@ const STATIC_OGP_PATH = "/assets/images/ogp.png";
 
 // TTL: 168時間（7日）
 const IMAGE_TTL_SECONDS = 168 * 60 * 60;
+// アップロードファイルの上限バイト数（2MB）
+const MAX_FILE_BYTES = 2 * 1024 * 1024; // 2MB
 
 // =====================================================
 // ユーティリティ関数
@@ -126,29 +128,42 @@ function corsHeaders() {
 
 async function handleSaveOgp(request, env) {
     try {
-        console.log('[handleSaveOgp] Starting...');
-        const body = await request.json();
-        const { dataUrl } = body;
+        console.log('[handleSaveOgp] Starting (FormData-only enforcement)...');
 
-        console.log('[handleSaveOgp] dataUrl length:', dataUrl?.length);
+        const contentType = (request.headers.get('content-type') || '').toLowerCase();
 
-        if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) {
-            console.error('[handleSaveOgp] Invalid data URL');
-            return new Response(JSON.stringify({ error: 'Invalid data URL' }), {
+        // Strict: accept only multipart/form-data
+        if (!contentType.includes('multipart/form-data')) {
+            console.error('[handleSaveOgp] Unsupported Content-Type:', contentType);
+            return new Response(JSON.stringify({ error: 'Unsupported Media Type. Send multipart/form-data with field "file".' }), {
+                status: 415,
+                headers: { "Content-Type": "application/json", ...corsHeaders() }
+            });
+        }
+
+        // multipart/form-data を想定（Blob/FormData）
+        const form = await request.formData();
+        const file = form.get('file') || form.get('image');
+        if (!file) {
+            console.error('[handleSaveOgp] No file field in form');
+            return new Response(JSON.stringify({ error: 'file missing' }), {
                 status: 400,
                 headers: { "Content-Type": "application/json", ...corsHeaders() }
             });
         }
 
-        // Base64デコード
-        const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
-        const binaryString = atob(base64Data);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
+        const buffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        console.log('[handleSaveOgp] Received multipart/form-data, size:', bytes.length);
 
-        console.log('[handleSaveOgp] Image bytes size:', bytes.length);
+        // サイズチェック
+        if (bytes.length > MAX_FILE_BYTES) {
+            console.error('[handleSaveOgp] File too large:', bytes.length);
+            return new Response(JSON.stringify({ error: 'File too large' }), {
+                status: 413,
+                headers: { "Content-Type": "application/json", ...corsHeaders() }
+            });
+        }
 
         // 画像IDを生成
         const imgId = generateImageId();
