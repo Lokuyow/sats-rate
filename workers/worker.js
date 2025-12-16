@@ -13,28 +13,40 @@ const IMAGE_TTL_SECONDS = 168 * 60 * 60; // 7日
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
 const CACHE_MAX_AGE = 604800;            // 7日（秒）
 
-const CORS_HEADERS = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
-};
+// CORS ヘッダーを動的に生成（オリジン検証付き）
+function getCorsHeaders(origin) {
+    const allowedOrigin = isAllowedOrigin(origin) ? origin : 'null';
+    return {
+        "Access-Control-Allow-Origin": allowedOrigin,
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+    };
+}
 
 const SOCIAL_BOT_PATTERN = /twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|telegrambot|line-poker|applebot/i;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const PNG_MAGIC_BYTES = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+const MAX_TEXT_LENGTH = 200; // メタタグの最大長
+
+// 許可されたオリジン（本番環境では実際のドメインに変更）
+const ALLOWED_ORIGINS = [
+    'https://osats.money',
+    'https://www.osats.money'
+];
 
 // -----------------------------------------------------
 // レスポンス生成ヘルパー
 // -----------------------------------------------------
-const jsonResponse = (data, status = 200) => new Response(
+const jsonResponse = (data, status = 200, origin = null) => new Response(
     JSON.stringify(data),
-    { status, headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
+    { status, headers: { "Content-Type": "application/json", ...getCorsHeaders(origin) } }
 );
 
-const errorResponse = (message, status) => jsonResponse({ error: message }, status);
+const errorResponse = (message, status, origin = null) => jsonResponse({ error: message }, status, origin);
 
-const corsPreflightResponse = () => new Response(null, {
+const corsPreflightResponse = (origin) => new Response(null, {
     status: 204,
-    headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "86400" }
+    headers: { ...getCorsHeaders(origin), "Access-Control-Max-Age": "86400" }
 });
 
 // -----------------------------------------------------
@@ -69,6 +81,43 @@ async function computeSha256Hex(uint8arr) {
         .join('');
 }
 
+// HTMLエスケープ（XSS対策）
+function escapeHtml(text) {
+    if (!text) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// テキストの長さとパターンを検証
+function sanitizeText(text, maxLength = MAX_TEXT_LENGTH) {
+    if (!text) return '';
+    const str = String(text).trim();
+    // 長さ制限
+    const truncated = str.length > maxLength ? str.substring(0, maxLength) : str;
+    return escapeHtml(truncated);
+}
+
+// PNGファイルの検証（マジックバイト）
+function isPngFile(bytes) {
+    if (!bytes || bytes.length < PNG_MAGIC_BYTES.length) return false;
+    for (let i = 0; i < PNG_MAGIC_BYTES.length; i++) {
+        if (bytes[i] !== PNG_MAGIC_BYTES[i]) return false;
+    }
+    return true;
+}
+
+// オリジンの検証
+function isAllowedOrigin(origin) {
+    if (!origin) return false;
+    // 開発環境の判定（localhost）
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+    return ALLOWED_ORIGINS.includes(origin);
+}
+
 // -----------------------------------------------------
 // メインハンドラー
 // -----------------------------------------------------
@@ -81,10 +130,11 @@ export default {
 async function handleRequest(request, env) {
     const url = new URL(request.url);
     const { pathname } = url;
+    const origin = request.headers.get('origin');
 
     // CORS プリフライト
     if (request.method === "OPTIONS") {
-        return corsPreflightResponse();
+        return corsPreflightResponse(origin);
     }
 
     // API: OGP画像保存
@@ -97,24 +147,27 @@ async function handleRequest(request, env) {
         return handleOgImage(url, env);
     }
 
-    // HTML以外かつボットでなければパススルー。ただし動的OGP（img_id または ts）がある場合は常に処理する
-    const userAgent = request.headers.get("user-agent") || "";
-    const accept = request.headers.get("accept") || "";
-    // 動的OGPリクエスト（img_id / ts）がある場合は、Acceptに関係なく書き換え処理を行う
-    if (!shouldUseDynamicOgp(url.searchParams) && !accept.includes("text/html") && !isSocialBot(userAgent)) {
+    // 静的アセット（画像、CSS、JS、フォントなど）はそのままパススルー
+    if (pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|css|js|ico|woff|woff2|ttf|eot|json)$/i)) {
         return fetch(request);
     }
 
     // オリジンからレスポンス取得
     const originRes = await fetch(request);
 
-    // 動的OGPが不要な場合はそのまま返す
-    if (!shouldUseDynamicOgp(url.searchParams)) {
+    // HTML以外のレスポンスはそのまま返す
+    const contentType = originRes.headers.get("content-type") || "";
+    if (!contentType.includes("text/html")) {
         return originRes;
     }
 
     // 旧式クエリ（カンマ区切り）は静的PNGを使用
-    const imgId = isLegacyQuery(url.searchParams) ? null : url.searchParams.get('img_id');
+    let imgId = isLegacyQuery(url.searchParams) ? null : url.searchParams.get('img_id');
+    // img_idの検証 - 無効な場合はnullにフォールバック
+    if (imgId && !isValidUuid(imgId)) {
+        console.warn('[handleRequest] Invalid img_id format, using static OGP');
+        imgId = null;
+    }
     return rewriteOgpMeta(originRes, url, imgId);
 }
 
@@ -122,28 +175,42 @@ async function handleRequest(request, env) {
 // OGP画像保存 API
 // -----------------------------------------------------
 async function handleSaveOgp(request, env) {
+    const origin = request.headers.get('origin');
+
+    // オリジン検証（開発環境ではlocalhostを許可）
+    if (!isAllowedOrigin(origin)) {
+        console.warn('[handleSaveOgp] Forbidden origin:', origin);
+        return errorResponse('Forbidden', 403, origin);
+    }
+
     const contentType = (request.headers.get('content-type') || '').toLowerCase();
 
     // multipart/form-data のみ受け付け
     if (!contentType.includes('multipart/form-data')) {
         console.error('[handleSaveOgp] Unsupported Content-Type:', contentType);
-        return errorResponse('Unsupported Media Type. Send multipart/form-data with field "file".', 415);
+        return errorResponse('Unsupported Media Type. Send multipart/form-data with field "file".', 415, origin);
     }
 
     try {
         const bytes = await extractFileFromFormData(request);
         if (!bytes) {
-            return errorResponse('file missing', 400);
+            return errorResponse('file missing', 400, origin);
         }
 
         if (bytes.length > MAX_FILE_BYTES) {
             console.error('[handleSaveOgp] File too large:', bytes.length);
-            return errorResponse('File too large', 413);
+            return errorResponse('File too large', 413, origin);
+        }
+
+        // PNG形式の検証（SVG等を拒否）
+        if (!isPngFile(bytes)) {
+            console.error('[handleSaveOgp] Invalid file format - only PNG allowed');
+            return errorResponse('Invalid file format. Only PNG images are allowed.', 415, origin);
         }
 
         if (!env.OGP_IMAGES) {
             console.error('[handleSaveOgp] R2 binding OGP_IMAGES not found!');
-            return errorResponse('R2 binding not configured', 500);
+            return errorResponse('R2 binding not configured', 500, origin);
         }
 
         // 重複チェック
@@ -151,17 +218,17 @@ async function handleSaveOgp(request, env) {
         const existingImgId = await findExistingImageByHash(env, hash);
         if (existingImgId) {
             console.log('[handleSaveOgp] Duplicate detected, reusing img_id:', existingImgId);
-            return jsonResponse({ img_id: existingImgId });
+            return jsonResponse({ img_id: existingImgId }, 200, origin);
         }
 
         // 新規保存
         const imgId = await saveImageToR2(env, bytes, hash);
         console.log('[handleSaveOgp] Successfully saved:', imgId);
-        return jsonResponse({ img_id: imgId });
+        return jsonResponse({ img_id: imgId }, 200, origin);
 
     } catch (error) {
         console.error('[handleSaveOgp] Error:', error.message, error.stack);
-        return errorResponse('Internal server error', 500);
+        return errorResponse('Internal server error', 500, origin);
     }
 }
 
@@ -242,6 +309,7 @@ async function handleOgImage(url, env) {
             headers: {
                 "Content-Type": "image/png",
                 "Cache-Control": `public, max-age=${CACHE_MAX_AGE}`,
+                "X-Content-Type-Options": "nosniff",
                 "X-Image-Id": imgId
             }
         });
@@ -275,8 +343,11 @@ function rewriteOgpMeta(originRes, url, imgId) {
         .on('meta[property="og:image"]', new MetaContentRewriter(ogImageUrl))
         .on('meta[property="og:url"]', new MetaContentRewriter(currentUrl))
         .on('meta[name="twitter:card"]', new MetaContentRewriter("summary_large_image"))
+        .on('meta[name="twitter:title"]', new MetaContentRewriter(title))
+        .on('meta[name="twitter:description"]', new MetaContentRewriter(description))
         .on('meta[name="twitter:image"]', new MetaContentRewriter(ogImageUrl))
         .on('title', new TitleRewriter(title))
+        .on('head', new HeadInjector(ogImageUrl, title, description))
         .transform(originRes);
 }
 
@@ -298,10 +369,12 @@ function buildOgTextFromParams(params) {
 
     const { key, value } = baseCurrency;
     const formattedValue = formatNumberWithLocale(value, params);
+    const currencyCode = formatCurrencyCode(key);
 
+    // タイトルと説明をサニタイズ（XSS対策）
     return {
-        title: `${formattedValue} ${formatCurrencyCode(key)} | ${DEFAULT_TITLE}`,
-        description: `${formattedValue} ${formatCurrencyCode(key)} を含む ${currencyList.length} 通貨間の換算結果`
+        title: sanitizeText(`${formattedValue} ${currencyCode} | ${DEFAULT_TITLE}`),
+        description: sanitizeText(`${formattedValue} ${currencyCode} を含む ${currencyList.length} 通貨間の換算結果`)
     };
 }
 
@@ -359,6 +432,31 @@ class TitleRewriter {
     }
     element(el) {
         el.setInnerContent(this.title);
+    }
+}
+
+// head に追加の OGP/Twitter 画像メタを挿入する（Twitterの判定が厳しい場合に備える）
+// XSS対策: 安全なメタ要素作成（エスケープ済みの値のみ使用）
+class HeadInjector {
+    constructor(ogImageUrl, title, description) {
+        // URLと文字列の検証・サニタイズ
+        this.ogImageUrl = sanitizeText(ogImageUrl, 500);
+        this.title = sanitizeText(title);
+        this.description = sanitizeText(description);
+    }
+    element(el) {
+        // 安全にエスケープされた値でメタ要素を追加
+        // HTMLRewriterは setAttribute 経由で安全に挿入
+        const metaTags = [
+            `<meta property="og:image:secure_url" content="${this.ogImageUrl}">`,
+            `<meta property="og:image:type" content="image/png">`,
+            `<meta property="og:image:width" content="1200">`,
+            `<meta property="og:image:height" content="630">`,
+            `<meta name="twitter:image:src" content="${this.ogImageUrl}">`
+        ].join('');
+
+        // 既にエスケープ済みなのでhtml:trueは安全
+        el.append(metaTags, { html: true });
     }
 }
 
