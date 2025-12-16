@@ -977,7 +977,7 @@ const OGP_FONT_CONFIGS = {
   1: { fontSize: 100, startY: 350, lineSpacing: 0 },
   2: { fontSize: 85, startY: 300, lineSpacing: 130 },
   3: { fontSize: 65, startY: 270, lineSpacing: 105 },
-  4: { fontSize: 60, startY: 250, lineSpacing: 85 }
+  4: { fontSize: 65, startY: 250, lineSpacing: 85 }
 };
 
 /**
@@ -1030,14 +1030,14 @@ function generateOgpCanvas() {
   ctx.font = `bold 115px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#1a1a1a';
   ctx.textAlign = 'center';
-  ctx.fillText(mainTitle, OGP_WIDTH / 2, 140);
+  ctx.fillText(mainTitle, OGP_WIDTH / 2, 130);
 
   // 区切り線
   ctx.strokeStyle = '#ddd';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(200, 170);
-  ctx.lineTo(1000, 170);
+  ctx.moveTo(200, 160);
+  ctx.lineTo(1000, 160);
   ctx.stroke();
 
   // 出力通貨の行を生成
@@ -1058,16 +1058,12 @@ function generateOgpCanvas() {
     ctx.fillText(line, OGP_WIDTH / 2, config.startY + (i * config.lineSpacing));
   });
 
-  // フッター左: サイト名
-  ctx.font = `38px ${OGP_FONT_FAMILY}`;
-  ctx.fillStyle = '#666';
-  ctx.textAlign = 'left';
-  ctx.fillText(OGP_DEFAULT_TITLE, 80, 570);
-
-  // フッター右: 日時
+  // フッター: 日付を中央に表示
   const dateText = formatTimestampForOgp(Date.now());
-  ctx.textAlign = 'right';
-  ctx.fillText(dateText, 1120, 570);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#666';
+  ctx.font = `46px ${OGP_FONT_FAMILY}`;
+  ctx.fillText(dateText, OGP_WIDTH / 2, 600);
 
   return canvas;
 }
@@ -1088,10 +1084,11 @@ function drawSimpleOgp(ctx, canvas) {
   ctx.fillStyle = '#666';
   ctx.fillText('ビットコイン通貨換算ツール', OGP_WIDTH / 2, 400);
 
-  ctx.font = `28px ${OGP_FONT_FAMILY}`;
+  const dateText = formatTimestampForOgp(Date.now());
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#888';
-  ctx.textAlign = 'left';
-  ctx.fillText('osats.money', 80, 570);
+  ctx.font = `28px ${OGP_FONT_FAMILY}`;
+  ctx.fillText(dateText, OGP_WIDTH / 2, 590);
 
   return canvas;
 }
