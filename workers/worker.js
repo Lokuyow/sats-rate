@@ -43,6 +43,13 @@ function isLegacyQuery(params) {
     return currencies.includes(',');
 }
 
+// SHA-256 を計算して hex 文字列を返す
+async function sha256Hex(uint8arr) {
+    const hashBuffer = await crypto.subtle.digest('SHA-256', uint8arr.buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // =====================================================
 // メインハンドラー（ES Modules形式）
 // =====================================================
@@ -165,10 +172,11 @@ async function handleSaveOgp(request, env) {
             });
         }
 
-        // 画像IDを生成
-        const imgId = generateImageId();
-        const key = `${imgId}.png`;
-        console.log('[handleSaveOgp] Generated key:', key);
+        // 重複チェック: bytes の SHA-256 ハッシュを作成して、既存マッピングを確認
+        const hash = await sha256Hex(bytes);
+        const mappingKey = `hashes/${hash}.json`;
+
+        console.log('[handleSaveOgp] Computed SHA-256 hash:', hash);
 
         // R2バインディングの確認
         if (!env.OGP_IMAGES) {
@@ -178,6 +186,24 @@ async function handleSaveOgp(request, env) {
                 headers: { "Content-Type": "application/json", ...corsHeaders() }
             });
         }
+
+        // 既に同じハッシュのマッピングがあれば、それを返す（重複排除）
+        const existingMapping = await env.OGP_IMAGES.get(mappingKey);
+        if (existingMapping) {
+            const existingImgId = existingMapping.customMetadata && existingMapping.customMetadata.img_id;
+            if (existingImgId) {
+                console.log('[handleSaveOgp] Duplicate detected, reusing img_id:', existingImgId);
+                return new Response(JSON.stringify({ img_id: existingImgId }), {
+                    status: 200,
+                    headers: { "Content-Type": "application/json", ...corsHeaders() }
+                });
+            }
+        }
+
+        // 新規保存: 画像IDを生成して R2 に保存し、ハッシュマッピングを作成
+        const imgId = generateImageId();
+        const key = `${imgId}.png`;
+        console.log('[handleSaveOgp] Generated key:', key);
 
         // R2に保存（TTLはカスタムメタデータで管理）
         const expiresAt = Date.now() + (IMAGE_TTL_SECONDS * 1000);
@@ -192,7 +218,20 @@ async function handleSaveOgp(request, env) {
                 createdAt: Date.now().toString()
             }
         });
-        console.log('[handleSaveOgp] Successfully saved to R2:', key);
+
+        // ハッシュ -> img_id マッピングを保存（空ボディでも customMetadata を使う）
+        await env.OGP_IMAGES.put(mappingKey, '', {
+            httpMetadata: {
+                contentType: 'application/json'
+            },
+            customMetadata: {
+                img_id: imgId,
+                hash: hash,
+                createdAt: Date.now().toString()
+            }
+        });
+
+        console.log('[handleSaveOgp] Successfully saved to R2:', key, 'mapping:', mappingKey);
 
         return new Response(JSON.stringify({ img_id: imgId }), {
             status: 200,
