@@ -97,10 +97,11 @@ async function handleRequest(request, env) {
         return handleOgImage(url, env);
     }
 
-    // HTML以外かつボットでなければパススルー
+    // HTML以外かつボットでなければパススルー。ただし動的OGP（img_id または ts）がある場合は常に処理する
     const userAgent = request.headers.get("user-agent") || "";
     const accept = request.headers.get("accept") || "";
-    if (!accept.includes("text/html") && !isSocialBot(userAgent)) {
+    // 動的OGPリクエスト（img_id / ts）がある場合は、Acceptに関係なく書き換え処理を行う
+    if (!shouldUseDynamicOgp(url.searchParams) && !accept.includes("text/html") && !isSocialBot(userAgent)) {
         return fetch(request);
     }
 
