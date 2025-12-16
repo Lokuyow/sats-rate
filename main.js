@@ -1018,10 +1018,6 @@ function generateOgpCanvas() {
 
   // 基準通貨の取得
   const baseKey = lastUpdatedField;
-  if (!baseKey) {
-    return drawSimpleOgp(ctx, canvas);
-  }
-
   const baseDisplayValue = document.getElementById(baseKey)?.value || '0';
   const baseNormalized = parseInput(baseDisplayValue, selectedLocale);
 
@@ -1064,31 +1060,6 @@ function generateOgpCanvas() {
   ctx.fillStyle = '#666';
   ctx.font = `46px ${OGP_FONT_FAMILY}`;
   ctx.fillText(dateText, OGP_WIDTH / 2, 600);
-
-  return canvas;
-}
-
-/**
- * シンプルなOGP画像を描画（基準通貨がない場合）
- */
-function drawSimpleOgp(ctx, canvas) {
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, OGP_WIDTH, OGP_HEIGHT);
-
-  ctx.font = `bold 80px ${OGP_FONT_FAMILY}`;
-  ctx.fillStyle = '#1a1a1a';
-  ctx.textAlign = 'center';
-  ctx.fillText(OGP_DEFAULT_TITLE, OGP_WIDTH / 2, 320);
-
-  ctx.font = `36px ${OGP_FONT_FAMILY}`;
-  ctx.fillStyle = '#666';
-  ctx.fillText('ビットコイン通貨換算ツール', OGP_WIDTH / 2, 400);
-
-  const dateText = formatTimestampForOgp(Date.now());
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#888';
-  ctx.font = `28px ${OGP_FONT_FAMILY}`;
-  ctx.fillText(dateText, OGP_WIDTH / 2, 590);
 
   return canvas;
 }
