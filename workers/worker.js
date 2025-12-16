@@ -60,7 +60,6 @@ const parseCurrencyList = (currencies) => {
 
 const isLegacyQuery = (params) => params.get('currencies')?.includes(',') ?? false;
 
-const isSocialBot = (userAgent) => SOCIAL_BOT_PATTERN.test(userAgent);
 
 const isValidUuid = (id) => UUID_PATTERN.test(id);
 
@@ -143,7 +142,7 @@ async function handleRequest(request, env) {
 
     // OGP画像配信
     if (pathname === "/og-image") {
-        return handleOgImage(url, env);
+        return handleOgImage(url, env, request);
     }
 
     // 静的アセット（画像、CSS、JS、フォントなど）はそのままパススルー
@@ -278,12 +277,13 @@ async function saveImageToR2(env, bytes, hash) {
 // -----------------------------------------------------
 // OGP画像配信
 // -----------------------------------------------------
-async function handleOgImage(url, env) {
+async function handleOgImage(url, env, request) {
     const imgId = url.searchParams.get('img_id');
 
-    // img_idがない、または無効な形式の場合は静的OGPへリダイレクト
+    // img_idがない、または無効な形式の場合は静的OGPを直接返す
+    // 注: Twitterbotはリダイレクトを追跡しないため、直接画像を返す必要がある
     if (!imgId || !isValidUuid(imgId)) {
-        return redirectToStaticOgp(url.origin);
+        return fetchStaticOgp(url.origin, request);
     }
 
     try {
@@ -291,10 +291,10 @@ async function handleOgImage(url, env) {
         const object = await env.OGP_IMAGES.get(key);
 
         if (!object) {
-            return redirectToStaticOgp(url.origin);
+            return fetchStaticOgp(url.origin, request);
         }
 
-        // TTLはR2のライフサイクルに任せる（期限切れオブジェクトはR2側で自動削除され、存在しない場合は上で静的OGPにリダイレクトされる）
+        // TTLはR2のライフサイクルに任せる（期限切れオブジェクトはR2側で自動削除され、存在しない場合は上で静的OGPを返す）
 
         return new Response(object.body, {
             headers: {
@@ -307,16 +307,38 @@ async function handleOgImage(url, env) {
         });
     } catch (error) {
         console.error('[handleOgImage] Error:', error);
-        return redirectToStaticOgp(url.origin);
+        return fetchStaticOgp(url.origin, request);
     }
 }
 
-const redirectToStaticOgp = (origin) => Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+// 静的OGP画像を直接フェッチして返す（リダイレクトではなく、Twitterbot対応）
+async function fetchStaticOgp(origin, request) {
+    try {
+        const staticUrl = `${origin}${STATIC_OGP_PATH}`;
+        const response = await fetch(staticUrl, {
+            headers: {
+                'User-Agent': request.headers.get('User-Agent') || ''
+            }
+        });
 
-// -----------------------------------------------------
-// 動的OGP判定
-// -----------------------------------------------------
-const shouldUseDynamicOgp = (params) => params.has('img_id') || params.has('ts');
+        if (!response.ok) {
+            // フェッチに失敗した場合のみリダイレクトにフォールバック
+            return Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+        }
+
+        // 画像を直接返す（リダイレクトなし）
+        return new Response(response.body, {
+            headers: {
+                "Content-Type": "image/png",
+                "Cache-Control": "public, max-age=86400",
+                "X-Content-Type-Options": "nosniff"
+            }
+        });
+    } catch (error) {
+        console.error('[fetchStaticOgp] Error:', error);
+        return Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+    }
+}
 
 // -----------------------------------------------------
 // OGPメタタグ書き換え
