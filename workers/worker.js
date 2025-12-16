@@ -9,9 +9,8 @@
 const DEFAULT_TITLE = "おいくらサッツ";
 const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール";
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
-const IMAGE_TTL_SECONDS = 168 * 60 * 60; // 7日
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
-const CACHE_MAX_AGE = 604800;            // 7日（秒）
+const CACHE_MAX_AGE = 31536000;           // 1年（秒）
 
 // CORS ヘッダーを動的に生成（オリジン検証付き）
 function getCorsHeaders(origin) {
@@ -250,16 +249,14 @@ async function findExistingImageByHash(env, hash) {
 async function saveImageToR2(env, bytes, hash) {
     const imgId = generateUuidV4();
     const key = `${imgId}.png`;
-    const expiresAt = Date.now() + (IMAGE_TTL_SECONDS * 1000);
 
     // 画像を保存
     await env.OGP_IMAGES.put(key, bytes, {
         httpMetadata: {
             contentType: 'image/png',
-            cacheControl: `public, max-age=${CACHE_MAX_AGE}`
+            cacheControl: `public, max-age=${CACHE_MAX_AGE}, immutable`
         },
         customMetadata: {
-            expiresAt: expiresAt.toString(),
             createdAt: Date.now().toString()
         }
     });
@@ -297,18 +294,13 @@ async function handleOgImage(url, env) {
             return redirectToStaticOgp(url.origin);
         }
 
-        // TTLチェック
-        const expiresAt = parseInt(object.customMetadata?.expiresAt || '0');
-        if (expiresAt && Date.now() > expiresAt) {
-            // 期限切れ画像を非同期で削除
-            env.OGP_IMAGES.delete(key).catch(() => { });
-            return redirectToStaticOgp(url.origin);
-        }
+        // TTLはR2のライフサイクルに任せる（期限切れオブジェクトはR2側で自動削除され、存在しない場合は上で静的OGPにリダイレクトされる）
 
         return new Response(object.body, {
             headers: {
                 "Content-Type": "image/png",
-                "Cache-Control": `public, max-age=${CACHE_MAX_AGE}`,
+                // Long cache + immutable for content-addressed images
+                "Cache-Control": `public, max-age=${CACHE_MAX_AGE}, immutable`,
                 "X-Content-Type-Options": "nosniff",
                 "X-Image-Id": imgId
             }
