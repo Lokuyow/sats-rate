@@ -3,31 +3,57 @@
 // R2を使用した動的PNG OGP画像配信
 // =====================================================
 
+// -----------------------------------------------------
 // 定数
+// -----------------------------------------------------
 const DEFAULT_TITLE = "おいくらサッツ";
 const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール";
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
+const IMAGE_TTL_SECONDS = 168 * 60 * 60; // 7日
+const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
+const CACHE_MAX_AGE = 604800;            // 7日（秒）
 
-// TTL: 168時間（7日）
-const IMAGE_TTL_SECONDS = 168 * 60 * 60;
-// アップロードファイルの上限バイト数（2MB）
-const MAX_FILE_BYTES = 2 * 1024 * 1024; // 2MB
+const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+};
 
-// =====================================================
+const SOCIAL_BOT_PATTERN = /twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|telegrambot|line-poker|applebot/i;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// -----------------------------------------------------
+// レスポンス生成ヘルパー
+// -----------------------------------------------------
+const jsonResponse = (data, status = 200) => new Response(
+    JSON.stringify(data),
+    { status, headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
+);
+
+const errorResponse = (message, status) => jsonResponse({ error: message }, status);
+
+const corsPreflightResponse = () => new Response(null, {
+    status: 204,
+    headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "86400" }
+});
+
+// -----------------------------------------------------
 // ユーティリティ関数
-// =====================================================
+// -----------------------------------------------------
+const formatCurrencyCode = (code) => code === 'sats' ? 'sats' : code.toUpperCase();
 
-function formatCurrencyCode(code) {
-    return code === 'sats' ? 'sats' : code.toUpperCase();
-}
-
-function parseCurrencyList(currencies) {
+const parseCurrencyList = (currencies) => {
     const separator = currencies.includes('-') ? '-' : ',';
     return currencies.split(separator).map(s => s.trim()).filter(Boolean);
-}
+};
 
-// UUIDv4生成
-function generateImageId() {
+const isLegacyQuery = (params) => params.get('currencies')?.includes(',') ?? false;
+
+const isSocialBot = (userAgent) => SOCIAL_BOT_PATTERN.test(userAgent);
+
+const isValidUuid = (id) => UUID_PATTERN.test(id);
+
+function generateUuidV4() {
     const bytes = new Uint8Array(16);
     crypto.getRandomValues(bytes);
     bytes[6] = (bytes[6] & 0x0f) | 0x40;
@@ -36,58 +62,49 @@ function generateImageId() {
     return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
-// 旧式クエリ判定（カンマ区切りcurrencies）
-function isLegacyQuery(params) {
-    const currencies = params.get('currencies');
-    if (!currencies) return false;
-    return currencies.includes(',');
-}
-
-// SHA-256 を計算して hex 文字列を返す
-async function sha256Hex(uint8arr) {
+async function computeSha256Hex(uint8arr) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', uint8arr.buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return [...new Uint8Array(hashBuffer)]
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
 }
 
-// =====================================================
-// メインハンドラー（ES Modules形式）
-// =====================================================
-
+// -----------------------------------------------------
+// メインハンドラー
+// -----------------------------------------------------
 export default {
-    async fetch(request, env, ctx) {
+    async fetch(request, env) {
         return handleRequest(request, env);
     }
 };
 
 async function handleRequest(request, env) {
     const url = new URL(request.url);
+    const { pathname } = url;
 
-    // CORS対応のOPTIONSリクエスト
+    // CORS プリフライト
     if (request.method === "OPTIONS") {
-        return handleCors();
+        return corsPreflightResponse();
     }
 
     // API: OGP画像保存
-    if (url.pathname === "/api/save-ogp" && request.method === "POST") {
+    if (pathname === "/api/save-ogp" && request.method === "POST") {
         return handleSaveOgp(request, env);
     }
 
     // OGP画像配信
-    if (url.pathname === "/og-image") {
+    if (pathname === "/og-image") {
         return handleOgImage(url, env);
     }
 
-    // SNSボットのUser-Agentを検出
-    const userAgent = (request.headers.get("user-agent") || "").toLowerCase();
-    const isSocialBot = /twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|telegrambot|line-poker|applebot/i.test(userAgent);
-
+    // HTML以外かつボットでなければパススルー
+    const userAgent = request.headers.get("user-agent") || "";
     const accept = request.headers.get("accept") || "";
-    // SNSボットの場合、またはtext/htmlを要求している場合に書き換え処理を行う
-    if (!accept.includes("text/html") && !isSocialBot) {
+    if (!accept.includes("text/html") && !isSocialBot(userAgent)) {
         return fetch(request);
     }
 
+    // オリジンからレスポンス取得
     const originRes = await fetch(request);
 
     // 動的OGPが不要な場合はそのまま返す
@@ -96,317 +113,225 @@ async function handleRequest(request, env) {
     }
 
     // 旧式クエリ（カンマ区切り）は静的PNGを使用
-    if (isLegacyQuery(url.searchParams)) {
-        return rewriteOgpMeta(originRes, url, null);
-    }
-
-    // 新形式: img_idがあればR2画像を参照
-    const imgId = url.searchParams.get('img_id');
+    const imgId = isLegacyQuery(url.searchParams) ? null : url.searchParams.get('img_id');
     return rewriteOgpMeta(originRes, url, imgId);
 }
 
-// =====================================================
-// CORS処理
-// =====================================================
-
-function handleCors() {
-    return new Response(null, {
-        status: 204,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "86400"
-        }
-    });
-}
-
-function corsHeaders() {
-    return {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type"
-    };
-}
-
-// =====================================================
+// -----------------------------------------------------
 // OGP画像保存 API
-// =====================================================
-
+// -----------------------------------------------------
 async function handleSaveOgp(request, env) {
+    const contentType = (request.headers.get('content-type') || '').toLowerCase();
+
+    // multipart/form-data のみ受け付け
+    if (!contentType.includes('multipart/form-data')) {
+        console.error('[handleSaveOgp] Unsupported Content-Type:', contentType);
+        return errorResponse('Unsupported Media Type. Send multipart/form-data with field "file".', 415);
+    }
+
     try {
-        console.log('[handleSaveOgp] Starting (FormData-only enforcement)...');
-
-        const contentType = (request.headers.get('content-type') || '').toLowerCase();
-
-        // Strict: accept only multipart/form-data
-        if (!contentType.includes('multipart/form-data')) {
-            console.error('[handleSaveOgp] Unsupported Content-Type:', contentType);
-            return new Response(JSON.stringify({ error: 'Unsupported Media Type. Send multipart/form-data with field "file".' }), {
-                status: 415,
-                headers: { "Content-Type": "application/json", ...corsHeaders() }
-            });
+        const bytes = await extractFileFromFormData(request);
+        if (!bytes) {
+            return errorResponse('file missing', 400);
         }
 
-        // multipart/form-data を想定（Blob/FormData）
-        const form = await request.formData();
-        const file = form.get('file') || form.get('image');
-        if (!file) {
-            console.error('[handleSaveOgp] No file field in form');
-            return new Response(JSON.stringify({ error: 'file missing' }), {
-                status: 400,
-                headers: { "Content-Type": "application/json", ...corsHeaders() }
-            });
-        }
-
-        const buffer = await file.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-        console.log('[handleSaveOgp] Received multipart/form-data, size:', bytes.length);
-
-        // サイズチェック
         if (bytes.length > MAX_FILE_BYTES) {
             console.error('[handleSaveOgp] File too large:', bytes.length);
-            return new Response(JSON.stringify({ error: 'File too large' }), {
-                status: 413,
-                headers: { "Content-Type": "application/json", ...corsHeaders() }
-            });
+            return errorResponse('File too large', 413);
         }
 
-        // 重複チェック: bytes の SHA-256 ハッシュを作成して、既存マッピングを確認
-        const hash = await sha256Hex(bytes);
-        const mappingKey = `hashes/${hash}.json`;
-
-        console.log('[handleSaveOgp] Computed SHA-256 hash:', hash);
-
-        // R2バインディングの確認
         if (!env.OGP_IMAGES) {
             console.error('[handleSaveOgp] R2 binding OGP_IMAGES not found!');
-            return new Response(JSON.stringify({ error: 'R2 binding not configured' }), {
-                status: 500,
-                headers: { "Content-Type": "application/json", ...corsHeaders() }
-            });
+            return errorResponse('R2 binding not configured', 500);
         }
 
-        // 既に同じハッシュのマッピングがあれば、それを返す（重複排除）
-        const existingMapping = await env.OGP_IMAGES.get(mappingKey);
-        if (existingMapping) {
-            const existingImgId = existingMapping.customMetadata && existingMapping.customMetadata.img_id;
-            if (existingImgId) {
-                console.log('[handleSaveOgp] Duplicate detected, reusing img_id:', existingImgId);
-                return new Response(JSON.stringify({ img_id: existingImgId }), {
-                    status: 200,
-                    headers: { "Content-Type": "application/json", ...corsHeaders() }
-                });
-            }
+        // 重複チェック
+        const hash = await computeSha256Hex(bytes);
+        const existingImgId = await findExistingImageByHash(env, hash);
+        if (existingImgId) {
+            console.log('[handleSaveOgp] Duplicate detected, reusing img_id:', existingImgId);
+            return jsonResponse({ img_id: existingImgId });
         }
 
-        // 新規保存: 画像IDを生成して R2 に保存し、ハッシュマッピングを作成
-        const imgId = generateImageId();
-        const key = `${imgId}.png`;
-        console.log('[handleSaveOgp] Generated key:', key);
+        // 新規保存
+        const imgId = await saveImageToR2(env, bytes, hash);
+        console.log('[handleSaveOgp] Successfully saved:', imgId);
+        return jsonResponse({ img_id: imgId });
 
-        // R2に保存（TTLはカスタムメタデータで管理）
-        const expiresAt = Date.now() + (IMAGE_TTL_SECONDS * 1000);
-        console.log('[handleSaveOgp] Saving to R2...');
-        await env.OGP_IMAGES.put(key, bytes, {
-            httpMetadata: {
-                contentType: 'image/png',
-                cacheControl: 'public, max-age=604800' // 7日
-            },
-            customMetadata: {
-                expiresAt: expiresAt.toString(),
-                createdAt: Date.now().toString()
-            }
-        });
-
-        // ハッシュ -> img_id マッピングを保存（空ボディでも customMetadata を使う）
-        await env.OGP_IMAGES.put(mappingKey, '', {
-            httpMetadata: {
-                contentType: 'application/json'
-            },
-            customMetadata: {
-                img_id: imgId,
-                hash: hash,
-                createdAt: Date.now().toString()
-            }
-        });
-
-        console.log('[handleSaveOgp] Successfully saved to R2:', key, 'mapping:', mappingKey);
-
-        return new Response(JSON.stringify({ img_id: imgId }), {
-            status: 200,
-            headers: { "Content-Type": "application/json", ...corsHeaders() }
-        });
     } catch (error) {
-        console.error('[handleSaveOgp] Error:', error);
-        console.error('[handleSaveOgp] Error stack:', error.stack);
-        return new Response(JSON.stringify({ error: 'Internal server error', message: error.message }), {
-            status: 500,
-            headers: { "Content-Type": "application/json", ...corsHeaders() }
-        });
+        console.error('[handleSaveOgp] Error:', error.message, error.stack);
+        return errorResponse('Internal server error', 500);
     }
 }
 
-// =====================================================
-// OGP画像配信
-// =====================================================
+async function extractFileFromFormData(request) {
+    const form = await request.formData();
+    const file = form.get('file') || form.get('image');
+    if (!file) return null;
 
+    const buffer = await file.arrayBuffer();
+    return new Uint8Array(buffer);
+}
+
+async function findExistingImageByHash(env, hash) {
+    const mappingKey = `hashes/${hash}.json`;
+    const existingMapping = await env.OGP_IMAGES.get(mappingKey);
+    return existingMapping?.customMetadata?.img_id || null;
+}
+
+async function saveImageToR2(env, bytes, hash) {
+    const imgId = generateUuidV4();
+    const key = `${imgId}.png`;
+    const expiresAt = Date.now() + (IMAGE_TTL_SECONDS * 1000);
+
+    // 画像を保存
+    await env.OGP_IMAGES.put(key, bytes, {
+        httpMetadata: {
+            contentType: 'image/png',
+            cacheControl: `public, max-age=${CACHE_MAX_AGE}`
+        },
+        customMetadata: {
+            expiresAt: expiresAt.toString(),
+            createdAt: Date.now().toString()
+        }
+    });
+
+    // ハッシュマッピングを保存
+    const mappingKey = `hashes/${hash}.json`;
+    await env.OGP_IMAGES.put(mappingKey, '', {
+        httpMetadata: { contentType: 'application/json' },
+        customMetadata: {
+            img_id: imgId,
+            hash,
+            createdAt: Date.now().toString()
+        }
+    });
+
+    return imgId;
+}
+
+// -----------------------------------------------------
+// OGP画像配信
+// -----------------------------------------------------
 async function handleOgImage(url, env) {
     const imgId = url.searchParams.get('img_id');
-    console.log('[handleOgImage] Requested img_id:', imgId);
 
-    // img_idがない場合は静的PNGにリダイレクト
-    if (!imgId) {
-        console.log('[handleOgImage] No img_id, redirecting to static OGP');
-        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
-    }
-
-    // img_idの形式チェック（UUID形式）
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(imgId)) {
-        console.log('[handleOgImage] Invalid UUID format, redirecting to static OGP');
-        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+    // img_idがない、または無効な形式の場合は静的OGPへリダイレクト
+    if (!imgId || !isValidUuid(imgId)) {
+        return redirectToStaticOgp(url.origin);
     }
 
     try {
         const key = `${imgId}.png`;
-        console.log('[handleOgImage] Fetching from R2:', key);
         const object = await env.OGP_IMAGES.get(key);
 
         if (!object) {
-            console.log('[handleOgImage] Image not found in R2:', key);
-            // R2に画像がない場合は静的PNGにリダイレクト
-            return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+            return redirectToStaticOgp(url.origin);
         }
 
-        console.log('[handleOgImage] Image found in R2, size:', object.size);
-
-        // TTLチェック（期限切れの場合も静的PNGにリダイレクト）
-        const expiresAt = object.customMetadata?.expiresAt;
-        if (expiresAt && Date.now() > parseInt(expiresAt)) {
-            console.log('[handleOgImage] Image expired, deleting and redirecting');
-            // 期限切れ画像を削除（非同期で実行）
+        // TTLチェック
+        const expiresAt = parseInt(object.customMetadata?.expiresAt || '0');
+        if (expiresAt && Date.now() > expiresAt) {
+            // 期限切れ画像を非同期で削除
             env.OGP_IMAGES.delete(key).catch(() => { });
-            return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+            return redirectToStaticOgp(url.origin);
         }
 
-        console.log('[handleOgImage] Serving image:', key);
         return new Response(object.body, {
             headers: {
                 "Content-Type": "image/png",
-                "Cache-Control": "public, max-age=604800", // 7日
+                "Cache-Control": `public, max-age=${CACHE_MAX_AGE}`,
                 "X-Image-Id": imgId
             }
         });
     } catch (error) {
-        console.error('Get OGP image error:', error);
-        return Response.redirect(`${url.origin}${STATIC_OGP_PATH}`, 302);
+        console.error('[handleOgImage] Error:', error);
+        return redirectToStaticOgp(url.origin);
     }
 }
 
-// =====================================================
+const redirectToStaticOgp = (origin) => Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+
+// -----------------------------------------------------
 // 動的OGP判定
-// =====================================================
+// -----------------------------------------------------
+const shouldUseDynamicOgp = (params) => params.has('img_id') || params.has('ts');
 
-function shouldUseDynamicOgp(params) {
-    // img_idがあれば動的OGP
-    if (params.has('img_id')) return true;
-    // 旧式（tsパラメータ）も一応対応（静的PNGを返す）
-    if (params.has('ts')) return true;
-    return false;
-}
-
-// =====================================================
+// -----------------------------------------------------
 // OGPメタタグ書き換え
-// =====================================================
-
+// -----------------------------------------------------
 function rewriteOgpMeta(originRes, url, imgId) {
     const params = url.searchParams;
     const { title, description } = buildOgTextFromParams(params);
     const currentUrl = url.toString();
+    const ogImageUrl = imgId
+        ? `${url.origin}/og-image?img_id=${imgId}`
+        : `${url.origin}${STATIC_OGP_PATH}`;
 
-    // OGP画像URL決定
-    let ogImageUrl;
-    if (imgId) {
-        // R2のPNG画像を参照
-        ogImageUrl = `${url.origin}/og-image?img_id=${imgId}`;
-    } else {
-        // 静的PNG
-        ogImageUrl = `${url.origin}${STATIC_OGP_PATH}`;
-    }
-
-    const rewriter = new HTMLRewriter()
-        .on('meta[property="og:title"]', new ReplaceMeta(title))
-        .on('meta[property="og:description"]', new ReplaceMeta(description))
-        .on('meta[property="og:image"]', new ReplaceMeta(ogImageUrl))
-        .on('meta[property="og:url"]', new ReplaceMeta(currentUrl))
-        .on('meta[name="twitter:card"]', new ReplaceMeta("summary_large_image"))
-        .on('meta[name="twitter:image"]', new ReplaceMeta(ogImageUrl))
-        .on('title', new ReplaceTitle(title));
-
-    return rewriter.transform(originRes);
+    return new HTMLRewriter()
+        .on('meta[property="og:title"]', new MetaContentRewriter(title))
+        .on('meta[property="og:description"]', new MetaContentRewriter(description))
+        .on('meta[property="og:image"]', new MetaContentRewriter(ogImageUrl))
+        .on('meta[property="og:url"]', new MetaContentRewriter(currentUrl))
+        .on('meta[name="twitter:card"]', new MetaContentRewriter("summary_large_image"))
+        .on('meta[name="twitter:image"]', new MetaContentRewriter(ogImageUrl))
+        .on('title', new TitleRewriter(title))
+        .transform(originRes);
 }
 
-// =====================================================
+// -----------------------------------------------------
 // OGPテキスト生成
-// =====================================================
-
+// -----------------------------------------------------
 function buildOgTextFromParams(params) {
     const currencies = params.get('currencies');
-
     if (!currencies) {
         return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
     }
 
     const currencyList = parseCurrencyList(currencies);
-    const { key: baseKey, value: baseValue } = findBaseCurrency(params);
+    const baseCurrency = findBaseCurrency(params);
 
-    if (!baseKey || !baseValue) {
+    if (!baseCurrency) {
         return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
     }
 
-    // タイトル: 入力値と通貨コード
-    const formattedValue = formatNumberWithLocale(baseValue, params);
-    const title = `${formattedValue} ${formatCurrencyCode(baseKey)} | ${DEFAULT_TITLE}`;
+    const { key, value } = baseCurrency;
+    const formattedValue = formatNumberWithLocale(value, params);
 
-    // Description: 選択通貨の一覧
-    const description = `${formattedValue} ${formatCurrencyCode(baseKey)} を含む ${currencyList.length} 通貨間の換算結果`;
-
-    return { title, description };
+    return {
+        title: `${formattedValue} ${formatCurrencyCode(key)} | ${DEFAULT_TITLE}`,
+        description: `${formattedValue} ${formatCurrencyCode(key)} を含む ${currencyList.length} 通貨間の換算結果`
+    };
 }
 
 function findBaseCurrency(params) {
-    // URLの最初の通貨パラメータを基準通貨とする
+    const SKIP_PARAMS = new Set(['currencies', 'img_id', 'd']);
+    const CURRENCY_CODE_PATTERN = /^[a-z]{2,4}$/i;
+
     for (const [key, value] of params.entries()) {
-        if (key === 'currencies' || key === 'img_id' || key === 'd') continue;
-        // 通貨コードと思われるキー（小文字2-4文字）
-        if (/^[a-z]{2,4}$/i.test(key) && value) {
+        if (SKIP_PARAMS.has(key)) continue;
+        if (CURRENCY_CODE_PATTERN.test(key) && value) {
             return { key, value };
         }
     }
-    return { key: null, value: null };
+    return null;
 }
 
 function formatNumberWithLocale(valueStr, params) {
     const s = String(valueStr).trim();
-    if (s === '') return s;
+    if (!s) return s;
 
     // 小数点の正規化
-    let normalized;
-    if (s.includes(',') && !s.includes('.')) {
-        normalized = s.replace(/,/g, '.');
-    } else {
-        normalized = s.replace(/,/g, '');
-    }
+    const normalized = s.includes(',') && !s.includes('.')
+        ? s.replace(/,/g, '.')
+        : s.replace(/,/g, '');
 
     const num = Number(normalized);
     if (Number.isNaN(num)) return s;
 
-    const decimalFormat = params.get('d');
-    const locale = decimalFormat === 'c' ? 'de-DE' : 'en-US';
-
+    const locale = params.get('d') === 'c' ? 'de-DE' : 'en-US';
     const parts = normalized.split('.');
-    const fracLength = parts[1] ? Math.min(parts[1].length, 8) : 0;
+    const fracLength = Math.min(parts[1]?.length || 0, 8);
 
     return new Intl.NumberFormat(locale, {
         minimumFractionDigits: 0,
@@ -415,11 +340,10 @@ function formatNumberWithLocale(valueStr, params) {
     }).format(num);
 }
 
-// =====================================================
+// -----------------------------------------------------
 // HTMLRewriter クラス
-// =====================================================
-
-class ReplaceMeta {
+// -----------------------------------------------------
+class MetaContentRewriter {
     constructor(content) {
         this.content = content;
     }
@@ -428,7 +352,7 @@ class ReplaceMeta {
     }
 }
 
-class ReplaceTitle {
+class TitleRewriter {
     constructor(title) {
         this.title = title;
     }
@@ -436,11 +360,4 @@ class ReplaceTitle {
         el.setInnerContent(this.title);
     }
 }
-
-// =====================================================
-// TODO: 定期クリーンアップ（Cron Trigger）
-// 期限切れ画像の削除は別途Cron Triggerで実装予定
-// [[triggers]]
-// crons = ["0 0 * * *"]  # 毎日0時に実行
-// =====================================================
 
