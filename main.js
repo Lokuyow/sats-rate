@@ -1026,7 +1026,7 @@ function generateOgpCanvas() {
   const baseNormalized = parseInput(baseDisplayValue, selectedLocale);
 
   // メインタイトル（入力値 通貨コード =）
-  const mainTitle = `${formatNumberForOgp(baseNormalized)} ${baseKey.toUpperCase()} =`;
+  const mainTitle = `${formatNumberForOgp(baseNormalized)} ${formatCurrencyCodeForOgp(baseKey)} =`;
   ctx.font = `bold 115px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#1a1a1a';
   ctx.textAlign = 'center';
