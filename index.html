@@ -418,21 +418,12 @@
 
   <script src="./lib/pulltorefresh.umd.min.js"></script>
   <script>
-    // wrangler dev（localhost/127.0.0.1）ではボタン操作がPullToRefreshに誤検知されて
-    // 予期せずリロードされるケースがあるため、開発時は無効化する。
-    // 本番（osats.money）では従来通り有効。
-    const isWranglerDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-
-    if (!isWranglerDev) {
-      PullToRefresh.init({
-        mainElement: 'body',
-        // 通貨入力エリアでの「引っ張って更新」だけを有効化（共有/コピーボタン等の操作で誤発火しないように）
-        triggerElement: '.currency-inputs-container',
-        onRefresh() {
-          window.location.reload();
-        }
-      });
-    }
+    PullToRefresh.init({
+      mainElement: 'body',
+      onRefresh() {
+        window.location.reload();
+      }
+    });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap@1"></script>
   <script src="https://cdn.jsdelivr.net/npm/nostr-zap-view@1"></script>
