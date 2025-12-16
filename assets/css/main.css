@@ -988,6 +988,7 @@ section {
   background-color: var(--bg-color1);
   border: 2px solid var(--input-bg-color);
   line-height: 50px;
+  opacity: 1;
 
   & div.bolt-solid {
     width: 24px;
