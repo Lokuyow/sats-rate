@@ -1030,20 +1030,35 @@ function generateOgpCanvas() {
 
   // 出力通貨の行を生成
   const outputCurrencies = selectedCurrencies.filter(key => key !== baseKey).slice(0, OGP_MAX_OUTPUT_CURRENCIES);
-  const outputLines = outputCurrencies.map(key => {
+  const outputData = outputCurrencies.map(key => {
     const displayValue = document.getElementById(key)?.value || '0';
     const normalized = parseInput(displayValue, selectedLocale);
-    return `${formatNumberForOgp(normalized)} ${formatCurrencyCodeForOgp(key)}`;
+    return {
+      value: formatNumberForOgp(normalized),
+      code: formatCurrencyCodeForOgp(key)
+    };
   });
 
   // フォント設定を取得
-  const config = OGP_FONT_CONFIGS[Math.min(outputLines.length, OGP_MAX_OUTPUT_CURRENCIES)] || OGP_FONT_CONFIGS[4];
+  const config = OGP_FONT_CONFIGS[Math.min(outputData.length, OGP_MAX_OUTPUT_CURRENCIES)] || OGP_FONT_CONFIGS[4];
 
-  // 出力行を描画
+  // 出力行を描画（数値と通貨記号を分けて整列）
   ctx.font = `${config.fontSize}px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#333';
-  outputLines.forEach((line, i) => {
-    ctx.fillText(line, OGP_WIDTH / 2, config.startY + (i * config.lineSpacing));
+  // 全体を右に寄せるオフセット（px）
+  const OUTPUT_SHIFT = 140;
+  const centerX = OGP_WIDTH / 2 + OUTPUT_SHIFT;
+  const numberX = centerX - 10; // 数値の右端位置
+  const codeX = centerX + 10;   // 通貨記号の左端位置
+
+  outputData.forEach((data, i) => {
+    const y = config.startY + (i * config.lineSpacing);
+    // 数値を右揃えで描画
+    ctx.textAlign = 'right';
+    ctx.fillText(data.value, numberX, y);
+    // 通貨記号を左揃えで描画
+    ctx.textAlign = 'left';
+    ctx.fillText(data.code, codeX, y);
   });
 
   // フッター: 日付を中央に表示
