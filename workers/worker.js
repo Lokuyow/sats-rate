@@ -335,9 +335,6 @@ function rewriteOgpMeta(originRes, url, imgId) {
         .on('meta[property="og:image"]', new MetaContentRewriter(ogImageUrl))
         .on('meta[property="og:url"]', new MetaContentRewriter(currentUrl))
         .on('meta[name="twitter:card"]', new MetaContentRewriter("summary_large_image"))
-        .on('meta[name="twitter:title"]', new MetaContentRewriter(title))
-        .on('meta[name="twitter:description"]', new MetaContentRewriter(description))
-        .on('meta[name="twitter:image"]', new MetaContentRewriter(ogImageUrl))
         .on('title', new TitleRewriter(title))
         .on('head', new HeadInjector(ogImageUrl, title, description))
         .transform(originRes);
@@ -427,7 +424,7 @@ class TitleRewriter {
     }
 }
 
-// head に追加の OGP/Twitter 画像メタを挿入する（Twitterの判定が厳しい場合に備える）
+// head に追加の OGP 画像メタを挿入する
 // XSS対策: 安全なメタ要素作成（エスケープ済みの値のみ使用）
 class HeadInjector {
     constructor(ogImageUrl, title, description) {
@@ -440,11 +437,9 @@ class HeadInjector {
         // 安全にエスケープされた値でメタ要素を追加
         // HTMLRewriterは setAttribute 経由で安全に挿入
         const metaTags = [
-            `<meta property="og:image:secure_url" content="${this.ogImageUrl}">`,
             `<meta property="og:image:type" content="image/png">`,
             `<meta property="og:image:width" content="1200">`,
-            `<meta property="og:image:height" content="630">`,
-            `<meta name="twitter:image:src" content="${this.ogImageUrl}">`
+            `<meta property="og:image:height" content="630">`
         ].join('');
 
         // 既にエスケープ済みなのでhtml:trueは安全
