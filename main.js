@@ -966,10 +966,10 @@ const OGP_MAX_OUTPUT_CURRENCIES = 4;
 const JST_OFFSET = 9 * 60 * 60 * 1000;
 
 const OGP_FONT_CONFIGS = {
-  1: { fontSize: 100, startY: 350, lineSpacing: 0 },
-  2: { fontSize: 85, startY: 300, lineSpacing: 130 },
-  3: { fontSize: 65, startY: 270, lineSpacing: 105 },
-  4: { fontSize: 65, startY: 250, lineSpacing: 85 }
+  1: { fontSize: 95, startY: 370, lineSpacing: 0 },
+  2: { fontSize: 90, startY: 320, lineSpacing: 130 },
+  3: { fontSize: 85, startY: 265, lineSpacing: 115 },
+  4: { fontSize: 70, startY: 235, lineSpacing: 95 }
 };
 
 /**
@@ -1015,17 +1015,17 @@ function generateOgpCanvas() {
 
   // メインタイトル（入力値 通貨コード =）
   const mainTitle = `${formatNumberForOgp(baseNormalized)} ${formatCurrencyCodeForOgp(baseKey)} =`;
-  ctx.font = `bold 115px ${OGP_FONT_FAMILY}`;
+  ctx.font = `bold 100px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#1a1a1a';
   ctx.textAlign = 'center';
   ctx.fillText(mainTitle, OGP_WIDTH / 2, 130);
 
   // 区切り線
-  ctx.strokeStyle = '#ddd';
+  ctx.strokeStyle = '#999';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(200, 160);
-  ctx.lineTo(1000, 160);
+  ctx.moveTo(100, 150);
+  ctx.lineTo(1100, 150);
   ctx.stroke();
 
   // 出力通貨の行を生成
@@ -1046,7 +1046,7 @@ function generateOgpCanvas() {
   ctx.font = `${config.fontSize}px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#333';
   // 全体を右に寄せるオフセット（px）
-  const OUTPUT_SHIFT = 140;
+  const OUTPUT_SHIFT = 120;
   const centerX = OGP_WIDTH / 2 + OUTPUT_SHIFT;
   const numberX = centerX - 10; // 数値の右端位置
   const codeX = centerX + 10;   // 通貨記号の左端位置
@@ -1065,7 +1065,7 @@ function generateOgpCanvas() {
   const dateText = formatTimestampForOgp(Date.now());
   ctx.textAlign = 'center';
   ctx.fillStyle = '#666';
-  ctx.font = `46px ${OGP_FONT_FAMILY}`;
+  ctx.font = `50px ${OGP_FONT_FAMILY}`;
   ctx.fillText(dateText, OGP_WIDTH / 2, 600);
 
   return canvas;
