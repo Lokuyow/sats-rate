@@ -1066,11 +1066,11 @@ function generateOgpCanvas() {
   ctx.textAlign = 'center';
   ctx.fillStyle = '#666';
   ctx.font = `50px ${OGP_FONT_FAMILY}`;
-  ctx.fillText(dateText, OGP_WIDTH / 2, 610);
+  ctx.fillText(dateText, OGP_WIDTH / 2, OGP_HEIGHT - 20);
 
   // Source credit (Right Bottom)
   ctx.textAlign = 'right';
-  ctx.font = `30px ${OGP_FONT_FAMILY}`;
+  ctx.font = `34px ${OGP_FONT_FAMILY}`;
   ctx.fillText('Source: CoinGecko', OGP_WIDTH - 20, OGP_HEIGHT - 20);
 
   return canvas;
