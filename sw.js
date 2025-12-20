@@ -13,6 +13,7 @@ const urlsToCache = [
   "/assets/js/currencyManager.js",
   "/assets/js/currencies.js",
   "/assets/js/lightning-address.js",
+  "/assets/js/ogpGenerator.js",
   "/assets/js/pos.js",
   "/assets/data/currencies.json",
   "/assets/vanilla-i18n/日本語.json",
