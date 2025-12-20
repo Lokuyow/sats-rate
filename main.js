@@ -998,7 +998,7 @@ function formatTimestampForOgp(timestamp) {
 /**
  * OGP画像用のCanvasを生成
  */
-function generateOgpCanvas() {
+async function generateOgpCanvas() {
   const canvas = document.createElement('canvas');
   canvas.width = OGP_WIDTH;
   canvas.height = OGP_HEIGHT;
@@ -1046,7 +1046,7 @@ function generateOgpCanvas() {
   ctx.font = `${config.fontSize}px ${OGP_FONT_FAMILY}`;
   ctx.fillStyle = '#333';
   // 全体を右に寄せるオフセット（px）
-  const OUTPUT_SHIFT = 120;
+  const OUTPUT_SHIFT = 135;
   const centerX = OGP_WIDTH / 2 + OUTPUT_SHIFT;
   const numberX = centerX - 10; // 数値の右端位置
   const codeX = centerX + 10;   // 通貨記号の左端位置
@@ -1060,6 +1060,26 @@ function generateOgpCanvas() {
     ctx.textAlign = 'left';
     ctx.fillText(data.code, codeX, y);
   });
+
+  // アイコン画像の読み込みと描画（左下）
+  try {
+    const iconImage = new Image();
+    iconImage.src = 'assets/images/icon_x192.png';
+    await new Promise((resolve, reject) => {
+      iconImage.onload = resolve;
+      iconImage.onerror = reject;
+    });
+
+    // アイコンのサイズと位置設定
+    const iconSize = 80; // 80x80px
+    const iconPadding = 15; // 左端と下端からの余白
+    const iconX = iconPadding;
+    const iconY = OGP_HEIGHT - iconSize - iconPadding;
+
+    ctx.drawImage(iconImage, iconX, iconY, iconSize, iconSize);
+  } catch (error) {
+    console.warn('OGPアイコンの読み込みに失敗しました:', error);
+  }
 
   // フッター: 日付を中央に表示
   const dateText = formatTimestampForOgp(Date.now());
@@ -1100,7 +1120,7 @@ function formatNumberForOgp(valueStr) {
 async function generateAndUploadOgpImage() {
   try {
     // Canvas生成
-    const canvas = generateOgpCanvas();
+    const canvas = await generateOgpCanvas();
     const isLocalHost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
     // Prefer production endpoint first for reliability, then fall back to local dev endpoints when running locally.
     const apiCandidates = isLocalHost
