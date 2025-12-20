@@ -764,7 +764,7 @@ async function copyToClipboardEvent(event) {
     console.log('[copyToClipboardEvent] Starting...');
     // OGP画像を生成してR2にアップロード
     const { baseNormalized, outputData } = prepareOgpData(lastUpdatedField, selectedCurrencies, parseInput, selectedLocale);
-    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData);
+    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData, lastUpdatedTimestamp);
     console.log('[copyToClipboardEvent] Got img_id:', imgId);
 
     const queryParams = generateQueryStringFromValues(imgId);
@@ -860,7 +860,7 @@ async function shareViaWebAPIEvent(event) {
   try {
     // OGP画像を生成してR2にアップロード
     const { baseNormalized, outputData } = prepareOgpData(lastUpdatedField, selectedCurrencies, parseInput, selectedLocale);
-    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData);
+    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData, lastUpdatedTimestamp);
     const queryParams = generateQueryStringFromValues(imgId);
     shareViaWebAPI(queryParams, event);
   } catch (error) {

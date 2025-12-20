@@ -60,9 +60,10 @@ function formatNumberForOgp(valueStr) {
  * @param {string} baseKey - 基準通貨のキー
  * @param {string} baseNormalized - 基準通貨の正規化された値
  * @param {Array<{value: string, code: string}>} outputData - 出力通貨データ
+ * @param {number} timestamp - レート取得時のUNIXタイムスタンプ（秒）
  * @returns {Promise<HTMLCanvasElement>}
  */
-async function generateOgpCanvas(baseKey, baseNormalized, outputData) {
+async function generateOgpCanvas(baseKey, baseNormalized, outputData, timestamp) {
     const canvas = document.createElement('canvas');
     canvas.width = OGP_WIDTH;
     canvas.height = OGP_HEIGHT;
@@ -129,8 +130,8 @@ async function generateOgpCanvas(baseKey, baseNormalized, outputData) {
         console.warn('OGPアイコンの読み込みに失敗しました:', error);
     }
 
-    // フッター: 日付を中央に表示
-    const dateText = formatTimestampForOgp(Date.now());
+    // フッター: 日付を中央に表示（レート取得時間）
+    const dateText = formatTimestampForOgp(timestamp * 1000);
     ctx.textAlign = 'center';
     ctx.fillStyle = '#666';
     ctx.font = `50px ${OGP_FONT_FAMILY}`;
@@ -149,12 +150,13 @@ async function generateOgpCanvas(baseKey, baseNormalized, outputData) {
  * @param {string} baseKey - 基準通貨のキー
  * @param {string} baseNormalized - 基準通貨の正規化された値
  * @param {Array<{value: string, code: string}>} outputData - 出力通貨データ
+ * @param {number} timestamp - レート取得時のUNIXタイムスタンプ（秒）
  * @returns {Promise<string|null>} img_id または null
  */
-export async function generateAndUploadOgpImage(baseKey, baseNormalized, outputData) {
+export async function generateAndUploadOgpImage(baseKey, baseNormalized, outputData, timestamp) {
     try {
         // Canvas生成
-        const canvas = await generateOgpCanvas(baseKey, baseNormalized, outputData);
+        const canvas = await generateOgpCanvas(baseKey, baseNormalized, outputData, timestamp);
         const isLocalHost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
         // Prefer production endpoint first for reliability, then fall back to local dev endpoints when running locally.
         const apiCandidates = isLocalHost
