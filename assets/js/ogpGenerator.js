@@ -45,7 +45,7 @@ const LAYOUT = {
 const OUTPUT_FONT_CONFIGS = {
     1: { fontSize: 95, startY: 370, lineSpacing: 0 },
     2: { fontSize: 90, startY: 320, lineSpacing: 130 },
-    3: { fontSize: 85, startY: 265, lineSpacing: 115 },
+    3: { fontSize: 85, startY: 270, lineSpacing: 115 },
     4: { fontSize: 70, startY: 235, lineSpacing: 95 }
 };
 
