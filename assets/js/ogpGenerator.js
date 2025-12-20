@@ -2,51 +2,94 @@
 // OGP画像生成（Canvas）
 // =====================================================
 
-const OGP_WIDTH = 1200;
-const OGP_HEIGHT = 630;
-const OGP_FONT_FAMILY = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-const OGP_MAX_OUTPUT_CURRENCIES = 4;
-const JST_OFFSET = 9 * 60 * 60 * 1000;
+// -----------------------------------------------------
+// 定数定義
+// -----------------------------------------------------
 
-const OGP_FONT_CONFIGS = {
+/** Canvas寸法 */
+const CANVAS = {
+    WIDTH: 1200,
+    HEIGHT: 630
+};
+
+/** フォント設定 */
+const FONTS = {
+    FAMILY: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    SIZE: {
+        TITLE: 100,
+        FOOTER_DATE: 50,
+        FOOTER_CREDIT: 34
+    }
+};
+
+/** 色設定 */
+const COLORS = {
+    BACKGROUND: '#F5F7F6',
+    TITLE: '#1a1a1a',
+    OUTPUT: '#333',
+    FOOTER: '#666',
+    SEPARATOR: '#999'
+};
+
+/** レイアウト設定 */
+const LAYOUT = {
+    TITLE_Y: 130,
+    SEPARATOR: { Y: 150, X_START: 100, X_END: 1100 },
+    OUTPUT_SHIFT: 135,
+    ICON: { SIZE: 80, PADDING: 15 },
+    FOOTER_Y_OFFSET: 20,
+    CREDIT_X_OFFSET: 20
+};
+
+/** 出力行のフォント設定（行数に応じた動的設定） */
+const OUTPUT_FONT_CONFIGS = {
     1: { fontSize: 95, startY: 370, lineSpacing: 0 },
     2: { fontSize: 90, startY: 320, lineSpacing: 130 },
     3: { fontSize: 85, startY: 265, lineSpacing: 115 },
     4: { fontSize: 70, startY: 235, lineSpacing: 95 }
 };
 
+/** 最大出力通貨数 */
+const MAX_OUTPUT_CURRENCIES = 4;
+
+/** JSTオフセット（ミリ秒） */
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+// -----------------------------------------------------
+// フォーマット関数
+// -----------------------------------------------------
+
 /**
- * 通貨コードをフォーマット
+ * 通貨コードを表示用にフォーマット
+ * @param {string} code - 通貨コード
+ * @returns {string} フォーマットされた通貨コード
  */
-function formatCurrencyCodeForOgp(code) {
+function formatCurrencyCode(code) {
     return code === 'sats' ? 'sats' : code.toUpperCase();
 }
 
 /**
- * タイムスタンプをJSTフォーマット
+ * UNIXタイムスタンプをJST形式の文字列に変換
+ * @param {number} timestampMs - ミリ秒単位のタイムスタンプ
+ * @returns {string} "YYYY/MM/DD HH:mm" 形式の文字列
  */
-function formatTimestampForOgp(timestamp) {
-    const date = new Date(timestamp);
-    const jstDate = new Date(date.getTime() + JST_OFFSET);
+function formatTimestampToJST(timestampMs) {
+    const jstDate = new Date(timestampMs + JST_OFFSET_MS);
+    const pad = (n) => String(n).padStart(2, '0');
 
-    const year = jstDate.getUTCFullYear();
-    const month = String(jstDate.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(jstDate.getUTCDate()).padStart(2, '0');
-    const hour = String(jstDate.getUTCHours()).padStart(2, '0');
-    const minute = String(jstDate.getUTCMinutes()).padStart(2, '0');
-
-    return `${year}/${month}/${day} ${hour}:${minute}`;
+    return `${jstDate.getUTCFullYear()}/${pad(jstDate.getUTCMonth() + 1)}/${pad(jstDate.getUTCDate())} ${pad(jstDate.getUTCHours())}:${pad(jstDate.getUTCMinutes())}`;
 }
 
 /**
- * 数値をOGP用にフォーマット（桁区切りあり、最大8桁）
+ * 数値文字列をOGP用にフォーマット（桁区切り、最大8小数桁）
+ * @param {string} valueStr - 数値文字列
+ * @returns {string} フォーマットされた数値文字列
  */
-function formatNumberForOgp(valueStr) {
+function formatNumber(valueStr) {
     const num = parseFloat(valueStr);
     if (isNaN(num)) return valueStr;
 
-    const parts = valueStr.split('.');
-    const fracLength = parts[1] ? Math.min(parts[1].length, 8) : 0;
+    const fracLength = Math.min((valueStr.split('.')[1] || '').length, 8);
 
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 0,
@@ -54,6 +97,132 @@ function formatNumberForOgp(valueStr) {
         useGrouping: true
     }).format(num);
 }
+
+// -----------------------------------------------------
+// Canvas描画ヘルパー関数
+// -----------------------------------------------------
+
+/**
+ * Canvas要素を作成し2Dコンテキストを返す
+ * @returns {{canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D}}
+ */
+function createCanvas() {
+    const canvas = document.createElement('canvas');
+    canvas.width = CANVAS.WIDTH;
+    canvas.height = CANVAS.HEIGHT;
+    return { canvas, ctx: canvas.getContext('2d') };
+}
+
+/**
+ * 背景を塗りつぶす
+ * @param {CanvasRenderingContext2D} ctx
+ */
+function drawBackground(ctx) {
+    ctx.fillStyle = COLORS.BACKGROUND;
+    ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
+}
+
+/**
+ * タイトル（入力値と通貨コード）を描画
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {string} baseKey - 基準通貨コード
+ * @param {string} baseValue - 基準通貨の値
+ */
+function drawTitle(ctx, baseKey, baseValue) {
+    const title = `${formatNumber(baseValue)} ${formatCurrencyCode(baseKey)} =`;
+    ctx.font = `bold ${FONTS.SIZE.TITLE}px ${FONTS.FAMILY}`;
+    ctx.fillStyle = COLORS.TITLE;
+    ctx.textAlign = 'center';
+    ctx.fillText(title, CANVAS.WIDTH / 2, LAYOUT.TITLE_Y);
+}
+
+/**
+ * 区切り線を描画
+ * @param {CanvasRenderingContext2D} ctx
+ */
+function drawSeparator(ctx) {
+    ctx.strokeStyle = COLORS.SEPARATOR;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(LAYOUT.SEPARATOR.X_START, LAYOUT.SEPARATOR.Y);
+    ctx.lineTo(LAYOUT.SEPARATOR.X_END, LAYOUT.SEPARATOR.Y);
+    ctx.stroke();
+}
+
+/**
+ * 出力通貨の行を描画
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Array<{value: string, code: string}>} outputData - 出力通貨データ
+ */
+function drawOutputRows(ctx, outputData) {
+    const config = OUTPUT_FONT_CONFIGS[Math.min(outputData.length, MAX_OUTPUT_CURRENCIES)] || OUTPUT_FONT_CONFIGS[4];
+    const centerX = CANVAS.WIDTH / 2 + LAYOUT.OUTPUT_SHIFT;
+    const numberX = centerX - 10;
+    const codeX = centerX + 10;
+
+    ctx.font = `${config.fontSize}px ${FONTS.FAMILY}`;
+    ctx.fillStyle = COLORS.OUTPUT;
+
+    outputData.forEach((data, i) => {
+        const y = config.startY + i * config.lineSpacing;
+        ctx.textAlign = 'right';
+        ctx.fillText(data.value, numberX, y);
+        ctx.textAlign = 'left';
+        ctx.fillText(data.code, codeX, y);
+    });
+}
+
+/**
+ * 画像を非同期で読み込む
+ * @param {string} src - 画像パス
+ * @returns {Promise<HTMLImageElement>}
+ */
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+/**
+ * アイコン画像を左下に描画
+ * @param {CanvasRenderingContext2D} ctx
+ */
+async function drawIcon(ctx) {
+    try {
+        const icon = await loadImage('assets/images/icon_x192.png');
+        const { SIZE, PADDING } = LAYOUT.ICON;
+        ctx.drawImage(icon, PADDING, CANVAS.HEIGHT - SIZE - PADDING, SIZE, SIZE);
+    } catch (error) {
+        console.warn('OGPアイコンの読み込みに失敗しました:', error);
+    }
+}
+
+/**
+ * フッター（日付とクレジット）を描画
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} timestampSec - UNIXタイムスタンプ（秒）
+ */
+function drawFooter(ctx, timestampSec) {
+    const footerY = CANVAS.HEIGHT - LAYOUT.FOOTER_Y_OFFSET;
+    ctx.fillStyle = COLORS.FOOTER;
+
+    // 日付（中央）
+    ctx.textAlign = 'center';
+    ctx.font = `${FONTS.SIZE.FOOTER_DATE}px ${FONTS.FAMILY}`;
+    ctx.fillText(formatTimestampToJST(timestampSec * 1000), CANVAS.WIDTH / 2, footerY);
+
+    // クレジット（右寄せ）
+    ctx.textAlign = 'right';
+    ctx.font = `${FONTS.SIZE.FOOTER_CREDIT}px ${FONTS.FAMILY}`;
+    ctx.fillText('Source: CoinGecko', CANVAS.WIDTH - LAYOUT.CREDIT_X_OFFSET, footerY);
+}
+
+// -----------------------------------------------------
+// Canvas生成（メイン）
+// -----------------------------------------------------
 
 /**
  * OGP画像用のCanvasを生成
@@ -64,85 +233,119 @@ function formatNumberForOgp(valueStr) {
  * @returns {Promise<HTMLCanvasElement>}
  */
 async function generateOgpCanvas(baseKey, baseNormalized, outputData, timestamp) {
-    const canvas = document.createElement('canvas');
-    canvas.width = OGP_WIDTH;
-    canvas.height = OGP_HEIGHT;
-    const ctx = canvas.getContext('2d');
+    const { canvas, ctx } = createCanvas();
 
-    // 背景
-    ctx.fillStyle = '#F5F7F6';
-    ctx.fillRect(0, 0, OGP_WIDTH, OGP_HEIGHT);
-
-    // メインタイトル（入力値 通貨コード =）
-    const mainTitle = `${formatNumberForOgp(baseNormalized)} ${formatCurrencyCodeForOgp(baseKey)} =`;
-    ctx.font = `bold 100px ${OGP_FONT_FAMILY}`;
-    ctx.fillStyle = '#1a1a1a';
-    ctx.textAlign = 'center';
-    ctx.fillText(mainTitle, OGP_WIDTH / 2, 130);
-
-    // 区切り線
-    ctx.strokeStyle = '#999';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(100, 150);
-    ctx.lineTo(1100, 150);
-    ctx.stroke();
-
-    // フォント設定を取得
-    const config = OGP_FONT_CONFIGS[Math.min(outputData.length, OGP_MAX_OUTPUT_CURRENCIES)] || OGP_FONT_CONFIGS[4];
-
-    // 出力行を描画（数値と通貨記号を分けて整列）
-    ctx.font = `${config.fontSize}px ${OGP_FONT_FAMILY}`;
-    ctx.fillStyle = '#333';
-    // 全体を右に寄せるオフセット（px）
-    const OUTPUT_SHIFT = 135;
-    const centerX = OGP_WIDTH / 2 + OUTPUT_SHIFT;
-    const numberX = centerX - 10; // 数値の右端位置
-    const codeX = centerX + 10;   // 通貨記号の左端位置
-
-    outputData.forEach((data, i) => {
-        const y = config.startY + (i * config.lineSpacing);
-        // 数値を右揃えで描画
-        ctx.textAlign = 'right';
-        ctx.fillText(data.value, numberX, y);
-        // 通貨記号を左揃えで描画
-        ctx.textAlign = 'left';
-        ctx.fillText(data.code, codeX, y);
-    });
-
-    // アイコン画像の読み込みと描画（左下）
-    try {
-        const iconImage = new Image();
-        iconImage.src = 'assets/images/icon_x192.png';
-        await new Promise((resolve, reject) => {
-            iconImage.onload = resolve;
-            iconImage.onerror = reject;
-        });
-
-        // アイコンのサイズと位置設定
-        const iconSize = 80; // 80x80px
-        const iconPadding = 15; // 左端と下端からの余白
-        const iconX = iconPadding;
-        const iconY = OGP_HEIGHT - iconSize - iconPadding;
-
-        ctx.drawImage(iconImage, iconX, iconY, iconSize, iconSize);
-    } catch (error) {
-        console.warn('OGPアイコンの読み込みに失敗しました:', error);
-    }
-
-    // フッター: 日付を中央に表示（レート取得時間）
-    const dateText = formatTimestampForOgp(timestamp * 1000);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#666';
-    ctx.font = `50px ${OGP_FONT_FAMILY}`;
-    ctx.fillText(dateText, OGP_WIDTH / 2, OGP_HEIGHT - 20);
-
-    // Source credit (Right Bottom)
-    ctx.textAlign = 'right';
-    ctx.font = `34px ${OGP_FONT_FAMILY}`;
-    ctx.fillText('Source: CoinGecko', OGP_WIDTH - 20, OGP_HEIGHT - 20);
+    drawBackground(ctx);
+    drawTitle(ctx, baseKey, baseNormalized);
+    drawSeparator(ctx);
+    drawOutputRows(ctx, outputData);
+    await drawIcon(ctx);
+    drawFooter(ctx, timestamp);
 
     return canvas;
+}
+
+// -----------------------------------------------------
+// アップロード機能
+// -----------------------------------------------------
+
+/** APIエンドポイント設定 */
+const API = {
+    PRODUCTION: 'https://osats.money/api/save-ogp',
+    LOCAL_PORTS: [8787],
+    PATH: '/api/save-ogp',
+    TIMEOUT_MS: 5000
+};
+
+/**
+ * ローカル環境かどうかを判定
+ * @returns {boolean}
+ */
+function isLocalEnvironment() {
+    const hostname = window.location.hostname;
+    return hostname === '127.0.0.1' || hostname === 'localhost';
+}
+
+/**
+ * APIエンドポイント候補のリストを取得
+ * @returns {string[]}
+ */
+function getApiEndpoints() {
+    if (!isLocalEnvironment()) {
+        return [`${window.location.origin}${API.PATH}`];
+    }
+    // ローカル環境: 本番優先、次にローカル開発サーバー
+    return [
+        API.PRODUCTION,
+        ...API.LOCAL_PORTS.flatMap(port => [
+            `${window.location.protocol}//127.0.0.1:${port}${API.PATH}`,
+            `${window.location.protocol}//localhost:${port}${API.PATH}`
+        ])
+    ];
+}
+
+/**
+ * CanvasをBlobに変換
+ * @param {HTMLCanvasElement} canvas
+ * @returns {Promise<Blob>}
+ */
+function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(
+            (blob) => blob ? resolve(blob) : reject(new Error('Failed to create blob')),
+            'image/png'
+        );
+    });
+}
+
+/**
+ * タイムアウト付きでBlobをアップロード
+ * @param {string} url - APIエンドポイント
+ * @param {Blob} blob - アップロードするBlob
+ * @param {number} timeoutMs - タイムアウト時間（ミリ秒）
+ * @returns {Promise<Response|null>}
+ */
+async function uploadWithTimeout(url, blob, timeoutMs = API.TIMEOUT_MS) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+        const form = new FormData();
+        form.append('file', blob, 'ogp.png');
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: form,
+            signal: controller.signal
+        });
+
+        console.log('Upload response status:', response.status, 'from', url);
+        return response;
+    } catch (error) {
+        const message = error.name === 'AbortError' ? 'timed out' : error.message;
+        console.error(`Upload ${message} for`, url);
+        return null;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+/**
+ * 複数のエンドポイントに対して順次アップロードを試行
+ * @param {Blob} blob - アップロードするBlob
+ * @param {string[]} endpoints - APIエンドポイントのリスト
+ * @returns {Promise<{response: Response, url: string}|null>}
+ */
+async function tryUploadToEndpoints(blob, endpoints) {
+    for (const url of endpoints) {
+        const response = await uploadWithTimeout(url, blob);
+        if (response?.ok) {
+            console.log('OGP uploaded successfully to:', url);
+            return { response, url };
+        }
+        console.warn('Upload failed or not ok, trying next candidate:', url);
+    }
+    return null;
 }
 
 /**
@@ -155,84 +358,40 @@ async function generateOgpCanvas(baseKey, baseNormalized, outputData, timestamp)
  */
 export async function generateAndUploadOgpImage(baseKey, baseNormalized, outputData, timestamp) {
     try {
-        // Canvas生成
         const canvas = await generateOgpCanvas(baseKey, baseNormalized, outputData, timestamp);
-        const isLocalHost = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
-        // Prefer production endpoint first for reliability, then fall back to local dev endpoints when running locally.
-        const apiCandidates = isLocalHost
-            ? [
-                'https://osats.money/api/save-ogp', // prefer production
-                `${window.location.protocol}//127.0.0.1:8787/api/save-ogp`,
-                `${window.location.protocol}//localhost:8787/api/save-ogp`,
-            ]
-            : [`${window.location.origin}/api/save-ogp`];
+        const blob = await canvasToBlob(canvas);
+        const endpoints = getApiEndpoints();
 
-        console.log('OGP upload candidates:', apiCandidates);
+        console.log('OGP upload candidates:', endpoints);
 
-        // Generate a binary Blob and send as multipart/form-data (FormData)
-        const blob = await new Promise((resolve) => canvas.toBlob((b) => resolve(b), 'image/png'));
-        if (!blob) {
-            throw new Error('Failed to create OGP blob');
+        const uploadResult = await tryUploadToEndpoints(blob, endpoints);
+
+        if (!uploadResult) {
+            throw new Error('All upload endpoints failed');
         }
 
-        // upload helper with timeout using AbortController. Always sends FormData(blob).
-        const tryUpload = async (apiUrl, timeoutMs = 5000) => {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), timeoutMs);
-            try {
-                const form = new FormData();
-                form.append('file', blob, 'ogp.png');
-                const resp = await fetch(apiUrl, {
-                    method: 'POST',
-                    body: form,
-                    signal: controller.signal,
-                });
-
-                clearTimeout(timeout);
-                console.log('Upload response status:', resp.status, 'from', apiUrl);
-                return resp;
-            } catch (err) {
-                clearTimeout(timeout);
-                if (err.name === 'AbortError') {
-                    console.error('Upload timed out for', apiUrl);
-                } else {
-                    console.error('Upload fetch error for', apiUrl, err);
-                }
-                return null;
-            }
-        };
-
-        let response = null;
-        let successfulUrl = null;
-        for (const apiUrl of apiCandidates) {
-            response = await tryUpload(apiUrl);
-            if (response && response.ok) {
-                successfulUrl = apiUrl;
-                break;
-            }
-            console.warn('Upload failed or not ok, trying next candidate:', apiUrl);
-        }
-
-        if (successfulUrl) {
-            console.log('OGP uploaded successfully to:', successfulUrl);
-        }
-
-        if (!response || !response.ok) {
-            const errorText = response ? await response.clone().text().catch(() => '') : '';
-            console.error('Upload error response:', errorText);
-            throw new Error(`Upload failed: ${response ? response.status : 'no-response'} - ${errorText}`);
-        }
-
-        const result = await response.json();
+        const result = await uploadResult.response.json();
         console.log('Upload successful, img_id:', result.img_id);
         return result.img_id || null;
     } catch (error) {
         console.error('Failed to generate and upload OGP image:', error);
         console.error('Error stack:', error.stack);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        alert(`共有用画像のアップロードに失敗しました。`);
+        alert('共有用画像のアップロードに失敗しました。');
         return null;
     }
+}
+
+// -----------------------------------------------------
+// データ準備
+// -----------------------------------------------------
+
+/**
+ * DOM要素から通貨の値を取得
+ * @param {string} currencyKey - 通貨キー
+ * @returns {string} 通貨の値（デフォルト: '0'）
+ */
+function getCurrencyValue(currencyKey) {
+    return document.getElementById(currencyKey)?.value || '0';
 }
 
 /**
@@ -244,16 +403,17 @@ export async function generateAndUploadOgpImage(baseKey, baseNormalized, outputD
  * @returns {{baseNormalized: string, outputData: Array<{value: string, code: string}>}}
  */
 export function prepareOgpData(baseKey, selectedCurrencies, parseInputFn, selectedLocale) {
-    const baseDisplayValue = document.getElementById(baseKey)?.value || '0';
-    const baseNormalized = parseInputFn(baseDisplayValue, selectedLocale);
+    const baseNormalized = parseInputFn(getCurrencyValue(baseKey), selectedLocale);
 
-    const outputCurrencies = selectedCurrencies.filter(key => key !== baseKey).slice(0, OGP_MAX_OUTPUT_CURRENCIES);
+    const outputCurrencies = selectedCurrencies
+        .filter(key => key !== baseKey)
+        .slice(0, MAX_OUTPUT_CURRENCIES);
+
     const outputData = outputCurrencies.map(key => {
-        const displayValue = document.getElementById(key)?.value || '0';
-        const normalized = parseInputFn(displayValue, selectedLocale);
+        const normalized = parseInputFn(getCurrencyValue(key), selectedLocale);
         return {
-            value: formatNumberForOgp(normalized),
-            code: formatCurrencyCodeForOgp(key)
+            value: formatNumber(normalized),
+            code: formatCurrencyCode(key)
         };
     });
 
