@@ -734,13 +734,6 @@ export function setupEventListenersForCurrencyButtons() {
       });
     }
   });
-
-  // すべての通貨をコピーするためのイベントリスナーの設定
-  const copyToClipboardButton = document.getElementById("copy-results-to-clipboard");
-  if (copyToClipboardButton) {
-    // ボタンが存在するか確認
-    copyToClipboardButton.addEventListener("click", copyToClipboardEvent);
-  }
 }
 
 // クリップボードにコピー　各通貨
@@ -750,41 +743,6 @@ function copySingleCurrencyToClipboardEvent(event) {
   const separators = getLocaleSeparators(selectedLocale);
   const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), ""); // 桁区切りを削除
   copyToClipboard(sanitizedValue, event, "left");
-}
-
-// クリップボードにコピー　全体（OGP画像生成付き）
-async function copyToClipboardEvent(event) {
-  // イベント伝播を防止
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  try {
-    console.log('[copyToClipboardEvent] Starting...');
-    // OGP画像を生成してR2にアップロード
-    const { baseNormalized, outputData } = prepareOgpData(lastUpdatedField, selectedCurrencies, parseInput, selectedLocale);
-    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData, lastUpdatedTimestamp);
-    console.log('[copyToClipboardEvent] Got img_id:', imgId);
-
-    const queryParams = generateQueryStringFromValues(imgId);
-    console.log('[copyToClipboardEvent] Generated query params:', queryParams);
-
-    const textToCopy = `${BASE_URL}${queryParams}`;
-    console.log('[copyToClipboardEvent] Text to copy:', textToCopy);
-
-    copyToClipboard(textToCopy, event, "right");
-    console.log('[copyToClipboardEvent] Completed successfully');
-    console.log('[copyToClipboardEvent] NOTE: Page refresh after this is likely due to Service Worker or Live Preview auto-reload');
-  } catch (error) {
-    console.error("[copyToClipboardEvent] Failed to generate OGP image:", error);
-    console.error("[copyToClipboardEvent] Error stack:", error.stack);
-    alert(`エラーが発生しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
-    // フォールバック: img_idなしでコピー
-    const queryParams = generateQueryStringFromValues(null);
-    const textToCopy = `${BASE_URL}${queryParams}`;
-    copyToClipboard(textToCopy, event, "right");
-  }
 }
 
 // コピー
