@@ -113,7 +113,7 @@ const urlsToCache = [
   "/assets/images/gold-icon.png",
 ];
 
-const VERSION = "2.23.5";
+const VERSION = "2.23.6";
 let CACHE_NAME = "osats-caches-" + VERSION;
 const MY_CACHES = new Set([CACHE_NAME]);
 
