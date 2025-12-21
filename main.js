@@ -1,5 +1,11 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
-import { generateAndUploadOgpImage, prepareOgpData } from "./assets/js/ogpGenerator.js";
+import {
+  setupEventListenersForCurrencyButtons,
+  shareViaWebAPIEvent,
+  shareSiteViaWebAPIEvent,
+  copySiteToClipboardEvent,
+  readFromClipboard,
+} from "./assets/js/clipboardShare.js";
 
 const BASE_URL = "https://osats.money/";
 const dateTimeFormatOptions = {
@@ -60,8 +66,8 @@ async function initializeApp() {
 
 function setupEventListeners() {
   setupInputFieldsEventListeners();
-  setupEventListenersForCurrencyButtons();
-  document.getElementById("share-results-via-webapi").addEventListener("click", shareViaWebAPIEvent);
+  setupCurrencyButtonsEventListeners();
+  document.getElementById("share-results-via-webapi").addEventListener("click", handleShareViaWebAPI);
   document.getElementById("share-site-via-webapi").addEventListener("click", shareSiteViaWebAPIEvent);
   document.getElementById("copy-site-to-clipboard").addEventListener("click", copySiteToClipboardEvent);
   document.getElementById("update-prices").addEventListener("click", updateElementsBasedOnTimestamp);
@@ -418,6 +424,16 @@ function addCommasToInput(inputElement) {
   }
 }
 
+// インプットフィールドから桁区切りを取り除いた数値を取得
+function getValuesFromElements() {
+  const values = {};
+  selectedCurrencies.forEach((field) => {
+    const rawValue = document.getElementById(field).value;
+    values[field] = parseInput(rawValue, selectedLocale);
+  });
+  return values;
+}
+
 // カスタムオプションを更新する関数
 function updateCustomOptions(rates) {
   // 各通貨についてループ
@@ -640,161 +656,14 @@ function changeBackgroundColorFromId(id) {
   targetInput.classList.add("last-input-field");
 }
 
-// ポップアップ表示
-function showNotification(message, event, align = "right") {
-  const notification = document.getElementById("notification");
-  notification.innerHTML = message.replace(/\n/g, '<br>');
-
-  // Handle null event (fallback scenarios)
-  if (event && event.pageX !== undefined && event.pageY !== undefined) {
-    notification.style.left = event.pageX + "px";
-    notification.style.top = event.pageY + 20 + "px";
-  } else {
-    // Center position as fallback
-    notification.style.left = "50%";
-    notification.style.top = "50px";
-    notification.style.transform = "translateX(-50%)";
-  }
-
-  if (event && align === "left") {
-    notification.style.transform = "translateX(0)";
-  } else if (event && align === "right") {
-    notification.style.transform = "translateX(-100%)";
-  }
-
-  notification.style.visibility = "visible";
-
-  setTimeout(() => {
-    notification.style.visibility = "hidden";
-  }, 1000);
-}
-
-
-function generateQueryStringFromValues(imgId = null) {
-  if (!lastUpdatedField || !selectedCurrencies.length) return "";
-
-  const baseKey = lastUpdatedField;
-  const separators = getLocaleSeparators(selectedLocale);
-  const decimalFormat = separators.decimalSeparator === "," ? "c" : "p";
-
-  // 画面に表示されている値を取得し、URLに適した形式に変換
-  const baseDisplayValue = document.getElementById(baseKey).value;
-  const baseNormalized = parseInput(baseDisplayValue, selectedLocale); // 一旦ピリオドに正規化
-  const baseValue = baseNormalized.replace(".", separators.decimalSeparator); // ロケールに合わせて置換
-
-  // currencies パラメータ（全選択通貨、ハイフン区切り）
-  const currencies = selectedCurrencies.join('-');
-
-  // 各通貨のkey=valueペアを構築（入力値のみ）
-  const params = new URLSearchParams();
-  params.set(baseKey, baseValue);
-  params.set('currencies', currencies);
-
-  // img_idがあれば追加
-  if (imgId) {
-    params.set('img_id', imgId);
-  }
-
-  params.set('d', decimalFormat);
-
-  return `?${params.toString()}`;
-}
-
-// インプットフィールドから桁区切りを取り除いた数値を取得
-function getValuesFromElements() {
-  const values = {};
-  const inputFields = selectedCurrencies;
-
-  inputFields.forEach((field) => {
-    const rawValue = document.getElementById(field).value;
-    values[field] = parseInput(rawValue, selectedLocale);
-  });
-  return values;
-}
-
-// コピー用テキストの作成
-
-export function setupEventListenersForCurrencyButtons() {
-  selectedCurrencies.forEach((currency) => {
-    // コピーイベントリスナーの設定
-    const copyButton = document.getElementById("copy-" + currency);
-    if (copyButton) {
-      // ボタンが存在するか確認
-      copyButton.addEventListener("click", function (event) {
-        copySingleCurrencyToClipboardEvent(event);
-      });
-    }
-
-    // ペーストイベントリスナーの設定
-    const pasteButton = document.getElementById("paste-" + currency);
-    if (pasteButton) {
-      // ボタンが存在するか確認
-      pasteButton.addEventListener("click", function () {
-        pasteFromClipboardToInput(currency);
-      });
-    }
-  });
-}
-
-// クリップボードにコピー　各通貨
-function copySingleCurrencyToClipboardEvent(event) {
-  const currency = event.target.dataset.currency;
-  const inputValue = document.getElementById(currency).value;
-  const separators = getLocaleSeparators(selectedLocale);
-  const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), ""); // 桁区切りを削除
-  copyToClipboard(sanitizedValue, event, "left");
-}
-
-// コピー
-function copyToClipboard(text, event, align = "right") {
-  // Secure context check (HTTPS or localhost)
-  if (!isSecureContext) {
-    fallbackCopyToClipboard(text, event);
-    return;
-  }
-
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      // 翻訳を使用
-      const message = window.vanilla_i18n_instance.translate("showNotification.copy");
-      showNotification(message, event); // 通知を表示
-    })
-    .catch((err) => {
-      console.error("Failed to copy to clipboard", err);
-      fallbackCopyToClipboard(text, event);
-    });
-}
-
-// Fallback copy method for non-secure contexts
-function fallbackCopyToClipboard(text, event) {
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  textarea.style.top = "-9999px";
-  document.body.appendChild(textarea);
-
-  try {
-    textarea.select();
-    document.execCommand("copy");
-    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
-    showNotification(message, event);
-  } catch (err) {
-    console.error("Fallback copy failed:", err);
-  } finally {
-    document.body.removeChild(textarea);
-  }
-}
-
-// クリップボードから読み取り
-async function readFromClipboard() {
-  try {
-    return await navigator.clipboard.readText();
-  } catch (error) {
-    console.error("Failed to read from clipboard:", error);
-    return null;
-  }
+// 通貨ボタンのイベントリスナー設定（clipboardShare.jsのラッパー）
+function setupCurrencyButtonsEventListeners() {
+  setupEventListenersForCurrencyButtons(
+    selectedCurrencies,
+    getLocaleSeparators,
+    selectedLocale,
+    pasteFromClipboardToInput
+  );
 }
 
 // クリップボードから貼り付け
@@ -807,113 +676,19 @@ async function pasteFromClipboardToInput(currency) {
   calculateValues(currency);
 }
 
-// Web Share API（OGP画像生成付き）
-async function shareViaWebAPIEvent(event) {
-  // イベント伝播を防止
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  try {
-    // OGP画像を生成してR2にアップロード
-    const { baseNormalized, outputData } = prepareOgpData(lastUpdatedField, selectedCurrencies, parseInput, selectedLocale);
-    const imgId = await generateAndUploadOgpImage(lastUpdatedField, baseNormalized, outputData, lastUpdatedTimestamp);
-    const queryParams = generateQueryStringFromValues(imgId);
-    shareViaWebAPI(queryParams, event);
-  } catch (error) {
-    console.error("Failed to generate OGP image:", error);
-    console.error("Error stack:", error.stack);
-    alert(`エラーが発生しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
-    // フォールバック: img_idなしで共有
-    const queryParams = generateQueryStringFromValues(null);
-    shareViaWebAPI(queryParams, event);
-  }
-}
-
-// サイトを共有 (Web Share API)
-function shareSiteViaWebAPIEvent(event) {
-  const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
-  const siteUrl = "https://osats.money/";
-
-  if (!isSecureContext || !navigator.share) {
-    fallbackShareSiteViaClipboard(siteText, siteUrl, event);
-    return;
-  }
-
-  navigator.share({ title: siteText, url: siteUrl })
-    .catch((error) => {
-      console.log("Sharing failed", error);
-      fallbackShareSiteViaClipboard(siteText, siteUrl, event);
-    });
-}
-
-// Fallback: copy site info to clipboard
-function fallbackShareSiteViaClipboard(siteText, siteUrl, event) {
-  const textToCopy = `${siteText}\n${siteUrl}`;
-  const textarea = document.createElement("textarea");
-  textarea.value = textToCopy;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  textarea.style.top = "-9999px";
-  document.body.appendChild(textarea);
-
-  try {
-    textarea.select();
-    document.execCommand("copy");
-    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
-    showNotification(message, event, "left");
-  } catch (err) {
-    console.error("Fallback share failed:", err);
-  } finally {
-    document.body.removeChild(textarea);
-  }
-}
-
-// サイトURLをクリップボードにコピー（名称＋URLの2行）
-function copySiteToClipboardEvent(event) {
-  const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
-  const siteUrl = "https://osats.money/";
-  const textToCopy = `${siteText}\n${siteUrl}`;
-  copyToClipboard(textToCopy, event, "right");
-}
-
-function shareViaWebAPI(queryParams, event) {
-  const shareUrl = `https://osats.money/${queryParams}`;
-
-  if (!isSecureContext || !navigator.share) {
-    fallbackShareViaClipboard(shareUrl, event);
-    return;
-  }
-
-  navigator.share({
-    url: shareUrl,
-  })
-    .catch((error) => {
-      console.error("Sharing failed", error);
-      fallbackShareViaClipboard(shareUrl, event);
-    });
-}
-
-// Fallback: copy URL to clipboard when Web Share API unavailable
-function fallbackShareViaClipboard(url, event) {
-  const textarea = document.createElement("textarea");
-  textarea.value = url;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  textarea.style.top = "-9999px";
-  document.body.appendChild(textarea);
-
-  try {
-    textarea.select();
-    document.execCommand("copy");
-    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
-    showNotification(message, event, "left");
-  } catch (err) {
-    console.error("Fallback share failed:", err);
-  } finally {
-    document.body.removeChild(textarea);
-  }
+// Web Share API イベントハンドラー（clipboardShare.jsのラッパー）
+function handleShareViaWebAPI(event) {
+  shareViaWebAPIEvent(
+    {
+      lastUpdatedField,
+      selectedCurrencies,
+      parseInput,
+      selectedLocale,
+      lastUpdatedTimestamp,
+      getLocaleSeparators,
+    },
+    event
+  );
 }
 
 // テーマ変更トグル

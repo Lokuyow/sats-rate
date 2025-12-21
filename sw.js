@@ -12,6 +12,7 @@ const urlsToCache = [
   "/manifest.json",
   "/assets/js/currencyManager.js",
   "/assets/js/currencies.js",
+  "/assets/js/clipboardShare.js",
   "/assets/js/lightning-address.js",
   "/assets/js/ogpGenerator.js",
   "/assets/js/pos.js",
