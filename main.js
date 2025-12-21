@@ -61,7 +61,7 @@ async function initializeApp() {
 function setupEventListeners() {
   setupInputFieldsEventListeners();
   setupEventListenersForCurrencyButtons();
-  document.getElementById("share-via-webapi").addEventListener("click", shareViaWebAPIEvent);
+  document.getElementById("share-results-via-webapi").addEventListener("click", shareViaWebAPIEvent);
   document.getElementById("share-site-via-webapi").addEventListener("click", shareSiteViaWebAPIEvent);
   document.getElementById("copy-site-to-clipboard").addEventListener("click", copySiteToClipboardEvent);
   document.getElementById("update-prices").addEventListener("click", updateElementsBasedOnTimestamp);
@@ -736,7 +736,7 @@ export function setupEventListenersForCurrencyButtons() {
   });
 
   // すべての通貨をコピーするためのイベントリスナーの設定
-  const copyToClipboardButton = document.getElementById("copy-to-clipboard");
+  const copyToClipboardButton = document.getElementById("copy-results-to-clipboard");
   if (copyToClipboardButton) {
     // ボタンが存在するか確認
     copyToClipboardButton.addEventListener("click", copyToClipboardEvent);
