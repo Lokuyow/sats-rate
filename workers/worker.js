@@ -391,7 +391,7 @@ function buildOgTextFromParams(params) {
     // タイトルと説明をサニタイズ（XSS対策）
     return {
         title: sanitizeText(`${formattedValue} ${currencyCode} | ${DEFAULT_TITLE}`),
-        description: sanitizeText(`${formattedValue} ${currencyCode} を含む ${currencyList.length} 通貨間の換算結果`)
+        description: sanitizeText(`${formattedValue} ${currencyCode} を含む ${currencyList.length} 通貨間の計算結果`)
     };
 }
 
