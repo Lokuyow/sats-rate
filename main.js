@@ -427,7 +427,7 @@ function updateCustomOptions(rates) {
 
     // 小数点以上の桁数を計算
     let integerDigits = Math.floor(value).toString().length;
-    let maximumFractionDigits = 10 - integerDigits;
+    let maximumFractionDigits = 11 - integerDigits;
 
     // maximumFractionDigitsは0以上でなければならない
     maximumFractionDigits = Math.max(0, maximumFractionDigits);
@@ -472,9 +472,9 @@ export function formatCurrency(num, id, selectedLocale, shouldRound = true, sign
 }
 
 // 有効桁数を算出する
-// 基本桁数7 + 入力桁数 - 1 = 有効桁数(最大10)
+// 基本桁数8 + 入力桁数 - 1 = 有効桁数(最大10)
 function calculateSignificantDigits(inputDigits) {
-  let dynamicSignificantDigits = 7;
+  let dynamicSignificantDigits = 8;
   if (inputDigits > 1) {
     dynamicSignificantDigits += inputDigits - 1;
   }
