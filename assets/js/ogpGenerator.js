@@ -149,6 +149,9 @@ function drawSeparator(ctx) {
     ctx.stroke();
 }
 
+/** 通貨コードのフォントサイズ比率（数値に対する割合） */
+const CODE_FONT_SIZE_RATIO = 0.80;
+
 /**
  * 出力通貨の行を描画
  * @param {CanvasRenderingContext2D} ctx
@@ -160,13 +163,21 @@ function drawOutputRows(ctx, outputData) {
     const numberX = centerX - 10;
     const codeX = centerX + 10;
 
-    ctx.font = `${config.fontSize}px ${FONTS.FAMILY}`;
+    const valueFontSize = config.fontSize;
+    const codeFontSize = Math.round(config.fontSize * CODE_FONT_SIZE_RATIO);
+
     ctx.fillStyle = COLORS.OUTPUT;
 
     outputData.forEach((data, i) => {
         const y = config.startY + i * config.lineSpacing;
+
+        // 数値を描画
+        ctx.font = `${valueFontSize}px ${FONTS.FAMILY}`;
         ctx.textAlign = 'right';
         ctx.fillText(data.value, numberX, y);
+
+        // 通貨コードを少し小さいフォントで描画
+        ctx.font = `${codeFontSize}px ${FONTS.FAMILY}`;
         ctx.textAlign = 'left';
         ctx.fillText(data.code, codeX, y);
     });
