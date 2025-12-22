@@ -376,7 +376,7 @@ export async function generateAndUploadOgpImage(baseKey, baseNormalized, outputD
     } catch (error) {
         console.error('Failed to generate and upload OGP image:', error);
         console.error('Error stack:', error.stack);
-        alert('共有用画像のアップロードに失敗しました。');
+        alert(window.vanilla_i18n_instance?.translate('alerts.ogpUploadFailed') || '共有用画像のアップロードに失敗しました。');
         return null;
     }
 }

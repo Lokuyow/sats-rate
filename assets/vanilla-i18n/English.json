@@ -62,7 +62,8 @@
   "alerts": {
     "shareNotSupported": "Your browser does not support the Web Share API. Please try a different browser.",
     "fetchErrorWithData": "Failed to fetch the latest currency rates. Displaying cached data.",
-    "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time."
+    "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time.",
+    "ogpUploadFailed": "Failed to upload image for sharing link."
   },
   "lightningAddress": {
     "errors": {
