@@ -33,8 +33,8 @@ const COLORS = {
 
 /** レイアウト設定 */
 const LAYOUT = {
-    TITLE_Y: 130,
-    SEPARATOR: { Y: 150, X_START: 100, X_END: 1100 },
+    TITLE_Y: 120,
+    SEPARATOR: { Y: 140, X_START: 100, X_END: 1100 },
     OUTPUT_SHIFT: 135,
     ICON: { SIZE: 80, PADDING: 15 },
     FOOTER_Y_OFFSET: 20,
@@ -44,9 +44,9 @@ const LAYOUT = {
 /** 出力行のフォント設定（行数に応じた動的設定） */
 const OUTPUT_FONT_CONFIGS = {
     1: { fontSize: 95, startY: 370, lineSpacing: 0 },
-    2: { fontSize: 90, startY: 320, lineSpacing: 130 },
-    3: { fontSize: 85, startY: 270, lineSpacing: 115 },
-    4: { fontSize: 70, startY: 235, lineSpacing: 95 }
+    2: { fontSize: 90, startY: 310, lineSpacing: 135 },
+    3: { fontSize: 85, startY: 260, lineSpacing: 120 },
+    4: { fontSize: 70, startY: 220, lineSpacing: 100 }
 };
 
 /** 最大出力通貨数 */
