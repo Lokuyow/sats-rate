@@ -453,6 +453,8 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .grid-container #share-results-via-webapi {
@@ -463,6 +465,13 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+
+  .share-nodes-solid {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 #update-prices div {
@@ -538,55 +547,6 @@ section {
       margin: 0 4px;
       padding: 0;
     }
-  }
-}
-
-/* Share results layout: left label, right buttons */
-.sns-share-container-0.share-results {
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  margin-top: 4px;
-}
-
-.sns-share-container-1.share-results {
-  justify-content: space-between;
-  align-items: center;
-  max-width: 512px;
-  width: 100%;
-  margin-inline: 12px;
-}
-
-.sns-share-container-1.share-results .sns-share-container-2 {
-  gap: 4px;
-  max-width: none;
-}
-
-.sns-share-container-1.share-results .sns-share-container-2 .normal-btn {
-  width: auto;
-  min-width: 30px;
-  width: 100%;
-  height: 40px;
-  margin: 0;
-
-  .share-nodes-solid {
-    width: 24px;
-    height: 24px;
-    mask-image: url("../images/share-nodes-solid.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
-  }
-
-  .clipboard-solid {
-    width: 23px;
-    height: 23px;
-    mask-image: url("../images/clipboard-solid.svg");
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    mask-position: center;
-    background-color: var(--svg-color);
   }
 }
 
