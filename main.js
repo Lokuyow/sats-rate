@@ -184,8 +184,9 @@ function initializeGlobalValues() {
       querySelectedCurrencies = currenciesParam.split(separator).map(s => s.trim()).filter(Boolean);
     }
 
+    // その他のパラメータから基準通貨の値を取得
     urlParams.forEach((value, key) => {
-      if (key !== "d" && key !== "currencies" && key !== "ts") {
+      if (key !== "d" && key !== "currencies" && key !== "ts" && key !== "img_id" && key !== "lang") {
         queryBaseCurrencyValue[key] = parseInput(value, locale);
       }
     });

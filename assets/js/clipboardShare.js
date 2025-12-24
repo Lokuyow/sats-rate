@@ -10,6 +10,23 @@ import { generateAndUploadOgpImage, prepareOgpData } from "./ogpGenerator.js";
 
 const SITE_URL = "https://osats.money/";
 
+/**
+ * サイトURLを取得（英語設定の場合は lang=en を付与）
+ * @returns {string} サイトURL
+ */
+function getSiteUrl() {
+    try {
+        const langKey = window.location.host + "-vanilla-i18n";
+        const storedLang = localStorage.getItem(langKey);
+        if (storedLang === "English") {
+            return SITE_URL + "?lang=en";
+        }
+    } catch (e) {
+        // localStorage にアクセスできない環境でもフェイルセーフ
+    }
+    return SITE_URL;
+}
+
 // -----------------------------------------------------
 // 通知表示
 // -----------------------------------------------------
@@ -242,15 +259,16 @@ export async function shareViaWebAPIEvent(options, event) {
  */
 export function shareSiteViaWebAPIEvent(event) {
     const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
+    const siteUrl = getSiteUrl();
 
     if (!isSecureContext || !navigator.share) {
-        fallbackShareSiteViaClipboard(siteText, SITE_URL, event);
+        fallbackShareSiteViaClipboard(siteText, siteUrl, event);
         return;
     }
 
-    navigator.share({ title: siteText, url: SITE_URL }).catch((error) => {
+    navigator.share({ title: siteText, url: siteUrl }).catch((error) => {
         console.log("Sharing failed", error);
-        fallbackShareSiteViaClipboard(siteText, SITE_URL, event);
+        fallbackShareSiteViaClipboard(siteText, siteUrl, event);
     });
 }
 
@@ -260,7 +278,8 @@ export function shareSiteViaWebAPIEvent(event) {
  */
 export function copySiteToClipboardEvent(event) {
     const siteText = window.vanilla_i18n_instance.translate("shareSite.text");
-    const textToCopy = `${siteText}\n${SITE_URL}`;
+    const siteUrl = getSiteUrl();
+    const textToCopy = `${siteText}\n${siteUrl}`;
     copyToClipboard(textToCopy, event, "right");
 }
 
@@ -388,6 +407,17 @@ export function generateQueryStringFromValues(
     }
 
     params.set("d", decimalFormat);
+
+    // サイトの言語が "English" に設定されている場合、共有 URL に lang=en を付与
+    try {
+        const langKey = window.location.host + "-vanilla-i18n";
+        const storedLang = localStorage.getItem(langKey);
+        if (storedLang === "English") {
+            params.set("lang", "en");
+        }
+    } catch (e) {
+        // localStorage にアクセスできない環境でもフェイルセーフ
+    }
 
     return `?${params.toString()}`;
 }
