@@ -8,6 +8,8 @@
 // -----------------------------------------------------
 const DEFAULT_TITLE = "おいくらサッツ";
 const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール";
+const DEFAULT_TITLE_EN = "OikuraSats";
+const DEFAULT_DESCRIPTION_EN = "Multi-currency converter for Bitcoin, sats, USD, EUR and more.";
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
 const CACHE_MAX_AGE = 31536000;           // 1年（秒）
@@ -22,7 +24,6 @@ function getCorsHeaders(origin) {
     };
 }
 
-const SOCIAL_BOT_PATTERN = /twitterbot|facebookexternalhit|linkedinbot|slackbot|discordbot|telegrambot|line-poker|applebot/i;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PNG_MAGIC_BYTES = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
 const MAX_TEXT_LENGTH = 200; // メタタグの最大長
@@ -350,38 +351,59 @@ async function fetchStaticOgp(origin, request) {
 // -----------------------------------------------------
 function rewriteOgpMeta(originRes, url, imgId) {
     const params = url.searchParams;
-    const { title, description } = buildOgTextFromParams(params);
+    const { title, description, siteName } = buildOgMetaFromParams(params);
     const currentUrl = url.toString();
     // 可能なら拡張子付きのパス形式を使う（bots が拡張子のないURLを嫌うケースを回避）
     const ogImageUrl = imgId
         ? `${url.origin}/og-image/${imgId}.png`
         : `${url.origin}${STATIC_OGP_PATH}`;
 
+    // lang=en の場合は en_US、それ以外は ja_JP
+    const ogLocale = (params.get('lang') || '').toLowerCase() === 'en' ? 'en_US' : 'ja_JP';
+    // lang=en の場合は代替言語を ja_JP、それ以外は en_US
+    const ogLocaleAlternate = (params.get('lang') || '').toLowerCase() === 'en' ? 'ja_JP' : 'en_US';
+
     return new HTMLRewriter()
         .on('meta[property="og:title"]', new MetaContentRewriter(title))
         .on('meta[property="og:description"]', new MetaContentRewriter(description))
+        .on('meta[property="og:site_name"]', new MetaContentRewriter(siteName))
         .on('meta[property="og:image"]', new MetaContentRewriter(ogImageUrl))
         .on('meta[property="og:url"]', new MetaContentRewriter(currentUrl))
         .on('meta[name="twitter:card"]', new MetaContentRewriter("summary_large_image"))
+        .on('meta[property="og:locale"]', new MetaContentRewriter(ogLocale))
+        .on('meta[property="og:locale:alternate"]', new MetaContentRewriter(ogLocaleAlternate))
         .on('title', new TitleRewriter(title))
-        .on('head', new HeadInjector(ogImageUrl, title, description))
+        .on('head', new HeadInjector(ogImageUrl, title, description, ogLocale))
         .transform(originRes);
 }
 
 // -----------------------------------------------------
 // OGPテキスト生成
 // -----------------------------------------------------
-function buildOgTextFromParams(params) {
+function buildOgMetaFromParams(params) {
     const currencies = params.get('currencies');
+    const lang = (params.get('lang') || '').toLowerCase();
+    const isEn = lang === 'en';
+
+    const siteName = isEn ? DEFAULT_TITLE_EN : DEFAULT_TITLE;
+
     if (!currencies) {
-        return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
+        return {
+            title: isEn ? DEFAULT_TITLE_EN : DEFAULT_TITLE,
+            description: isEn ? DEFAULT_DESCRIPTION_EN : DEFAULT_DESCRIPTION,
+            siteName
+        };
     }
 
     const currencyList = parseCurrencyList(currencies);
     const baseCurrency = findBaseCurrency(params);
 
     if (!baseCurrency) {
-        return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
+        return {
+            title: isEn ? DEFAULT_TITLE_EN : DEFAULT_TITLE,
+            description: isEn ? DEFAULT_DESCRIPTION_EN : DEFAULT_DESCRIPTION,
+            siteName
+        };
     }
 
     const { key, value } = baseCurrency;
@@ -389,14 +411,23 @@ function buildOgTextFromParams(params) {
     const currencyCode = formatCurrencyCode(key);
 
     // タイトルと説明をサニタイズ（XSS対策）
+    if (isEn) {
+        return {
+            title: sanitizeText(`${formattedValue} ${currencyCode} | ${DEFAULT_TITLE_EN}`),
+            description: sanitizeText(`${formattedValue} ${currencyCode} across ${currencyList.length} currencies`),
+            siteName
+        };
+    }
+
     return {
         title: sanitizeText(`${formattedValue} ${currencyCode} | ${DEFAULT_TITLE}`),
-        description: sanitizeText(`${formattedValue} ${currencyCode} を含む ${currencyList.length} 通貨間の計算結果`)
+        description: sanitizeText(`${formattedValue} ${currencyCode} を含む ${currencyList.length} 通貨間の計算結果`),
+        siteName
     };
 }
 
 function findBaseCurrency(params) {
-    const SKIP_PARAMS = new Set(['currencies', 'img_id', 'd']);
+    const SKIP_PARAMS = new Set(['currencies', 'img_id', 'd', 'lang']);
     const CURRENCY_CODE_PATTERN = /^[a-z]{2,4}$/i;
 
     for (const [key, value] of params.entries()) {
@@ -455,11 +486,12 @@ class TitleRewriter {
 // head に追加の OGP 画像メタを挿入する
 // XSS対策: 安全なメタ要素作成（エスケープ済みの値のみ使用）
 class HeadInjector {
-    constructor(ogImageUrl, title, description) {
+    constructor(ogImageUrl, title, description, locale) {
         // URLと文字列の検証・サニタイズ
         this.ogImageUrl = sanitizeText(ogImageUrl, 500);
         this.title = sanitizeText(title);
         this.description = sanitizeText(description);
+        this.locale = sanitizeText(locale || 'ja_JP');
     }
     element(el) {
         // 安全にエスケープされた値でメタ要素を追加
