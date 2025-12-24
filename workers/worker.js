@@ -9,7 +9,7 @@
 const DEFAULT_TITLE = "おいくらサッツ";
 const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ドルなど複数通貨間換算ツール";
 const DEFAULT_TITLE_EN = "OikuraSats";
-const DEFAULT_DESCRIPTION_EN = "Multi-currency converter for Bitcoin, sats, USD, EUR and more.";
+const DEFAULT_DESCRIPTION_EN = "Multi-currency converter for bitcoin, sats, USD, EUR and more.";
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
 const STATIC_OGP_PATH_EN = "/assets/images/ogp_en.png";
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB

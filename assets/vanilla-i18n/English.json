@@ -42,7 +42,7 @@
   },
   "footer": {
     "oikura": "What is OikuraSats?",
-    "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), Bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
+    "description": "‘Oikura’ means ‘how much’ in Japanese. This tool allows you to perform conversions between multiple currencies such as Sats (Sats, Sat, Satoshi), bitcoin (BTC), Japanese Yen (JPY), and US Dollars (USD).",
     "unit": "Sats, Sat, Satoshi (Units)",
     "formula": "100 million sats = 1 BTC",
     "created": "Created by: ",
@@ -82,7 +82,7 @@
   "about": {
     "zapWhat": {
       "title": "What are Zaps?",
-      "description": "Zaps are a tipping method using Bitcoin. Creators can easily receive Bitcoin, and users can support them at a low cost."
+      "description": "Zaps are a tipping method using Bitcoin. Creators can easily receive bitcoin, and users can support them at a low cost."
     },
     "whyZap": {
       "title": "Why Zap?",
@@ -129,11 +129,11 @@
       },
       "lightningNetwork": {
         "title": "Lightning Network",
-        "description": "The Lightning Network is a technology that speeds up Bitcoin transactions and reduces fees. This makes small payments easier and maintains anonymity."
+        "description": "The Lightning Network is a technology that speeds up bitcoin transactions and reduces fees. This makes small payments easier and maintains anonymity."
       },
       "zap": {
         "title": "Zap (Nostr Lightning Zaps)",
-        "description": "Zap is a feature on Nostr that uses the Lightning Network to send Bitcoin. By linking it to a Nostr account, you can publicly display the sender, recipient, amount, and comments without a third party. This makes supporting creators easy."
+        "description": "Zap is a feature on Nostr that uses the Lightning Network to send bitcoin. By linking it to a Nostr account, you can publicly display the sender, recipient, amount, and comments without a third party. This makes supporting creators easy."
       },
       "nostr": {
         "title": "Nostr",
@@ -169,6 +169,6 @@
     "shareBluesky": "Share Results on Bluesky",
     "shareWebAPI": "Share Results via WebAPI",
     "copyToClipboard": "Copy Results to Clipboard",
-    "zapButton": "Zap (Bitcoin Tipping) Button"
+    "zapButton": "Zap (bitcoin tipping) Button"
   }
 }
