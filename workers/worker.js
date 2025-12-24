@@ -11,6 +11,7 @@ const DEFAULT_DESCRIPTION = "ビットコイン、サッツ、日本円、米ド
 const DEFAULT_TITLE_EN = "OikuraSats";
 const DEFAULT_DESCRIPTION_EN = "Multi-currency converter for Bitcoin, sats, USD, EUR and more.";
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
+const STATIC_OGP_PATH_EN = "/assets/images/ogp_en.png";
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
 const CACHE_MAX_AGE = 31536000;           // 1年（秒）
 
@@ -287,9 +288,11 @@ async function handleOgImage(url, env, request) {
         if (m) imgId = m[1];
     }
 
+    const lang = (url.searchParams.get('lang') || '').toLowerCase();
+
     // img_idがない、または無効な形式の場合は静的OGPを直接返す（Twitterbotはリダイレクトを追跡しないため）
     if (!imgId || !isValidUuid(imgId)) {
-        return fetchStaticOgp(url.origin, request);
+        return fetchStaticOgp(url.origin, request, lang);
     }
 
     try {
@@ -297,7 +300,7 @@ async function handleOgImage(url, env, request) {
         const object = await env.OGP_IMAGES.get(key);
 
         if (!object) {
-            return fetchStaticOgp(url.origin, request);
+            return fetchStaticOgp(url.origin, request, lang);
         }
 
         // TTLはR2のライフサイクルに任せる（期限切れオブジェクトはR2側で自動削除され、存在しない場合は上で静的OGPを返す）
@@ -313,14 +316,15 @@ async function handleOgImage(url, env, request) {
         });
     } catch (error) {
         console.error('[handleOgImage] Error:', error);
-        return fetchStaticOgp(url.origin, request);
+        return fetchStaticOgp(url.origin, request, lang);
     }
 }
 
 // 静的OGP画像を直接フェッチして返す（リダイレクトではなく、Twitterbot対応）
-async function fetchStaticOgp(origin, request) {
+async function fetchStaticOgp(origin, request, lang = '') {
+    const ogpPath = lang === 'en' ? STATIC_OGP_PATH_EN : STATIC_OGP_PATH;
     try {
-        const staticUrl = `${origin}${STATIC_OGP_PATH}`;
+        const staticUrl = `${origin}${ogpPath}`;
         const response = await fetch(staticUrl, {
             headers: {
                 'User-Agent': request.headers.get('User-Agent') || ''
@@ -329,7 +333,7 @@ async function fetchStaticOgp(origin, request) {
 
         if (!response.ok) {
             // フェッチに失敗した場合のみリダイレクトにフォールバック
-            return Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+            return Response.redirect(`${origin}${ogpPath}`, 302);
         }
 
         // 画像を直接返す（リダイレクトなし）
@@ -342,7 +346,7 @@ async function fetchStaticOgp(origin, request) {
         });
     } catch (error) {
         console.error('[fetchStaticOgp] Error:', error);
-        return Response.redirect(`${origin}${STATIC_OGP_PATH}`, 302);
+        return Response.redirect(`${origin}${ogpPath}`, 302);
     }
 }
 
@@ -353,10 +357,12 @@ function rewriteOgpMeta(originRes, url, imgId) {
     const params = url.searchParams;
     const { title, description, siteName } = buildOgMetaFromParams(params);
     const currentUrl = url.toString();
+    const lang = (params.get('lang') || '').toLowerCase();
+    const staticOgpPath = lang === 'en' ? STATIC_OGP_PATH_EN : STATIC_OGP_PATH;
     // 可能なら拡張子付きのパス形式を使う（bots が拡張子のないURLを嫌うケースを回避）
     const ogImageUrl = imgId
         ? `${url.origin}/og-image/${imgId}.png`
-        : `${url.origin}${STATIC_OGP_PATH}`;
+        : `${url.origin}${staticOgpPath}`;
 
     // lang=en の場合は en_US、それ以外は ja_JP
     const ogLocale = (params.get('lang') || '').toLowerCase() === 'en' ? 'en_US' : 'ja_JP';
