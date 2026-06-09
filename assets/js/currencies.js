@@ -1,3 +1,5 @@
+import { loadJsonFromStorage } from "./storage.js";
+
 let currentOrder = [];
 let currencyDetails = {};
 
@@ -93,7 +95,7 @@ function createNameLabel(name) {
 }
 
 function updateCheckboxStates() {
-  const selectedCurrencies = JSON.parse(localStorage.getItem("selectedCurrenciesLS")) || [];
+  const selectedCurrencies = loadJsonFromStorage("selectedCurrenciesLS", []);
   const checkboxes = document.querySelectorAll('input[name="currency"]');
   checkboxes.forEach((checkbox) => {
     checkbox.checked = selectedCurrencies.includes(checkbox.value);
@@ -309,7 +311,7 @@ function checkScrollButtonVisibility() {
 }
 
 function loadOrderFromLocalStorage() {
-  const storedOrder = JSON.parse(localStorage.getItem("selectedCurrenciesLS")) || [];
+  const storedOrder = loadJsonFromStorage("selectedCurrenciesLS", []);
   if (storedOrder.length > 0) {
     currentOrder = storedOrder;
   }

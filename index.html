@@ -172,15 +172,43 @@
           <div class="currency-inputs-container">
             <script>
               const urlParams = new URLSearchParams(window.location.search);
+              const maxSelectedCurrencies = 20;
+              const parseStoredJson = (rawValue, fallbackValue) => {
+                if (!rawValue) {
+                  return fallbackValue;
+                }
+
+                const parsedValue = JSON.parse(rawValue);
+                return parsedValue === null ? fallbackValue : parsedValue;
+              };
+              const readStoredCurrencies = () => {
+                try {
+                  const storedCurrenciesRaw = localStorage.getItem("selectedCurrenciesLS");
+                  const storedCurrencies = parseStoredJson(storedCurrenciesRaw, []);
+                  if (!Array.isArray(storedCurrencies)) {
+                    return [];
+                  }
+
+                  return [...new Set(storedCurrencies.filter((currency) => typeof currency === "string" && currency.trim()))].slice(0, maxSelectedCurrencies);
+                } catch (error) {
+                  try {
+                    localStorage.removeItem("selectedCurrenciesLS");
+                  } catch {
+                    // localStorageが使えない環境では削除をスキップする
+                  }
+                  return [];
+                }
+              };
               let queryCount = 0;
               const currenciesParam = urlParams.get("currencies");
               if (currenciesParam) {
-                const queryCurrencies = currenciesParam.split(",").map(s => s.trim()).filter(Boolean);
-                queryCount = queryCurrencies.length;
+                const separator = currenciesParam.includes("-") ? "-" : ",";
+                const queryCurrencies = [...new Set(currenciesParam.split(separator).map(s => s.trim()).filter(Boolean))];
+                queryCount = Math.min(queryCurrencies.length, maxSelectedCurrencies);
               }
               if (!queryCount) {
-                const storedCurrencies = JSON.parse(localStorage.getItem("selectedCurrenciesLS"));
-                queryCount = (storedCurrencies && storedCurrencies.length) ? storedCurrencies.length : 5;
+                const storedCurrencies = readStoredCurrencies();
+                queryCount = storedCurrencies.length ? storedCurrencies.length : 5;
               }
               let skeletonHTML = '';
               for (let i = 0; i < queryCount; i++) {

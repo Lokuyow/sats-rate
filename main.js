@@ -1,4 +1,7 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
+import { Pos } from "./assets/js/pos.js";
+import { formatCurrency, getLocaleSeparators, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
+import { loadJsonFromStorage } from "./assets/js/storage.js";
 import {
   setupEventListenersForCurrencyButtons,
   shareViaWebAPIEvent,
@@ -23,13 +26,13 @@ window.currencyRates = {};
 window.baseCurrencyValue = {};
 let selectedCurrencies = [];
 let currencyInputFields = [];
-let customOptions = {
-  sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
-  btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
-};
+const DEFAULT_SELECTED_CURRENCIES = ["sats", "btc", "jpy", "usd", "eur"];
+const MAX_SELECTED_CURRENCIES = 20;
+const RESERVED_QUERY_PARAMS = new Set(["d", "currencies", "ts", "img_id", "lang"]);
 
 // 自動更新モードフラグ（初期値はローカルストレージから取得、未設定の場合はtrue）
-let autoUpdateEnabled = localStorage.getItem("autoUpdateEnabledLS") === null ? true : JSON.parse(localStorage.getItem("autoUpdateEnabledLS"));
+const storedAutoUpdateEnabled = loadJsonFromStorage("autoUpdateEnabledLS", true);
+let autoUpdateEnabled = typeof storedAutoUpdateEnabled === "boolean" ? storedAutoUpdateEnabled : true;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initializeApp();
@@ -166,6 +169,50 @@ async function handleOnline() {
   checkAndUpdateElements();
 }
 
+function sanitizeSelectedCurrencies(candidateCurrencies) {
+  if (!Array.isArray(candidateCurrencies)) {
+    return [];
+  }
+
+  const allowedCurrencies = new Set(currencyManager.currencies);
+  const sanitizedCurrencies = [];
+  const seenCurrencies = new Set();
+
+  candidateCurrencies.forEach((candidate) => {
+    const currency = typeof candidate === "string" ? candidate.trim().toLowerCase() : "";
+
+    if (!currency || seenCurrencies.has(currency) || !allowedCurrencies.has(currency)) {
+      return;
+    }
+
+    seenCurrencies.add(currency);
+    sanitizedCurrencies.push(currency);
+  });
+
+  return sanitizedCurrencies.slice(0, MAX_SELECTED_CURRENCIES);
+}
+
+function sanitizeBaseCurrencyValue(candidateBaseCurrencyValue) {
+  if (!candidateBaseCurrencyValue || typeof candidateBaseCurrencyValue !== "object" || Array.isArray(candidateBaseCurrencyValue)) {
+    return {};
+  }
+
+  const allowedCurrencies = new Set(currencyManager.currencies);
+
+  for (const [candidateKey, candidateValue] of Object.entries(candidateBaseCurrencyValue)) {
+    const currency = typeof candidateKey === "string" ? candidateKey.trim().toLowerCase() : "";
+    const numericValue = Number.parseFloat(candidateValue);
+
+    if (!allowedCurrencies.has(currency) || !Number.isFinite(numericValue)) {
+      continue;
+    }
+
+    return { [currency]: numericValue };
+  }
+
+  return {};
+}
+
 function initializeGlobalValues() {
   const urlParams = new URLSearchParams(window.location.search);
   let querySelectedCurrencies = [];
@@ -186,15 +233,20 @@ function initializeGlobalValues() {
 
     // その他のパラメータから基準通貨の値を取得
     urlParams.forEach((value, key) => {
-      if (key !== "d" && key !== "currencies" && key !== "ts" && key !== "img_id" && key !== "lang") {
+      if (!RESERVED_QUERY_PARAMS.has(key)) {
         queryBaseCurrencyValue[key] = parseInput(value, locale);
       }
     });
   }
 
   // ローカルストレージからの読み込み
-  let storageSelectedCurrencies = JSON.parse(localStorage.getItem("selectedCurrenciesLS")) || [];
-  let storageBaseCurrencyValue = JSON.parse(localStorage.getItem("baseCurrencyValueLS")) || {};
+  let storageSelectedCurrencies = loadJsonFromStorage("selectedCurrenciesLS", []);
+  let storageBaseCurrencyValue = loadJsonFromStorage("baseCurrencyValueLS", {});
+
+  querySelectedCurrencies = sanitizeSelectedCurrencies(querySelectedCurrencies);
+  storageSelectedCurrencies = sanitizeSelectedCurrencies(storageSelectedCurrencies);
+  queryBaseCurrencyValue = sanitizeBaseCurrencyValue(queryBaseCurrencyValue);
+  storageBaseCurrencyValue = sanitizeBaseCurrencyValue(storageBaseCurrencyValue);
 
   // URLクエリパラメータが優先
   selectedCurrencies = querySelectedCurrencies.length ? querySelectedCurrencies : storageSelectedCurrencies;
@@ -202,7 +254,7 @@ function initializeGlobalValues() {
 
   // デフォルト値の設定
   if (!selectedCurrencies.length) {
-    selectedCurrencies = ["sats", "btc", "jpy", "usd", "eur"];
+    selectedCurrencies = [...DEFAULT_SELECTED_CURRENCIES];
     localStorage.setItem("selectedCurrenciesLS", JSON.stringify(selectedCurrencies));
   }
 
@@ -210,7 +262,7 @@ function initializeGlobalValues() {
     baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
   }
 
-  processGlobalValues(querySelectedCurrencies.length > 0, Object.keys(queryBaseCurrencyValue).length > 0);
+  processGlobalValues(Object.keys(queryBaseCurrencyValue).length > 0);
 
   // URLクエリパラメータの処理後に削除
   if (urlParams.toString()) {
@@ -220,24 +272,13 @@ function initializeGlobalValues() {
   }
 }
 
-function processGlobalValues(queryParamsSelected, queryParamsBase) {
+function processGlobalValues(queryParamsBase) {
   const baseCurrencyKey = Object.keys(baseCurrencyValue)[0];
 
-  if (queryParamsBase) {
-    // URLクエリパラメータでbaseCurrencyValueが設定された場合
-    if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
-      selectedCurrencies.unshift(baseCurrencyKey);
-    }
-  }
-
-  if (queryParamsSelected) {
-    // URLクエリパラメータでselectedCurrenciesが設定された場合
-    if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
-      baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
-    }
-  } else {
-    // ローカルストレージからselectedCurrenciesが設定された場合
-    if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+  if (baseCurrencyKey && !selectedCurrencies.includes(baseCurrencyKey)) {
+    if (queryParamsBase) {
+      selectedCurrencies = sanitizeSelectedCurrencies([baseCurrencyKey, ...selectedCurrencies]);
+    } else {
       baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
     }
   }
@@ -350,27 +391,6 @@ function calculateValues(inputField) {
   changeBackgroundColorFromId(inputField);
 }
 
-//　ロケールから桁区切りと小数点の文字を取得
-function getLocaleSeparators(locale) {
-  const formattedNumber = new Intl.NumberFormat(locale, { numberingSystem: "latn" }).format(1000.1);
-  return {
-    groupSeparator: formattedNumber[1], // 桁区切り文字
-    decimalSeparator: formattedNumber[5], // 小数点の区切り文字
-  };
-}
-
-//ピリオドを小数点とし、桁区切り文字を使わないよう変換
-export function parseInput(inputValue, locale) {
-  const separators = getLocaleSeparators(locale);
-
-  // 数字、小数点、桁区切り文字以外の文字を削除
-  const onlyNumbersAndSeparators = inputValue.replace(/[^0-9\.,]/g, "");
-
-  const sanitizedValue = onlyNumbersAndSeparators.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").replace(separators.decimalSeparator, ".");
-
-  return sanitizedValue;
-}
-
 // 直接入力時の数値処理
 function addCommasToInput(inputElement) {
   const originalCaretPos = inputElement.selectionStart;
@@ -433,59 +453,6 @@ function getValuesFromElements() {
     values[field] = parseInput(rawValue, selectedLocale);
   });
   return values;
-}
-
-// カスタムオプションを更新する関数
-function updateCustomOptions(rates) {
-  // 各通貨についてループ
-  for (const [key, value] of Object.entries(rates)) {
-    // sats と btc はスキップ
-    if (key === "sats" || key === "btc" || key === "last_updated_at") continue;
-
-    // 小数点以上の桁数を計算
-    let integerDigits = Math.floor(value).toString().length;
-    let maximumFractionDigits = 11 - integerDigits;
-
-    // maximumFractionDigitsは0以上でなければならない
-    maximumFractionDigits = Math.max(0, maximumFractionDigits);
-
-    // カスタムオプションの更新
-    customOptions[key] = {
-      maximumFractionDigits: maximumFractionDigits,
-      minimumFractionDigits: 0,
-    };
-  }
-}
-
-// 小数点以下の制限、ロケールごとの小数点記号の記法
-export function formatCurrency(num, id, selectedLocale, shouldRound = true, significantDigits) {
-  // numが数値でない場合、数値に変換
-  if (typeof num !== "number") {
-    num = parseFloat(num);
-    if (isNaN(num)) {
-      console.error("Invalid type for num:", num);
-      return;
-    }
-  }
-
-  // significantDigitsが指定されている場合、指定の桁数で数値を丸める
-  let roundedNum = shouldRound ? Number(num.toPrecision(significantDigits)) : num;
-
-  // 通貨ごとのフォーマットオプションを取得
-  const formatOptions = {
-    ...customOptions[id],
-    numberingSystem: "latn",
-  };
-  const maximumFractionDigits = formatOptions.maximumFractionDigits;
-  const numFractionDigits = (roundedNum.toString().split(".")[1] || "").length;
-
-  // 小数点以下の桁数が規定以上の場合丸める
-  if (numFractionDigits > maximumFractionDigits) {
-    roundedNum = Number(roundedNum.toFixed(maximumFractionDigits));
-  }
-
-  // ロケールに応じて数値をフォーマットし、返却
-  return roundedNum.toLocaleString(selectedLocale, formatOptions);
 }
 
 // 有効桁数を算出する
@@ -857,8 +824,6 @@ async function displaySiteVersion() {
     document.getElementById("siteVersion").textContent = siteVersion;
   }
 }
-
-import { Pos } from "./assets/js/pos.js";
 
 const pos = new Pos();
 pos.initialize();

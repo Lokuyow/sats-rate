@@ -1,3 +1,5 @@
+import { loadJsonFromStorage } from "./storage.js";
+
 export class CurrencyManager {
   constructor() {
     if (CurrencyManager.instance) {
@@ -31,7 +33,7 @@ export class CurrencyManager {
   }
 
   async fetchCurrencyData(selectedCurrencies) {
-    const storedData = JSON.parse(localStorage.getItem("currencyRatesLS"));
+    const storedData = loadJsonFromStorage("currencyRatesLS", null);
     const filteredCurrencies = selectedCurrencies.filter((currency) => currency !== "sats" && currency !== "btc");
     const needFetchAPI = this.doesNeedFetchAPI(storedData, filteredCurrencies);
 
@@ -98,15 +100,29 @@ export class CurrencyManager {
   updateCurrencyInputs(selectedCurrencies) {
     const container = document.querySelector(".currency-inputs-container");
     container.innerHTML = "";
+    let renderedRows = 0;
+
     selectedCurrencies.forEach((currency) => {
-      container.appendChild(this.createCurrencyInputField(currency));
+      const currencyInputField = this.createCurrencyInputField(currency);
+      if (!currencyInputField) {
+        return;
+      }
+
+      container.appendChild(currencyInputField);
+      renderedRows += 1;
     });
-    const rows = selectedCurrencies.length;
-    container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+    container.style.gridTemplateRows = `repeat(${renderedRows}, 1fr)`;
   }
 
   createCurrencyInputField(currency) {
     const currencySymbol = this.currencySymbols[currency];
+    const hasBuiltInIcon = currency === "btc" || currency === "sats";
+
+    if (!hasBuiltInIcon && typeof currencySymbol !== "string") {
+      console.warn(`Skipping unknown currency code: ${currency}`);
+      return null;
+    }
 
     // 左側のボタン（ペースト）
     const leftButton = document.createElement("button");
@@ -120,7 +136,7 @@ export class CurrencyManager {
     const symbolSpan = document.createElement("span");
     symbolSpan.className = "currency-icon-span";
 
-    if (currency === "btc" || currency === "sats") {
+    if (hasBuiltInIcon) {
       const bitcoinIconDiv = document.createElement("div");
       bitcoinIconDiv.className = "bitcoin-icon";
       symbolSpan.appendChild(bitcoinIconDiv);
@@ -131,23 +147,25 @@ export class CurrencyManager {
     leftButton.appendChild(symbolSpan);
 
     // スタイル調整
-    switch (currencySymbol.length) {
-      case 2:
-        leftButton.style.fontWeight = "500";
-        leftButton.style.fontSize = "1.2rem";
-        leftButton.style.letterSpacing = "-1px";
-        break;
-      case 3:
-        leftButton.style.fontWeight = "700";
-        leftButton.style.fontSize = "0.9rem";
-        leftButton.style.letterSpacing = "-1px";
-        break;
-      case 4:
-        leftButton.style.fontWeight = "700";
-        leftButton.style.fontSize = "0.82rem";
-        leftButton.style.letterSpacing = "-1px";
-      default:
-        break;
+    if (typeof currencySymbol === "string") {
+      switch (currencySymbol.length) {
+        case 2:
+          leftButton.style.fontWeight = "500";
+          leftButton.style.fontSize = "1.2rem";
+          leftButton.style.letterSpacing = "-1px";
+          break;
+        case 3:
+          leftButton.style.fontWeight = "700";
+          leftButton.style.fontSize = "0.9rem";
+          leftButton.style.letterSpacing = "-1px";
+          break;
+        case 4:
+          leftButton.style.fontWeight = "700";
+          leftButton.style.fontSize = "0.82rem";
+          leftButton.style.letterSpacing = "-1px";
+        default:
+          break;
+      }
     }
 
     // 入力フィールド
@@ -163,7 +181,9 @@ export class CurrencyManager {
     input.type = "text";
     input.id = currency;
     input.setAttribute("aria-label", `Amount of ${currencyDisplay}`);
-    input.setAttribute("oninput", `window.satsRate.calculateValues('${currency}')`);
+    input.addEventListener("input", () => {
+      window.satsRate?.calculateValues(currency);
+    });
     input.inputMode = "decimal";
 
     // 右側のボタン（コピー）

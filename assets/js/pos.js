@@ -1,4 +1,4 @@
-import { formatCurrency, parseInput } from "../../main.js";
+import { formatCurrency, parseInput } from "./numberUtils.js";
 import { LightningAddress } from "./lightning-address.js";
 
 /**
