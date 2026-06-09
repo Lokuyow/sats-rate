@@ -1,4 +1,4 @@
-import { formatCurrency } from "../../main.js";
+import { formatCurrency, parseInput } from "../../main.js";
 import { LightningAddress } from "./lightning-address.js";
 
 /**
@@ -88,7 +88,8 @@ export class Pos {
     // satsの値を直接取得できるか確認
     const satsInput = window.document.getElementById("sats");
     if (satsInput) {
-      const satsAmount = parseInt(satsInput.value.replaceAll(",", ""), 10);
+      const selectedLocale = navigator.language || navigator.languages[0];
+      const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
       return satsAmount;
     }
 

@@ -360,7 +360,7 @@ function getLocaleSeparators(locale) {
 }
 
 //ピリオドを小数点とし、桁区切り文字を使わないよう変換
-function parseInput(inputValue, locale) {
+export function parseInput(inputValue, locale) {
   const separators = getLocaleSeparators(locale);
 
   // 数字、小数点、桁区切り文字以外の文字を削除
