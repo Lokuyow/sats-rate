@@ -122,7 +122,9 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      await cache.addAll(urlsToCache);
+      await Promise.allSettled(
+        urlsToCache.map((url) => cache.add(url).catch(() => null))
+      );
 
       // 新しいバージョンがインストールされたことをクライアントに通知
       self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
@@ -158,13 +160,7 @@ self.addEventListener(
 
         let requestToFetch = ev.request;
 
-        if (ev.request.mode === "navigate") {
-          requestToFetch = new Request(ev.request, {
-            mode: "cors",
-          });
-        }
-
-        const cacheResponse = await caches.match(url.toString());
+        const cacheResponse = await caches.match(ev.request);
 
         return cacheResponse || fetch(requestToFetch);
       })()
