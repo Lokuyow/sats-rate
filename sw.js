@@ -6,6 +6,7 @@ const RELEASE_REVISION = RELEASE_MANIFEST.revision || SITE_VERSION;
 const CACHE_NAME = `osats-release-${SITE_VERSION}`;
 const STAGING_CACHE_NAME = `osats-release-staging-${RELEASE_REVISION}`;
 const LOCAL_ASSETS = new Set(RELEASE_MANIFEST.assets);
+const LEGACY_CACHE_PREFIX = "osats-caches-";
 const NAVIGATION_ROUTES = new Map([
   ["/", "/index.html"],
   ["/index.html", "/index.html"],
@@ -26,7 +27,12 @@ function isLocalAsset(pathname) {
 }
 
 function isManagedCacheName(cacheName) {
-  return cacheName.startsWith("osats-caches-") || cacheName.startsWith("osats-release-");
+  return cacheName.startsWith(LEGACY_CACHE_PREFIX) || cacheName.startsWith("osats-release-");
+}
+
+async function hasLegacyCache() {
+  const keys = await caches.keys();
+  return keys.some((key) => key.startsWith(LEGACY_CACHE_PREFIX));
 }
 
 async function populateStagingCache() {
@@ -55,6 +61,9 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       await populateStagingCache();
+      if (await hasLegacyCache()) {
+        await self.skipWaiting();
+      }
     })()
   );
 });
@@ -99,10 +108,26 @@ self.addEventListener(
 );
 
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+  if (event.data === "skipWaiting" || (event.data && event.data.type === "SKIP_WAITING")) {
     self.skipWaiting();
   }
-  if (event.data && event.data.type === "GET_VERSION") {
+
+  if (event.data === "CHECK_UPDATE_STATUS") {
+    if (self.registration.waiting) {
+      event.source.postMessage({ type: "NEW_VERSION_INSTALLED" });
+    } else if (self.registration.installing) {
+      const worker = self.registration.installing;
+      worker.addEventListener("statechange", () => {
+        if (worker.state === "installed") {
+          event.source.postMessage({ type: "NEW_VERSION_INSTALLED" });
+        }
+      });
+    } else {
+      event.source.postMessage({ type: "NO_UPDATE_FOUND" });
+    }
+  }
+
+  if ((event.data && event.data.type === "GET_VERSION") || (event.data && event.data.action === "getVersion")) {
     event.ports[0].postMessage({ version: SITE_VERSION });
   }
 });

@@ -122,7 +122,7 @@ async function waitForInstallationOutcome(installingWorker) {
       } else if (installingWorker.state === "activating") {
         updateState({ newVersionAvailable: false, isActivatingUpdate: true });
       } else if (installingWorker.state === "redundant") {
-        finish("update-ready");
+        finish("no-update");
       }
     });
   });
@@ -230,7 +230,7 @@ export async function checkForServiceWorkerUpdates() {
 
   if (registration.waiting) {
     updateState({ newVersionAvailable: true });
-    return { status: "update-ready" };
+    return applyServiceWorkerUpdate();
   }
 
   updateState({ isCheckingForUpdates: true });
@@ -245,7 +245,7 @@ export async function checkForServiceWorkerUpdates() {
 
     if (latestRegistration.waiting) {
       updateState({ newVersionAvailable: true });
-      return { status: "update-ready" };
+      return applyServiceWorkerUpdate();
     }
 
     if (!latestRegistration.installing) {
@@ -253,7 +253,12 @@ export async function checkForServiceWorkerUpdates() {
       return { status: "no-update" };
     }
 
-    return await waitForInstallationOutcome(latestRegistration.installing);
+    const result = await waitForInstallationOutcome(latestRegistration.installing);
+    if (result.status === "update-ready") {
+      return applyServiceWorkerUpdate();
+    }
+
+    return result;
   } finally {
     updateState({ isCheckingForUpdates: false });
   }
