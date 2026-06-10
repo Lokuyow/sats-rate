@@ -44,18 +44,20 @@ export function showNotification(message, event, align = "right") {
     // Handle null event (fallback scenarios)
     if (event && event.pageX !== undefined && event.pageY !== undefined) {
         notification.style.top = `${event.pageY}px`;
-        notification.style.left = `${event.pageX}px`;
+
+        const scrollX = window.scrollX || window.pageXOffset || 0;
+        const notificationWidth = notification.offsetWidth;
+        const minLeft = scrollX + 10;
+        const maxLeft = scrollX + window.innerWidth - notificationWidth - 10;
+        let leftValue = align === "left" ? event.pageX - notificationWidth : event.pageX;
+        leftValue = Math.min(Math.max(leftValue, minLeft), maxLeft);
+        notification.style.left = `${leftValue}px`;
+        notification.style.transform = "translate(0, -100%)";
     } else {
         // Fallback position: center of the viewport
         notification.style.top = "50%";
         notification.style.left = "50%";
         notification.style.transform = "translate(-50%, -50%)";
-    }
-
-    if (event && align === "left") {
-        notification.style.transform = "translate(-100%, -100%)";
-    } else if (event) {
-        notification.style.transform = "translate(0, -100%)";
     }
 
     notification.style.visibility = "visible";

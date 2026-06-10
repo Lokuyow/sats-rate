@@ -122,7 +122,7 @@
   position: fixed;
   top: 48px;
   /* ヘッダーの高さに合わせる */
-  right: max(0px, calc(((100vw - 800px) / 2) - 10px));
+  right: 10px;
   margin-left: 4px;
   background-color: var(--bg-color1);
   border: 1px solid var(--unit-bg-color);
@@ -135,6 +135,10 @@
 
   @media (min-width: 601px) {
     top: 56px;
+  }
+
+  @media (min-width: 820px) {
+    right: calc(((100vw - 800px) / 2) - 10px);
   }
 }
 

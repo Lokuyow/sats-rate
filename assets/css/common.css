@@ -115,7 +115,11 @@ main {
   border: 2px solid var(--input-bg-color);
   border-radius: 6px;
   padding: 8px 10px;
-  white-space: nowrap;
+  max-width: calc(100vw - 20px);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  box-sizing: border-box;
 }
 
 /* ダークモード設定 */
