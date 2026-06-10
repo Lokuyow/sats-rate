@@ -53,7 +53,7 @@
   "lokuyow": "Lokuyow",
   "showNotification": {
     "setup": "Setup complete",
-    "copy": "Copied to clipboard",
+    "copy": "Copied",
     "up": "Up to date"
   },
   "updateUI": {
