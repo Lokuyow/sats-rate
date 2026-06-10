@@ -18,7 +18,7 @@ function isServiceWorkerUsable() {
   if (!isSecureContext) {
     console.warn(
       "Service Worker registration skipped: Not in secure context (HTTP + private IP). " +
-        "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
+      "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
     );
     return false;
   }
@@ -122,7 +122,7 @@ async function waitForInstallationOutcome(installingWorker) {
       } else if (installingWorker.state === "activating") {
         updateState({ newVersionAvailable: false, isActivatingUpdate: true });
       } else if (installingWorker.state === "redundant") {
-        finish("no-update");
+        finish("update-ready");
       }
     });
   });
