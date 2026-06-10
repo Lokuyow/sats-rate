@@ -156,13 +156,23 @@ function attachRegistrationListeners(registration) {
   });
 }
 
+async function resolveUpdateReady(applyWhenReady) {
+  updateState({ newVersionAvailable: true });
+
+  if (applyWhenReady) {
+    return applyServiceWorkerUpdate();
+  }
+
+  return { status: "update-ready" };
+}
+
 async function registerServiceWorker() {
   if (!isServiceWorkerUsable()) {
     return null;
   }
 
   try {
-    const registration = await navigator.serviceWorker.register(SW_URL);
+    const registration = await navigator.serviceWorker.register(SW_URL, { updateViaCache: "none" });
     attachRegistrationListeners(registration);
     return registration;
   } catch (error) {
@@ -218,7 +228,8 @@ export async function applyServiceWorkerUpdate() {
   return { status: "activating" };
 }
 
-export async function checkForServiceWorkerUpdates() {
+export async function checkForServiceWorkerUpdates({ applyWhenReady = false } = {}) {
+
   if (isCheckingForUpdates || isActivatingUpdate) {
     return { status: "busy" };
   }
@@ -229,8 +240,7 @@ export async function checkForServiceWorkerUpdates() {
   }
 
   if (registration.waiting) {
-    updateState({ newVersionAvailable: true });
-    return applyServiceWorkerUpdate();
+    return resolveUpdateReady(applyWhenReady);
   }
 
   updateState({ isCheckingForUpdates: true });
@@ -244,8 +254,7 @@ export async function checkForServiceWorkerUpdates() {
     }
 
     if (latestRegistration.waiting) {
-      updateState({ newVersionAvailable: true });
-      return applyServiceWorkerUpdate();
+      return resolveUpdateReady(applyWhenReady);
     }
 
     if (!latestRegistration.installing) {
@@ -255,7 +264,7 @@ export async function checkForServiceWorkerUpdates() {
 
     const result = await waitForInstallationOutcome(latestRegistration.installing);
     if (result.status === "update-ready") {
-      return applyServiceWorkerUpdate();
+      return resolveUpdateReady(applyWhenReady);
     }
 
     return result;

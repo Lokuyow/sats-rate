@@ -75,6 +75,9 @@ async function initializeApp() {
     updateUpdateButtonState(updateReady, isServiceWorkerUpdateBusy);
   });
   setupEventListeners();
+  void checkForServiceWorkerUpdates().catch((error) => {
+    console.error("An error occurred while checking for updates on app initialization:", error);
+  });
   checkAndUpdateElements();
   document.addEventListener("visibilitychange", handleVisibilityChange);
   setupThemeToggle();
@@ -221,6 +224,9 @@ function setupInputFieldsEventListeners() {
 
 async function handleOnline() {
   await currencyManager.fetchCurrencyData(selectedCurrencies);
+  void checkForServiceWorkerUpdates().catch((error) => {
+    console.error("An error occurred while checking for updates after reconnecting:", error);
+  });
   checkAndUpdateElements();
 }
 
