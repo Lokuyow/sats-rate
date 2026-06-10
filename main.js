@@ -7,8 +7,15 @@ import {
   shareViaWebAPIEvent,
   shareSiteViaWebAPIEvent,
   copySiteToClipboardEvent,
+  showNotification,
   readFromClipboard,
 } from "./assets/js/clipboardShare.js";
+import {
+  checkForServiceWorkerUpdates,
+  displaySiteVersion,
+  initializeServiceWorker,
+  subscribeToServiceWorkerUpdates,
+} from "./assets/js/serviceWorkerManager.js";
 
 const BASE_URL = "https://osats.money/";
 const dateTimeFormatOptions = {
@@ -26,6 +33,7 @@ window.currencyRates = {};
 window.baseCurrencyValue = {};
 let selectedCurrencies = [];
 let currencyInputFields = [];
+const pos = new Pos();
 const DEFAULT_SELECTED_CURRENCIES = ["sats", "btc", "jpy", "usd", "eur"];
 const MAX_SELECTED_CURRENCIES = 20;
 const RESERVED_QUERY_PARAMS = new Set(["d", "currencies", "ts", "img_id", "lang"]);
@@ -56,12 +64,16 @@ async function initializeApp() {
   currencyInputFields = selectedCurrencies.map((id) => document.getElementById(id));
 
   // その他の初期化処理
-  await registerAndHandleServiceWorker();
+  await initializeServiceWorker();
   await displaySiteVersion();
+  subscribeToServiceWorkerUpdates(({ newVersionAvailable: updateReady }) => {
+    updateUpdateButtonState(updateReady);
+  });
   setupEventListeners();
   checkAndUpdateElements();
   document.addEventListener("visibilitychange", handleVisibilityChange);
   setupThemeToggle();
+  setupPosDialogEventListeners();
 
   // 計算
   prepareAndCalculate(baseCurrencyValue);
@@ -94,10 +106,10 @@ function setupEventListeners() {
   const floatingMenu = document.getElementById("floating-menu");
 
   if (menuToggleButton && floatingMenu) {
-    // タッチデバイスかどうかを判定
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    // ホバー操作が可能な環境ではホバー開閉、そうでない環境ではタップ開閉
+    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-    if (isTouchDevice) {
+    if (!supportsHover) {
       // タッチデバイスの場合：クリックでトグル
       menuToggleButton.addEventListener("click", (event) => {
         event.stopPropagation(); // documentへの伝播を防ぐ
@@ -135,6 +147,42 @@ function setupEventListeners() {
       menuToggleButton.addEventListener("mouseleave", hideMenu);
       floatingMenu.addEventListener("mouseleave", hideMenu);
     }
+  }
+}
+
+function getUpdateButtonElements() {
+  const button = document.getElementById("checkForUpdateBtn");
+  if (!button) {
+    return {};
+  }
+
+  const label = document.getElementById("buttonLabel");
+  const spinnerWrapper = button.querySelector(".spinner-wrapper");
+  return { button, label, spinnerWrapper };
+}
+
+function getTranslatedUpdateButtonText(translationKey, fallbackText) {
+  if (!window.vanilla_i18n_instance || !window.vanilla_i18n_instance._translationData) {
+    return fallbackText;
+  }
+
+  return window.vanilla_i18n_instance.translate(translationKey) || fallbackText;
+}
+
+function updateUpdateButtonState(isUpdateReady) {
+  const { label, spinnerWrapper } = getUpdateButtonElements();
+  if (!label) {
+    return;
+  }
+
+  const translationKey = isUpdateReady ? "updateUI.textContent" : "settings.update";
+  const fallbackText = isUpdateReady ? "更新があります" : "更新をチェック";
+
+  label.setAttribute("vanilla-i18n", translationKey);
+  label.textContent = getTranslatedUpdateButtonText(translationKey, fallbackText);
+
+  if (spinnerWrapper) {
+    spinnerWrapper.style.display = "none";
   }
 }
 
@@ -670,248 +718,131 @@ function setupThemeToggle() {
   });
 }
 
-// サービスワーカー
-let newVersionAvailable = false;
-
-// サービスワーカーからのメッセージリスナー（セキュアコンテキストのみ）
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.addEventListener("message", async (event) => {
-    const updateButton = document.getElementById("checkForUpdateBtn");
-    const buttonText = updateButton.querySelector("#buttonText");
-    const spinnerWrapper = buttonText.querySelector(".spinner-wrapper");
-
-    console.log("Message from Service Worker:", event.data);
-
-    if (event.data && event.data.type === "NEW_VERSION_INSTALLED") {
-      newVersionAvailable = true;
-      if (buttonText) {
-        buttonText.textContent = window.vanilla_i18n_instance.translate("updateUI.textContent");
-      }
-      if (spinnerWrapper) {
-        spinnerWrapper.style.display = "none";
-      }
-    } else if (event.data && event.data.type === "NO_UPDATE_FOUND") {
-      // 一定時間待機してからメッセージを確認
-      await delay(300);
-
-      if (!newVersionAvailable) {
-        const message = window.vanilla_i18n_instance.translate("showNotification.up");
-        showNotification(message, lastClickEvent);
-        if (spinnerWrapper) {
-          spinnerWrapper.style.display = "none";
-        }
-      }
-    }
-  });
-}
-
-async function registerAndHandleServiceWorker() {
-  if (!("serviceWorker" in navigator)) {
-    console.warn("Service Worker is not supported in this browser.");
-    return;
-  }
-
-  // Non-secure contexts (HTTP + private IP) cannot register Service Workers
-  if (!isSecureContext) {
-    console.warn(
-      "Service Worker registration skipped: Not in secure context (HTTP + private IP). " +
-      "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
-    );
-    return;
-  }
-
-  try {
-    const registration = await navigator.serviceWorker.register("./sw.js");
-
-    registration.addEventListener("updatefound", () => {
-      const installingWorker = registration.installing;
-
-      installingWorker.addEventListener("statechange", async () => {
-        if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
-          newVersionAvailable = true;
-          const updateUI = document.getElementById("buttonText");
-          if (updateUI) {
-            console.log("Updating UI from Service Worker installation");
-
-            // 翻訳テキストを取得
-            let translatedText = "";
-            if (window.vanilla_i18n_instance && window.vanilla_i18n_instance._translationData) {
-              translatedText = window.vanilla_i18n_instance.translate("updateUI.textContent");
-            } else {
-              // 翻訳データがまだロードされていない場合
-              await window.vanilla_i18n_instance.run();
-              translatedText = window.vanilla_i18n_instance.translate("updateUI.textContent");
-            }
-
-            // テキストを更新
-            updateUI.textContent = translatedText || "更新があります"; // デフォルトのテキストを設定
-          }
-        }
-      });
-    });
-  } catch (error) {
-    console.error("Service Worker registration failed:", error);
-  }
-}
-
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 // サイト更新ボタン
 async function checkForUpdates(event) {
   lastClickEvent = event; // クリックイベントを保存
-  const updateButton = document.getElementById("checkForUpdateBtn");
-  const buttonText = updateButton.querySelector("#buttonText");
-  const spinnerWrapper = buttonText.querySelector(".spinner-wrapper");
+  const { spinnerWrapper } = getUpdateButtonElements();
 
   if (spinnerWrapper) {
     spinnerWrapper.style.display = "block";
   }
 
-  // 新しいバージョンが利用可能な場合、ページをリロード
-  if (newVersionAvailable) {
-    window.location.reload();
-    return; // 以降の処理を実行させない
-  }
-
   try {
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (!registration) throw new Error("No active service worker registration found");
+    const result = await checkForServiceWorkerUpdates();
 
-    // サービスワーカーの状態を確認
-    if (registration.installing || registration.waiting) {
-      // サービスワーカーがインストール中または待機中であれば、更新状態をチェック
-      navigator.serviceWorker.controller.postMessage("CHECK_UPDATE_STATUS");
-    } else {
-      // それ以外の場合は、更新を試みる
-      await registration.update();
-      // 更新状態をチェック
-      navigator.serviceWorker.controller.postMessage("CHECK_UPDATE_STATUS");
+    if (result.status === "no-update") {
+      const message = window.vanilla_i18n_instance.translate("showNotification.up");
+      showNotification(message, lastClickEvent);
+    } else if (result.status === "update-ready") {
+      updateUpdateButtonState(true);
+    } else if (result.status === "unavailable") {
+      console.warn("No active service worker registration found");
     }
   } catch (error) {
     console.error("An error occurred while checking for updates:", error);
+  } finally {
     if (spinnerWrapper) {
       spinnerWrapper.style.display = "none";
     }
   }
 }
 
-//Service Workerからサイトのバージョン情報を取得
-async function fetchVersionFromSW() {
-  if ("serviceWorker" in navigator) {
-    const registration = await navigator.serviceWorker.ready;
-    return new Promise((resolve, reject) => {
-      const messageChannel = new MessageChannel();
-      messageChannel.port1.onmessage = (event) => {
-        if (event.data.error) {
-          reject(event.data.error);
-        } else {
-          resolve(event.data.version);
-        }
-      };
+function setupPosDialogEventListeners() {
+  pos.initialize();
 
-      registration.active.postMessage({ action: "getVersion" }, [messageChannel.port2]);
-    });
-  }
-  return null;
-}
+  /**
+   * ライトニングアドレスのダイアログの制御
+   */
+  const showAddressButton = document.getElementById("show-lightning-address-dialog");
+  const lnDialog = document.getElementById("update-lightning-address-dialog");
+  const lnDialogSubmitButton = document.getElementById("lightning-address-submit-button");
+  const lnDialogCloseButton = document.getElementById("lightning-address-close-button");
+  const lnDialogClearButton = document.getElementById("lightning-address-clear-button");
+  const lnAddressForm = document.getElementById("lightning-address-form");
 
-//サイトのバージョン情報を画面に表示
-async function displaySiteVersion() {
-  const siteVersion = await fetchVersionFromSW();
-  if (siteVersion) {
-    document.getElementById("siteVersion").textContent = siteVersion;
-  }
-}
-
-const pos = new Pos();
-pos.initialize();
-
-/**
- * ライトニングアドレスのダイアログの制御
- */
-const showAddressButton = document.getElementById("show-lightning-address-dialog");
-const lnDialog = document.getElementById("update-lightning-address-dialog");
-const lnDialogSubmitButton = document.getElementById("lightning-address-submit-button");
-const lnDialogCloseButton = document.getElementById("lightning-address-close-button");
-const lnDialogClearButton = document.getElementById("lightning-address-clear-button");
-const lnAddressForm = document.getElementById("lightning-address-form");
-
-// ダイアログを開く
-showAddressButton.addEventListener("click", () => {
-  lnDialog.showModal();
-});
-
-// ダイアログを閉じる
-lnDialogCloseButton.addEventListener("click", (event) => {
-  event.preventDefault(); // フォームを送信しない
-  lnDialog.close();
-});
-
-// フォームをクリアして設定
-lnDialogClearButton.addEventListener("click", (event) => {
-  event.preventDefault(); // フォームを送信しない
-  pos.clearLnAddress();
-  lnDialog.close();
-});
-
-// ライトニングアドレスのダイアログの外側をクリックして閉じる
-lnDialog.addEventListener("click", (event) => {
-  const rect = lnDialog.getBoundingClientRect();
-  const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
-
-  if (!isInDialog) {
-    lnDialog.close();
-  }
-});
-
-// アドレスを設定する
-lnDialogSubmitButton.addEventListener("click", (event) => {
-  const isValid = lnAddressForm.checkValidity();
-  if (!isValid) {
+  if (!showAddressButton || !lnDialog || !lnDialogSubmitButton || !lnDialogCloseButton || !lnDialogClearButton || !lnAddressForm) {
     return;
   }
 
-  pos.setLnAddress(lnAddressForm);
-  event.preventDefault(); // フォームを送信しない
-  lnDialog.close();
-});
+  // ダイアログを開く
+  showAddressButton.addEventListener("click", () => {
+    lnDialog.showModal();
+  });
 
-/**
- * 支払いインボイスのQRコードダイアログの制御
- */
-const showInvoiceButton = document.getElementById("show-invoice-dialog");
-const invoiceDialog = document.getElementById("lightning-invoice-dialog");
-const invoiceDialogCloseButton = document.getElementById("lightning-invoice-close-button");
+  // ダイアログを閉じる
+  lnDialogCloseButton.addEventListener("click", (event) => {
+    event.preventDefault(); // フォームを送信しない
+    lnDialog.close();
+  });
 
-// ダイアログを開く
-showInvoiceButton.addEventListener("click", () => {
-  invoiceDialog.showModal();
-  pos.showInvoice();
-});
+  // フォームをクリアして設定
+  lnDialogClearButton.addEventListener("click", (event) => {
+    event.preventDefault(); // フォームを送信しない
+    pos.clearLnAddress();
+    lnDialog.close();
+  });
 
-// ダイアログを閉じる
-invoiceDialogCloseButton.addEventListener("click", (event) => {
-  event.preventDefault(); // フォームを送信しない
-  invoiceDialog.close();
-  pos.clearMessage();
-});
+  // ライトニングアドレスのダイアログの外側をクリックして閉じる
+  lnDialog.addEventListener("click", (event) => {
+    const rect = lnDialog.getBoundingClientRect();
+    const isInDialog = rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right;
 
-// インボイスのダイアログの外側をクリックして閉じる
-invoiceDialog.addEventListener("click", (event) => {
-  const rect = invoiceDialog.getBoundingClientRect();
-  const isInDialog =
-    rect.top <= event.clientY &&
-    event.clientY <= rect.bottom &&
-    rect.left <= event.clientX &&
-    event.clientX <= rect.right;
+    if (!isInDialog) {
+      lnDialog.close();
+    }
+  });
 
-  if (!isInDialog) {
+  // アドレスを設定する
+  lnDialogSubmitButton.addEventListener("click", (event) => {
+    const isValid = lnAddressForm.checkValidity();
+    if (!isValid) {
+      return;
+    }
+
+    pos.setLnAddress(lnAddressForm);
+    event.preventDefault(); // フォームを送信しない
+    lnDialog.close();
+  });
+
+  /**
+   * 支払いインボイスのQRコードダイアログの制御
+   */
+  const showInvoiceButton = document.getElementById("show-invoice-dialog");
+  const invoiceDialog = document.getElementById("lightning-invoice-dialog");
+  const invoiceDialogCloseButton = document.getElementById("lightning-invoice-close-button");
+
+  if (!showInvoiceButton || !invoiceDialog || !invoiceDialogCloseButton) {
+    return;
+  }
+
+  // ダイアログを開く
+  showInvoiceButton.addEventListener("click", () => {
+    invoiceDialog.showModal();
+    pos.showInvoice();
+  });
+
+  // ダイアログを閉じる
+  invoiceDialogCloseButton.addEventListener("click", (event) => {
+    event.preventDefault(); // フォームを送信しない
     invoiceDialog.close();
     pos.clearMessage();
-  }
-});
+  });
+
+  // インボイスのダイアログの外側をクリックして閉じる
+  invoiceDialog.addEventListener("click", (event) => {
+    const rect = invoiceDialog.getBoundingClientRect();
+    const isInDialog =
+      rect.top <= event.clientY &&
+      event.clientY <= rect.bottom &&
+      rect.left <= event.clientX &&
+      event.clientX <= rect.right;
+
+    if (!isInDialog) {
+      invoiceDialog.close();
+      pos.clearMessage();
+    }
+  });
+}
 
 // index.htmlで使用する関数をグローバルスコープで使用できるようにwindowに追加する
 window.satsRate = {
