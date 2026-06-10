@@ -40,6 +40,7 @@ const MAX_SELECTED_CURRENCIES = 20;
 const RESERVED_QUERY_PARAMS = new Set(["d", "currencies", "ts", "img_id", "lang"]);
 let isServiceWorkerUpdateReady = false;
 let isServiceWorkerUpdateBusy = false;
+let shouldSelectAllOnNextInputFocus = false;
 
 // 自動更新モードフラグ（初期値はローカルストレージから取得、未設定の場合はtrue）
 const storedAutoUpdateEnabled = loadJsonFromStorage("autoUpdateEnabledLS", true);
@@ -194,6 +195,7 @@ function updateUpdateButtonState(isUpdateReady, isBusy = isServiceWorkerUpdateBu
 }
 
 function setupInputFieldEventListeners(element) {
+  element.addEventListener("mousedown", handleMouseDownForSelectAll);
   element.addEventListener("keyup", handleInputFormatting);
   element.addEventListener("focus", handleFocus);
   element.addEventListener("contextmenu", handleContextMenu);
@@ -564,6 +566,8 @@ let updateTimer = null;
 
 function handleVisibilityChange() {
   if (document.hidden) {
+    shouldSelectAllOnNextInputFocus = true;
+
     // 画面が非表示になったらタイマーをクリア
     if (updateTimer) {
       clearTimeout(updateTimer);
@@ -656,8 +660,26 @@ function updateElementClass(element, isOutdated) {
   element.style.visibility = "visible";
 }
 
+function handleMouseDownForSelectAll(event) {
+  if (!shouldSelectAllOnNextInputFocus) {
+    return;
+  }
+
+  const targetInput = event.target;
+  if (!(targetInput instanceof HTMLInputElement)) {
+    return;
+  }
+
+  // 復帰直後の初回クリックはキャレット移動を抑止して全選択する
+  event.preventDefault();
+  targetInput.focus();
+  targetInput.select();
+  shouldSelectAllOnNextInputFocus = false;
+}
+
 // 選択
 function handleFocus(event) {
+  shouldSelectAllOnNextInputFocus = false;
   event.target.select();
 }
 
