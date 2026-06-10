@@ -1,8 +1,10 @@
 importScripts("/assets/generated/sw-manifest.js");
 
 const RELEASE_MANIFEST = self.__OSATS_SW_MANIFEST;
-const VERSION = RELEASE_MANIFEST.version;
-const CACHE_NAME = `osats-release-${VERSION}`;
+const SITE_VERSION = RELEASE_MANIFEST.version;
+const RELEASE_REVISION = RELEASE_MANIFEST.revision || SITE_VERSION;
+const CACHE_NAME = `osats-release-${SITE_VERSION}`;
+const STAGING_CACHE_NAME = `osats-release-staging-${RELEASE_REVISION}`;
 const LOCAL_ASSETS = new Set(RELEASE_MANIFEST.assets);
 const NAVIGATION_ROUTES = new Map([
   ["/", "/index.html"],
@@ -23,11 +25,36 @@ function isLocalAsset(pathname) {
   return LOCAL_ASSETS.has(pathname);
 }
 
+function isManagedCacheName(cacheName) {
+  return cacheName.startsWith("osats-caches-") || cacheName.startsWith("osats-release-");
+}
+
+async function populateStagingCache() {
+  const cache = await caches.open(STAGING_CACHE_NAME);
+  await cache.addAll(RELEASE_MANIFEST.assets);
+}
+
+async function promoteStagingCache() {
+  const stagingCache = await caches.open(STAGING_CACHE_NAME);
+  const requests = await stagingCache.keys();
+
+  await caches.delete(CACHE_NAME);
+
+  const activeCache = await caches.open(CACHE_NAME);
+  await Promise.all(
+    requests.map(async (request) => {
+      const response = await stagingCache.match(request);
+      if (response) {
+        await activeCache.put(request, response);
+      }
+    })
+  );
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.addAll(RELEASE_MANIFEST.assets);
+      await populateStagingCache();
     })()
   );
 });
@@ -35,8 +62,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
+      await promoteStagingCache();
       const keys = await caches.keys();
-      await Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)));
+      await Promise.all(keys.filter((key) => isManagedCacheName(key) && key !== CACHE_NAME).map((key) => caches.delete(key)));
       return self.clients.claim();
     })()
   );
@@ -75,6 +103,6 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
   if (event.data && event.data.type === "GET_VERSION") {
-    event.ports[0].postMessage({ version: VERSION });
+    event.ports[0].postMessage({ version: SITE_VERSION });
   }
 });

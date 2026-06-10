@@ -1,4 +1,5 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
+import { Pos } from "./assets/js/pos.js";
 import {
   setupEventListenersForCurrencyButtons,
   shareViaWebAPIEvent,
@@ -7,6 +8,7 @@ import {
   readFromClipboard,
 } from "./assets/js/clipboardShare.js";
 import {
+  applyServiceWorkerUpdate,
   checkForServiceWorkerUpdates,
   displaySiteVersion,
   initializeServiceWorker,
@@ -29,6 +31,8 @@ window.currencyRates = {};
 window.baseCurrencyValue = {};
 let selectedCurrencies = [];
 let currencyInputFields = [];
+let isServiceWorkerUpdateReady = false;
+let isServiceWorkerUpdateBusy = false;
 let customOptions = {
   sats: { maximumFractionDigits: 0, minimumFractionDigits: 0 },
   btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
@@ -61,8 +65,10 @@ async function initializeApp() {
   // その他の初期化処理
   await initializeServiceWorker();
   await displaySiteVersion();
-  subscribeToServiceWorkerUpdates(({ newVersionAvailable: updateReady }) => {
-    updateUpdateButtonState(updateReady);
+  subscribeToServiceWorkerUpdates(({ newVersionAvailable: updateReady, isCheckingForUpdates, isActivatingUpdate }) => {
+    isServiceWorkerUpdateReady = updateReady;
+    isServiceWorkerUpdateBusy = isCheckingForUpdates || isActivatingUpdate;
+    updateUpdateButtonState(updateReady, isServiceWorkerUpdateBusy);
   });
   setupEventListeners();
   checkAndUpdateElements();
@@ -163,9 +169,9 @@ function getTranslatedUpdateButtonText(translationKey, fallbackText) {
   return window.vanilla_i18n_instance.translate(translationKey) || fallbackText;
 }
 
-function updateUpdateButtonState(isUpdateReady) {
-  const { label, spinnerWrapper } = getUpdateButtonElements();
-  if (!label) {
+function updateUpdateButtonState(isUpdateReady, isBusy = isServiceWorkerUpdateBusy) {
+  const { button, label, spinnerWrapper } = getUpdateButtonElements();
+  if (!button || !label) {
     return;
   }
 
@@ -174,9 +180,11 @@ function updateUpdateButtonState(isUpdateReady) {
 
   label.setAttribute("vanilla-i18n", translationKey);
   label.textContent = getTranslatedUpdateButtonText(translationKey, fallbackText);
+  button.disabled = isBusy;
+  button.setAttribute("aria-busy", isBusy ? "true" : "false");
 
   if (spinnerWrapper) {
-    spinnerWrapper.style.display = "none";
+    spinnerWrapper.style.display = isBusy ? "block" : "none";
   }
 }
 
@@ -751,33 +759,27 @@ function setupThemeToggle() {
 // サイト更新ボタン
 async function checkForUpdates(event) {
   lastClickEvent = event; // クリックイベントを保存
-  const { spinnerWrapper } = getUpdateButtonElements();
-
-  if (spinnerWrapper) {
-    spinnerWrapper.style.display = "block";
+  if (isServiceWorkerUpdateBusy) {
+    return;
   }
 
   try {
-    const result = await checkForServiceWorkerUpdates();
+    const result = isServiceWorkerUpdateReady ? await applyServiceWorkerUpdate() : await checkForServiceWorkerUpdates();
 
     if (result.status === "no-update") {
       const message = window.vanilla_i18n_instance.translate("showNotification.up");
       showNotification(message, lastClickEvent);
     } else if (result.status === "update-ready") {
       updateUpdateButtonState(true);
+    } else if (result.status === "activating" || result.status === "busy") {
+      return;
     } else if (result.status === "unavailable") {
       console.warn("No active service worker registration found");
     }
   } catch (error) {
     console.error("An error occurred while checking for updates:", error);
-  } finally {
-    if (spinnerWrapper) {
-      spinnerWrapper.style.display = "none";
-    }
   }
 }
-
-import { Pos } from "./assets/js/pos.js";
 
 const pos = new Pos();
 pos.initialize();

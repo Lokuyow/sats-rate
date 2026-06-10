@@ -1,4 +1,5 @@
 {
+  "version": "2.40.0",
   "scripts": {
     "sw:generate": "node scripts/generate-sw-manifest.js",
     "sw:check": "node scripts/generate-sw-manifest.js --check"
