@@ -37,7 +37,7 @@ function getSiteUrl() {
  * @param {Event} event - イベントオブジェクト
  * @param {string} align - 配置 ("right" | "left")
  */
-function showNotification(message, event, align = "right") {
+export function showNotification(message, event, align = "right") {
     const notification = document.getElementById("notification");
     notification.innerHTML = message.replace(/\n/g, "<br>");
 

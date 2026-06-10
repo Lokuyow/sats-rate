@@ -5,6 +5,7 @@ import {
   shareViaWebAPIEvent,
   shareSiteViaWebAPIEvent,
   copySiteToClipboardEvent,
+  showNotification,
   readFromClipboard,
 } from "./assets/js/clipboardShare.js";
 import {
