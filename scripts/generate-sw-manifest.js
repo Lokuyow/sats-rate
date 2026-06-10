@@ -5,6 +5,8 @@ const path = require("node:path");
 const projectRoot = path.resolve(__dirname, "..");
 const outputPath = path.join(projectRoot, "assets", "generated", "sw-manifest.js");
 const shouldCheck = process.argv.includes("--check");
+const packageJsonPath = path.join(projectRoot, "package.json");
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
 const includeFiles = ["index.html", "main.js", "manifest.json", path.join("currencies", "index.html"), path.join("what-are-zaps", "index.html")];
 const includeDirectories = ["assets", "lib"];
@@ -75,7 +77,15 @@ function buildAssetList() {
     .sort((left, right) => left.localeCompare(right));
 }
 
-function createVersion(assetList) {
+function getReleaseVersion() {
+  if (typeof packageJson.version !== "string" || packageJson.version.trim() === "") {
+    throw new Error("package.json must define a non-empty version for the service worker release.");
+  }
+
+  return packageJson.version.trim();
+}
+
+function createRevision(assetList) {
   const hash = crypto.createHash("sha256");
 
   for (const assetPath of assetList) {
@@ -91,7 +101,8 @@ function createVersion(assetList) {
 function buildManifestContent() {
   const assets = buildAssetList();
   const manifest = {
-    version: createVersion(assets),
+    version: getReleaseVersion(),
+    revision: createRevision(assets),
     assets,
   };
 

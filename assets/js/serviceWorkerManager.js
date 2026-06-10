@@ -2,8 +2,12 @@ const SW_URL = "/sw.js";
 const UPDATE_RELOAD_KEY = "osats-sw-reload-pending";
 
 let newVersionAvailable = false;
+let isCheckingForUpdates = false;
+let isActivatingUpdate = false;
 let registrationPromise = null;
+let controllerChangeListenerAttached = false;
 const updateListeners = new Set();
+const observedRegistrations = new WeakSet();
 
 function isServiceWorkerUsable() {
   if (!("serviceWorker" in navigator)) {
@@ -14,7 +18,7 @@ function isServiceWorkerUsable() {
   if (!isSecureContext) {
     console.warn(
       "Service Worker registration skipped: Not in secure context (HTTP + private IP). " +
-        "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
+      "App works in offline-limited mode. For full PWA features, use HTTPS or localhost."
     );
     return false;
   }
@@ -23,19 +27,45 @@ function isServiceWorkerUsable() {
 }
 
 function notifyUpdateListeners() {
-  updateListeners.forEach((listener) => listener({ newVersionAvailable }));
+  updateListeners.forEach((listener) =>
+    listener({
+      newVersionAvailable,
+      isCheckingForUpdates,
+      isActivatingUpdate,
+    })
+  );
 }
 
-function setNewVersionAvailable(value) {
-  if (newVersionAvailable === value) {
-    return;
+function updateState(nextState) {
+  let hasChanged = false;
+
+  if (typeof nextState.newVersionAvailable === "boolean" && nextState.newVersionAvailable !== newVersionAvailable) {
+    newVersionAvailable = nextState.newVersionAvailable;
+    hasChanged = true;
   }
 
-  newVersionAvailable = value;
-  notifyUpdateListeners();
+  if (typeof nextState.isCheckingForUpdates === "boolean" && nextState.isCheckingForUpdates !== isCheckingForUpdates) {
+    isCheckingForUpdates = nextState.isCheckingForUpdates;
+    hasChanged = true;
+  }
+
+  if (typeof nextState.isActivatingUpdate === "boolean" && nextState.isActivatingUpdate !== isActivatingUpdate) {
+    isActivatingUpdate = nextState.isActivatingUpdate;
+    hasChanged = true;
+  }
+
+  if (hasChanged) {
+    notifyUpdateListeners();
+  }
 }
 
 function handleControllerChange() {
+  updateState({
+    newVersionAvailable: false,
+    isCheckingForUpdates: false,
+    isActivatingUpdate: false,
+  });
+
   if (sessionStorage.getItem(UPDATE_RELOAD_KEY) !== "1") {
     return;
   }
@@ -44,28 +74,53 @@ function handleControllerChange() {
   window.location.reload();
 }
 
-async function waitForInstallationOutcome(registration, installingWorker) {
+async function getLatestRegistration() {
+  if (!isServiceWorkerUsable()) {
+    return null;
+  }
+
+  if (registrationPromise) {
+    await registrationPromise.catch(() => null);
+  }
+
+  const registration = await navigator.serviceWorker.getRegistration().catch(() => null);
+  if (registration) {
+    attachRegistrationListeners(registration);
+  }
+
+  return registration;
+}
+
+async function waitForInstallationOutcome(installingWorker) {
   return new Promise((resolve) => {
     const finish = (status) => resolve({ status });
 
     if (installingWorker.state === "installed") {
-      if (navigator.serviceWorker.controller && registration.waiting) {
-        setNewVersionAvailable(true);
-        finish("update-ready");
-      } else {
+      getLatestRegistration().then((registration) => {
+        if (navigator.serviceWorker.controller && registration && registration.waiting) {
+          updateState({ newVersionAvailable: true });
+          finish("update-ready");
+          return;
+        }
+
         finish("no-update");
-      }
+      });
       return;
     }
 
     installingWorker.addEventListener("statechange", () => {
       if (installingWorker.state === "installed") {
-        if (navigator.serviceWorker.controller && registration.waiting) {
-          setNewVersionAvailable(true);
-          finish("update-ready");
-        } else {
+        getLatestRegistration().then((registration) => {
+          if (navigator.serviceWorker.controller && registration && registration.waiting) {
+            updateState({ newVersionAvailable: true });
+            finish("update-ready");
+            return;
+          }
+
           finish("no-update");
-        }
+        });
+      } else if (installingWorker.state === "activating") {
+        updateState({ newVersionAvailable: false, isActivatingUpdate: true });
       } else if (installingWorker.state === "redundant") {
         finish("no-update");
       }
@@ -74,8 +129,17 @@ async function waitForInstallationOutcome(registration, installingWorker) {
 }
 
 function attachRegistrationListeners(registration) {
-  if (registration.waiting) {
-    setNewVersionAvailable(true);
+  if (observedRegistrations.has(registration)) {
+    if (registration.waiting && navigator.serviceWorker.controller) {
+      updateState({ newVersionAvailable: true });
+    }
+    return;
+  }
+
+  observedRegistrations.add(registration);
+
+  if (registration.waiting && navigator.serviceWorker.controller) {
+    updateState({ newVersionAvailable: true });
   }
 
   registration.addEventListener("updatefound", () => {
@@ -86,7 +150,7 @@ function attachRegistrationListeners(registration) {
 
     installingWorker.addEventListener("statechange", () => {
       if (installingWorker.state === "installed" && navigator.serviceWorker.controller && registration.waiting) {
-        setNewVersionAvailable(true);
+        updateState({ newVersionAvailable: true });
       }
     });
   });
@@ -108,12 +172,16 @@ async function registerServiceWorker() {
 }
 
 export function initializeServiceWorker() {
-  if (!("serviceWorker" in navigator)) {
+  if (!isServiceWorkerUsable()) {
     return Promise.resolve(null);
   }
 
-  if (!registrationPromise) {
+  if (!controllerChangeListenerAttached) {
     navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);
+    controllerChangeListenerAttached = true;
+  }
+
+  if (!registrationPromise) {
     registrationPromise = registerServiceWorker();
   }
 
@@ -122,7 +190,11 @@ export function initializeServiceWorker() {
 
 export function subscribeToServiceWorkerUpdates(listener) {
   updateListeners.add(listener);
-  listener({ newVersionAvailable });
+  listener({
+    newVersionAvailable,
+    isCheckingForUpdates,
+    isActivatingUpdate,
+  });
 
   return () => {
     updateListeners.delete(listener);
@@ -130,39 +202,66 @@ export function subscribeToServiceWorkerUpdates(listener) {
 }
 
 export async function applyServiceWorkerUpdate() {
-  const registration = await initializeServiceWorker();
-  if (!registration || !registration.waiting) {
-    return false;
-  }
-
-  sessionStorage.setItem(UPDATE_RELOAD_KEY, "1");
-  registration.waiting.postMessage({ type: "SKIP_WAITING" });
-  return true;
-}
-
-export async function checkForServiceWorkerUpdates() {
-  const registration = await initializeServiceWorker();
+  const registration = (await getLatestRegistration()) || (await initializeServiceWorker());
   if (!registration) {
     return { status: "unavailable" };
   }
 
-  if (registration.waiting || newVersionAvailable) {
-    await applyServiceWorkerUpdate();
-    return { status: "activating" };
-  }
-
-  await registration.update();
-
-  if (registration.waiting) {
-    setNewVersionAvailable(true);
-    return { status: "update-ready" };
-  }
-
-  if (!registration.installing) {
+  if (!registration.waiting) {
+    updateState({ newVersionAvailable: false, isActivatingUpdate: false });
     return { status: "no-update" };
   }
 
-  return waitForInstallationOutcome(registration, registration.installing);
+  updateState({ newVersionAvailable: false, isActivatingUpdate: true });
+  sessionStorage.setItem(UPDATE_RELOAD_KEY, "1");
+  registration.waiting.postMessage({ type: "SKIP_WAITING" });
+  return { status: "activating" };
+}
+
+export async function checkForServiceWorkerUpdates() {
+  if (isCheckingForUpdates || isActivatingUpdate) {
+    return { status: "busy" };
+  }
+
+  const registration = (await initializeServiceWorker()) || (await getLatestRegistration());
+  if (!registration) {
+    return { status: "unavailable" };
+  }
+
+  if (registration.waiting) {
+    updateState({ newVersionAvailable: true });
+    return applyServiceWorkerUpdate();
+  }
+
+  updateState({ isCheckingForUpdates: true });
+
+  try {
+    await registration.update();
+
+    const latestRegistration = await getLatestRegistration();
+    if (!latestRegistration) {
+      return { status: "unavailable" };
+    }
+
+    if (latestRegistration.waiting) {
+      updateState({ newVersionAvailable: true });
+      return applyServiceWorkerUpdate();
+    }
+
+    if (!latestRegistration.installing) {
+      updateState({ newVersionAvailable: false });
+      return { status: "no-update" };
+    }
+
+    const result = await waitForInstallationOutcome(latestRegistration.installing);
+    if (result.status === "update-ready") {
+      return applyServiceWorkerUpdate();
+    }
+
+    return result;
+  } finally {
+    updateState({ isCheckingForUpdates: false });
+  }
 }
 
 export async function fetchVersionFromSW() {

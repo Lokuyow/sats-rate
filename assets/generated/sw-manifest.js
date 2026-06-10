@@ -1,5 +1,6 @@
 self.__OSATS_SW_MANIFEST = {
-  "version": "2.24.0",
+  "version": "2.40.0",
+  "revision": "814e16a2bcc9",
   "assets": [
     "/assets/css/common.css",
     "/assets/css/currencies.css",
@@ -105,9 +106,11 @@ self.__OSATS_SW_MANIFEST = {
     "/assets/js/currencies.js",
     "/assets/js/currencyManager.js",
     "/assets/js/lightning-address.js",
+    "/assets/js/numberUtils.js",
     "/assets/js/ogpGenerator.js",
     "/assets/js/pos.js",
     "/assets/js/serviceWorkerManager.js",
+    "/assets/js/storage.js",
     "/assets/vanilla-i18n/English.json",
     "/assets/vanilla-i18n/日本語.json",
     "/currencies/index.html",
