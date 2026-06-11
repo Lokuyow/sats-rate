@@ -121,6 +121,44 @@ async function ensureClipboardButtonHandlers() {
   return clipboardShare;
 }
 
+function fallbackCopyTextToClipboard(text, event, align = "right") {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+    const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+    showNotification(message, event, align);
+  } catch (err) {
+    console.error("Fallback copy failed:", err);
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
+function copyTextToClipboard(text, event, align = "right") {
+  if (navigator.clipboard && isSecureContext) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+        showNotification(message, event, align);
+      })
+      .catch((err) => {
+        console.error("Failed to copy to clipboard", err);
+        fallbackCopyTextToClipboard(text, event, align);
+      });
+    return;
+  }
+
+  fallbackCopyTextToClipboard(text, event, align);
+}
+
 async function ensureZapButtonReady() {
   if (window.nostrZap?.initTargets) {
     return;
@@ -164,13 +202,26 @@ async function ensureZapViewReady() {
   await zapViewReadyPromise;
 }
 
-function redispatchDeferredButtonClick(button) {
-  window.setTimeout(() => {
-    button.click();
-  }, 0);
+async function handleClipboardButtonAfterLoad(button, event) {
+  const clipboardShare = await getClipboardShareModule();
+  const currency = button.dataset?.currency;
+
+  if (button.id?.startsWith("copy-") && currency) {
+    const inputElement = document.getElementById(currency);
+    if (inputElement) {
+      const separators = getLocaleSeparators(selectedLocale);
+      const sanitizedValue = inputElement.value.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "");
+      clipboardShare.copyToClipboard(sanitizedValue, event, "left");
+    }
+    return;
+  }
+
+  if (button.id?.startsWith("paste-") && currency) {
+    await pasteFromClipboardToInput(currency);
+  }
 }
 
-function updateLightningUiPlaceholder() {
+async function updateLightningUiPlaceholder() {
   const lightningAddressOutput = document.getElementById("lightning-address-output");
   const showInvoiceButton = document.getElementById("show-invoice-dialog");
   if (!lightningAddressOutput || !showInvoiceButton) {
@@ -897,8 +948,12 @@ function setupLazyLoadedClipboardHandlers() {
       async (event) => {
         event.preventDefault();
         event.stopImmediatePropagation();
+        const preservedEvent = {
+          pageX: event.pageX,
+          pageY: event.pageY,
+        };
         await ensureClipboardButtonHandlers();
-        redispatchDeferredButtonClick(button);
+        await handleClipboardButtonAfterLoad(button, preservedEvent);
       },
       { once: true, capture: true }
     );

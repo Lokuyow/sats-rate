@@ -151,8 +151,20 @@ export function setupEventListenersForCurrencyButtons(
  * @param {string} selectedLocale - 選択されたロケール
  */
 function copySingleCurrencyToClipboard(event, getLocaleSeparators, selectedLocale) {
-    const currency = event.target.dataset.currency;
-    const inputValue = document.getElementById(currency).value;
+    const target = event.currentTarget || event.target;
+    const currency = target?.dataset?.currency;
+    if (!currency) {
+        console.warn("Copy button clicked without currency dataset.");
+        return;
+    }
+
+    const inputElement = document.getElementById(currency);
+    if (!inputElement) {
+        console.warn(`No input element found for currency: ${currency}`);
+        return;
+    }
+
+    const inputValue = inputElement.value;
     const separators = getLocaleSeparators(selectedLocale);
     const sanitizedValue = inputValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "");
     copyToClipboard(sanitizedValue, event, "left");
