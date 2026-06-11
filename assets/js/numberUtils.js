@@ -3,12 +3,21 @@ let customOptions = {
   btc: { maximumFractionDigits: 8, minimumFractionDigits: 0 },
 };
 
+const localeSeparatorsCache = new Map();
+
 export function getLocaleSeparators(locale) {
+  if (localeSeparatorsCache.has(locale)) {
+    return localeSeparatorsCache.get(locale);
+  }
+
   const formattedNumber = new Intl.NumberFormat(locale, { numberingSystem: "latn" }).format(1000.1);
-  return {
+  const separators = {
     groupSeparator: formattedNumber[1],
     decimalSeparator: formattedNumber[5],
   };
+
+  localeSeparatorsCache.set(locale, separators);
+  return separators;
 }
 
 export function parseInput(inputValue, locale) {

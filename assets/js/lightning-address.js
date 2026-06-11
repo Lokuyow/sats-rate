@@ -4,6 +4,7 @@ const addressRegExp = /^[A-Za-z0-9][A-Za-z0-9_\.\-]*@[A-Za-z0-9_\.\-]+\.[A-Za-z0
 export class LightningAddress {
   addressView = window.document.getElementById("lightning-address-output");
   addressInput = window.document.getElementById("lightning-address-input");
+  #handleLanguageChange;
 
   #domain = "";
   #userName = "";
@@ -20,9 +21,19 @@ export class LightningAddress {
     this.#updateView();
 
     // 言語変更イベントのリスナーを追加
-    window.addEventListener("languageChange", () => {
+    this.#handleLanguageChange = () => {
       this.#updateView();
-    });
+    };
+    window.addEventListener("languageChange", this.#handleLanguageChange);
+  }
+
+  dispose() {
+    if (!this.#handleLanguageChange) {
+      return;
+    }
+
+    window.removeEventListener("languageChange", this.#handleLanguageChange);
+    this.#handleLanguageChange = null;
   }
 
   async fetchAddressData() {

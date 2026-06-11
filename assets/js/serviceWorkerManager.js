@@ -5,9 +5,32 @@ let newVersionAvailable = false;
 let isCheckingForUpdates = false;
 let isActivatingUpdate = false;
 let registrationPromise = null;
+let scheduledInitializationPromise = null;
 let controllerChangeListenerAttached = false;
 const updateListeners = new Set();
 const observedRegistrations = new WeakSet();
+
+function runAfterWindowLoad(callback) {
+  if (document.readyState === "complete") {
+    callback();
+    return;
+  }
+
+  window.addEventListener("load", callback, { once: true });
+}
+
+function runWhenBrowserIdle(callback) {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(() => {
+      void callback();
+    }, { timeout: 2000 });
+    return;
+  }
+
+  window.setTimeout(() => {
+    void callback();
+  }, 0);
+}
 
 function isServiceWorkerUsable() {
   if (!("serviceWorker" in navigator)) {
@@ -198,6 +221,28 @@ export function initializeServiceWorker() {
   return registrationPromise;
 }
 
+export function scheduleServiceWorkerInitialization() {
+  if (!isServiceWorkerUsable()) {
+    return Promise.resolve(null);
+  }
+
+  if (registrationPromise) {
+    return registrationPromise;
+  }
+
+  if (!scheduledInitializationPromise) {
+    scheduledInitializationPromise = new Promise((resolve) => {
+      runAfterWindowLoad(() => {
+        runWhenBrowserIdle(async () => {
+          resolve(await initializeServiceWorker());
+        });
+      });
+    });
+  }
+
+  return scheduledInitializationPromise;
+}
+
 export function subscribeToServiceWorkerUpdates(listener) {
   updateListeners.add(listener);
   listener({
@@ -310,4 +355,4 @@ export async function displaySiteVersion(elementId = "siteVersion") {
   }
 }
 
-initializeServiceWorker();
+void scheduleServiceWorkerInitialization();

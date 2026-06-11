@@ -14,7 +14,7 @@ import {
   applyServiceWorkerUpdate,
   checkForServiceWorkerUpdates,
   displaySiteVersion,
-  initializeServiceWorker,
+  scheduleServiceWorkerInitialization,
   subscribeToServiceWorkerUpdates,
 } from "./assets/js/serviceWorkerManager.js";
 
@@ -67,17 +67,24 @@ async function initializeApp() {
   currencyInputFields = selectedCurrencies.map((id) => document.getElementById(id));
 
   // その他の初期化処理
-  await initializeServiceWorker();
-  await displaySiteVersion();
   subscribeToServiceWorkerUpdates(({ newVersionAvailable: updateReady, isCheckingForUpdates, isActivatingUpdate }) => {
     isServiceWorkerUpdateReady = updateReady;
     isServiceWorkerUpdateBusy = isCheckingForUpdates || isActivatingUpdate;
     updateUpdateButtonState(updateReady, isServiceWorkerUpdateBusy);
   });
+  void scheduleServiceWorkerInitialization()
+    .then(async (registration) => {
+      if (!registration) {
+        return;
+      }
+
+      await displaySiteVersion();
+      await checkForServiceWorkerUpdates();
+    })
+    .catch((error) => {
+      console.error("An error occurred while scheduling service worker initialization:", error);
+    });
   setupEventListeners();
-  void checkForServiceWorkerUpdates().catch((error) => {
-    console.error("An error occurred while checking for updates on app initialization:", error);
-  });
   checkAndUpdateElements();
   document.addEventListener("visibilitychange", handleVisibilityChange);
   setupThemeToggle();
@@ -649,10 +656,10 @@ function updateElementClass(element, isOutdated) {
   if (isOutdated) {
     element.classList.add("outdated");
     element.classList.remove("recent");
-    // 自動更新が有効かつ更新中でなければ、直ちに自動クリック
+    // 自動更新が有効かつ更新中でなければ、直ちに更新処理を実行
     if (element.id === "update-prices" && autoUpdateEnabled && !element.classList.contains("updating")) {
       element.classList.add("updating");
-      element.click();
+      void updateElementsBasedOnTimestamp();
     }
   } else {
     element.classList.remove("outdated");

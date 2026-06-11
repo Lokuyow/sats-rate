@@ -135,19 +135,17 @@ function selectDefaultCurrencies() {
     checkbox.checked = false;
   });
 
-  currentOrder = [];
-
-  // デフォルトの通貨を順番に選択する
-  defaultCurrencies.forEach((currency, index) => {
-    const checkbox = checkboxes.find((cb) => cb.value === currency);
-    if (checkbox) {
-      setTimeout(() => {
-        checkbox.checked = true;
-        currentOrder.push(currency);
-        displaySelectedCurrencies();
-      }, index * 10);
+  currentOrder = defaultCurrencies.filter((currency) => {
+    const checkbox = checkboxes.find((candidate) => candidate.value === currency);
+    if (!checkbox) {
+      return false;
     }
+
+    checkbox.checked = true;
+    return true;
   });
+
+  displaySelectedCurrencies();
 }
 
 function initializeSortable() {
@@ -164,7 +162,7 @@ function initializeSortable() {
       // ドラッグ中のアイテムがtrash-container上にある場合のみ
       if (evt.to === trashContainer) {
         trashContainer.classList.add('drag-over');
-        
+
         // trash-container上でのみsort-iconを非表示にする
         const draggedItem = evt.dragged;
         if (draggedItem) {
@@ -175,7 +173,7 @@ function initializeSortable() {
         }
       } else {
         trashContainer.classList.remove('drag-over');
-        
+
         // trash-container以外では通常の半透明表示に戻す
         const draggedItem = evt.dragged;
         if (draggedItem) {
@@ -189,13 +187,13 @@ function initializeSortable() {
     onEnd: (evt) => {
       // ドラッグ終了時にすべての状態をリセット
       trashContainer.classList.remove('drag-over');
-      
+
       // すべてのsort-iconの表示状態をリセット
       const allSortIcons = document.querySelectorAll('.sort-icon');
       allSortIcons.forEach(icon => {
         icon.style.visibility = '';
       });
-      
+
       if (evt.to !== fixContainer) {
         currentOrder = Array.from(sortContainer.querySelectorAll(".sort-item")).map((el) => el.querySelector(".sort-icon").dataset.currency);
       }

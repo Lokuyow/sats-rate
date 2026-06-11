@@ -1,6 +1,41 @@
 import { formatCurrency, parseInput } from "./numberUtils.js";
 import { LightningAddress } from "./lightning-address.js";
 
+const QR_CODE_STYLING_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js";
+let qrCodeStylingPromise = null;
+
+function loadQrCodeStyling() {
+  if (window.QRCodeStyling) {
+    return Promise.resolve(window.QRCodeStyling);
+  }
+
+  if (!qrCodeStylingPromise) {
+    qrCodeStylingPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = QR_CODE_STYLING_SCRIPT_URL;
+      script.async = true;
+      script.dataset.osatsExternal = "qr-code-styling";
+      script.onload = () => {
+        if (window.QRCodeStyling) {
+          resolve(window.QRCodeStyling);
+          return;
+        }
+
+        qrCodeStylingPromise = null;
+        reject(new Error("QRCodeStyling did not initialize correctly."));
+      };
+      script.onerror = () => {
+        qrCodeStylingPromise = null;
+        reject(new Error("Failed to load QRCodeStyling."));
+      };
+
+      document.head.appendChild(script);
+    });
+  }
+
+  return qrCodeStylingPromise;
+}
+
 /**
  * POS機能
  * ライトニングアドレスを保管して入力された金額のインボイスのQRコードの表示を行う。
@@ -40,9 +75,14 @@ export class Pos {
   // 連打による連続的なリクエストを制限するためのフラグ
   #isRequesting = false;
 
+  #setLightningAddressInstance(lightningAddress) {
+    this.#lnAddress?.dispose?.();
+    this.#lnAddress = lightningAddress;
+  }
+
   initialize() {
     // ローカルストレージからアドレスを取得
-    this.#lnAddress = new LightningAddress(window.localStorage.getItem(this.localStorageKey) ?? "");
+    this.#setLightningAddressInstance(new LightningAddress(window.localStorage.getItem(this.localStorageKey) ?? ""));
 
     this.#updatePosPayButton();
   }
@@ -50,7 +90,7 @@ export class Pos {
   setLnAddress(form) {
     const formData = new FormData(form);
 
-    this.#lnAddress = new LightningAddress(formData.get("lightning-address") ?? "");
+    this.#setLightningAddressInstance(new LightningAddress(formData.get("lightning-address") ?? ""));
 
     if (!this.#lnAddress.hasValidAddress) {
       console.warn(`Pos: invalid address: ${formData.get("lightning-address")}`);
@@ -126,14 +166,16 @@ export class Pos {
       return;
     }
 
+    const qrCodeLibraryPromise = loadQrCodeStyling();
+
     this.#clearQrCode();
     this.#showCurrentAmounts(satsAmount);
 
-    await this.#generateInvoice(satsAmount);
+    await this.#generateInvoice(satsAmount, qrCodeLibraryPromise);
   }
 
   // 支払いボタン押下時
-  async #generateInvoice(satsAmount) {
+  async #generateInvoice(satsAmount, qrCodeLibraryPromise) {
     if (this.#isRequesting) {
       return;
     }
@@ -147,7 +189,7 @@ export class Pos {
     try {
       await this.#lnAddress.fetchAddressData();
       const invoice = await this.#lnAddress.getInvoice(satsAmount * 1000);
-      this.#showQrCode(invoice.pr);
+      await this.#showQrCode(invoice.pr, qrCodeLibraryPromise);
     } catch (error) {
       let message;
 
@@ -169,7 +211,7 @@ export class Pos {
   }
 
   clearLnAddress() {
-    this.#lnAddress = new LightningAddress("");
+    this.#setLightningAddressInstance(new LightningAddress(""));
     this.#updatePosPayButton();
     window.localStorage.removeItem("POS:LnAddress");
     this.#clearQrCode();
@@ -204,7 +246,8 @@ export class Pos {
     this.#qrWrapper.innerHTML = "";
   }
 
-  #showQrCode(data) {
+  async #showQrCode(data, qrCodeLibraryPromise = null) {
+    const QRCodeStyling = await (qrCodeLibraryPromise || loadQrCodeStyling());
     const qrCode = new QRCodeStyling(this.#getQrCodeConfig(data));
     qrCode.append(this.#qrWrapper);
   }
