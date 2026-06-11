@@ -19,6 +19,10 @@ import {
 } from "./assets/js/serviceWorkerManager.js";
 
 const BASE_URL = "https://osats.money/";
+const ZAP_SCRIPT_URLS = {
+  zap: "https://cdn.jsdelivr.net/npm/nostr-zap@1",
+  zapView: "https://cdn.jsdelivr.net/npm/nostr-zap-view@1",
+};
 const dateTimeFormatOptions = {
   year: "numeric",
   month: "2-digit",
@@ -30,10 +34,16 @@ let lastUpdatedField;
 let lastUpdatedTimestamp = null;
 let selectedLocale = navigator.language || navigator.languages[0];
 let lastClickEvent = null;
-window.currencyRates = {};
-window.baseCurrencyValue = {};
+let currencyRates = {};
+window.currencyRates = currencyRates;
+let baseCurrencyValue = {};
+window.baseCurrencyValue = baseCurrencyValue;
 let selectedCurrencies = [];
 let currencyInputFields = [];
+let currentCurrencyValues = {};
+const externalScriptLoaders = new Map();
+let zapButtonReadyPromise = null;
+let zapViewReadyPromise = null;
 const pos = new Pos();
 const DEFAULT_SELECTED_CURRENCIES = ["sats", "btc", "jpy", "usd", "eur"];
 const MAX_SELECTED_CURRENCIES = 20;
@@ -48,6 +58,167 @@ let autoUpdateEnabled = typeof storedAutoUpdateEnabled === "boolean" ? storedAut
 document.addEventListener("DOMContentLoaded", async () => {
   await initializeApp();
 });
+
+function loadExternalScript(url, cacheKey) {
+  if (externalScriptLoaders.has(cacheKey)) {
+    return externalScriptLoaders.get(cacheKey);
+  }
+
+  const promise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = url;
+    script.async = true;
+    script.dataset.osatsExternal = cacheKey;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      externalScriptLoaders.delete(cacheKey);
+      reject(new Error(`Failed to load script: ${cacheKey}`));
+    };
+    document.head.appendChild(script);
+  });
+
+  externalScriptLoaders.set(cacheKey, promise);
+  return promise;
+}
+
+async function ensureZapButtonReady() {
+  if (window.nostrZap?.initTargets) {
+    return;
+  }
+
+  if (!zapButtonReadyPromise) {
+    zapButtonReadyPromise = loadExternalScript(ZAP_SCRIPT_URLS.zap, "nostr-zap");
+  }
+
+  await zapButtonReadyPromise;
+}
+
+async function ensureZapViewReady() {
+  if (!zapViewReadyPromise) {
+    zapViewReadyPromise = (async () => {
+      if (!window.nostrZapView) {
+        await loadExternalScript(ZAP_SCRIPT_URLS.zapView, "nostr-zap-view");
+      }
+
+      if (!window.nostrZapView) {
+        throw new Error("nostrZapView did not initialize correctly.");
+      }
+
+      if (typeof window.nostrZapView.initialize === "function") {
+        window.nostrZapView.initialize();
+        return;
+      }
+
+      if (typeof window.nostrZapView.nostrZapView === "function") {
+        window.nostrZapView.nostrZapView();
+        return;
+      }
+
+      throw new Error("nostrZapView does not expose an initialization method.");
+    })().catch((error) => {
+      zapViewReadyPromise = null;
+      throw error;
+    });
+  }
+
+  await zapViewReadyPromise;
+}
+
+function redispatchDeferredButtonClick(button) {
+  window.setTimeout(() => {
+    button.click();
+  }, 0);
+}
+
+function setupLazyLoadedZapButton(button, ensureReady) {
+  if (!button) {
+    return;
+  }
+
+  button.addEventListener(
+    "click",
+    async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      button.setAttribute("aria-busy", "true");
+
+      try {
+        await ensureReady();
+        redispatchDeferredButtonClick(button);
+      } catch (error) {
+        console.error("Failed to initialize Zap library:", error);
+      } finally {
+        button.removeAttribute("aria-busy");
+      }
+    },
+    { capture: true, once: true }
+  );
+}
+
+function setupLazyLoadedZapHandlers() {
+  setupLazyLoadedZapButton(document.getElementById("nostr-zap-target"), ensureZapButtonReady);
+  document.querySelectorAll("button[data-nzv-id]").forEach((button) => {
+    setupLazyLoadedZapButton(button, ensureZapViewReady);
+  });
+}
+
+function replaceBaseCurrencyValue(nextBaseCurrencyValue) {
+  baseCurrencyValue = nextBaseCurrencyValue;
+  window.baseCurrencyValue = baseCurrencyValue;
+}
+
+function updateBaseCurrencyValue(currency, value) {
+  const numericValue = Number.isFinite(value) ? value : 0;
+  replaceBaseCurrencyValue({ [currency]: numericValue });
+  return numericValue;
+}
+
+function updateStoredCurrencyRates(nextRates) {
+  currencyRates = nextRates;
+  window.currencyRates = currencyRates;
+}
+
+function buildCalculatedValues(inputField, inputValue) {
+  const satsInBtc = 1e8;
+  const nextValues = {};
+  const normalizedInputValue = Number.isFinite(inputValue) ? inputValue : 0;
+
+  let btcValue = 0;
+  let satsValue = 0;
+
+  if (inputField === "sats") {
+    satsValue = normalizedInputValue;
+    btcValue = satsValue / satsInBtc;
+  } else if (inputField === "btc") {
+    btcValue = normalizedInputValue;
+    satsValue = btcValue * satsInBtc;
+  } else {
+    const rate = Number(currencyRates[inputField]) || 0;
+    btcValue = rate ? normalizedInputValue / rate : 0;
+    satsValue = btcValue * satsInBtc;
+  }
+
+  selectedCurrencies.forEach((currency) => {
+    if (currency === "sats") {
+      nextValues[currency] = satsValue;
+      return;
+    }
+
+    if (currency === "btc") {
+      nextValues[currency] = btcValue;
+      return;
+    }
+
+    if (currency === inputField) {
+      nextValues[currency] = normalizedInputValue;
+      return;
+    }
+
+    nextValues[currency] = btcValue * (currencyRates[currency] || 0);
+  });
+
+  return nextValues;
+}
 
 async function initializeApp() {
   // CurrencyManagerのインスタンスを作成
@@ -97,6 +268,7 @@ async function initializeApp() {
 function setupEventListeners() {
   setupInputFieldsEventListeners();
   setupCurrencyButtonsEventListeners();
+  setupLazyLoadedZapHandlers();
   document.getElementById("share-results-via-webapi").addEventListener("click", handleShareViaWebAPI);
   document.getElementById("share-site-via-webapi").addEventListener("click", shareSiteViaWebAPIEvent);
   document.getElementById("copy-site-to-clipboard").addEventListener("click", copySiteToClipboardEvent);
@@ -217,7 +389,7 @@ function setupInputFieldEventListeners(element) {
 
 // 通貨レートの更新をグローバル変数に反映するコールバック関数
 function updateGlobalCurrencyRates(rates) {
-  currencyRates = rates;
+  updateStoredCurrencyRates(rates);
   updateCustomOptions(currencyRates);
   updateLastUpdated(currencyRates.last_updated_at);
 }
@@ -318,7 +490,7 @@ function initializeGlobalValues() {
 
   // URLクエリパラメータが優先
   selectedCurrencies = querySelectedCurrencies.length ? querySelectedCurrencies : storageSelectedCurrencies;
-  baseCurrencyValue = Object.keys(queryBaseCurrencyValue).length ? queryBaseCurrencyValue : storageBaseCurrencyValue;
+  replaceBaseCurrencyValue(Object.keys(queryBaseCurrencyValue).length ? queryBaseCurrencyValue : storageBaseCurrencyValue);
 
   // デフォルト値の設定
   if (!selectedCurrencies.length) {
@@ -327,7 +499,7 @@ function initializeGlobalValues() {
   }
 
   if (!Object.keys(baseCurrencyValue).length) {
-    baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
+    replaceBaseCurrencyValue({ [selectedCurrencies[0]]: 100 });
   }
 
   processGlobalValues(Object.keys(queryBaseCurrencyValue).length > 0);
@@ -347,7 +519,7 @@ function processGlobalValues(queryParamsBase) {
     if (queryParamsBase) {
       selectedCurrencies = sanitizeSelectedCurrencies([baseCurrencyKey, ...selectedCurrencies]);
     } else {
-      baseCurrencyValue = { [selectedCurrencies[0]]: 100 };
+      replaceBaseCurrencyValue({ [selectedCurrencies[0]]: 100 });
     }
   }
 }
@@ -356,13 +528,11 @@ function processGlobalValues(queryParamsBase) {
 function handleInputFormatting(event) {
   const inputElement = event.target;
   addCommasToInput(inputElement);
-  const values = getValuesFromElements();
 
   // 計算元の通貨とその値を保存
   const currencyId = inputElement.id;
-  const inputValue = values[currencyId];
-  baseCurrencyValue = {};
-  baseCurrencyValue[currencyId] = parseFloat(inputValue) || 0;
+  const inputValue = parseFloat(parseInput(inputElement.value, selectedLocale)) || 0;
+  updateBaseCurrencyValue(currencyId, inputValue);
 }
 
 // 現在の入力値をデフォルト値としてローカルストレージに保存
@@ -391,7 +561,7 @@ function getInputValue(id) {
 function prepareAndCalculate(baseCurrencyValue) {
   // baseCurrencyValue から最初の通貨コードを取得
   const baseCurrency = Object.keys(baseCurrencyValue)[0];
-  const currencyValue = baseCurrencyValue[baseCurrency];
+  const currencyValue = Number(baseCurrencyValue[baseCurrency]) || 0;
   const currencyInputField = document.getElementById(baseCurrency);
 
   if (baseCurrency && currencyInputField) {
@@ -402,41 +572,24 @@ function prepareAndCalculate(baseCurrencyValue) {
     currencyInputField.value = formattedValue;
 
     // calculateValues 関数を呼び出して計算を実行
-    calculateValues(baseCurrency);
+    calculateValues(baseCurrency, currencyValue);
   } else {
     console.error("Base currency is not valid or element does not exist.");
   }
 }
 
 // 計算
-function calculateValues(inputField) {
-  const satsInBtc = 1e8;
-
-  const inputValues = selectedCurrencies.reduce((acc, currency) => {
-    acc[currency] = parseFloat(getInputValue(currency)) || 0;
-    return acc;
-  }, {});
-
-  if (inputField === "sats") {
-    inputValues["btc"] = inputValues["sats"] / satsInBtc;
-  } else if (inputField === "btc") {
-    inputValues["sats"] = inputValues["btc"] * satsInBtc;
-  } else {
-    inputValues["btc"] = inputValues[inputField] / currencyRates[inputField];
-    inputValues["sats"] = inputValues["btc"] * satsInBtc;
-  }
-
-  selectedCurrencies.forEach((currency) => {
-    if (currency !== "btc" && currency !== "sats") {
-      inputValues[currency] = inputValues["btc"] * (currencyRates[currency] || 0);
-    }
-  });
+function calculateValues(inputField, sourceValue = null) {
+  const inputValue = Number.isFinite(sourceValue) ? sourceValue : parseFloat(getInputValue(inputField)) || 0;
+  const inputValues = buildCalculatedValues(inputField, inputValue);
+  currentCurrencyValues = inputValues;
+  updateBaseCurrencyValue(inputField, inputValue);
 
   // 最後に更新されたフィールドを記録
   lastUpdatedField = inputField;
 
   // 有効桁数の計算
-  const inputDigits = inputValues[inputField].toString().replace(".", "").length;
+  const inputDigits = inputValue.toString().replace(".", "").length;
   const significantDigits = calculateSignificantDigits(inputDigits);
 
   // 入力フィールドの更新
@@ -451,7 +604,10 @@ function calculateValues(inputField) {
         element.setSelectionRange(caretPos, caretPos);
       } else {
         // 値のフォーマットと更新
-        element.value = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
+        const formattedValue = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
+        if (element.value !== formattedValue) {
+          element.value = formattedValue;
+        }
       }
     }
   });
@@ -511,16 +667,6 @@ function addCommasToInput(inputElement) {
     inputElement.selectionStart = newCaretPos;
     inputElement.selectionEnd = newCaretPos;
   }
-}
-
-// インプットフィールドから桁区切りを取り除いた数値を取得
-function getValuesFromElements() {
-  const values = {};
-  selectedCurrencies.forEach((field) => {
-    const rawValue = document.getElementById(field).value;
-    values[field] = parseInput(rawValue, selectedLocale);
-  });
-  return values;
 }
 
 // 有効桁数を算出する
