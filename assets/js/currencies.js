@@ -2,6 +2,7 @@ import { loadJsonFromStorage } from "./storage.js";
 
 let currentOrder = [];
 let currencyDetails = {};
+const sortItemElements = new Map();
 
 async function initializeApp() {
   const { currencies, currencyDetails: details } = await loadCurrencies();
@@ -223,47 +224,60 @@ function initializeSortable() {
 
 function displaySelectedCurrencies() {
   const sortContainer = document.querySelector(".sort-container");
-  sortContainer.innerHTML = "";
 
   const selectedCurrencies = Array.from(document.querySelectorAll('input[name="currency"]:checked')).map((el) => el.value);
   const orderedSelectedCurrencies = currentOrder.length > 0 ? currentOrder.filter((currency) => selectedCurrencies.includes(currency)) : selectedCurrencies;
 
-  orderedSelectedCurrencies.forEach((currency) => {
-    const emoji = currencyDetails[currency].emoji;
+  const nextSelectedCurrencySet = new Set(orderedSelectedCurrencies);
 
-    // 新しいコンテナを作成
-    const floatingItemContainer = document.createElement("div");
-    floatingItemContainer.classList.add("sort-item");
-    floatingItemContainer.classList.add("normal-btn");
-
-    // drag-indicator を作成
-    const dragIndicator = document.createElement("div");
-    dragIndicator.classList.add("drag-indicator");
-
-    // sort-icon を作成
-    const floatingItem = document.createElement("div");
-    floatingItem.classList.add("sort-icon");
-    floatingItem.dataset.currency = currency;
-    if (emoji.startsWith("/")) {
-      const img = document.createElement("img");
-      img.src = emoji;
-      floatingItem.appendChild(img);
-    } else {
-      floatingItem.textContent = emoji;
+  Array.from(sortItemElements.keys()).forEach((currency) => {
+    if (nextSelectedCurrencySet.has(currency)) {
+      return;
     }
 
-    // コンテナに drag-indicator と sort-icon を追加
-    floatingItemContainer.appendChild(dragIndicator);
-    floatingItemContainer.appendChild(floatingItem);
+    sortItemElements.get(currency)?.remove();
+    sortItemElements.delete(currency);
+  });
 
-    // コンテナを sortContainer に追加
-    sortContainer.appendChild(floatingItemContainer);
+  orderedSelectedCurrencies.forEach((currency) => {
+    const sortItem = getOrCreateSortItem(currency);
+    sortContainer.appendChild(sortItem);
   });
 
   requestAnimationFrame(() => {
     checkScrollButtonVisibility();
     requestAnimationFrame(updatePosition);
   });
+}
+
+function getOrCreateSortItem(currency) {
+  if (sortItemElements.has(currency)) {
+    return sortItemElements.get(currency);
+  }
+
+  const emoji = currencyDetails[currency].emoji;
+  const floatingItemContainer = document.createElement("div");
+  floatingItemContainer.classList.add("sort-item");
+  floatingItemContainer.classList.add("normal-btn");
+
+  const dragIndicator = document.createElement("div");
+  dragIndicator.classList.add("drag-indicator");
+
+  const floatingItem = document.createElement("div");
+  floatingItem.classList.add("sort-icon");
+  floatingItem.dataset.currency = currency;
+  if (emoji.startsWith("/")) {
+    const img = document.createElement("img");
+    img.src = emoji;
+    floatingItem.appendChild(img);
+  } else {
+    floatingItem.textContent = emoji;
+  }
+
+  floatingItemContainer.appendChild(dragIndicator);
+  floatingItemContainer.appendChild(floatingItem);
+  sortItemElements.set(currency, floatingItemContainer);
+  return floatingItemContainer;
 }
 
 function updateSelectedCurrencies(currency, isChecked) {

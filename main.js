@@ -1,15 +1,7 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
-import { Pos } from "./assets/js/pos.js";
 import { formatCurrency, getLocaleSeparators, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
 import { loadJsonFromStorage } from "./assets/js/storage.js";
-import {
-  setupEventListenersForCurrencyButtons,
-  shareViaWebAPIEvent,
-  shareSiteViaWebAPIEvent,
-  copySiteToClipboardEvent,
-  showNotification,
-  readFromClipboard,
-} from "./assets/js/clipboardShare.js";
+import { showNotification } from "./assets/js/notification.js";
 import {
   applyServiceWorkerUpdate,
   checkForServiceWorkerUpdates,
@@ -44,7 +36,11 @@ let currentCurrencyValues = {};
 const externalScriptLoaders = new Map();
 let zapButtonReadyPromise = null;
 let zapViewReadyPromise = null;
-const pos = new Pos();
+let clipboardShareModulePromise = null;
+let clipboardButtonHandlersInitialized = false;
+let posModulePromise = null;
+let posInstancePromise = null;
+let posDialogHandlersInitialized = false;
 const DEFAULT_SELECTED_CURRENCIES = ["sats", "btc", "jpy", "usd", "eur"];
 const MAX_SELECTED_CURRENCIES = 20;
 const RESERVED_QUERY_PARAMS = new Set(["d", "currencies", "ts", "img_id", "lang"]);
@@ -79,6 +75,50 @@ function loadExternalScript(url, cacheKey) {
 
   externalScriptLoaders.set(cacheKey, promise);
   return promise;
+}
+
+function getClipboardShareModule() {
+  if (!clipboardShareModulePromise) {
+    clipboardShareModulePromise = import("./assets/js/clipboardShare.js");
+  }
+
+  return clipboardShareModulePromise;
+}
+
+function getPosModule() {
+  if (!posModulePromise) {
+    posModulePromise = import("./assets/js/pos.js");
+  }
+
+  return posModulePromise;
+}
+
+async function getPosInstance() {
+  if (!posInstancePromise) {
+    posInstancePromise = getPosModule().then(({ Pos }) => {
+      const pos = new Pos();
+      pos.initialize();
+      return pos;
+    });
+  }
+
+  return posInstancePromise;
+}
+
+async function ensureClipboardButtonHandlers() {
+  if (clipboardButtonHandlersInitialized) {
+    return getClipboardShareModule();
+  }
+
+  const clipboardShare = await getClipboardShareModule();
+  clipboardShare.setupEventListenersForCurrencyButtons(
+    selectedCurrencies,
+    getLocaleSeparators,
+    selectedLocale,
+    pasteFromClipboardToInput
+  );
+  clipboardButtonHandlersInitialized = true;
+  return clipboardShare;
 }
 
 async function ensureZapButtonReady() {
@@ -128,6 +168,19 @@ function redispatchDeferredButtonClick(button) {
   window.setTimeout(() => {
     button.click();
   }, 0);
+}
+
+function updateLightningUiPlaceholder() {
+  const lightningAddressOutput = document.getElementById("lightning-address-output");
+  const showInvoiceButton = document.getElementById("show-invoice-dialog");
+  if (!lightningAddressOutput || !showInvoiceButton) {
+    return;
+  }
+
+  const storedLightningAddress = window.localStorage.getItem("POS:LnAddress") ?? "";
+  const noAddressMessage = window.vanilla_i18n_instance?.translate("lightningAddress.errors.noAddressSet") || "";
+  lightningAddressOutput.value = storedLightningAddress || noAddressMessage;
+  showInvoiceButton.disabled = !storedLightningAddress;
 }
 
 function setupLazyLoadedZapButton(button, ensureReady) {
@@ -256,10 +309,12 @@ async function initializeApp() {
       console.error("An error occurred while scheduling service worker initialization:", error);
     });
   setupEventListeners();
+  updateLightningUiPlaceholder();
   checkAndUpdateElements();
   document.addEventListener("visibilitychange", handleVisibilityChange);
+  window.addEventListener("languageChange", updateLightningUiPlaceholder);
   setupThemeToggle();
-  setupPosDialogEventListeners();
+  setupLazyLoadedPosDialogHandlers();
 
   // 計算
   prepareAndCalculate(baseCurrencyValue);
@@ -267,11 +322,8 @@ async function initializeApp() {
 
 function setupEventListeners() {
   setupInputFieldsEventListeners();
-  setupCurrencyButtonsEventListeners();
+  setupLazyLoadedClipboardHandlers();
   setupLazyLoadedZapHandlers();
-  document.getElementById("share-results-via-webapi").addEventListener("click", handleShareViaWebAPI);
-  document.getElementById("share-site-via-webapi").addEventListener("click", shareSiteViaWebAPIEvent);
-  document.getElementById("copy-site-to-clipboard").addEventListener("click", copySiteToClipboardEvent);
   document.getElementById("update-prices").addEventListener("click", updateElementsBasedOnTimestamp);
   document.getElementById("saveDefaultValuesButton").addEventListener("click", (event) => {
     saveCurrentValuesAsDefault(event);
@@ -838,19 +890,39 @@ function changeBackgroundColorFromId(id) {
   targetInput.classList.add("last-input-field");
 }
 
-// 通貨ボタンのイベントリスナー設定（clipboardShare.jsのラッパー）
-function setupCurrencyButtonsEventListeners() {
-  setupEventListenersForCurrencyButtons(
-    selectedCurrencies,
-    getLocaleSeparators,
-    selectedLocale,
-    pasteFromClipboardToInput
-  );
+function setupLazyLoadedClipboardHandlers() {
+  document.querySelectorAll(".currency-icons, .currency-units").forEach((button) => {
+    button.addEventListener(
+      "click",
+      async (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        await ensureClipboardButtonHandlers();
+        redispatchDeferredButtonClick(button);
+      },
+      { once: true, capture: true }
+    );
+  });
+
+  const shareResultsButton = document.getElementById("share-results-via-webapi");
+  const shareSiteButton = document.getElementById("share-site-via-webapi");
+  const copySiteButton = document.getElementById("copy-site-to-clipboard");
+
+  shareResultsButton.addEventListener("click", handleShareViaWebAPI);
+  shareSiteButton.addEventListener("click", async (event) => {
+    const clipboardShare = await getClipboardShareModule();
+    clipboardShare.shareSiteViaWebAPIEvent(event);
+  });
+  copySiteButton.addEventListener("click", async (event) => {
+    const clipboardShare = await getClipboardShareModule();
+    clipboardShare.copySiteToClipboardEvent(event);
+  });
 }
 
 // クリップボードから貼り付け
 async function pasteFromClipboardToInput(currency) {
-  const clipboardData = await readFromClipboard();
+  const clipboardShare = await getClipboardShareModule();
+  const clipboardData = await clipboardShare.readFromClipboard();
   const inputElement = document.getElementById(currency);
   inputElement.value = clipboardData;
   lastUpdatedField = currency;
@@ -859,8 +931,9 @@ async function pasteFromClipboardToInput(currency) {
 }
 
 // Web Share API イベントハンドラー（clipboardShare.jsのラッパー）
-function handleShareViaWebAPI(event) {
-  shareViaWebAPIEvent(
+async function handleShareViaWebAPI(event) {
+  const clipboardShare = await getClipboardShareModule();
+  clipboardShare.shareViaWebAPIEvent(
     {
       lastUpdatedField,
       selectedCurrencies,
@@ -909,8 +982,12 @@ async function checkForUpdates(event) {
   }
 }
 
-function setupPosDialogEventListeners() {
-  pos.initialize();
+function setupLazyLoadedPosDialogHandlers() {
+  if (posDialogHandlersInitialized) {
+    return;
+  }
+
+  posDialogHandlersInitialized = true;
 
   /**
    * ライトニングアドレスのダイアログの制御
@@ -927,7 +1004,8 @@ function setupPosDialogEventListeners() {
   }
 
   // ダイアログを開く
-  showAddressButton.addEventListener("click", () => {
+  showAddressButton.addEventListener("click", async () => {
+    await getPosInstance();
     lnDialog.showModal();
   });
 
@@ -938,8 +1016,9 @@ function setupPosDialogEventListeners() {
   });
 
   // フォームをクリアして設定
-  lnDialogClearButton.addEventListener("click", (event) => {
+  lnDialogClearButton.addEventListener("click", async (event) => {
     event.preventDefault(); // フォームを送信しない
+    const pos = await getPosInstance();
     pos.clearLnAddress();
     lnDialog.close();
   });
@@ -955,13 +1034,15 @@ function setupPosDialogEventListeners() {
   });
 
   // アドレスを設定する
-  lnDialogSubmitButton.addEventListener("click", (event) => {
+  lnDialogSubmitButton.addEventListener("click", async (event) => {
     const isValid = lnAddressForm.checkValidity();
     if (!isValid) {
       return;
     }
 
+    const pos = await getPosInstance();
     pos.setLnAddress(lnAddressForm);
+    updateLightningUiPlaceholder();
     event.preventDefault(); // フォームを送信しない
     lnDialog.close();
   });
@@ -978,15 +1059,17 @@ function setupPosDialogEventListeners() {
   }
 
   // ダイアログを開く
-  showInvoiceButton.addEventListener("click", () => {
+  showInvoiceButton.addEventListener("click", async () => {
+    const pos = await getPosInstance();
     invoiceDialog.showModal();
     pos.showInvoice();
   });
 
   // ダイアログを閉じる
-  invoiceDialogCloseButton.addEventListener("click", (event) => {
+  invoiceDialogCloseButton.addEventListener("click", async (event) => {
     event.preventDefault(); // フォームを送信しない
     invoiceDialog.close();
+    const pos = await getPosInstance();
     pos.clearMessage();
   });
 
@@ -1001,7 +1084,9 @@ function setupPosDialogEventListeners() {
 
     if (!isInDialog) {
       invoiceDialog.close();
-      pos.clearMessage();
+      void getPosInstance().then((pos) => {
+        pos.clearMessage();
+      });
     }
   });
 }

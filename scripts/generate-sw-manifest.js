@@ -22,6 +22,11 @@ const includeExtensions = new Set([
   ".woff2",
 ]);
 const excludedRelativePaths = new Set(["assets/generated/sw-manifest.js"]);
+const excludedPathPrefixes = [];
+
+function shouldIncludeRelativePath(relativePath) {
+  return !excludedRelativePaths.has(relativePath);
+}
 
 function toWebPath(absolutePath) {
   const relativePath = path.relative(projectRoot, absolutePath).replace(/\\/g, "/");
@@ -40,7 +45,7 @@ function collectFiles(directoryPath) {
     }
 
     const relativePath = path.relative(projectRoot, absolutePath).replace(/\\/g, "/");
-    if (!includeExtensions.has(path.extname(entry.name)) || excludedRelativePaths.has(relativePath)) {
+    if (!includeExtensions.has(path.extname(entry.name)) || !shouldIncludeRelativePath(relativePath)) {
       continue;
     }
 
@@ -58,6 +63,11 @@ function buildAssetList() {
     if (!fs.existsSync(absolutePath)) {
       throw new Error(`Missing required file: ${relativePath}`);
     }
+
+    if (!shouldIncludeRelativePath(relativePath.replace(/\\/g, "/"))) {
+      continue;
+    }
+
     files.add(absolutePath);
   }
 
