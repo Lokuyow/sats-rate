@@ -233,7 +233,7 @@ section {
 .subject {
   color: var(--subject-text-color);
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
   margin-top: 0;
   margin-bottom: 34px;
@@ -274,7 +274,7 @@ section {
 
   & .text {
     font-size: 0.8rem;
-    font-weight: bold;
+    font-weight: 700;
     color: var(--subject-text-color);
     margin-bottom: -2px;
   }
@@ -910,7 +910,7 @@ section {
   display: flex;
   flex-flow: column;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
   padding: 8px;
   margin: 0.5em 0 0.2em;
