@@ -42,7 +42,6 @@ let posModulePromise = null;
 let posInstancePromise = null;
 let posDialogHandlersInitialized = false;
 const DEFAULT_SELECTED_CURRENCIES = ["sats", "btc", "jpy", "usd", "eur"];
-const MAX_SELECTED_CURRENCIES = 20;
 const RESERVED_QUERY_PARAMS = new Set(["d", "currencies", "ts", "img_id", "lang"]);
 let isServiceWorkerUpdateReady = false;
 let isServiceWorkerUpdateBusy = false;
@@ -532,7 +531,7 @@ function sanitizeSelectedCurrencies(candidateCurrencies) {
     sanitizedCurrencies.push(currency);
   });
 
-  return sanitizedCurrencies.slice(0, MAX_SELECTED_CURRENCIES);
+  return sanitizedCurrencies;
 }
 
 function sanitizeBaseCurrencyValue(candidateBaseCurrencyValue) {

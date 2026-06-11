@@ -172,7 +172,6 @@
           <div class="currency-inputs-container">
             <script>
               const urlParams = new URLSearchParams(window.location.search);
-              const maxSelectedCurrencies = 20;
               const parseStoredJson = (rawValue, fallbackValue) => {
                 if (!rawValue) {
                   return fallbackValue;
@@ -189,7 +188,7 @@
                     return [];
                   }
 
-                  return [...new Set(storedCurrencies.filter((currency) => typeof currency === "string" && currency.trim()))].slice(0, maxSelectedCurrencies);
+                  return [...new Set(storedCurrencies.filter((currency) => typeof currency === "string" && currency.trim()))];
                 } catch (error) {
                   try {
                     localStorage.removeItem("selectedCurrenciesLS");
@@ -204,7 +203,7 @@
               if (currenciesParam) {
                 const separator = currenciesParam.includes("-") ? "-" : ",";
                 const queryCurrencies = [...new Set(currenciesParam.split(separator).map(s => s.trim()).filter(Boolean))];
-                queryCount = Math.min(queryCurrencies.length, maxSelectedCurrencies);
+                queryCount = queryCurrencies.length;
               }
               if (!queryCount) {
                 const storedCurrencies = readStoredCurrencies();
