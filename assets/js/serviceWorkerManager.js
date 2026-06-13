@@ -6,6 +6,8 @@ let isActivatingUpdate = false;
 let registrationPromise = null;
 let scheduledInitializationPromise = null;
 let controllerChangeListenerAttached = false;
+let pageExitListenerAttached = false;
+let knownRegistration = null;
 const updateListeners = new Set();
 const observedRegistrations = new WeakSet();
 
@@ -81,6 +83,39 @@ function updateState(nextState) {
   }
 }
 
+function rememberRegistration(registration) {
+  if (registration) {
+    knownRegistration = registration;
+  }
+}
+
+function promoteWaitingWorkerForNextNavigation() {
+  const waitingWorker = knownRegistration?.waiting;
+  if (!waitingWorker) {
+    return;
+  }
+
+  waitingWorker.postMessage({ type: "SKIP_WAITING" });
+}
+
+function handlePageExit(event) {
+  if (event.type === "pagehide" && event.persisted) {
+    return;
+  }
+
+  promoteWaitingWorkerForNextNavigation();
+}
+
+function ensurePageExitListener() {
+  if (pageExitListenerAttached) {
+    return;
+  }
+
+  window.addEventListener("beforeunload", handlePageExit);
+  window.addEventListener("pagehide", handlePageExit);
+  pageExitListenerAttached = true;
+}
+
 function ensureControllerChangeListener() {
   if (controllerChangeListenerAttached) {
     return;
@@ -113,6 +148,7 @@ async function getLatestRegistration() {
 
   const registration = await navigator.serviceWorker.getRegistration().catch(() => null);
   if (registration) {
+    rememberRegistration(registration);
     attachRegistrationListeners(registration);
   }
 
@@ -163,6 +199,8 @@ function syncWaitingUpdateState(registration) {
 }
 
 function attachRegistrationListeners(registration) {
+  rememberRegistration(registration);
+
   if (observedRegistrations.has(registration)) {
     syncWaitingUpdateState(registration);
     return;
@@ -210,6 +248,7 @@ async function registerServiceWorker() {
 
   try {
     const registration = await navigator.serviceWorker.register(SW_URL, { updateViaCache: "none" });
+    rememberRegistration(registration);
     attachRegistrationListeners(registration);
     return registration;
   } catch (error) {
@@ -224,6 +263,7 @@ export function initializeServiceWorker() {
   }
 
   ensureControllerChangeListener();
+  ensurePageExitListener();
 
   if (!registrationPromise) {
     registrationPromise = registerServiceWorker();
@@ -238,6 +278,7 @@ export async function activateWaitingServiceWorkerOnStartup() {
   }
 
   ensureControllerChangeListener();
+  ensurePageExitListener();
 
   const registration = await getLatestRegistration();
   if (!registration) {

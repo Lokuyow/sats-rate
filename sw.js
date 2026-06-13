@@ -33,14 +33,6 @@ function isManagedCacheName(cacheName) {
   return cacheName.startsWith(LEGACY_CACHE_PREFIX) || cacheName.startsWith("osats-release-");
 }
 
-function promoteWaitingWorkerOnNavigation(request) {
-  if (request.mode !== "navigate" || !self.registration.waiting) {
-    return;
-  }
-
-  self.registration.waiting.postMessage({ type: "SKIP_WAITING" });
-}
-
 async function hasLegacyCache() {
   const keys = await caches.keys();
   return keys.some((key) => key.startsWith(LEGACY_CACHE_PREFIX));
@@ -81,8 +73,6 @@ self.addEventListener(
         if (url.origin !== location.origin) {
           return fetch(ev.request);
         }
-
-        promoteWaitingWorkerOnNavigation(ev.request);
 
         const cache = await caches.open(CACHE_NAME);
         const cacheKey =
