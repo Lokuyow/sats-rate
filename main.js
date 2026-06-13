@@ -3,6 +3,7 @@ import { formatCurrency, getLocaleSeparators, parseInput, updateCustomOptions } 
 import { loadJsonFromStorage } from "./assets/js/storage.js";
 import { showNotification } from "./assets/js/notification.js";
 import {
+  activateWaitingServiceWorkerOnStartup,
   applyServiceWorkerUpdate,
   checkForServiceWorkerUpdates,
   displaySiteVersion,
@@ -51,6 +52,10 @@ const storedAutoUpdateEnabled = loadJsonFromStorage("autoUpdateEnabledLS", true)
 let autoUpdateEnabled = typeof storedAutoUpdateEnabled === "boolean" ? storedAutoUpdateEnabled : true;
 
 document.addEventListener("DOMContentLoaded", async () => {
+  void activateWaitingServiceWorkerOnStartup().catch((error) => {
+    console.error("An error occurred while activating a waiting service worker on startup:", error);
+  });
+
   await initializeApp();
 });
 

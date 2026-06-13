@@ -1,5 +1,4 @@
 const SW_URL = "/sw.js";
-const UPDATE_RELOAD_KEY = "osats-sw-reload-pending";
 
 let newVersionAvailable = false;
 let isCheckingForUpdates = false;
@@ -82,6 +81,15 @@ function updateState(nextState) {
   }
 }
 
+function ensureControllerChangeListener() {
+  if (controllerChangeListenerAttached) {
+    return;
+  }
+
+  navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);
+  controllerChangeListenerAttached = true;
+}
+
 function handleControllerChange() {
   updateState({
     newVersionAvailable: false,
@@ -89,12 +97,9 @@ function handleControllerChange() {
     isActivatingUpdate: false,
   });
 
-  if (sessionStorage.getItem(UPDATE_RELOAD_KEY) !== "1") {
-    return;
-  }
-
-  sessionStorage.removeItem(UPDATE_RELOAD_KEY);
-  window.location.reload();
+  void displaySiteVersion().catch((error) => {
+    console.error("Failed to refresh the displayed service worker version:", error);
+  });
 }
 
 async function getLatestRegistration() {
@@ -151,19 +156,21 @@ async function waitForInstallationOutcome(installingWorker) {
   });
 }
 
+function syncWaitingUpdateState(registration) {
+  if (registration.waiting && navigator.serviceWorker.controller && !isActivatingUpdate) {
+    updateState({ newVersionAvailable: true });
+  }
+}
+
 function attachRegistrationListeners(registration) {
   if (observedRegistrations.has(registration)) {
-    if (registration.waiting && navigator.serviceWorker.controller) {
-      updateState({ newVersionAvailable: true });
-    }
+    syncWaitingUpdateState(registration);
     return;
   }
 
   observedRegistrations.add(registration);
 
-  if (registration.waiting && navigator.serviceWorker.controller) {
-    updateState({ newVersionAvailable: true });
-  }
+  syncWaitingUpdateState(registration);
 
   registration.addEventListener("updatefound", () => {
     const installingWorker = registration.installing;
@@ -179,14 +186,21 @@ function attachRegistrationListeners(registration) {
   });
 }
 
-async function resolveUpdateReady(applyWhenReady) {
+async function resolveUpdateReady() {
   updateState({ newVersionAvailable: true });
 
-  if (applyWhenReady) {
-    return applyServiceWorkerUpdate();
+  return { status: "update-ready" };
+}
+
+async function activateWaitingServiceWorker(registration) {
+  if (!registration.waiting) {
+    updateState({ newVersionAvailable: false, isActivatingUpdate: false });
+    return { status: "no-update" };
   }
 
-  return { status: "update-ready" };
+  updateState({ newVersionAvailable: false, isActivatingUpdate: true });
+  registration.waiting.postMessage({ type: "SKIP_WAITING" });
+  return { status: "activating" };
 }
 
 async function registerServiceWorker() {
@@ -209,16 +223,32 @@ export function initializeServiceWorker() {
     return Promise.resolve(null);
   }
 
-  if (!controllerChangeListenerAttached) {
-    navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);
-    controllerChangeListenerAttached = true;
-  }
+  ensureControllerChangeListener();
 
   if (!registrationPromise) {
     registrationPromise = registerServiceWorker();
   }
 
   return registrationPromise;
+}
+
+export async function activateWaitingServiceWorkerOnStartup() {
+  if (!isServiceWorkerUsable()) {
+    return { status: "unavailable" };
+  }
+
+  ensureControllerChangeListener();
+
+  const registration = await getLatestRegistration();
+  if (!registration) {
+    return { status: "unavailable" };
+  }
+
+  if (!registration.waiting) {
+    return { status: "no-update" };
+  }
+
+  return activateWaitingServiceWorker(registration);
 }
 
 export function scheduleServiceWorkerInitialization() {
@@ -262,19 +292,10 @@ export async function applyServiceWorkerUpdate() {
     return { status: "unavailable" };
   }
 
-  if (!registration.waiting) {
-    updateState({ newVersionAvailable: false, isActivatingUpdate: false });
-    return { status: "no-update" };
-  }
-
-  updateState({ newVersionAvailable: false, isActivatingUpdate: true });
-  sessionStorage.setItem(UPDATE_RELOAD_KEY, "1");
-  registration.waiting.postMessage({ type: "SKIP_WAITING" });
-  return { status: "activating" };
+  return activateWaitingServiceWorker(registration);
 }
 
-export async function checkForServiceWorkerUpdates({ applyWhenReady = false } = {}) {
-
+export async function checkForServiceWorkerUpdates() {
   if (isCheckingForUpdates || isActivatingUpdate) {
     return { status: "busy" };
   }
@@ -285,7 +306,7 @@ export async function checkForServiceWorkerUpdates({ applyWhenReady = false } = 
   }
 
   if (registration.waiting) {
-    return resolveUpdateReady(applyWhenReady);
+    return resolveUpdateReady();
   }
 
   updateState({ isCheckingForUpdates: true });
@@ -299,7 +320,7 @@ export async function checkForServiceWorkerUpdates({ applyWhenReady = false } = 
     }
 
     if (latestRegistration.waiting) {
-      return resolveUpdateReady(applyWhenReady);
+      return resolveUpdateReady();
     }
 
     if (!latestRegistration.installing) {
@@ -309,7 +330,7 @@ export async function checkForServiceWorkerUpdates({ applyWhenReady = false } = 
 
     const result = await waitForInstallationOutcome(latestRegistration.installing);
     if (result.status === "update-ready") {
-      return resolveUpdateReady(applyWhenReady);
+      return resolveUpdateReady();
     }
 
     return result;
