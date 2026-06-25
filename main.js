@@ -1016,6 +1016,24 @@ function setupThemeToggle() {
   });
 }
 
+function prepareReloadAfterServiceWorkerControllerChange() {
+  if (!("serviceWorker" in navigator)) {
+    return { cancel: () => {} };
+  }
+
+  const reloadPage = () => {
+    navigator.serviceWorker.removeEventListener("controllerchange", reloadPage);
+    window.location.reload();
+  };
+
+  navigator.serviceWorker.addEventListener("controllerchange", reloadPage);
+  return {
+    cancel: () => {
+      navigator.serviceWorker.removeEventListener("controllerchange", reloadPage);
+    },
+  };
+}
+
 // サイト更新ボタン
 async function checkForUpdates(event) {
   lastClickEvent = event; // クリックイベントを保存
@@ -1023,20 +1041,26 @@ async function checkForUpdates(event) {
     return;
   }
 
+  const reloadAfterUpdate = isServiceWorkerUpdateReady ? prepareReloadAfterServiceWorkerControllerChange() : null;
+
   try {
     const result = isServiceWorkerUpdateReady ? await applyServiceWorkerUpdate() : await checkForServiceWorkerUpdates();
 
     if (result.status === "no-update") {
+      reloadAfterUpdate?.cancel();
       const message = window.vanilla_i18n_instance.translate("showNotification.up");
       showNotification(message, lastClickEvent);
     } else if (result.status === "update-ready") {
+      reloadAfterUpdate?.cancel();
       updateUpdateButtonState(true);
     } else if (result.status === "activating" || result.status === "busy") {
       return;
     } else if (result.status === "unavailable") {
+      reloadAfterUpdate?.cancel();
       console.warn("No active service worker registration found");
     }
   } catch (error) {
+    reloadAfterUpdate?.cancel();
     console.error("An error occurred while checking for updates:", error);
   }
 }
