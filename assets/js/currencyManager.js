@@ -1,5 +1,8 @@
 import { loadJsonFromStorage } from "./storage.js";
 
+// CoinGecko API の応答がぶら下がっても初期化が止まらないようにするタイムアウト（ミリ秒）
+const FETCH_TIMEOUT_MS = 10000;
+
 export class CurrencyManager {
   constructor() {
     if (CurrencyManager.instance) {
@@ -106,13 +109,24 @@ export class CurrencyManager {
   async fetchDataFromAPI(filteredCurrencies) {
     const currenciesParam = filteredCurrencies.map((c) => c.toLowerCase()).join(",");
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currenciesParam}&include_last_updated_at=true&precision=full`;
-    const response = await fetch(url);
-    console.log("API_URL", url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      console.log("API_URL", url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.bitcoin || {};
+    } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error(`API request timed out after ${FETCH_TIMEOUT_MS} ms`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
-    const data = await response.json();
-    return data.bitcoin || {};
   }
 
   updateCurrencyRates(currencyData) {
