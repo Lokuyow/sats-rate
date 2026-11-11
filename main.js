@@ -1,5 +1,5 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
-import { formatCurrency, getEffectiveSeparators, getLocaleSeparators, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
+import { formatCurrency, getEffectiveSeparators, getLocaleSeparators, parseFieldInput, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
 import { loadJsonFromStorage } from "./assets/js/storage.js";
 import { showNotification } from "./assets/js/notification.js";
 import {
@@ -638,7 +638,7 @@ function handleInputFormatting(event) {
 
   // 計算元の通貨とその値を保存
   const currencyId = inputElement.id;
-  const inputValue = parseFloat(parseInput(inputElement.value, selectedLocale)) || 0;
+  const inputValue = parseFloat(parseFieldInput(inputElement.value, selectedLocale)) || 0;
   updateBaseCurrencyValue(currencyId, inputValue);
 }
 
@@ -661,7 +661,7 @@ function saveCurrentValuesAsDefault(event) {
 
 function getInputValue(id) {
   const element = document.getElementById(id);
-  return element ? parseInput(element.value, selectedLocale) : 0;
+  return element ? parseFieldInput(element.value, selectedLocale) : 0;
 }
 
 // 計算前に入力値をフォーマットしインプットフィールドに入れる
@@ -727,7 +727,7 @@ function addCommasToInput(inputElement) {
   const originalCaretPos = inputElement.selectionStart;
   const originalSelectionEnd = inputElement.selectionEnd;
   const separators = getLocaleSeparators(selectedLocale);
-  let originalValue = parseInput(inputElement.value, selectedLocale);
+  const originalValue = parseFieldInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
     inputElement.value = "0";
@@ -737,7 +737,8 @@ function addCommasToInput(inputElement) {
   }
 
   // ロケールの桁区切りが小数点として解釈される入力（例: en-US で "1,5"）の扱い。
-  // 記号が1種類・1回だけ現れる場合に限る（両記号の混在や繰り返しは parseInput の解釈どおり整形する）
+  // 数値の解釈自体は parseFieldInput に委譲し、ここでは表示を書き換えるかどうかだけを判断する。
+  // 記号が1種類・1回だけ現れる場合に限る（両記号の混在や繰り返しは通常どおり整形する）
   const effectiveSeparators = getEffectiveSeparators(inputElement.value, selectedLocale);
   if (effectiveSeparators.decimalSeparator !== separators.decimalSeparator) {
     const cleanedValue = String(inputElement.value ?? "").replace(/[^0-9\.,]/g, "");
@@ -757,11 +758,7 @@ function addCommasToInput(inputElement) {
           return;
         }
 
-        // 3桁を超えて数字が続く場合は、書式設定で付いた桁区切りへ数字を追加した形とみなし、
-        // ロケールの桁区切りとして解釈し直す（例: "1,234" へ続けて打った "1,2345" は 12345）
-        const withoutGroupSeparator = cleanedValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "");
-        const decimalParts = withoutGroupSeparator.split(separators.decimalSeparator);
-        originalValue = decimalParts.length > 1 ? `${decimalParts[0]}.${decimalParts.slice(1).join("")}` : decimalParts[0];
+        // 後ろに4桁以上続く場合は、parseFieldInput が桁区切りとして解釈した値で通常どおり整形する
       }
     }
   }

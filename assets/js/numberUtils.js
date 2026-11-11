@@ -68,6 +68,39 @@ export function parseInput(inputValue, locale) {
   return decimalParts.length > 1 ? `${decimalParts[0]}.${decimalParts.slice(1).join("")}` : decimalParts[0];
 }
 
+// 欄への入力としての解釈で正規化した文字列を返す
+// parseInput との違いは1点のみ: ロケールの桁区切りが1回だけ現れ、後ろに4桁以上続く場合、
+// parseInput は小数点として解釈するが、欄入力では書式設定で付いた桁区切りへ数字を
+// 追加した形とみなして桁区切りとして解釈する（例: en-US で "1,2345" → "12345"）
+// URL クエリなど欄以外の入力には使わないこと
+export function parseFieldInput(inputValue, locale) {
+  const separators = getLocaleSeparators(locale);
+  const effectiveSeparators = getEffectiveSeparators(inputValue, locale);
+
+  if (effectiveSeparators.decimalSeparator !== separators.decimalSeparator) {
+    const cleanedValue = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
+    const hasDot = cleanedValue.includes(".");
+    const hasComma = cleanedValue.includes(",");
+
+    if (hasDot !== hasComma) {
+      const presentSeparator = hasDot ? "." : ",";
+      const separatorCount = cleanedValue.split(presentSeparator).length - 1;
+
+      if (separatorCount === 1) {
+        const digitsAfterSeparator = cleanedValue.length - cleanedValue.indexOf(presentSeparator) - 1;
+
+        if (digitsAfterSeparator > 3) {
+          const withoutGroupSeparator = cleanedValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "");
+          const decimalParts = withoutGroupSeparator.split(separators.decimalSeparator);
+          return decimalParts.length > 1 ? `${decimalParts[0]}.${decimalParts.slice(1).join("")}` : decimalParts[0];
+        }
+      }
+    }
+  }
+
+  return parseInput(inputValue, locale);
+}
+
 export function updateCustomOptions(rates) {
   for (const [key, value] of Object.entries(rates)) {
     if (key === "sats" || key === "btc" || key === "last_updated_at") continue;

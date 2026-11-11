@@ -1,4 +1,4 @@
-import { formatCurrency, parseInput } from "./numberUtils.js";
+import { formatCurrency, parseFieldInput } from "./numberUtils.js";
 import { LightningAddress } from "./lightning-address.js";
 
 const QR_CODE_STYLING_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js";
@@ -129,7 +129,8 @@ export class Pos {
     const satsInput = window.document.getElementById("sats");
     if (satsInput) {
       const selectedLocale = navigator.language || navigator.languages[0];
-      const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
+      // 欄の文字列の読み取りなので、メイン画面の換算と同じ欄入力の解釈を使う
+      const satsAmount = parseInt(parseFieldInput(satsInput.value, selectedLocale), 10);
       return satsAmount;
     }
 
