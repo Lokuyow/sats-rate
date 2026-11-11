@@ -1,6 +1,8 @@
 import { loadJsonFromStorage } from "./storage.js";
 
 export class CurrencyManager {
+  #inFlightFetchCurrencyData = null;
+
   constructor() {
     if (CurrencyManager.instance) {
       return CurrencyManager.instance;
@@ -32,7 +34,27 @@ export class CurrencyManager {
     this.onRatesUpdate = callback;
   }
 
-  async fetchCurrencyData(selectedCurrencies) {
+  // 実行中の取得があれば、その Promise をそのまま返して二重リクエストを防ぐ。
+  // 呼び出し元は3か所（初期化・オンライン復帰・手動／自動更新）とも同じ
+  // selectedCurrencies を渡すため、重なった呼び出しの引数が異なることはない。
+  // 万一引数が異なる呼び出しが重なった場合は、先行する呼び出しが優先され、
+  // 後続の呼び出し元にも先行側の結果（戻り値・例外）がそのまま返る。
+  fetchCurrencyData(selectedCurrencies) {
+    if (this.#inFlightFetchCurrencyData) {
+      return this.#inFlightFetchCurrencyData;
+    }
+
+    const promise = this.#performFetchCurrencyData(selectedCurrencies).finally(() => {
+      // 成功・失敗のどちらでもクリアし、次回の呼び出しで再取得できるようにする
+      if (this.#inFlightFetchCurrencyData === promise) {
+        this.#inFlightFetchCurrencyData = null;
+      }
+    });
+    this.#inFlightFetchCurrencyData = promise;
+    return promise;
+  }
+
+  async #performFetchCurrencyData(selectedCurrencies) {
     const storedData = loadJsonFromStorage("currencyRatesLS", null);
     const filteredCurrencies = selectedCurrencies.filter((currency) => currency !== "sats" && currency !== "btc");
 
