@@ -103,6 +103,10 @@ export class Pos {
     window.localStorage.setItem(this.localStorageKey, this.#lnAddress.toString());
   }
 
+  get selectedLocale() {
+    return window.selectedLocale;
+  }
+
   get currencyRates() {
     return window.currencyRates;
   }
@@ -128,7 +132,7 @@ export class Pos {
     // satsの値を直接取得できるか確認
     const satsInput = window.document.getElementById("sats");
     if (satsInput) {
-      const selectedLocale = navigator.language || navigator.languages[0];
+      const selectedLocale = this.selectedLocale || navigator.language || navigator.languages[0];
       const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
       return satsAmount;
     }
