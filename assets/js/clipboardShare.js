@@ -229,7 +229,7 @@ export async function shareViaWebAPIEvent(options, event) {
     } catch (error) {
         console.error("Failed to generate OGP image:", error);
         console.error("Error stack:", error.stack);
-        alert(`エラーが発生しました: ${error.message}\n\nコンソールで詳細を確認してください。`);
+        alert(window.vanilla_i18n_instance?.translate("alerts.ogpGenerationFailed") || "共有リンク用画像の生成に失敗しました。");
         // フォールバック: img_idなしで共有
         const queryParams = generateQueryStringFromValues(
             lastUpdatedField,
