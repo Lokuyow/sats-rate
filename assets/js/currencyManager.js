@@ -35,6 +35,17 @@ export class CurrencyManager {
   async fetchCurrencyData(selectedCurrencies) {
     const storedData = loadJsonFromStorage("currencyRatesLS", null);
     const filteredCurrencies = selectedCurrencies.filter((currency) => currency !== "sats" && currency !== "btc");
+
+    // sats / btc のみ表示の場合は外部レートが不要なため、APIを呼ばずに完了する
+    if (filteredCurrencies.length === 0) {
+      if (storedData) {
+        this.updateCurrencyRates(storedData);
+      } else {
+        this.currencyRates = {};
+      }
+      return;
+    }
+
     const needFetchAPI = this.doesNeedFetchAPI(storedData, filteredCurrencies);
 
     if (needFetchAPI) {
