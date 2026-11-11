@@ -92,7 +92,7 @@ export class Pos {
 
     this.#setLightningAddressInstance(new LightningAddress(formData.get("lightning-address") ?? ""));
 
-    if (!this.#lnAddress.hasValidAddress) {
+    if (!this.#lnAddress.hasValidAddress()) {
       console.warn(`Pos: invalid address: ${formData.get("lightning-address")}`);
 
       return;
@@ -182,11 +182,11 @@ export class Pos {
 
     this.#isRequesting = true;
 
-    if (!this.#lnAddress.hasValidAddress()) {
-      return;
-    }
-
     try {
+      if (!this.#lnAddress.hasValidAddress()) {
+        return;
+      }
+
       await this.#lnAddress.fetchAddressData();
       const invoice = await this.#lnAddress.getInvoice(satsAmount * 1000);
       await this.#showQrCode(invoice.pr, qrCodeLibraryPromise);
