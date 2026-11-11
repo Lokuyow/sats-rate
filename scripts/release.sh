@@ -59,14 +59,22 @@ if git rev-parse --verify --quiet origin/production >/dev/null; then
   fi
 fi
 
+# push の対象（ローカル main）が祖先チェックの対象（origin/main）と一致していることを
+# 直前の fetch で再確認する（fetch〜push の間に origin/main が進んだ場合に備える）
+git fetch origin
+
+if [ "$(git rev-parse main)" != "$(git rev-parse origin/main)" ]; then
+  fail "ローカル main が origin/main と一致しません（直前の確認後に origin/main が更新された可能性があります）。pull / push してから再実行してください"
+fi
+
 git push origin main:production
 
 # --- 完了サマリ -------------------------------------------------------------
 new_production="$(git rev-parse main)"
-revision="$(grep -o '"revision": "[^"]*"' "$MANIFEST" | head -n 1 | sed 's/^"revision": "//; s/"$//')"
+revision="$(grep -o '"revision": "[^"]*"' "$MANIFEST" | head -n 1 | sed 's/^"revision": "//; s/"$//' || true)"
 
 echo ""
 echo "release: 完了しました"
 echo "  production: ${old_production:-'(新規作成)'} -> ${new_production}"
-echo "  manifest revision: ${revision}"
+echo "  manifest revision: ${revision:-（取得できませんでした）}"
 echo "  GitHub Pages の反映には少し時間がかかります"
