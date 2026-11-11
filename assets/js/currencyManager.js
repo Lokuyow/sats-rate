@@ -136,7 +136,8 @@ export class CurrencyManager {
   isDataOutdated(lastUpdatedAt) {
     const lastUpdatedTimestamp = lastUpdatedAt;
     const currentTime = Math.floor(Date.now() / 1000);
-    return currentTime - lastUpdatedTimestamp > 610;
+    // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+    return Math.max(0, currentTime - lastUpdatedTimestamp) > 610;
   }
 
   updateCurrencyInputs(selectedCurrencies) {
