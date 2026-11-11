@@ -56,6 +56,7 @@ export class CurrencyManager {
         const currencyData = await this.fetchDataFromAPI(filteredCurrencies);
         this.updateCurrencyRates(currencyData);
         localStorage.setItem("currencyRatesLS", JSON.stringify(currencyData));
+        this.saveUnavailableCurrencies(filteredCurrencies, currencyData);
       } catch (error) {
         console.error("Error fetching currency data:", error);
         this.handleFetchError(storedData);
@@ -72,7 +73,37 @@ export class CurrencyManager {
     }
     const lastUpdatedAt = storedData.last_updated_at;
     const storedCurrencies = Object.keys(storedData).filter((key) => key !== "last_updated_at");
-    return filteredCurrencies.some((currency) => !storedCurrencies.includes(currency)) || this.isDataOutdated(lastUpdatedAt);
+    const unavailableCurrencies = this.loadUnavailableCurrencies(lastUpdatedAt);
+    const hasMissingCurrency = filteredCurrencies.some(
+      (currency) => !storedCurrencies.includes(currency) && !unavailableCurrencies.includes(currency)
+    );
+    return hasMissingCurrency || this.isDataOutdated(lastUpdatedAt);
+  }
+
+  // API に要求してもレスポンスに含まれなかった通貨を、そのレスポンスの
+  // last_updated_at と紐付けて記録する。返ってこない通貨があるせいで
+  // doesNeedFetchAPI が毎回「要取得」と判定するのを防ぐため。
+  saveUnavailableCurrencies(requestedCurrencies, currencyData) {
+    const unavailableCurrencies = requestedCurrencies.filter((currency) => !(currency in currencyData));
+    if (unavailableCurrencies.length === 0) {
+      localStorage.removeItem("unavailableCurrenciesLS");
+      return;
+    }
+    localStorage.setItem(
+      "unavailableCurrenciesLS",
+      JSON.stringify({
+        currencies: unavailableCurrencies,
+        last_updated_at: currencyData.last_updated_at,
+      })
+    );
+  }
+
+  loadUnavailableCurrencies(lastUpdatedAt) {
+    const stored = loadJsonFromStorage("unavailableCurrenciesLS", null);
+    if (!stored || stored.last_updated_at !== lastUpdatedAt || !Array.isArray(stored.currencies)) {
+      return [];
+    }
+    return stored.currencies;
   }
 
   async fetchDataFromAPI(filteredCurrencies) {
