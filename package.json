@@ -3,7 +3,8 @@
   "scripts": {
     "sw:generate": "node scripts/generate-sw-manifest.js",
     "sw:check": "node scripts/generate-sw-manifest.js --check",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "release": "bash scripts/release.sh"
   },
   "devDependencies": {
     "wrangler": "^4.54.0"
