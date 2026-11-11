@@ -44,30 +44,29 @@ describe("getLocaleSeparators", () => {
   });
 
   // Issue #7: 4桁を区切らないロケールでは format(1000.1) の固定インデックスが
-  // 数字を拾ってしまい、区切り文字が壊れる。修正は PR #23。
-  // PR #23 がマージされたら以下の skip を外すこと。
-  test.skip("es-ES: 桁区切りはピリオド、小数点はカンマ（PR #23 で修正予定）", () => {
+  // 数字を拾ってしまい、区切り文字が壊れていた。PR #23 で修正済み。
+  test("es-ES: 桁区切りはピリオド、小数点はカンマ", () => {
     assert.deepEqual(getLocaleSeparators("es-ES"), {
       groupSeparator: ".",
       decimalSeparator: ",",
     });
   });
 
-  test.skip("pt-PT: 桁区切りはノーブレークスペース、小数点はカンマ（PR #23 で修正予定）", () => {
+  test("pt-PT: 桁区切りはノーブレークスペース、小数点はカンマ", () => {
     assert.deepEqual(getLocaleSeparators("pt-PT"), {
       groupSeparator: "\u00A0",
       decimalSeparator: ",",
     });
   });
 
-  test.skip("it-IT: 桁区切りはピリオド、小数点はカンマ（PR #23 で修正予定）", () => {
+  test("it-IT: 桁区切りはピリオド、小数点はカンマ", () => {
     assert.deepEqual(getLocaleSeparators("it-IT"), {
       groupSeparator: ".",
       decimalSeparator: ",",
     });
   });
 
-  test.skip("hu-HU: 桁区切りはノーブレークスペース、小数点はカンマ（PR #23 で修正予定）", () => {
+  test("hu-HU: 桁区切りはノーブレークスペース、小数点はカンマ", () => {
     assert.deepEqual(getLocaleSeparators("hu-HU"), {
       groupSeparator: "\u00A0",
       decimalSeparator: ",",
@@ -122,11 +121,12 @@ describe("parseInput", () => {
   });
 
   // Issue #8: 現行実装は指数表記・全角数字・負号を無言で別の値に変換する
-  // （例: "1e-8" が "18" になる）。修正は PR #26 で、負号は無効入力として
-  // 空文字を返す仕様。PR #26 がマージされたら以下の skip を外すこと。
-  test.skip("指数表記を正しく展開する（PR #26 で修正予定）", () => {
-    assert.equal(parseInput("1e-8", "en-US"), "0.00000001");
-    assert.equal(parseInput("1e5", "en-US"), "100000");
+  // （例: "1e-8" が "18" になる）。仕様判断により、指数表記と負号は無効入力
+  // として空文字を返し、全角数字は半角に解釈して受け付ける。
+  // 修正は PR #26。PR #26 がマージされたら以下の skip を外すこと。
+  test.skip("指数表記は無効として空文字を返す（PR #26 で修正予定）", () => {
+    assert.equal(parseInput("1e-8", "en-US"), "");
+    assert.equal(parseInput("1e5", "en-US"), "");
   });
 
   test.skip("全角数字を受け付ける（PR #26 で修正予定）", () => {
@@ -137,16 +137,10 @@ describe("parseInput", () => {
     assert.equal(parseInput("-100", "en-US"), "");
   });
 
-  // Issue #9: ロケールと逆の小数点記号で入力すると、区切り文字として
-  // 処理されて金額が10倍になる。修正は PR #24。
-  // PR #24 がマージされたら以下の skip を外すこと。
-  test.skip("en-US でカンマ小数（1,5）を 1.5 と読む（PR #24 で修正予定）", () => {
-    assert.equal(parseInput("1,5", "en-US"), "1.5");
-  });
-
-  test.skip("de-DE でピリオド小数（1.5）を 1.5 と読む（PR #24 で修正予定）", () => {
-    assert.equal(parseInput("1.5", "de-DE"), "1.5");
-  });
+  // Issue #9（ロケールと逆の小数点記号を小数として解釈する）は「設計上の
+  // 割り切り」としてクローズされ、対応 PR #24 も未マージでクローズされた
+  // ため、そのテスト2件は削除した。入力は表示ロケールの形式に厳密に従って
+  // 解釈する（桁区切り記号は除去され、小数点はロケールの記号のみ）のが仕様。
 });
 
 describe("formatCurrency", () => {
