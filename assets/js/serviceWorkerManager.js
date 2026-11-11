@@ -393,11 +393,32 @@ export async function fetchVersionFromSW() {
 
   return new Promise((resolve, reject) => {
     const messageChannel = new MessageChannel();
+    let settled = false;
+
+    // Fall back to null if the service worker does not respond in time,
+    // so the promise never stays pending forever.
+    const timeoutId = setTimeout(() => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      resolve(null);
+    }, 3000);
+
+    const settle = (callback, value) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timeoutId);
+      callback(value);
+    };
+
     messageChannel.port1.onmessage = (event) => {
-      if (event.data.error) {
-        reject(event.data.error);
+      if (event.data?.error) {
+        settle(reject, event.data.error);
       } else {
-        resolve(event.data.version);
+        settle(resolve, event.data?.version ?? null);
       }
     };
 
