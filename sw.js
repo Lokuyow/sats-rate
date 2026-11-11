@@ -79,7 +79,19 @@ self.addEventListener(
           ev.request.mode === "navigate" ? getNavigationAsset(url.pathname) : isLocalAsset(url.pathname) ? url.pathname : null;
 
         if (!cacheKey) {
-          return fetch(ev.request);
+          if (ev.request.mode !== "navigate") {
+            return fetch(ev.request);
+          }
+
+          try {
+            return await fetch(ev.request);
+          } catch (error) {
+            const fallbackResponse = await cache.match(getNavigationAsset("/"));
+            if (fallbackResponse) {
+              return fallbackResponse;
+            }
+            throw error;
+          }
         }
 
         const cacheResponse = await cache.match(cacheKey);
