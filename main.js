@@ -573,9 +573,8 @@ function initializeGlobalValues() {
     // currencies パラメータから通貨リストを取得（ハイフンまたはカンマ区切り、互換性のため）
     const currenciesParam = urlParams.get("currencies");
     if (currenciesParam) {
-      // ハイフンまたはカンマで分割
-      const separator = currenciesParam.includes('-') ? '-' : ',';
-      querySelectedCurrencies = currenciesParam.split(separator).map(s => s.trim()).filter(Boolean);
+      // ハイフンまたはカンマで分割（混在表記にも対応）
+      querySelectedCurrencies = currenciesParam.split(/[-,]/).map(s => s.trim()).filter(Boolean);
     }
 
     // その他のパラメータから基準通貨の値を取得
