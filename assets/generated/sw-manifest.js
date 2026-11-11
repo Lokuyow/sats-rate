@@ -1,6 +1,6 @@
 self.__OSATS_SW_MANIFEST = {
   "version": "2.40.6",
-  "revision": "6ff54008bff8",
+  "revision": "bfc94450ffe3",
   "assets": [
     "/assets/css/common.css",
     "/assets/css/currencies.css",
