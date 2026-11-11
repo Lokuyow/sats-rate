@@ -49,12 +49,7 @@ export class LightningAddress {
       return res.json();
     });
 
-    if (!this.data || this.data.tag !== "payRequest" || !this.data.callback) {
-      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.invalidAddress");
-      throw new Error(message);
-    }
-
-    if (this.data.status === "ERROR") {
+    if (this.data?.status === "ERROR") {
       // 仕様上this.data.reasonが存在するはずなのでエラー理由をスローする
       // https://github.com/lnurl/luds/blob/luds/06.md
       if (this.data.reason) {
@@ -62,6 +57,11 @@ export class LightningAddress {
       } else {
         throw new Error(`Invalid lnurlp response: ${JSON.stringify(this.data)}`);
       }
+    }
+
+    if (!this.data || this.data.tag !== "payRequest" || !this.data.callback) {
+      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.invalidAddress");
+      throw new Error(message);
     }
   }
 
