@@ -122,6 +122,40 @@ function drawBackground(ctx) {
     ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 }
 
+/** テキスト幅フィット時の最小フォントサイズ */
+const MIN_FITTED_FONT_SIZE = 10;
+
+/**
+ * テキストが最大幅に収まるようフォントサイズを縮小して ctx.font に設定する
+ * 実幅が最大幅以下ならベースサイズのまま（従来と同一のフォント指定になる）
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {string} text - 描画するテキスト
+ * @param {number} baseFontSize - 基本フォントサイズ
+ * @param {number} maxWidth - 収める最大幅（px）
+ * @param {string} [fontWeight] - フォントウェイト（例: 'bold'）
+ * @returns {number} 実際に設定したフォントサイズ
+ */
+function setFontFittedToWidth(ctx, text, baseFontSize, maxWidth, fontWeight = '') {
+    const buildFont = (fontSize) => `${fontWeight ? `${fontWeight} ` : ''}${fontSize}px ${FONTS.FAMILY}`;
+
+    let fontSize = baseFontSize;
+    ctx.font = buildFont(fontSize);
+
+    const measuredWidth = ctx.measureText(text).width;
+    if (measuredWidth > maxWidth && measuredWidth > 0) {
+        // 幅はフォントサイズにほぼ比例するので、まず比率で縮小する
+        fontSize = Math.max(MIN_FITTED_FONT_SIZE, Math.floor(baseFontSize * (maxWidth / measuredWidth)));
+        ctx.font = buildFont(fontSize);
+        // 計測誤差などでまだはみ出す場合は、実測しながら1pxずつ縮小する
+        while (fontSize > MIN_FITTED_FONT_SIZE && ctx.measureText(text).width > maxWidth) {
+            fontSize -= 1;
+            ctx.font = buildFont(fontSize);
+        }
+    }
+
+    return fontSize;
+}
+
 /**
  * タイトル（入力値と通貨コード）を描画
  * @param {CanvasRenderingContext2D} ctx
@@ -130,7 +164,9 @@ function drawBackground(ctx) {
  */
 function drawTitle(ctx, baseKey, baseValue) {
     const title = `${formatNumber(baseValue)} ${formatCurrencyCode(baseKey)} =`;
-    ctx.font = `bold ${FONTS.SIZE.TITLE}px ${FONTS.FAMILY}`;
+    // 中央寄せのため、区切り線の範囲（左右マージン内）に収まるようフィットさせる
+    const maxTitleWidth = LAYOUT.SEPARATOR.X_END - LAYOUT.SEPARATOR.X_START;
+    setFontFittedToWidth(ctx, title, FONTS.SIZE.TITLE, maxTitleWidth, 'bold');
     ctx.fillStyle = COLORS.TITLE;
     ctx.textAlign = 'center';
     ctx.fillText(title, CANVAS.WIDTH / 2, LAYOUT.TITLE_Y);
@@ -171,13 +207,13 @@ function drawOutputRows(ctx, outputData) {
     outputData.forEach((data, i) => {
         const y = config.startY + i * config.lineSpacing;
 
-        // 数値を描画
-        ctx.font = `${valueFontSize}px ${FONTS.FAMILY}`;
+        // 数値を描画（右寄せ: 左端のマージンまでに収まるようフィットさせる）
+        setFontFittedToWidth(ctx, data.value, valueFontSize, numberX - LAYOUT.SEPARATOR.X_START);
         ctx.textAlign = 'right';
         ctx.fillText(data.value, numberX, y);
 
-        // 通貨コードを少し小さいフォントで描画
-        ctx.font = `${codeFontSize}px ${FONTS.FAMILY}`;
+        // 通貨コードを少し小さいフォントで描画（左寄せ: 右端のマージンまでに収める）
+        setFontFittedToWidth(ctx, data.code, codeFontSize, LAYOUT.SEPARATOR.X_END - codeX);
         ctx.textAlign = 'left';
         ctx.fillText(data.code, codeX, y);
     });
