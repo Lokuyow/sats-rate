@@ -13,6 +13,8 @@ const DEFAULT_DESCRIPTION_EN = "Multi-currency converter for bitcoin, sats, USD,
 const STATIC_OGP_PATH = "/assets/images/ogp.png";
 const STATIC_OGP_PATH_EN = "/assets/images/ogp_en.png";
 const MAX_FILE_BYTES = 2 * 1024 * 1024;  // 2MB
+const MULTIPART_OVERHEAD_BYTES = 64 * 1024; // multipart の境界・パートヘッダー分の余裕
+const MAX_REQUEST_BYTES = MAX_FILE_BYTES + MULTIPART_OVERHEAD_BYTES; // Content-Length 事前チェック用
 const CACHE_MAX_AGE = 31536000;           // 1年（秒）
 
 // CORS ヘッダーを動的に生成（オリジン検証付き）
@@ -192,15 +194,31 @@ async function handleSaveOgp(request, env) {
         return errorResponse('Unsupported Media Type. Send multipart/form-data with field "file".', 415, origin);
     }
 
+    // Content-Length の事前チェック（ボディを読み込む前に過大なリクエストを拒否）
+    // ヘッダが無い・解釈できない場合は、読み込み後の実サイズチェックで担保する
+    const contentLength = Number(request.headers.get('content-length'));
+    if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+        console.error('[handleSaveOgp] Request too large (Content-Length):', contentLength);
+        return errorResponse('File too large', 413, origin);
+    }
+
     try {
-        const bytes = await extractFileFromFormData(request);
-        if (!bytes) {
+        const extracted = await extractFileFromFormData(request);
+        if (!extracted) {
             return errorResponse('file missing', 400, origin);
         }
+        const { bytes } = extracted;
 
         if (bytes.length > MAX_FILE_BYTES) {
             console.error('[handleSaveOgp] File too large:', bytes.length);
             return errorResponse('File too large', 413, origin);
+        }
+
+        // パートに宣言された Content-Type があれば image/png のみ許可
+        // （最終判定は下の PNG マジックバイト検証）
+        if (extracted.contentType && extracted.contentType !== 'image/png') {
+            console.error('[handleSaveOgp] Invalid file Content-Type:', extracted.contentType);
+            return errorResponse('Invalid file format. Only PNG images are allowed.', 415, origin);
         }
 
         // PNG形式の検証（SVG等を拒否）
@@ -236,10 +254,11 @@ async function handleSaveOgp(request, env) {
 async function extractFileFromFormData(request) {
     const form = await request.formData();
     const file = form.get('file') || form.get('image');
-    if (!file) return null;
+    // フィールドが文字列など File でない場合は null（呼び出し側で 400 を返す）
+    if (!file || typeof file.arrayBuffer !== 'function') return null;
 
     const buffer = await file.arrayBuffer();
-    return new Uint8Array(buffer);
+    return { bytes: new Uint8Array(buffer), contentType: file.type || '' };
 }
 
 async function findExistingImageByHash(env, hash) {
