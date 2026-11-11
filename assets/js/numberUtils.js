@@ -22,9 +22,21 @@ export function getLocaleSeparators(locale) {
 
 export function parseInput(inputValue, locale) {
   const separators = getLocaleSeparators(locale);
-  const onlyNumbersAndSeparators = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
+  // 全角数字・記号を半角にそろえる（例: "１００" → "100"）。区切り文字も同じ正規化形で照合する
+  const groupSeparator = separators.groupSeparator.normalize("NFKC");
+  const decimalSeparator = separators.decimalSeparator.normalize("NFKC");
+  const normalized = String(inputValue ?? "")
+    .normalize("NFKC")
+    .replace(new RegExp(`\\${groupSeparator}`, "g"), "")
+    .replace(decimalSeparator, ".");
 
-  return onlyNumbersAndSeparators.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").replace(separators.decimalSeparator, ".");
+  // 数字・小数点・符号と、無効な入力の判定に使う "e"/"E" 以外（通貨記号など）は除去する
+  const cleaned = normalized.replace(/[^0-9.eE+-]/g, "");
+
+  // 負の値と、指数表記を含む入力、解釈できない "e" や "+" を含む入力は無効（値なし）として扱う
+  if (/[eE+-]/.test(cleaned)) return "";
+
+  return cleaned;
 }
 
 export function updateCustomOptions(rates) {
