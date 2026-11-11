@@ -1,7 +1,7 @@
 import { formatCurrency, parseInput } from "./numberUtils.js";
 import { LightningAddress } from "./lightning-address.js";
 
-const QR_CODE_STYLING_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js";
+const QR_CODE_STYLING_SCRIPT_URL = "https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js";
 let qrCodeStylingPromise = null;
 
 function loadQrCodeStyling() {
@@ -13,6 +13,8 @@ function loadQrCodeStyling() {
     qrCodeStylingPromise = new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.src = QR_CODE_STYLING_SCRIPT_URL;
+      script.integrity = "sha384-P7sw4KeI1SDhOs6wYFsBysIIHFqMTgG4y9vunEfL8ZuV0WhnHsh9MRu9Rso17MtY";
+      script.crossOrigin = "anonymous";
       script.async = true;
       script.dataset.osatsExternal = "qr-code-styling";
       script.onload = () => {
