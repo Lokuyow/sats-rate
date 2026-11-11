@@ -400,6 +400,12 @@ function setupEventListeners() {
   const floatingMenu = document.getElementById("floating-menu");
 
   if (menuToggleButton && floatingMenu) {
+    // メニューの開閉は必ずこのヘルパー経由で行い、open クラスと aria-expanded を同期させる
+    const setMenuExpanded = (open) => {
+      floatingMenu.classList.toggle("open", open);
+      menuToggleButton.setAttribute("aria-expanded", String(open));
+    };
+
     // ホバー操作が可能な環境ではホバー開閉、そうでない環境ではタップ開閉
     const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
@@ -407,13 +413,13 @@ function setupEventListeners() {
       // タッチデバイスの場合：クリックでトグル
       menuToggleButton.addEventListener("click", (event) => {
         event.stopPropagation(); // documentへの伝播を防ぐ
-        floatingMenu.classList.toggle("open");
+        setMenuExpanded(!floatingMenu.classList.contains("open"));
       });
 
       // ドキュメントのどこかをクリックしたらメニューを閉じる
       document.addEventListener("click", () => {
         if (floatingMenu.classList.contains("open")) {
-          floatingMenu.classList.remove("open");
+          setMenuExpanded(false);
         }
       });
 
@@ -426,12 +432,12 @@ function setupEventListeners() {
       let menuTimer;
       const showMenu = () => {
         clearTimeout(menuTimer);
-        floatingMenu.classList.add("open");
+        setMenuExpanded(true);
       };
 
       const hideMenu = () => {
         menuTimer = setTimeout(() => {
-          floatingMenu.classList.remove("open");
+          setMenuExpanded(false);
         }, 300);
       };
 
