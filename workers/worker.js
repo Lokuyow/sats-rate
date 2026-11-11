@@ -62,6 +62,10 @@ const parseCurrencyList = (currencies) => {
 
 const isLegacyQuery = (params) => params.get('currencies')?.includes(',') ?? false;
 
+// 動的OGP書き換えの対象はトップページのみ
+// （換算パラメータ付きの共有URLはトップページ宛てに生成される）
+const isTopPagePath = (pathname) => pathname === '/' || pathname === '/index.html';
+
 
 const isValidUuid = (id) => UUID_PATTERN.test(id);
 
@@ -168,6 +172,10 @@ async function handleRequest(request, env) {
     if (imgId && !isValidUuid(imgId)) {
         console.warn('[handleRequest] Invalid img_id format, using static OGP');
         imgId = null;
+    }
+    // サブページは固有の title / OGP を保持するため、書き換えはトップページのみ
+    if (!isTopPagePath(pathname)) {
+        return originRes;
     }
     return rewriteOgpMeta(originRes, url, imgId);
 }
