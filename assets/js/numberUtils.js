@@ -10,10 +10,10 @@ export function getLocaleSeparators(locale) {
     return localeSeparatorsCache.get(locale);
   }
 
-  const formattedNumber = new Intl.NumberFormat(locale, { numberingSystem: "latn" }).format(1000.1);
+  const parts = new Intl.NumberFormat(locale, { numberingSystem: "latn" }).formatToParts(1000000.1);
   const separators = {
-    groupSeparator: formattedNumber[1],
-    decimalSeparator: formattedNumber[5],
+    groupSeparator: parts.find((part) => part.type === "group")?.value ?? "",
+    decimalSeparator: parts.find((part) => part.type === "decimal")?.value ?? ".",
   };
 
   localeSeparatorsCache.set(locale, separators);
