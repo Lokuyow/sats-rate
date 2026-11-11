@@ -1,5 +1,5 @@
 import { currencyManager } from "./assets/js/currencyManager.js";
-import { formatCurrency, getLocaleSeparators, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
+import { formatCurrency, getEffectiveSeparators, getLocaleSeparators, parseInput, updateCustomOptions } from "./assets/js/numberUtils.js";
 import { loadJsonFromStorage } from "./assets/js/storage.js";
 import { showNotification } from "./assets/js/notification.js";
 import {
@@ -727,13 +727,43 @@ function addCommasToInput(inputElement) {
   const originalCaretPos = inputElement.selectionStart;
   const originalSelectionEnd = inputElement.selectionEnd;
   const separators = getLocaleSeparators(selectedLocale);
-  const originalValue = parseInput(inputElement.value, selectedLocale);
+  let originalValue = parseInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
     inputElement.value = "0";
     inputElement.selectionStart = 1;
     inputElement.selectionEnd = 1;
     return;
+  }
+
+  // ロケールの桁区切りが小数点として解釈される入力（例: en-US で "1,5"）の扱い。
+  // 記号が1種類・1回だけ現れる場合に限る（両記号の混在や繰り返しは parseInput の解釈どおり整形する）
+  const effectiveSeparators = getEffectiveSeparators(inputElement.value, selectedLocale);
+  if (effectiveSeparators.decimalSeparator !== separators.decimalSeparator) {
+    const cleanedValue = String(inputElement.value ?? "").replace(/[^0-9\.,]/g, "");
+    const hasDot = cleanedValue.includes(".");
+    const hasComma = cleanedValue.includes(",");
+
+    if (hasDot !== hasComma) {
+      const presentSeparator = hasDot ? "." : ",";
+      const separatorCount = cleanedValue.split(presentSeparator).length - 1;
+
+      if (separatorCount === 1) {
+        const digitsAfterSeparator = cleanedValue.length - cleanedValue.indexOf(presentSeparator) - 1;
+
+        if (digitsAfterSeparator <= 2) {
+          // 小数点として入力された途中かもしれないため、表示は書き換えず入力された記号のままにする
+          // （キャレット位置もそのまま。入力が進んで桁区切りに確定すれば通常の整形に戻る）
+          return;
+        }
+
+        // 3桁を超えて数字が続く場合は、書式設定で付いた桁区切りへ数字を追加した形とみなし、
+        // ロケールの桁区切りとして解釈し直す（例: "1,234" へ続けて打った "1,2345" は 12345）
+        const withoutGroupSeparator = cleanedValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "");
+        const decimalParts = withoutGroupSeparator.split(separators.decimalSeparator);
+        originalValue = decimalParts.length > 1 ? `${decimalParts[0]}.${decimalParts.slice(1).join("")}` : decimalParts[0];
+      }
+    }
   }
 
   let preSeparatorCount = (inputElement.value.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, "g")) || []).length;

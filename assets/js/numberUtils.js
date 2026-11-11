@@ -20,7 +20,9 @@ export function getLocaleSeparators(locale) {
   return separators;
 }
 
-export function parseInput(inputValue, locale) {
+// 入力文字列に対して実際に小数点・桁区切りとして扱う記号を返す
+// （ロケールの桁区切りが小数点として解釈される場合など、ロケールの区切りと異なることがある）
+export function getEffectiveSeparators(inputValue, locale) {
   const separators = getLocaleSeparators(locale);
   const onlyNumbersAndSeparators = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
 
@@ -52,6 +54,13 @@ export function parseInput(inputValue, locale) {
       }
     }
   }
+
+  return { decimalSeparator, groupSeparator };
+}
+
+export function parseInput(inputValue, locale) {
+  const { decimalSeparator, groupSeparator } = getEffectiveSeparators(inputValue, locale);
+  const onlyNumbersAndSeparators = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
 
   const withoutGroupSeparator = onlyNumbersAndSeparators.replace(new RegExp(`\\${groupSeparator}`, "g"), "");
   const decimalParts = withoutGroupSeparator.split(decimalSeparator);
