@@ -112,7 +112,13 @@ export class CurrencyManager {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.bitcoin || {};
+    if (!data?.bitcoin || typeof data.bitcoin !== "object") {
+      throw new Error("Invalid CoinGecko response: missing bitcoin data");
+    }
+    if (!Number.isFinite(data.bitcoin.last_updated_at)) {
+      throw new Error("Invalid CoinGecko response: last_updated_at is not a finite number");
+    }
+    return data.bitcoin;
   }
 
   updateCurrencyRates(currencyData) {
