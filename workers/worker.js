@@ -433,7 +433,7 @@ function buildOgMetaFromParams(params) {
 }
 
 function findBaseCurrency(params) {
-    const SKIP_PARAMS = new Set(['currencies', 'img_id', 'd', 'lang']);
+    const SKIP_PARAMS = new Set(['currencies', 'img_id', 'd', 'lang', 'ts']);
     const CURRENCY_CODE_PATTERN = /^[a-z]{2,4}$/i;
 
     for (const [key, value] of params.entries()) {
