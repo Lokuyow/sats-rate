@@ -24,7 +24,39 @@ export function parseInput(inputValue, locale) {
   const separators = getLocaleSeparators(locale);
   const onlyNumbersAndSeparators = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
 
-  return onlyNumbersAndSeparators.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").replace(separators.decimalSeparator, ".");
+  const lastDotIndex = onlyNumbersAndSeparators.lastIndexOf(".");
+  const lastCommaIndex = onlyNumbersAndSeparators.lastIndexOf(",");
+
+  let decimalSeparator = separators.decimalSeparator;
+  let groupSeparator = separators.groupSeparator;
+
+  if (lastDotIndex !== -1 && lastCommaIndex !== -1) {
+    // 両方の記号が現れる場合は、後ろに現れる方を小数点とみなす
+    decimalSeparator = lastDotIndex > lastCommaIndex ? "." : ",";
+    groupSeparator = decimalSeparator === "." ? "," : ".";
+  } else if (lastDotIndex !== -1 || lastCommaIndex !== -1) {
+    const presentSeparator = lastDotIndex !== -1 ? "." : ",";
+    const separatorCount = onlyNumbersAndSeparators.split(presentSeparator).length - 1;
+
+    if (separatorCount > 1) {
+      // 同じ記号が複数回現れる場合は桁区切りとみなす
+      groupSeparator = presentSeparator;
+      decimalSeparator = presentSeparator === "." ? "," : ".";
+    } else if (presentSeparator === separators.groupSeparator) {
+      // ロケールの桁区切りが1回だけ現れる場合、後ろが3桁ちょうどでなければ
+      // 逆の記法で入力された小数点とみなす（例: en-US で "1,5" → 1.5）
+      const separatorIndex = onlyNumbersAndSeparators.indexOf(presentSeparator);
+      if (onlyNumbersAndSeparators.length - separatorIndex - 1 !== 3) {
+        decimalSeparator = presentSeparator;
+        groupSeparator = separators.decimalSeparator;
+      }
+    }
+  }
+
+  const withoutGroupSeparator = onlyNumbersAndSeparators.replace(new RegExp(`\\${groupSeparator}`, "g"), "");
+  const decimalParts = withoutGroupSeparator.split(decimalSeparator);
+  // 小数点は最初の1つだけを残し、残りは取り除く
+  return decimalParts.length > 1 ? `${decimalParts[0]}.${decimalParts.slice(1).join("")}` : decimalParts[0];
 }
 
 export function updateCustomOptions(rates) {
