@@ -113,8 +113,13 @@ function isPngFile(bytes) {
 // オリジンの検証
 function isAllowedOrigin(origin) {
     if (!origin) return false;
-    // 開発環境の判定（localhost）
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+    // 開発環境の判定（localhost）: URLとしてパースし、ホスト名が完全一致する場合のみ許可
+    try {
+        const { hostname } = new URL(origin);
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') return true;
+    } catch (error) {
+        // パースできないオリジンは開発環境として扱わない
+    }
     return ALLOWED_ORIGINS.includes(origin);
 }
 
