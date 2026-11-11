@@ -63,6 +63,7 @@
     "shareNotSupported": "お使いのブラウザはWeb共有APIをサポートしていません。別のブラウザを試してください。",
     "fetchErrorWithData": "最新価格レートの取得に失敗しました。過去のデータを表示しています。",
     "fetchErrorNoData": "価格レートの取得に失敗しました。時間をおいてリロードをして下さい。",
+    "fetchErrorMissingRates": "次の通貨のレートが保存データにないため、金額を表示できません: {currencies}",
     "ogpUploadFailed": "共有リンク用画像のアップロードに失敗しました。"
   },
   "lightningAddress": {
