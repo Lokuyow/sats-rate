@@ -88,6 +88,15 @@ export class LightningAddress {
     }
 
     const callbackUrl = new URL(this.data.callback);
+
+    // LNURL 仕様では callback は https が必須（Tor の .onion のみ http を許可）
+    const isHttps = callbackUrl.protocol === "https:";
+    const isOnionHttp = callbackUrl.protocol === "http:" && callbackUrl.hostname.endsWith(".onion");
+    if (!isHttps && !isOnionHttp) {
+      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.invalidAddress");
+      throw new Error(message);
+    }
+
     callbackUrl.searchParams.append("amount", amount);
 
     const invoice = await fetch(callbackUrl).then(async (res) => {
