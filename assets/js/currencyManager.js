@@ -1,4 +1,5 @@
 import { loadJsonFromStorage } from "./storage.js";
+import { showNotification } from "./notification.js";
 
 export class CurrencyManager {
   constructor() {
@@ -44,7 +45,7 @@ export class CurrencyManager {
         localStorage.setItem("currencyRatesLS", JSON.stringify(currencyData));
       } catch (error) {
         console.error("Error fetching currency data:", error);
-        this.handleFetchError(storedData);
+        this.handleFetchError(storedData, filteredCurrencies);
       }
     } else {
       console.log("Local storage data is up-to-date. Skipping API request.");
@@ -78,13 +79,24 @@ export class CurrencyManager {
     this.onRatesUpdate?.(this.currencyRates);
   }
 
-  handleFetchError(storedData) {
+  handleFetchError(storedData, requestedCurrencies = []) {
     if (storedData) {
       this.updateCurrencyRates(storedData);
 
-      const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+      let message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+
+      // 保存データに無い通貨は金額を表示できないため、その旨もあわせて知らせる
+      const missingCurrencies = requestedCurrencies.filter((currency) => !(Number(storedData[currency]) > 0));
+      if (missingCurrencies.length > 0) {
+        const missingMessage = window.vanilla_i18n_instance.translate("alerts.fetchErrorMissingRates", {
+          currencies: missingCurrencies.map((currency) => currency.toUpperCase()).join(", "),
+        });
+        message = `${message}\n${missingMessage}`;
+      }
+
       console.log(message);
       console.log(this.currencyRates);
+      showNotification(message);
     } else {
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorNoData");
       alert(message);

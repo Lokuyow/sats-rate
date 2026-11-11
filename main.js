@@ -286,6 +286,12 @@ function updateStoredCurrencyRates(nextRates) {
   window.currencyRates = currencyRates;
 }
 
+// 通貨のレートを返す。レートが無い・不正な場合は null（不明）を返す
+function getValidRate(currency) {
+  const rate = Number(currencyRates[currency]);
+  return Number.isFinite(rate) && rate > 0 ? rate : null;
+}
+
 function buildCalculatedValues(inputField, inputValue) {
   const satsInBtc = 1e8;
   const nextValues = {};
@@ -301,9 +307,10 @@ function buildCalculatedValues(inputField, inputValue) {
     btcValue = normalizedInputValue;
     satsValue = btcValue * satsInBtc;
   } else {
-    const rate = Number(currencyRates[inputField]) || 0;
-    btcValue = rate ? normalizedInputValue / rate : 0;
-    satsValue = btcValue * satsInBtc;
+    const rate = getValidRate(inputField);
+    // 基準通貨のレートが無い場合は換算できないため、他通貨もすべて不明（null）にする
+    btcValue = rate ? normalizedInputValue / rate : null;
+    satsValue = rate ? btcValue * satsInBtc : null;
   }
 
   selectedCurrencies.forEach((currency) => {
@@ -322,7 +329,8 @@ function buildCalculatedValues(inputField, inputValue) {
       return;
     }
 
-    nextValues[currency] = btcValue * (currencyRates[currency] || 0);
+    const rate = getValidRate(currency);
+    nextValues[currency] = btcValue !== null && rate ? btcValue * rate : null;
   });
 
   return nextValues;
@@ -710,8 +718,11 @@ function calculateValues(inputField, sourceValue = null) {
         const caretPos = element.selectionStart;
         element.setSelectionRange(caretPos, caretPos);
       } else {
-        // 値のフォーマットと更新
-        const formattedValue = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
+        // 値のフォーマットと更新（レートが無い通貨は 0 と誤認させないよう「—」を表示）
+        const formattedValue =
+          inputValues[currency] === null
+            ? "—"
+            : formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
         if (element.value !== formattedValue) {
           element.value = formattedValue;
         }
