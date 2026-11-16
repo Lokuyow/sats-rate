@@ -752,7 +752,16 @@ function addCommasToInput(inputElement) {
   const originalValue = parseInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
-    // 空欄を維持する（"0" を書き戻さない）。計算側は空欄を 0 として扱う。
+    // 欄が実質的に空（空文字・区切り文字・空白だけ）の場合は空欄を維持する
+    // （"0" を書き戻さない）。計算側は空欄を 0 として扱う。
+    // 一方、解釈できない文字が入っている場合は表示と計算（0扱い）が
+    // 食い違うため、従来どおり "0" に戻す。
+    const contentWithoutSeparators = rawValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").trim();
+    if (contentWithoutSeparators !== "") {
+      inputElement.value = "0";
+      inputElement.selectionStart = 1;
+      inputElement.selectionEnd = 1;
+    }
     return;
   }
 
