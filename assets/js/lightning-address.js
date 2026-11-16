@@ -93,7 +93,7 @@ export class LightningAddress {
     const isHttps = callbackUrl.protocol === "https:";
     const isOnionHttp = callbackUrl.protocol === "http:" && callbackUrl.hostname.endsWith(".onion");
     if (!isHttps && !isOnionHttp) {
-      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.invalidAddress");
+      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.insecureCallback");
       throw new Error(message);
     }
 

@@ -71,7 +71,8 @@
       "noAddressSet": "No Lightning address set",
       "invalidAmount": "Invalid amount. Make sure the amount is between {min} sats and {max} sats.",
       "cannotFetchData": "Cannot fetch address data.",
-      "cannotGetInvoice": "Cannot get invoice."
+      "cannotGetInvoice": "Cannot get invoice.",
+      "insecureCallback": "The wallet does not support a secure connection (https), so the invoice cannot be created."
     }
   },
   "pos": {
