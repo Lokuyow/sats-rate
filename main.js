@@ -836,7 +836,8 @@ function updateLastUpdated(timestamp) {
 
 // ページ読み込みもしくは表示状態が変わった際の要素更新処理
 export function checkAndUpdateElements() {
-  const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+  // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+  const diffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
   const updatePricesElement = document.getElementById("update-prices");
   const lastUpdatedElement = document.getElementById("last-updated");
 
@@ -876,7 +877,8 @@ function handleVisibilityChange() {
 
 // レート更新ボタンを押したとき
 async function updateElementsBasedOnTimestamp() {
-  const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+  // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+  const diffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
 
   const updatePricesElement = document.getElementById("update-prices");
   const lastUpdatedElement = document.getElementById("last-updated");
@@ -897,7 +899,7 @@ async function updateElementsBasedOnTimestamp() {
     try {
       // データを取得
       await currencyManager.fetchCurrencyData(selectedCurrencies);
-      const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+      const updatedDiffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
 
       // 計算処理
       if (lastUpdatedField) {
