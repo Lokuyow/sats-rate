@@ -487,6 +487,10 @@ function setupInputFieldEventListeners(element) {
   element.addEventListener("focus", handleFocus);
   element.addEventListener("contextmenu", handleContextMenu);
   element.addEventListener("paste", handleInputFormatting);
+  // 右クリックメニューからの貼り付けでは keyup が発生せず、paste イベントは
+  // 挿入前に発火するため、貼り付けた内容が整形されない。値の変更後に発火する
+  // input イベントでも整形する（Ctrl+V・タイピング時は従来の経路と冪等に重なる）
+  element.addEventListener("input", handleInputFormatting);
   element.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       this.blur();
