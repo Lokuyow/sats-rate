@@ -130,7 +130,8 @@ export class Pos {
     if (satsInput) {
       const selectedLocale = navigator.language || navigator.languages[0];
       const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
-      return satsAmount;
+      // 「—」表示や空欄など数値化できない入力は NaN になるため、金額として扱わず null を返す
+      return Number.isFinite(satsAmount) ? satsAmount : null;
     }
 
     // 取得できなかった場合、計算
@@ -155,6 +156,11 @@ export class Pos {
         return null;
       }
       satsAmount = Math.round(value / (rate / 1e8));
+    }
+
+    // 非有限の値（NaN / Infinity）が金額として下流に渡らないようにする
+    if (!Number.isFinite(satsAmount)) {
+      return null;
     }
 
     return satsAmount || null;

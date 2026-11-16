@@ -1,4 +1,5 @@
 import { loadJsonFromStorage } from "./storage.js";
+import { showNotification } from "./notification.js";
 
 // CoinGecko API の応答がぶら下がっても初期化が止まらないようにするタイムアウト（ミリ秒）
 const FETCH_TIMEOUT_MS = 10000;
@@ -59,7 +60,7 @@ export class CurrencyManager {
         this.saveUnavailableCurrencies(filteredCurrencies, currencyData);
       } catch (error) {
         console.error("Error fetching currency data:", error);
-        this.handleFetchError(storedData);
+        this.handleFetchError(storedData, filteredCurrencies);
       }
     } else {
       console.log("Local storage data is up-to-date. Skipping API request.");
@@ -134,13 +135,25 @@ export class CurrencyManager {
     this.onRatesUpdate?.(this.currencyRates);
   }
 
-  handleFetchError(storedData) {
+  handleFetchError(storedData, requestedCurrencies = []) {
     if (storedData) {
       this.updateCurrencyRates(storedData);
 
-      const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+      let message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+
+      // 保存データに無い通貨は金額を表示できないため、その旨もあわせて知らせる
+      const missingCurrencies = requestedCurrencies.filter((currency) => !(Number(storedData[currency]) > 0));
+      if (missingCurrencies.length > 0) {
+        const missingMessage = window.vanilla_i18n_instance.translate("alerts.fetchErrorMissingRates", {
+          currencies: missingCurrencies.map((currency) => currency.toUpperCase()).join(", "),
+        });
+        message = `${message}\n${missingMessage}`;
+      }
+
       console.log(message);
       console.log(this.currencyRates);
+      // 失敗の通知は読むのに時間がかかるため、閉じるボタンで消すまで表示し続ける
+      showNotification(message, undefined, "right", { dismissible: true });
     } else {
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorNoData");
       alert(message);
