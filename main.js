@@ -751,25 +751,45 @@ function addCommasToInput(inputElement) {
   const originalValue = parseInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
-    inputElement.value = "0";
-    inputElement.selectionStart = 1;
-    inputElement.selectionEnd = 1;
+    // 欄が実質的に空（空文字・区切り文字・空白だけ）の場合は空欄を維持する
+    // （"0" を書き戻さない）。計算側は空欄を 0 として扱う。
+    // 一方、解釈できない文字が入っている場合は表示と計算（0扱い）が
+    // 食い違うため、従来どおり "0" に戻す。
+    const contentWithoutSeparators = rawValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").trim();
+    if (contentWithoutSeparators !== "") {
+      inputElement.value = "0";
+      inputElement.selectionStart = 1;
+      inputElement.selectionEnd = 1;
+    }
     return;
   }
 
   let preSeparatorCount = (inputElement.value.slice(0, originalCaretPos).match(new RegExp(`\\${separators.groupSeparator}`, "g")) || []).length;
 
   let formattedValue;
+  // 整数部が空の場合、整形で先頭に "0" が補われる（"." → "0."）。
+  // その 1 文字分、カーソル位置も後ろへずらす必要がある。
+  let leadingZeroAdded = false;
   if (originalValue.endsWith(".") || (originalValue.includes(".") && originalCaretPos > originalValue.indexOf("."))) {
     const parts = originalValue.split(".");
     const integerPart = parts[0];
-    formattedValue = new Intl.NumberFormat(selectedLocale, { numberingSystem: "latn" }).format(parseFloat(integerPart));
+    leadingZeroAdded = integerPart === "";
+    // 整数部が空（小数点から入力を始めた場合）は 0 として整形する（NaN 表示を防ぐ）
+    formattedValue = new Intl.NumberFormat(selectedLocale, { numberingSystem: "latn" }).format(parseFloat(integerPart) || 0);
 
     if (parts[1] !== undefined) {
       formattedValue += separators.decimalSeparator + parts[1];
     } else if (originalValue.endsWith(".")) {
       formattedValue += separators.decimalSeparator;
     }
+  } else if (originalValue.includes(".")) {
+    // 編集中（カーソルが小数点より前）は小数部を文字列のまま保持する。
+    // formatCurrency は maximumFractionDigits で小数部を丸めるため使わない。
+    const parts = originalValue.split(".");
+    const integerPart = parts[0];
+    leadingZeroAdded = integerPart === "";
+    formattedValue = new Intl.NumberFormat(selectedLocale, { numberingSystem: "latn" }).format(parseFloat(integerPart) || 0);
+    formattedValue += separators.decimalSeparator + parts[1];
   } else {
     const currencyId = inputElement.id;
     formattedValue = formatCurrency(originalValue, currencyId, selectedLocale, false);
@@ -798,6 +818,12 @@ function addCommasToInput(inputElement) {
     }
 
     let newCaretPos = originalCaretPos + diffSeparatorCount;
+
+    // 先頭に "0" を補った場合、小数点より後ろにあったカーソルは補った 1 文字分ずらす。
+    // ずらさないと "." → "0." でカーソルが小数点の手前に残り、続けて "5" を打つと "5." になる。
+    if (leadingZeroAdded && originalCaretPos > originalValue.indexOf(".")) {
+      newCaretPos += 1;
+    }
 
     if (newCaretPos < 0) newCaretPos = 0;
     if (newCaretPos > formattedValue.length) newCaretPos = formattedValue.length;
