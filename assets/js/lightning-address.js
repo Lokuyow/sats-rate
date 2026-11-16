@@ -54,9 +54,10 @@ export class LightningAddress {
       // https://github.com/lnurl/luds/blob/luds/06.md
       if (this.data.reason) {
         throw new Error(this.data.reason);
-      } else {
-        throw new Error(`Invalid lnurlp response: ${JSON.stringify(this.data)}`);
       }
+      // reason が無い場合は、技術的な応答内容ではなく汎用の案内文にする
+      const message = window.vanilla_i18n_instance.translate("lightningAddress.errors.invalidAddress");
+      throw new Error(message);
     }
 
     if (!this.data || this.data.tag !== "payRequest" || !this.data.callback) {
@@ -102,9 +103,9 @@ export class LightningAddress {
       // https://github.com/lnurl/luds/blob/luds/06.md
       if (invoice.reason) {
         throw new Error(invoice.reason);
-      } else {
-        throw new Error(`Invalid callback response: ${JSON.stringify(invoice)}`);
       }
+      // reason が無い場合は、技術的な応答内容ではなく汎用の案内文にする
+      throw new Error(window.vanilla_i18n_instance.translate("lightningAddress.errors.cannotGetInvoice"));
     }
 
     return invoice;
