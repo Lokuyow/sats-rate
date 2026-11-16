@@ -40,7 +40,14 @@ async function hasLegacyCache() {
 
 async function populateReleaseCache() {
   const cache = await caches.open(CACHE_NAME);
-  await cache.addAll(RELEASE_MANIFEST.assets);
+  // Cache each asset individually so that one failed fetch does not fail the
+  // whole install. Assets that fail here are fetched from the network on
+  // demand by the fetch handler instead.
+  const results = await Promise.allSettled(RELEASE_MANIFEST.assets.map((assetPath) => cache.add(assetPath)));
+  const failedAssets = RELEASE_MANIFEST.assets.filter((_, index) => results[index].status === "rejected");
+  if (failedAssets.length > 0) {
+    console.warn(`Failed to cache ${failedAssets.length} asset(s) during service worker install:`, failedAssets);
+  }
 }
 
 self.addEventListener("install", (event) => {
