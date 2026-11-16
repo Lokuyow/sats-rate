@@ -31,6 +31,7 @@ let currencyRates = {};
 window.currencyRates = currencyRates;
 let baseCurrencyValue = {};
 window.baseCurrencyValue = baseCurrencyValue;
+window.selectedLocale = selectedLocale;
 let selectedCurrencies = [];
 let currencyInputFields = [];
 let currentCurrencyValues = {};

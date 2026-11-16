@@ -103,6 +103,10 @@ export class Pos {
     window.localStorage.setItem(this.localStorageKey, this.#lnAddress.toString());
   }
 
+  get selectedLocale() {
+    return window.selectedLocale;
+  }
+
   get currencyRates() {
     return window.currencyRates;
   }
@@ -128,7 +132,7 @@ export class Pos {
     // satsの値を直接取得できるか確認
     const satsInput = window.document.getElementById("sats");
     if (satsInput) {
-      const selectedLocale = navigator.language || navigator.languages[0];
+      const selectedLocale = this.selectedLocale || navigator.language || navigator.languages[0];
       const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
       // 「—」表示や空欄など数値化できない入力は NaN になるため、金額として扱わず null を返す
       return Number.isFinite(satsAmount) ? satsAmount : null;
