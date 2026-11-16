@@ -518,6 +518,11 @@ function setupInputFieldsEventListeners() {
 
 async function handleOnline() {
   await currencyManager.fetchCurrencyData(selectedCurrencies);
+  // 再取得に失敗して保存データに切り替わった場合も、金額欄の表示を
+  // 現在のレートに合わせる（更新ボタン押下時と同じ再計算）
+  if (lastUpdatedField) {
+    calculateValues(lastUpdatedField);
+  }
   void checkForServiceWorkerUpdates().catch((error) => {
     console.error("An error occurred while checking for updates after reconnecting:", error);
   });
