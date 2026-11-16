@@ -92,7 +92,7 @@ export class Pos {
 
     this.#setLightningAddressInstance(new LightningAddress(formData.get("lightning-address") ?? ""));
 
-    if (!this.#lnAddress.hasValidAddress) {
+    if (!this.#lnAddress.hasValidAddress()) {
       console.warn(`Pos: invalid address: ${formData.get("lightning-address")}`);
 
       return;
@@ -101,6 +101,10 @@ export class Pos {
     this.#updatePosPayButton();
 
     window.localStorage.setItem(this.localStorageKey, this.#lnAddress.toString());
+  }
+
+  get selectedLocale() {
+    return window.selectedLocale;
   }
 
   get currencyRates() {
@@ -128,9 +132,10 @@ export class Pos {
     // satsの値を直接取得できるか確認
     const satsInput = window.document.getElementById("sats");
     if (satsInput) {
-      const selectedLocale = navigator.language || navigator.languages[0];
+      const selectedLocale = this.selectedLocale || navigator.language || navigator.languages[0];
       const satsAmount = parseInt(parseInput(satsInput.value, selectedLocale), 10);
-      return satsAmount;
+      // 「—」表示や空欄など数値化できない入力は NaN になるため、金額として扱わず null を返す
+      return Number.isFinite(satsAmount) ? satsAmount : null;
     }
 
     // 取得できなかった場合、計算
@@ -155,6 +160,11 @@ export class Pos {
         return null;
       }
       satsAmount = Math.round(value / (rate / 1e8));
+    }
+
+    // 非有限の値（NaN / Infinity）が金額として下流に渡らないようにする
+    if (!Number.isFinite(satsAmount)) {
+      return null;
     }
 
     return satsAmount || null;
@@ -182,11 +192,11 @@ export class Pos {
 
     this.#isRequesting = true;
 
-    if (!this.#lnAddress.hasValidAddress()) {
-      return;
-    }
-
     try {
+      if (!this.#lnAddress.hasValidAddress()) {
+        return;
+      }
+
       await this.#lnAddress.fetchAddressData();
       const invoice = await this.#lnAddress.getInvoice(satsAmount * 1000);
       await this.#showQrCode(invoice.pr, qrCodeLibraryPromise);
