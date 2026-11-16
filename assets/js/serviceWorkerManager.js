@@ -7,6 +7,9 @@ let registrationPromise = null;
 let scheduledInitializationPromise = null;
 let controllerChangeListenerAttached = false;
 let pageExitListenerAttached = false;
+let pageWasControlledAtSetup = false;
+let hasReloadedAfterControllerChange = false;
+let isPageUnloading = false;
 let knownRegistration = null;
 const updateListeners = new Set();
 const observedRegistrations = new WeakSet();
@@ -103,6 +106,7 @@ function handlePageExit(event) {
     return;
   }
 
+  isPageUnloading = true;
   promoteWaitingWorkerForNextNavigation();
 }
 
@@ -121,8 +125,20 @@ function ensureControllerChangeListener() {
     return;
   }
 
+  pageWasControlledAtSetup = Boolean(navigator.serviceWorker.controller);
   navigator.serviceWorker.addEventListener("controllerchange", handleControllerChange);
   controllerChangeListenerAttached = true;
+}
+
+function reloadOnceAfterControllerChange() {
+  // 初回インストール時の有効化では旧ページが存在しないためリロードしない。
+  // 離脱中に有効化された場合は、次回表示が自然に新 SW 配下になるためリロードしない。
+  if (!pageWasControlledAtSetup || hasReloadedAfterControllerChange || isPageUnloading) {
+    return;
+  }
+
+  hasReloadedAfterControllerChange = true;
+  window.location.reload();
 }
 
 function handleControllerChange() {
@@ -135,6 +151,8 @@ function handleControllerChange() {
   void displaySiteVersion().catch((error) => {
     console.error("Failed to refresh the displayed service worker version:", error);
   });
+
+  reloadOnceAfterControllerChange();
 }
 
 async function getLatestRegistration() {

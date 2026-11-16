@@ -31,6 +31,7 @@ let currencyRates = {};
 window.currencyRates = currencyRates;
 let baseCurrencyValue = {};
 window.baseCurrencyValue = baseCurrencyValue;
+window.selectedLocale = selectedLocale;
 let selectedCurrencies = [];
 let currencyInputFields = [];
 let currentCurrencyValues = {};
@@ -286,6 +287,12 @@ function updateStoredCurrencyRates(nextRates) {
   window.currencyRates = currencyRates;
 }
 
+// 通貨のレートを返す。レートが無い・不正な場合は null（不明）を返す
+function getValidRate(currency) {
+  const rate = Number(currencyRates[currency]);
+  return Number.isFinite(rate) && rate > 0 ? rate : null;
+}
+
 function buildCalculatedValues(inputField, inputValue) {
   const satsInBtc = 1e8;
   const nextValues = {};
@@ -301,9 +308,10 @@ function buildCalculatedValues(inputField, inputValue) {
     btcValue = normalizedInputValue;
     satsValue = btcValue * satsInBtc;
   } else {
-    const rate = Number(currencyRates[inputField]) || 0;
-    btcValue = rate ? normalizedInputValue / rate : 0;
-    satsValue = btcValue * satsInBtc;
+    const rate = getValidRate(inputField);
+    // 基準通貨のレートが無い場合は換算できないため、他通貨もすべて不明（null）にする
+    btcValue = rate ? normalizedInputValue / rate : null;
+    satsValue = rate ? btcValue * satsInBtc : null;
   }
 
   selectedCurrencies.forEach((currency) => {
@@ -322,7 +330,8 @@ function buildCalculatedValues(inputField, inputValue) {
       return;
     }
 
-    nextValues[currency] = btcValue * (currencyRates[currency] || 0);
+    const rate = getValidRate(currency);
+    nextValues[currency] = btcValue !== null && rate ? btcValue * rate : null;
   });
 
   return nextValues;
@@ -487,6 +496,10 @@ function setupInputFieldEventListeners(element) {
   element.addEventListener("focus", handleFocus);
   element.addEventListener("contextmenu", handleContextMenu);
   element.addEventListener("paste", handleInputFormatting);
+  // 右クリックメニューからの貼り付けでは keyup が発生せず、paste イベントは
+  // 挿入前に発火するため、貼り付けた内容が整形されない。値の変更後に発火する
+  // input イベントでも整形する（Ctrl+V・タイピング時は従来の経路と冪等に重なる）
+  element.addEventListener("input", handleInputFormatting);
   element.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       this.blur();
@@ -510,6 +523,11 @@ function setupInputFieldsEventListeners() {
 
 async function handleOnline() {
   await currencyManager.fetchCurrencyData(selectedCurrencies);
+  // 再取得に失敗して保存データに切り替わった場合も、金額欄の表示を
+  // 現在のレートに合わせる（更新ボタン押下時と同じ再計算）
+  if (lastUpdatedField) {
+    calculateValues(lastUpdatedField);
+  }
   void checkForServiceWorkerUpdates().catch((error) => {
     console.error("An error occurred while checking for updates after reconnecting:", error);
   });
@@ -573,9 +591,8 @@ function initializeGlobalValues() {
     // currencies パラメータから通貨リストを取得（ハイフンまたはカンマ区切り、互換性のため）
     const currenciesParam = urlParams.get("currencies");
     if (currenciesParam) {
-      // ハイフンまたはカンマで分割
-      const separator = currenciesParam.includes('-') ? '-' : ',';
-      querySelectedCurrencies = currenciesParam.split(separator).map(s => s.trim()).filter(Boolean);
+      // ハイフンまたはカンマで分割（混在表記にも対応）
+      querySelectedCurrencies = currenciesParam.split(/[-,]/).map(s => s.trim()).filter(Boolean);
     }
 
     // その他のパラメータから基準通貨の値を取得
@@ -710,8 +727,11 @@ function calculateValues(inputField, sourceValue = null) {
         const caretPos = element.selectionStart;
         element.setSelectionRange(caretPos, caretPos);
       } else {
-        // 値のフォーマットと更新
-        const formattedValue = formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
+        // 値のフォーマットと更新（レートが無い通貨は 0 と誤認させないよう「—」を表示）
+        const formattedValue =
+          inputValues[currency] === null
+            ? "—"
+            : formatCurrency(inputValues[currency], currency, selectedLocale, true, significantDigits);
         if (element.value !== formattedValue) {
           element.value = formattedValue;
         }
@@ -727,6 +747,7 @@ function addCommasToInput(inputElement) {
   const originalCaretPos = inputElement.selectionStart;
   const originalSelectionEnd = inputElement.selectionEnd;
   const separators = getLocaleSeparators(selectedLocale);
+  const rawValue = inputElement.value;
   const originalValue = parseInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
@@ -762,6 +783,16 @@ function addCommasToInput(inputElement) {
 
     if (originalCaretPos === 0 && originalSelectionEnd === originalValue.length) {
       inputElement.selectionStart = 0;
+      inputElement.selectionEnd = formattedValue.length;
+      return;
+    }
+
+    // 指数表記の展開など、区切り文字の増減では説明できない書き換えが起きたときは、
+    // 元のキャレット位置が新しい値に対応しなくなるため、キャレットを末尾に置く
+    // （例: "1e-8" を貼り付けると "0.00000001" になり、元の位置 4 のままだと途中に入る）
+    const rawLengthWithoutSeparators = rawValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").length;
+    if (rawLengthWithoutSeparators !== originalValue.length) {
+      inputElement.selectionStart = formattedValue.length;
       inputElement.selectionEnd = formattedValue.length;
       return;
     }
@@ -804,7 +835,8 @@ function updateLastUpdated(timestamp) {
 
 // ページ読み込みもしくは表示状態が変わった際の要素更新処理
 export function checkAndUpdateElements() {
-  const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+  // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+  const diffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
   const updatePricesElement = document.getElementById("update-prices");
   const lastUpdatedElement = document.getElementById("last-updated");
 
@@ -844,7 +876,8 @@ function handleVisibilityChange() {
 
 // レート更新ボタンを押したとき
 async function updateElementsBasedOnTimestamp() {
-  const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+  // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+  const diffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
 
   const updatePricesElement = document.getElementById("update-prices");
   const lastUpdatedElement = document.getElementById("last-updated");
@@ -865,7 +898,7 @@ async function updateElementsBasedOnTimestamp() {
     try {
       // データを取得
       await currencyManager.fetchCurrencyData(selectedCurrencies);
-      const updatedDiffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
+      const updatedDiffTime = Math.max(0, Math.floor(Date.now() / 1000) - lastUpdatedTimestamp);
 
       // 計算処理
       if (lastUpdatedField) {

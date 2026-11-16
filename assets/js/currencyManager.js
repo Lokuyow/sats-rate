@@ -1,4 +1,8 @@
 import { loadJsonFromStorage } from "./storage.js";
+import { showNotification } from "./notification.js";
+
+// CoinGecko API の応答がぶら下がっても初期化が止まらないようにするタイムアウト（ミリ秒）
+const FETCH_TIMEOUT_MS = 10000;
 
 export class CurrencyManager {
   constructor() {
@@ -56,7 +60,7 @@ export class CurrencyManager {
         this.saveUnavailableCurrencies(filteredCurrencies, currencyData);
       } catch (error) {
         console.error("Error fetching currency data:", error);
-        this.handleFetchError(storedData);
+        this.handleFetchError(storedData, filteredCurrencies);
       }
     } else {
       console.log("Local storage data is up-to-date. Skipping API request.");
@@ -106,19 +110,30 @@ export class CurrencyManager {
   async fetchDataFromAPI(filteredCurrencies) {
     const currenciesParam = filteredCurrencies.map((c) => c.toLowerCase()).join(",");
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${currenciesParam}&include_last_updated_at=true&precision=full`;
-    const response = await fetch(url);
-    console.log("API_URL", url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      console.log("API_URL", url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (!data?.bitcoin || typeof data.bitcoin !== "object") {
+        throw new Error("Invalid CoinGecko response: missing bitcoin data");
+      }
+      if (!Number.isFinite(data.bitcoin.last_updated_at)) {
+        throw new Error("Invalid CoinGecko response: last_updated_at is not a finite number");
+      }
+      return data.bitcoin;
+    } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error(`API request timed out after ${FETCH_TIMEOUT_MS} ms`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
-    const data = await response.json();
-    if (!data?.bitcoin || typeof data.bitcoin !== "object") {
-      throw new Error("Invalid CoinGecko response: missing bitcoin data");
-    }
-    if (!Number.isFinite(data.bitcoin.last_updated_at)) {
-      throw new Error("Invalid CoinGecko response: last_updated_at is not a finite number");
-    }
-    return data.bitcoin;
   }
 
   updateCurrencyRates(currencyData) {
@@ -126,13 +141,25 @@ export class CurrencyManager {
     this.onRatesUpdate?.(this.currencyRates);
   }
 
-  handleFetchError(storedData) {
+  handleFetchError(storedData, requestedCurrencies = []) {
     if (storedData) {
       this.updateCurrencyRates(storedData);
 
-      const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+      let message = window.vanilla_i18n_instance.translate("alerts.fetchErrorWithData");
+
+      // 保存データに無い通貨は金額を表示できないため、その旨もあわせて知らせる
+      const missingCurrencies = requestedCurrencies.filter((currency) => !(Number(storedData[currency]) > 0));
+      if (missingCurrencies.length > 0) {
+        const missingMessage = window.vanilla_i18n_instance.translate("alerts.fetchErrorMissingRates", {
+          currencies: missingCurrencies.map((currency) => currency.toUpperCase()).join(", "),
+        });
+        message = `${message}\n${missingMessage}`;
+      }
+
       console.log(message);
       console.log(this.currencyRates);
+      // 失敗の通知は読むのに時間がかかるため、閉じるボタンで消すまで表示し続ける
+      showNotification(message, undefined, "right", { dismissible: true });
     } else {
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorNoData");
       alert(message);
@@ -142,7 +169,8 @@ export class CurrencyManager {
   isDataOutdated(lastUpdatedAt) {
     const lastUpdatedTimestamp = lastUpdatedAt;
     const currentTime = Math.floor(Date.now() / 1000);
-    return currentTime - lastUpdatedTimestamp > 610;
+    // 端末時計がサーバー時刻より遅れていると負になるため、0にクランプする
+    return Math.max(0, currentTime - lastUpdatedTimestamp) > 610;
   }
 
   updateCurrencyInputs(selectedCurrencies) {
