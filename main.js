@@ -727,6 +727,7 @@ function addCommasToInput(inputElement) {
   const originalCaretPos = inputElement.selectionStart;
   const originalSelectionEnd = inputElement.selectionEnd;
   const separators = getLocaleSeparators(selectedLocale);
+  const rawValue = inputElement.value;
   const originalValue = parseInput(inputElement.value, selectedLocale);
 
   if (originalValue === "") {
@@ -762,6 +763,16 @@ function addCommasToInput(inputElement) {
 
     if (originalCaretPos === 0 && originalSelectionEnd === originalValue.length) {
       inputElement.selectionStart = 0;
+      inputElement.selectionEnd = formattedValue.length;
+      return;
+    }
+
+    // 指数表記の展開など、区切り文字の増減では説明できない書き換えが起きたときは、
+    // 元のキャレット位置が新しい値に対応しなくなるため、キャレットを末尾に置く
+    // （例: "1e-8" を貼り付けると "0.00000001" になり、元の位置 4 のままだと途中に入る）
+    const rawLengthWithoutSeparators = rawValue.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").length;
+    if (rawLengthWithoutSeparators !== originalValue.length) {
+      inputElement.selectionStart = formattedValue.length;
       inputElement.selectionEnd = formattedValue.length;
       return;
     }
