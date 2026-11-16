@@ -64,7 +64,8 @@
     "fetchErrorWithData": "Failed to fetch the latest currency rates. Displaying cached data.",
     "fetchErrorNoData": "Failed to fetch currency rates. Please reload the page after some time.",
     "fetchErrorMissingRates": "Rates for the following currencies are not in the cached data, so their amounts cannot be displayed: {currencies}",
-    "ogpUploadFailed": "Failed to upload image for sharing link."
+    "ogpUploadFailed": "Failed to upload image for sharing link.",
+    "ogpGenerationFailed": "Failed to generate image for sharing link."
   },
   "lightningAddress": {
     "errors": {
