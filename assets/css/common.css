@@ -122,6 +122,26 @@ main {
   box-sizing: border-box;
 }
 
+/* 閉じるボタン付き通知: ボタンと本文が重ならないよう右側に余白を取る */
+#notification.has-close {
+  padding-right: 34px;
+}
+
+#notification .notification-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--main-text-color);
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 /* ダークモード設定 */
 @media (prefers-color-scheme: light) {
   :root {

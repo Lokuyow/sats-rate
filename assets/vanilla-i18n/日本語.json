@@ -159,6 +159,7 @@
     "changeLanguage": "言語を変更",
     "openMenu": "メニューを開く",
     "updatePrices": "価格の更新",
+    "closeNotification": "通知を閉じる",
     "themeToggle": "ダークモード切り替え",
     "autoUpdateToggle": "自動価格更新切り替え",
     "saveDefaultValues": "現在の入力値をデフォルトに設定",

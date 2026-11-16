@@ -159,6 +159,7 @@
     "changeLanguage": "Change language",
     "openMenu": "Open menu",
     "updatePrices": "Update Prices",
+    "closeNotification": "Close notification",
     "themeToggle": "Toggle dark mode",
     "autoUpdateToggle": "Toggle auto price update",
     "saveDefaultValues": "Set current input values as default",
