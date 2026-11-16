@@ -20,11 +20,57 @@ export function getLocaleSeparators(locale) {
   return separators;
 }
 
+// 指数表記の数値を通常の10進表記に展開する（例: "1e-8" → "0.00000001"）
+function expandExponentialNotation(numericString) {
+  const value = Number(numericString);
+  if (!Number.isFinite(value)) return "";
+
+  const str = String(value);
+  if (!str.includes("e") && !str.includes("E")) return str;
+
+  const [mantissa, exponentPart] = str.split(/[eE]/);
+  const exponent = parseInt(exponentPart, 10);
+  const isNegative = mantissa.startsWith("-");
+  const mantissaDigits = mantissa.replace("-", "");
+  const dotIndex = mantissaDigits.indexOf(".");
+  const integerDigitCount = dotIndex === -1 ? mantissaDigits.length : dotIndex;
+  const digits = mantissaDigits.replace(".", "");
+  const newDotIndex = integerDigitCount + exponent;
+
+  let expanded;
+  if (newDotIndex <= 0) {
+    expanded = "0." + "0".repeat(-newDotIndex) + digits;
+  } else if (newDotIndex >= digits.length) {
+    expanded = digits + "0".repeat(newDotIndex - digits.length);
+  } else {
+    expanded = digits.slice(0, newDotIndex) + "." + digits.slice(newDotIndex);
+  }
+
+  return (isNegative ? "-" : "") + expanded;
+}
+
 export function parseInput(inputValue, locale) {
   const separators = getLocaleSeparators(locale);
-  const onlyNumbersAndSeparators = String(inputValue ?? "").replace(/[^0-9\.,]/g, "");
+  // 全角数字・記号を半角にそろえる（例: "１００" → "100"）。区切り文字も同じ正規化形で照合する
+  const groupSeparator = separators.groupSeparator.normalize("NFKC");
+  const decimalSeparator = separators.decimalSeparator.normalize("NFKC");
+  const normalized = String(inputValue ?? "")
+    .normalize("NFKC")
+    .replace(new RegExp(`\\${groupSeparator}`, "g"), "")
+    .replace(decimalSeparator, ".");
 
-  return onlyNumbersAndSeparators.replace(new RegExp(`\\${separators.groupSeparator}`, "g"), "").replace(separators.decimalSeparator, ".");
+  // 数字・小数点・指数表記に使う文字以外（通貨記号など）は除去する
+  const cleaned = normalized.replace(/[^0-9.eE+-]/g, "");
+
+  // 指数表記は文字を落として別の値にせず、通常の10進表記に展開して正しく解釈する
+  if (/^(?:\d+(?:\.\d*)?|\.\d+)[eE][+-]?\d+$/.test(cleaned)) {
+    return expandExponentialNotation(cleaned);
+  }
+
+  // 負の値と、解釈できない "e" や "+" を含む入力は無効（値なし）として扱う
+  if (/[eE+-]/.test(cleaned)) return "";
+
+  return cleaned;
 }
 
 export function updateCustomOptions(rates) {
