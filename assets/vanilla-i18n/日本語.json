@@ -72,7 +72,8 @@
       "noAddressSet": "ライトニングアドレス未設定",
       "invalidAmount": "数量が不正です。{min} sats～{max} satsの間である必要があります。",
       "cannotFetchData": "アドレスデータを取得できません。",
-      "cannotGetInvoice": "インボイスを取得できません。"
+      "cannotGetInvoice": "インボイスを取得できません。",
+      "insecureCallback": "接続先のウォレットが安全な接続（https）に対応していないため、インボイスを作成できません"
     }
   },
   "pos": {
