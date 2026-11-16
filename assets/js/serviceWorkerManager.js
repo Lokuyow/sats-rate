@@ -10,6 +10,7 @@ let pageExitListenerAttached = false;
 let pageWasControlledAtSetup = false;
 let hasReloadedAfterControllerChange = false;
 let isPageUnloading = false;
+let thisTabRequestedActivation = false;
 let knownRegistration = null;
 const updateListeners = new Set();
 const observedRegistrations = new WeakSet();
@@ -133,7 +134,10 @@ function ensureControllerChangeListener() {
 function reloadOnceAfterControllerChange() {
   // 初回インストール時の有効化では旧ページが存在しないためリロードしない。
   // 離脱中に有効化された場合は、次回表示が自然に新 SW 配下になるためリロードしない。
-  if (!pageWasControlledAtSetup || hasReloadedAfterControllerChange || isPageUnloading) {
+  // 有効化を要求したのがこのタブ自身でない場合（別タブの起動時有効化や離脱時
+  // プロモーションに巻き込まれた場合）は、未保存の入力を失わせないため
+  // リロードしない。次回表示・遷移で自然に新 SW 配下になる。
+  if (!pageWasControlledAtSetup || hasReloadedAfterControllerChange || isPageUnloading || !thisTabRequestedActivation) {
     return;
   }
 
@@ -255,6 +259,7 @@ async function activateWaitingServiceWorker(registration) {
   }
 
   updateState({ newVersionAvailable: false, isActivatingUpdate: true });
+  thisTabRequestedActivation = true;
   registration.waiting.postMessage({ type: "SKIP_WAITING" });
   return { status: "activating" };
 }
