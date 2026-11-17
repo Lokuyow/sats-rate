@@ -29,7 +29,12 @@ export function showNotification(message, event, align = "right", options = {}) 
         notification.classList.remove("has-close");
     }
 
-    if (event && event.pageX !== undefined && event.pageY !== undefined) {
+    if (options.position === "top") {
+        // 画面上部に中央寄せで表示する（レート取得失敗の通知用）
+        notification.style.top = "12px";
+        notification.style.left = "50%";
+        notification.style.transform = "translateX(-50%)";
+    } else if (event && event.pageX !== undefined && event.pageY !== undefined) {
         notification.style.top = `${event.pageY}px`;
 
         const scrollX = window.scrollX || window.pageXOffset || 0;

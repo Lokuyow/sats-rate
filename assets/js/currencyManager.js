@@ -181,7 +181,8 @@ export class CurrencyManager {
       console.log(message);
       console.log(this.currencyRates);
       // 失敗の通知は読むのに時間がかかるため、閉じるボタンで消すまで表示し続ける
-      showNotification(message, undefined, "right", { dismissible: true });
+      // 表示位置は金額欄に被らないよう画面上部にする（オーナー要望）
+      showNotification(message, undefined, "right", { dismissible: true, position: "top" });
     } else {
       const message = window.vanilla_i18n_instance.translate("alerts.fetchErrorNoData");
       alert(message);
