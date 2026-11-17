@@ -252,7 +252,8 @@ export function shareSiteViaWebAPIEvent(event) {
     const siteUrl = getSiteUrl();
 
     if (!isSecureContext || !navigator.share) {
-        fallbackShareSiteViaClipboard(siteText, siteUrl, event);
+        // Web Share 非対応時は、コピーの完了通知ではなく非対応の案内を出す（Issue #66）
+        fallbackShareSiteViaClipboard(siteText, siteUrl, event, "alerts.shareNotSupported");
         return;
     }
 
@@ -282,7 +283,8 @@ function shareViaWebAPI(queryParams, event) {
     const shareUrl = `${SITE_URL}${queryParams}`;
 
     if (!isSecureContext || !navigator.share) {
-        fallbackShareViaClipboard(shareUrl, event);
+        // Web Share 非対応時は、コピーの完了通知ではなく非対応の案内を出す（Issue #66）
+        fallbackShareViaClipboard(shareUrl, event, "alerts.shareNotSupported");
         return;
     }
 
@@ -304,7 +306,7 @@ function shareViaWebAPI(queryParams, event) {
  * @param {string} siteUrl - サイトURL
  * @param {Event} event - イベントオブジェクト
  */
-function fallbackShareSiteViaClipboard(siteText, siteUrl, event) {
+function fallbackShareSiteViaClipboard(siteText, siteUrl, event, noticeKey = "showNotification.copy") {
     const textToCopy = `${siteText}\n${siteUrl}`;
     const textarea = document.createElement("textarea");
     textarea.value = textToCopy;
@@ -316,7 +318,7 @@ function fallbackShareSiteViaClipboard(siteText, siteUrl, event) {
     try {
         textarea.select();
         document.execCommand("copy");
-        const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+        const message = window.vanilla_i18n_instance.translate(noticeKey);
         showNotification(message, event, "left");
     } catch (err) {
         console.error("Fallback share failed:", err);
@@ -330,7 +332,7 @@ function fallbackShareSiteViaClipboard(siteText, siteUrl, event) {
  * @param {string} url - 共有URL
  * @param {Event} event - イベントオブジェクト
  */
-function fallbackShareViaClipboard(url, event) {
+function fallbackShareViaClipboard(url, event, noticeKey = "showNotification.copy") {
     const textarea = document.createElement("textarea");
     textarea.value = url;
     textarea.style.position = "fixed";
@@ -341,7 +343,7 @@ function fallbackShareViaClipboard(url, event) {
     try {
         textarea.select();
         document.execCommand("copy");
-        const message = window.vanilla_i18n_instance.translate("showNotification.copy");
+        const message = window.vanilla_i18n_instance.translate(noticeKey);
         showNotification(message, event, "left");
     } catch (err) {
         console.error("Fallback share failed:", err);

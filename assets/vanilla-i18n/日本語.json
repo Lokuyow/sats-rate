@@ -16,7 +16,6 @@
     "text": "おいくらサッツ"
   },
   "settings": {
-    "subject": "設定",
     "theme": "ダークモード",
     "autoUpdate": "自動価格更新",
     "value": {
@@ -168,9 +167,6 @@
     "changeCurrencies": "通貨を変更",
     "checkForUpdate": "更新をチェック",
     "setLightningAddress": "受取ライトニングアドレスの設定",
-    "shareTwitter": "計算結果をXで共有",
-    "shareNostter": "計算結果をnostterで共有",
-    "shareBluesky": "計算結果をBlueskyで共有",
     "shareWebAPI": "計算結果をWebAPIで共有",
     "copyToClipboard": "計算結果をクリップボードにコピー",
     "zapButton": "Zap(ビットコインの投げ銭)ボタン"
