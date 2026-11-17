@@ -649,7 +649,9 @@ function processGlobalValues(queryParamsBase) {
     if (queryParamsBase) {
       selectedCurrencies = sanitizeSelectedCurrencies([baseCurrencyKey, ...selectedCurrencies]);
     } else {
-      replaceBaseCurrencyValue({ [selectedCurrencies[0]]: 100 });
+      // 保存済みの基準通貨が表示対象から外れている場合は、金額の数値だけを
+      // 先頭の表示通貨へ引き継ぐ（Issue #60、オーナー判断で選択肢2を採用）
+      replaceBaseCurrencyValue({ [selectedCurrencies[0]]: baseCurrencyValue[baseCurrencyKey] });
     }
   }
 }
