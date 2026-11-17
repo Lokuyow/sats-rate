@@ -108,16 +108,16 @@
       "title": "Zapの手順",
       "step1": {
         "title": "1. ライトニングウォレットを作成",
-        "description": "「Wallet of Satoshi（WoS）」はZap対応のシンプルなウォレットアプリです。<a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\">公式サイト</a>からダウンロードしてください。",
+        "description": "「Wallet of Satoshi（WoS）」はZap対応のシンプルなウォレットアプリです。<a href=\"https://www.walletofsatoshi.com/\" target=\"_blank\" rel=\"noopener\">公式サイト</a>からダウンロードしてください。",
         "description2": "ウォレットにsatsを入れれば匿名Zapが可能です。サイトのZapボタンを押して試してみてください。記名Zapを利用する場合は次に進んでください。"
       },
       "step2": {
         "title": "2. Nostrのアカウントを作成",
-        "description": "Nostrのアカウントを作成します。<a href=\"https://nostter.app\" target=\"_blank\">nostter.app</a>にアクセスして、アカウントを作成し、プロフィールを設定してください。"
+        "description": "Nostrのアカウントを作成します。<a href=\"https://nostter.app\" target=\"_blank\" rel=\"noopener\">nostter.app</a>にアクセスして、アカウントを作成し、プロフィールを設定してください。"
       },
       "step3": {
         "title": "3. Nostr Extension（Nostr ログイン拡張機能）",
-        "description": "Nostr用のブラウザ拡張機能を導入します。PC、iOS、Androidで導入方法が異なります。詳しい手順は<a href=\"https://welcome.nostr-jp.org/tutorial/nip-07.html\" target=\"_blank\">こちらのチュートリアル（日本語）</a>をご覧ください。秘密鍵（プライベートキー）はnostterで作成したものを使用します。nostterの「設定」ページからコピーしてください。"
+        "description": "Nostr用のブラウザ拡張機能を導入します。PC、iOS、Androidで導入方法が異なります。詳しい手順は<a href=\"https://welcome.nostr-jp.org/tutorial/nip-07.html\" target=\"_blank\" rel=\"noopener\">こちらのチュートリアル（日本語）</a>をご覧ください。秘密鍵（プライベートキー）はnostterで作成したものを使用します。nostterの「設定」ページからコピーしてください。"
       },
       "step4": {
         "title": "4. Zapする",
@@ -150,10 +150,10 @@
     },
     "referenceLinks": {
       "title": "参考リンク",
-      "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\">Zap (日本語, Scrapbox, Cosense)</a>",
-      "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\">【Nostr】Webサイトにビットコインの投げ銭ボタンを設置しよう【Zap】 (日本語, Spotlight)</a>",
-      "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
-      "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\">nostr-zap (library, GitHub)</a>"
+      "link1": "<a href=\"https://scrapbox.io/nostr/Zap\" target=\"_blank\" rel=\"noopener\">Zap (日本語, Scrapbox, Cosense)</a>",
+      "link2": "<a href=\"https://spotlight.soy/detail?article_id=ucd7cbrql\" target=\"_blank\" rel=\"noopener\">【Nostr】Webサイトにビットコインの投げ銭ボタンを設置しよう【Zap】 (日本語, Spotlight)</a>",
+      "link3": "<a href=\"https://github.com/nostr-protocol/nips/blob/master/57.md\" target=\"_blank\" rel=\"noopener\">NIP-57 (nostr-protocol / nips, GitHub)</a>",
+      "link4": "<a href=\"https://github.com/SamSamskies/nostr-zap\" target=\"_blank\" rel=\"noopener\">nostr-zap (library, GitHub)</a>"
     }
   },
   "ariaLabels": {
