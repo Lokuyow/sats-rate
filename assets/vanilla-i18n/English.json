@@ -16,7 +16,6 @@
     "text": "OikuraSats"
   },
   "settings": {
-    "subject": "Settings",
     "theme": "Dark Mode",
     "autoUpdate": "Auto Price Update",
     "value": {
@@ -168,9 +167,6 @@
     "changeCurrencies": "Change currencies",
     "checkForUpdate": "Check for updates",
     "setLightningAddress": "Set Receiving Lightning Address",
-    "shareTwitter": "Share Results on X",
-    "shareNostter": "Share Results on nostter",
-    "shareBluesky": "Share Results on Bluesky",
     "shareWebAPI": "Share Results via WebAPI",
     "copyToClipboard": "Copy Results to Clipboard",
     "zapButton": "Zap (bitcoin tipping) Button"
