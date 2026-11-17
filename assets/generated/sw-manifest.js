@@ -1,5 +1,5 @@
 self.__OSATS_SW_MANIFEST = {
-  "version": "2.40.6",
+  "version": "2.41.0",
   "revision": "3282df1dfad6",
   "assets": [
     "/assets/css/common.css",
